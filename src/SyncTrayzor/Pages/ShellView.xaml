@@ -1,8 +1,15 @@
 ﻿<Window x:Class="SyncTrayzor.Pages.ShellView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="https://github.com/canton7/Stylet"
         Title="ShellView" Height="300" Width="300">
-    <Grid>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBlock Text="{Binding ExecutablePath}"/>
+            <Button Command="{s:Action Start}">Start</Button>
+            <Button Command="{s:Action Stop}">Stop</Button>
+        </StackPanel>
         
-    </Grid>
+        <ContentControl s:View.Model="{Binding Console}"/>
+    </DockPanel>
 </Window>
