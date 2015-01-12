@@ -5,8 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
              d:DesignHeight="300" d:DesignWidth="300">
-    <DockPanel LastChildFill="False">
-        
-    </DockPanel>
+    <Grid>
+        <TextBox xaml:TextBoxUtilities.AlwaysScrollToEnd="True"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 FontFamily="Consolas"
+                 FontSize="11"
+                 IsReadOnly="True"
+                 UndoLimit="0"
+                 Text="{Binding LogMessages}"/>
+    </Grid>
 </UserControl>

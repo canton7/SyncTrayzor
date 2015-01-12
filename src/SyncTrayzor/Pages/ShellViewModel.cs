@@ -21,8 +21,12 @@ namespace SyncTrayzor.Pages
             ISyncThingRunner syncThingRunner,
             ConsoleViewModel console)
         {
+            this.DisplayName = "SyncTrayzor";
+
             this.syncThingRunner = syncThingRunner;
             this.Console = console;
+
+            this.syncThingRunner.StateChanged += (o, e) => this.IsStarted = e.State == SyncThingState.Started;
         }
 
         public bool CanStart
@@ -31,7 +35,8 @@ namespace SyncTrayzor.Pages
         }
         public void Start()
         {
-
+            this.syncThingRunner.ExecutablePath = "syncthing.exe"; // TEMP
+            this.syncThingRunner.Start();
         }
 
         public bool CanStop
@@ -40,7 +45,7 @@ namespace SyncTrayzor.Pages
         }
         public void Stop()
         {
-
+            this.syncThingRunner.Kill();
         }
     }
 }

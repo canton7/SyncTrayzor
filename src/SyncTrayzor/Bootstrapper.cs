@@ -16,5 +16,10 @@ namespace SyncTrayzor
         {
             builder.Bind<ISyncThingRunner>().To<SyncThingRunner>().InSingletonScope();
         }
+
+        protected override void OnExit(System.Windows.ExitEventArgs e)
+        {
+            this.Container.Get<ISyncThingRunner>().Dispose();
+        }
     }
 }

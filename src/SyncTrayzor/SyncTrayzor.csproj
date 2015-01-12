@@ -44,6 +44,19 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -67,6 +80,7 @@
     </Compile>
     <Compile Include="Pages\ConsoleViewModel.cs" />
     <Compile Include="Services\SyncThingRunner.cs" />
+    <Compile Include="Xaml\TextBoxUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
