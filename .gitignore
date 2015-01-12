@@ -39,3 +39,4 @@ installer/Output
 *.gjq
 *.tmp
 Coverage
+RefitStubs.cs
