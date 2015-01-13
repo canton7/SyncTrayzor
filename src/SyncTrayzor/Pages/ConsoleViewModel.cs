@@ -1,5 +1,5 @@
 ﻿using Stylet;
-using SyncTrayzor.Services;
+using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +10,17 @@ namespace SyncTrayzor.Pages
 {
     public class ConsoleViewModel : Screen
     {
-        private readonly ISyncThingRunner syncThingRunner;
+        private readonly ISyncThingManager syncThingManager;
 
         public string LogMessages { get; private set; }
 
-        public ConsoleViewModel(ISyncThingRunner syncThingRunner)
+        public ConsoleViewModel(ISyncThingManager syncThingManager)
         {
-            this.syncThingRunner = syncThingRunner;
+            this.syncThingManager = syncThingManager;
             this.LogMessages = "";
 
             // TODO: UGLY!
-            this.syncThingRunner.LogMessages.Subscribe(msg => this.LogMessages += msg + "\n");
+            this.syncThingManager.MessageLogged += (o, e) => this.LogMessages += e.LogMessage + "\n";
         }
     }
 }

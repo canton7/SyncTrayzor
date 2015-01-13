@@ -1,5 +1,5 @@
 ﻿using Stylet;
-using SyncTrayzor.Services;
+using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,42 +10,51 @@ namespace SyncTrayzor.Pages
 {
     public class ShellViewModel : Screen
     {
-        private readonly ISyncThingRunner syncThingRunner;
+        private readonly ISyncThingManager syncThingManager;
 
         public string ExecutablePath { get; private set; }
         public ConsoleViewModel Console { get; private set; }
 
-        public bool IsStarted { get; private set; }
+        public SyncThingState SyncThingState { get; private set; }
 
         public ShellViewModel(
-            ISyncThingRunner syncThingRunner,
+            ISyncThingManager syncThingManager,
             ConsoleViewModel console)
         {
             this.DisplayName = "SyncTrayzor";
 
-            this.syncThingRunner = syncThingRunner;
+            this.syncThingManager = syncThingManager;
             this.Console = console;
 
-            this.syncThingRunner.StateChanged += (o, e) => this.IsStarted = e.State == SyncThingState.Started;
+            this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
         }
 
         public bool CanStart
         {
-            get { return !this.IsStarted; }
+            get { return this.SyncThingState == SyncThingState.Stopped; }
         }
         public void Start()
         {
-            this.syncThingRunner.ExecutablePath = "syncthing.exe"; // TEMP
-            this.syncThingRunner.Start();
+            this.syncThingManager.ExecutablePath = "syncthing.exe"; // TEMP
+            this.syncThingManager.Start();
         }
 
         public bool CanStop
         {
-            get { return this.IsStarted; }
+            get { return this.SyncThingState == SyncThingState.Started; }
         }
         public void Stop()
         {
-            this.syncThingRunner.Kill();
+            this.syncThingManager.StopAsync();
+        }
+
+        public bool CanKill
+        {
+            get { return this.SyncThingState != SyncThingState.Stopped; }
+        }
+        public void Kill()
+        {
+            this.syncThingManager.Kill();
         }
     }
 }

@@ -52,18 +52,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Reactive.Core">
-      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Interfaces">
-      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Linq">
-      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -86,9 +74,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Pages\ConsoleViewModel.cs" />
-    <Compile Include="Services\SyncThingApi.cs" />
-    <Compile Include="Services\SyncThingClient.cs" />
-    <Compile Include="Services\SyncThingRunner.cs" />
+    <Compile Include="RefitStubs.cs" />
+    <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
+    <Compile Include="SyncThing\SyncThingApi.cs" />
+    <Compile Include="SyncThing\SyncThingApiClient.cs" />
+    <Compile Include="SyncThing\SyncThingManager.cs" />
+    <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
+    <Compile Include="SyncThing\SyncThingState.cs" />
+    <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

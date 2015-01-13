@@ -1,7 +1,7 @@
 ﻿using Stylet;
 using StyletIoC;
 using SyncTrayzor.Pages;
-using SyncTrayzor.Services;
+using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +14,9 @@ namespace SyncTrayzor
     {
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
-            builder.Bind<ISyncThingRunner>().To<SyncThingRunner>().InSingletonScope();
-            builder.Bind<ISyncThingClient>().To<SyncThingClient>().InSingletonScope();
+            builder.Bind<ISyncThingApiClient>().To<SyncThingApiClient>();
+            builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>();
+            builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
         }
 
         protected override void OnExit(System.Windows.ExitEventArgs e)

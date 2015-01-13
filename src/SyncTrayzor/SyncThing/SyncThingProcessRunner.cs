@@ -3,62 +3,44 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.SyncThing
 {
-    public enum SyncThingState {  Started, Stopped }
-
-    public class SyncThingStateChangedEventArgs : EventArgs
-    {
-        public SyncThingState State { get; private set; }
-
-        public SyncThingStateChangedEventArgs(SyncThingState state)
-        {
-            this.State = state;
-        }
-    }
-
-    public interface ISyncThingRunner : IDisposable
+    public interface ISyncThingProcessRunner : IDisposable
     {
         string ExecutablePath { get; set; }
-        IObservable<string> LogMessages { get; }
-        SyncThingState State { get; }
+        string ApiKey { get; set; }
+        string HostAddress { get; set; }
 
-        event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
+        event EventHandler<MessageLoggedEventArgs> MessageLogged;
+        event EventHandler ProcessStopped;
 
         void Start();
         void Kill();
     }
 
-    public class SyncThingRunner : ISyncThingRunner
+    public class SyncThingProcessRunner : ISyncThingProcessRunner
     {
         private static readonly string[] defaultArguments = new[] { "-no-browser" };
 
-        private readonly Subject<string> logMessages = new Subject<string>();
         private Process process;
 
         public string ExecutablePath { get; set; }
-        public SyncThingState State { get; private set; }
-        public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
-        public IObservable<string> LogMessages
-        {
-            get { return this.logMessages; }
-        }
+        public string ApiKey { get; set; }
+        public string HostAddress { get; set; }
 
-        public SyncThingRunner()
+        public event EventHandler<MessageLoggedEventArgs> MessageLogged;
+        public event EventHandler ProcessStopped;
+
+        public SyncThingProcessRunner()
         {
-            this.State = SyncThingState.Stopped;
         }
 
         public void Start()
         {
-            if (this.State == SyncThingState.Started)
-                throw new InvalidOperationException("Already started");
-
             var processStartInfo = new ProcessStartInfo()
             {
                 FileName = this.ExecutablePath,
@@ -72,19 +54,17 @@ namespace SyncTrayzor.Services
 
             this.process = Process.Start(processStartInfo);
 
+            this.process.EnableRaisingEvents = true;
             this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
+
             this.process.BeginOutputReadLine();
             this.process.BeginErrorReadLine();
-            this.process.Exited += (o, e) => this.Kill();
 
-            this.SetState(SyncThingState.Started);
+            this.process.Exited += (o, e) => this.OnProcessStopped();
         }
 
         public void Kill()
         {
-            if (this.State == SyncThingState.Stopped)
-                throw new InvalidOperationException("Already stopped");
-
             this.KillInternal();
         }
 
@@ -95,34 +75,39 @@ namespace SyncTrayzor.Services
                 KillProcessAndChildren(this.process.Id);
                 this.process = null;
             }
-
-            this.SetState(SyncThingState.Stopped);
         }
 
         private IEnumerable<string> GenerateArguments()
         {
-            return defaultArguments;
-        }
-
-        private void SetState(SyncThingState state)
-        {
-            if (state == this.State)
-                return;
-
-            this.State = state;
-            var handler = this.StateChanged;
-            if (handler != null)
-                handler(this, new SyncThingStateChangedEventArgs(state));
+            return defaultArguments.Concat(new[]
+            {
+                String.Format("-gui-apikey=\"{0}\"", this.ApiKey),
+                String.Format("-gui-address=\"{0}\"", this.HostAddress)
+            });
         }
 
         private void DataReceived(string data)
         {
-            this.logMessages.OnNext(data);
+            this.OnMessageLogged(data);
         }
 
         public void Dispose()
         {
             this.KillInternal();
+        }
+
+        private void OnProcessStopped()
+        {
+            var handler = this.ProcessStopped;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void OnMessageLogged(string logMessage)
+        {
+            var handler = this.MessageLogged;
+            if (handler != null)
+                handler(this, new MessageLoggedEventArgs(logMessage));
         }
 
         // http://stackoverflow.com/questions/5901679/kill-process-tree-programatically-in-c-sharp

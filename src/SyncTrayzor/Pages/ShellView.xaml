@@ -8,6 +8,7 @@
             <TextBlock Text="{Binding ExecutablePath}"/>
             <Button Command="{s:Action Start}">Start</Button>
             <Button Command="{s:Action Stop}">Stop</Button>
+            <Button Command="{s:Action Kill}">Kill</Button>
         </StackPanel>
         
         <ContentControl s:View.Model="{Binding Console}"/>

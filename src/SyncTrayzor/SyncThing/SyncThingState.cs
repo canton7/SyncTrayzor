@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.SyncThing
 {
-    public interface SyncThingApi
+    public enum SyncThingState
     {
+        Stopped,
+        Started,
+        Stopping
     }
 }
