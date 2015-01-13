@@ -10,7 +10,7 @@
             <Button Command="{s:Action Stop}">Stop</Button>
             <Button Command="{s:Action Kill}">Kill</Button>
         </StackPanel>
-        
-        <ContentControl s:View.Model="{Binding Console}"/>
+        <ContentControl DockPanel.Dock="Top" Height="300" s:View.Model="{Binding Viewer}"/>
+        <ContentControl DockPanel.Dock="Top" s:View.Model="{Binding Console}"/>
     </DockPanel>
 </Window>

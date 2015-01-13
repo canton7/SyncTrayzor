@@ -14,19 +14,24 @@ namespace SyncTrayzor.Pages
 
         public string ExecutablePath { get; private set; }
         public ConsoleViewModel Console { get; private set; }
+        public ViewerViewModel Viewer { get; private set; }
 
         public SyncThingState SyncThingState { get; private set; }
 
         public ShellViewModel(
             ISyncThingManager syncThingManager,
-            ConsoleViewModel console)
+            ConsoleViewModel console,
+            ViewerViewModel viewer)
         {
             this.DisplayName = "SyncTrayzor";
 
             this.syncThingManager = syncThingManager;
             this.Console = console;
+            this.Viewer = viewer;
 
             this.syncThingManager.StateChanged += (o, e) => Execute.OnUIThread(() => this.SyncThingState = e.NewState);
+
+            this.Viewer.Location = "http://localhost:4567";
         }
 
         public bool CanStart
