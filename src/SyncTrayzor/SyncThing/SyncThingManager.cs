@@ -24,7 +24,6 @@ namespace SyncTrayzor.SyncThing
     {
         private readonly ISyncThingProcessRunner processRunner;
         private readonly ISyncThingApiClient apiClient;
-        private readonly SynchronizationContext synchronizationContext;
 
         public SyncThingState State { get; private set; }
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
@@ -38,10 +37,6 @@ namespace SyncTrayzor.SyncThing
 
         public SyncThingManager(ISyncThingProcessRunner processRunner, ISyncThingApiClient apiClient)
         {
-            this.synchronizationContext = SynchronizationContext.Current;
-            if (this.synchronizationContext == null)
-                throw new InvalidOperationException("Must be created on the main thread");
-
             this.processRunner = processRunner;
             this.apiClient = apiClient;
 
@@ -85,14 +80,14 @@ namespace SyncTrayzor.SyncThing
 
             var handler = this.StateChanged;
             if (handler != null)
-                this.synchronizationContext.Post(_ => handler(this, new SyncThingStateChangedEventArgs(oldState, state)), null);
+                handler(this, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
         private void OnMessageLogged(string logMessage)
         {
             var handler = this.MessageLogged;
             if (handler != null)
-                this.synchronizationContext.Post(_ => handler(this, new MessageLoggedEventArgs(logMessage)), null);
+                handler(this, new MessageLoggedEventArgs(logMessage));
         }
 
         public void Dispose()

@@ -20,7 +20,7 @@ namespace SyncTrayzor.Pages
             this.LogMessages = "";
 
             // TODO: UGLY!
-            this.syncThingManager.MessageLogged += (o, e) => this.LogMessages += e.LogMessage + "\n";
+            this.syncThingManager.MessageLogged += (o, e) => Execute.OnUIThread(() => this.LogMessages += e.LogMessage + "\n");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SyncTrayzor.Pages
             this.syncThingManager = syncThingManager;
             this.Console = console;
 
-            this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
+            this.syncThingManager.StateChanged += (o, e) => Execute.OnUIThread(() => this.SyncThingState = e.NewState);
         }
 
         public bool CanStart
