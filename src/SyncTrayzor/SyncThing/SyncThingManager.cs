@@ -14,6 +14,7 @@ namespace SyncTrayzor.SyncThing
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
 
         string ExecutablePath { get; set; }
+        string Address { get; set; }
 
         void Start();
         Task StopAsync();
@@ -35,6 +36,18 @@ namespace SyncTrayzor.SyncThing
             set { this.processRunner.ExecutablePath = value; }
         }
 
+        private string _address;
+        public string Address
+        {
+            get { return this._address; }
+            set
+            {
+                this._address = value;
+                this.apiClient.BaseAddress = new Uri(this._address);
+                this.processRunner.HostAddress = this._address;
+            }
+        }
+
         public SyncThingManager(ISyncThingProcessRunner processRunner, ISyncThingApiClient apiClient)
         {
             this.processRunner = processRunner;
@@ -43,10 +56,6 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.ProcessStopped += (o, e) => this.SetState(SyncThingState.Stopped);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
 
-            // TEMP
-            var address = "http://localhost:4567";
-            this.apiClient.BaseAddress = new Uri(address);
-            this.processRunner.HostAddress = address;
             var apiKey = "abc123";
             this.apiClient.ApiKey = apiKey;
             this.processRunner.ApiKey = apiKey;
@@ -55,7 +64,7 @@ namespace SyncTrayzor.SyncThing
         public void Start()
         {
             this.processRunner.Start();
-            this.SetState(SyncThingState.Started);
+            this.SetState(SyncThingState.Running);
         }
 
         public Task StopAsync()

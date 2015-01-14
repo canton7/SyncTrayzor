@@ -2,6 +2,7 @@
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,8 @@ namespace SyncTrayzor.Pages
             this.Console = console;
             this.Viewer = viewer;
 
+            this.syncThingManager.Address = "http://localhost:4567";
             this.syncThingManager.StateChanged += (o, e) => Execute.OnUIThread(() => this.SyncThingState = e.NewState);
-
-            this.Viewer.Location = "http://localhost:4567";
         }
 
         public bool CanStart
@@ -46,7 +46,7 @@ namespace SyncTrayzor.Pages
 
         public bool CanStop
         {
-            get { return this.SyncThingState == SyncThingState.Started; }
+            get { return this.SyncThingState == SyncThingState.Running; }
         }
         public void Stop()
         {
@@ -60,6 +60,15 @@ namespace SyncTrayzor.Pages
         public void Kill()
         {
             this.syncThingManager.Kill();
+        }
+
+        public bool CanOpenBrowser
+        {
+            get { return this.SyncThingState == SyncThingState.Running; }
+        }
+        public void OpenBrowser()
+        {
+            Process.Start(this.syncThingManager.Address);
         }
     }
 }

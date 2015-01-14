@@ -2,15 +2,34 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
-        Title="ShellView" Height="300" Width="300">
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        Title="ShellView" Height="700" Width="1100">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*" MinHeight="100"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Padding" Value="7,2"/>
+                    <Setter Property="Margin" Value="0,0,5,0"/>
+                </Style>
+            </StackPanel.Resources>
+            
             <TextBlock Text="{Binding ExecutablePath}"/>
             <Button Command="{s:Action Start}">Start</Button>
             <Button Command="{s:Action Stop}">Stop</Button>
             <Button Command="{s:Action Kill}">Kill</Button>
+            <Button Command="{s:Action OpenBrowser}">Open Browser</Button>
         </StackPanel>
-        <ContentControl DockPanel.Dock="Top" Height="300" s:View.Model="{Binding Viewer}"/>
-        <ContentControl DockPanel.Dock="Top" s:View.Model="{Binding Console}"/>
-    </DockPanel>
+        
+        <ContentControl Grid.Row="1" s:View.Model="{Binding Viewer}"/>
+
+        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
+
+        <ContentControl Grid.Row="3" s:View.Model="{Binding Console}" MinHeight="100"/>
+    </Grid>
 </Window>

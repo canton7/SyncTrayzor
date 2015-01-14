@@ -9,7 +9,7 @@ namespace SyncTrayzor.SyncThing
     public enum SyncThingState
     {
         Stopped,
-        Started,
+        Running,
         Stopping
     }
 }
