@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,6 +44,11 @@ namespace SyncTrayzor.Pages
                 e.Cancel = true;
                 Process.Start(e.Uri.ToString());
             }
+        }
+
+        public void ExternalWindowOpened(ExternalWindowOpenedEventArgs e)
+        {
+            Process.Start(e.Url);
         }
     }
 }
