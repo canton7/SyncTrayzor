@@ -8,6 +8,10 @@
             <s:ApplicationLoader.Bootstrapper>
                 <local:Bootstrapper/>
             </s:ApplicationLoader.Bootstrapper>
+            
+            <s:ApplicationLoader.MergedDictionaries>
+                <ResourceDictionary Source="NotifyIcon/TaskbarIconResources.xaml"/>
+            </s:ApplicationLoader.MergedDictionaries>
         </s:ApplicationLoader>
     </Application.Resources>
 </Application>
