@@ -13,6 +13,11 @@ namespace SyncTrayzor
 {
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
+        protected override void Configure()
+        {
+            Stylet.Logging.LogManager.Enabled = true;
+        }
+
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<ISyncThingApiClient>().To<SyncThingApiClient>();
@@ -21,16 +26,10 @@ namespace SyncTrayzor
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
         }
 
-        protected override void Launch()
+        protected override void OnStartup()
         {
-            // Override how launching is done
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
-            var rootViewModel = this.Container.Get<ShellViewModel>();
-            var windowManager = this.Container.Get<IWindowManager>();
-
-            notifyIconManager.Setup(rootViewModel, this.Application);
-
-            windowManager.ShowWindow(rootViewModel);
+            notifyIconManager.Setup((ShellViewModel)this.RootViewModel, this.Application);
         }
 
         protected override void OnExit(System.Windows.ExitEventArgs e)
