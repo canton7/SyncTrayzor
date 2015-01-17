@@ -17,8 +17,7 @@ namespace SyncTrayzor.NotifyIcon
 
         void Setup(IScreen rootViewModel);
 
-        void HideToTray();
-        void Show();
+        void EnsureIconVisible();
         void ShowBaloonTip(string title, string text);
     }
 
@@ -78,19 +77,11 @@ namespace SyncTrayzor.NotifyIcon
 
             this.rootViewModel.Activated += rootViewModelActivated;
             this.rootViewModel.Closed += rootViewModelClosed;
-
-            this.ShowOnlyOnClose = false;
-            this.CloseToTray = true;
         }
 
-        public void HideToTray()
+        public void EnsureIconVisible()
         {
-            this.rootViewModel.RequestClose();
-        }
-
-        public void Show()
-        {
-            this.windowManager.ShowWindow(this.rootViewModel);
+            this.viewModel.Visible = true;
         }
 
         public void ShowBaloonTip(string title, string text)

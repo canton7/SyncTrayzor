@@ -74,6 +74,15 @@ namespace SyncTrayzor.Pages
             this.syncThingManager.Kill();
         }
 
+        public bool CanRefreshBrowser
+        {
+            get { return this.SyncThingState == SyncThingState.Running; }
+        }
+        public void RefreshBrowser()
+        {
+            this.Viewer.RefreshBrowser();
+        }
+
         public bool CanOpenBrowser
         {
             get { return this.SyncThingState == SyncThingState.Running; }

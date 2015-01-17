@@ -14,17 +14,20 @@ namespace SyncTrayzor.Services
 
         private readonly INotifyIconManager notifyIconManager;
         private readonly ISyncThingManager syncThingManager;
+        private readonly AutostartProvider autostartProvider;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
             INotifyIconManager notifyIconManager,
-            ISyncThingManager syncThingManager)
+            ISyncThingManager syncThingManager,
+            AutostartProvider autostartProvider)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
 
             this.notifyIconManager = notifyIconManager;
             this.syncThingManager = syncThingManager;
+            this.autostartProvider = autostartProvider;
         }
 
         public void ApplyConfiguration()
@@ -38,6 +41,8 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
 
             this.syncThingManager.Address = configuration.SyncThingAddress;
+
+            this.autostartProvider.SetAutoStart(configuration.StartOnLogon, configuration.StartMinimized);
         }
     }
 }

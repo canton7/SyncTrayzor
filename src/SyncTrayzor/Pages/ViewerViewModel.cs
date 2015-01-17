@@ -29,17 +29,19 @@ namespace SyncTrayzor.Pages
                 this.syncThingRunning = e.NewState == SyncThingState.Running || e.NewState == SyncThingState.Stopping;
 
                 if (e.NewState == SyncThingState.Running)
-                {
-                    // Force refresh
-                    this.Location = null;
-                    this.Location = this.syncThingManager.Address;
-                }
+                    this.Refresh();
             };
+        }
+
+        public void RefreshBrowser()
+        {
+            this.Location = null;
+            this.Location = this.syncThingManager.Address;
         }
 
         public void Navigating(NavigatingCancelEventArgs e)
         {
-            if (e.Uri != new Uri(this.syncThingManager.Address))
+            if ((e.Uri.Scheme == "http" || e.Uri.Scheme == "https") && e.Uri != new Uri(this.syncThingManager.Address))
             {
                 e.Cancel = true;
                 Process.Start(e.Uri.ToString());

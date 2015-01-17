@@ -73,6 +73,9 @@ namespace SyncTrayzor.Xaml
             var wbEvents = (SHDocVw.DWebBrowserEvents_Event)webBrowserService;
             wbEvents.NewWindow += (string url, int flags, string targetFrameName, ref object postData, string headers, ref bool processed) =>
             {
+                if (processed)
+                    return;
+
                 processed = true;
                 webBrowser.RaiseEvent(new ExternalWindowOpenedEventArgs(WebBrowserUtilities.ExternalWindowOpenedEvent, url));
             };

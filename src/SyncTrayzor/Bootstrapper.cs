@@ -23,6 +23,7 @@ namespace SyncTrayzor
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
+            builder.Bind<AutostartProvider>().ToSelf().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
             builder.Bind<ISyncThingApiClient>().To<SyncThingApiClient>();
             builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>();
@@ -30,12 +31,20 @@ namespace SyncTrayzor
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
         }
 
-        protected override void OnStartup()
+        protected override void Launch()
         {
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((IScreen)this.RootViewModel);
-
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
+
+            if (this.Args.Length > 0 && this.Args[0] == "-minimized")
+                this.Container.Get<INotifyIconManager>().EnsureIconVisible();
+            else
+                base.Launch();
+
+            var config = this.Container.Get<IConfigurationProvider>().Load();
+            if (config.StartSyncThingAutomatically)
+                ((ShellViewModel)this.RootViewModel).Start();
         }
 
         protected override void OnExit(System.Windows.ExitEventArgs e)

@@ -31,7 +31,8 @@
                 <Button Command="{s:Action Start}">Start</Button>
                 <Button Command="{s:Action Stop}">Stop</Button>
                 <Button Command="{s:Action Kill}">Kill</Button>
-                <Button Command="{s:Action OpenBrowser}">Open Browser</Button>
+                <Button Command="{s:Action RefreshBrowser}">Refresh Browser</Button>
+                <Button Command="{s:Action OpenBrowser}">Open External Browser</Button>
             </StackPanel>
 
             <ContentControl Grid.Row="1" s:View.Model="{Binding Viewer}"/>

@@ -25,10 +25,32 @@ namespace SyncTrayzor.Pages
             set { this.configuration.CloseToTray = value; }
         }
 
+        public bool StartSyncThingAutomatically
+        {
+            get { return this.configuration.StartSyncThingAutomatically; }
+            set { this.configuration.StartSyncThingAutomatically = value; }
+        }
+
         public string SyncThingAddress
         {
             get { return this.configuration.SyncThingAddress; }
             set { this.configuration.SyncThingAddress = value; }
+        }
+
+        public bool StartOnLogon
+        {
+            get { return this.configuration.StartOnLogon; }
+            set
+            {
+                this.configuration.StartOnLogon = value;
+                this.NotifyOfPropertyChange(); // Needed to StartMinimized enabledness
+            }
+        }
+
+        public bool StartMinimized
+        {
+            get { return this.configuration.StartMinimized; }
+            set { this.configuration.StartMinimized = value; }
         }
 
         public SettingsViewModel(IConfigurationProvider configurationProvider)

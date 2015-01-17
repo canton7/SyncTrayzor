@@ -24,8 +24,18 @@
         
         <GroupBox DockPanel.Dock="Top" Header="SyncThing">
             <DockPanel>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start SyncThing on application start</CheckBox>
                 <TextBlock DockPanel.Dock="Top"> Address:</TextBlock>
                 <TextBox DockPanel.Dock="Top" Text="{Binding SyncThingAddress}"/>
+            </DockPanel>
+        </GroupBox>
+        
+        <GroupBox DockPanel.Dock="Top" Header="Autostart">
+            <DockPanel>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartOnLogon}">Automatically start on login</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartMinimized}" IsEnabled="{Binding StartOnLogon}">
+                    Start Minimized
+                </CheckBox>
             </DockPanel>
         </GroupBox>
        
