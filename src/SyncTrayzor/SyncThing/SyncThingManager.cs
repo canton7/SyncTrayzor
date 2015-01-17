@@ -30,23 +30,8 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
 
-        public string ExecutablePath
-        {
-            get { return this.processRunner.ExecutablePath; }
-            set { this.processRunner.ExecutablePath = value; }
-        }
-
-        private string _address;
-        public string Address
-        {
-            get { return this._address; }
-            set
-            {
-                this._address = value;
-                this.apiClient.BaseAddress = new Uri(this._address);
-                this.processRunner.HostAddress = this._address;
-            }
-        }
+        public string ExecutablePath { get; set; }
+        public string Address { get; set; }
 
         public SyncThingManager(ISyncThingProcessRunner processRunner, ISyncThingApiClient apiClient)
         {
@@ -63,6 +48,10 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
+            this.apiClient.BaseAddress = new Uri(this.Address);
+            this.processRunner.HostAddress = this.Address;
+            this.processRunner.ExecutablePath = this.ExecutablePath;
+
             this.processRunner.Start();
             this.SetState(SyncThingState.Running);
         }

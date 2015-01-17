@@ -1,0 +1,43 @@
+﻿<Window x:Class="SyncTrayzor.Pages.SettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:pages="clr-namespace:SyncTrayzor.Pages"
+        mc:Ignorable="d" 
+        d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
+        Title="SettingsView" Height="300" Width="300">
+    <DockPanel Margin="10">
+        <DockPanel.Resources>
+            <Style TargetType="GroupBox">
+                <Setter Property="Padding" Value="5"/>
+            </Style>    
+        </DockPanel.Resources>
+        
+        <GroupBox DockPanel.Dock="Top" Header="Tray Icon">
+            <DockPanel>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}">Show Tray Icon only on close</CheckBox>
+            </DockPanel>
+        </GroupBox>
+        
+        <GroupBox DockPanel.Dock="Top" Header="SyncThing">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"> Address:</TextBlock>
+                <TextBox DockPanel.Dock="Top" Text="{Binding SyncThingAddress}"/>
+            </DockPanel>
+        </GroupBox>
+       
+        <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="75"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" IsDefault="True" Command="{s:Action Save}">Save</Button>
+            <Button Grid.Column="2" IsCancel="True" Command="{s:Action Cancel}">Cancel</Button>
+        </Grid>
+    </DockPanel>
+</Window>

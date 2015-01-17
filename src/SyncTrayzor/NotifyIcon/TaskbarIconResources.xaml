@@ -2,10 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="https://github.com/canton7/Stylet"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
+    
+    <BitmapImage x:Key="TaskbarIdleIcon" UriSource="Icons/idle.ico"/>
+    
     <tb:TaskbarIcon x:Key="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                     DoubleClickCommand="{s:Action DoubleClick}"
-                    MenuActivation="LeftOrRightClick">
+                    MenuActivation="RightClick"
+                    IconSource="{StaticResource TaskbarIdleIcon}">
         <tb:TaskbarIcon.ContextMenu>
             <!-- Attached properties aren't inherited to ContextMenus -->
             <ContextMenu s:View.ActionTarget="{Binding}">

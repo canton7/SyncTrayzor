@@ -78,11 +78,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Pages\SettingsViewModel.cs" />
+    <Compile Include="Services\Configuration.cs" />
+    <Compile Include="Services\ConfigurationApplicator.cs" />
+    <Compile Include="Services\ConfigurationProvider.cs" />
     <Compile Include="NotifyIcon\NotifyIconManager.cs" />
     <Compile Include="NotifyIcon\NotifyIconViewModel.cs" />
     <Compile Include="Pages\ConsoleViewModel.cs" />
     <Compile Include="Pages\ViewerViewModel.cs" />
     <Compile Include="RefitStubs.cs" />
+    <Compile Include="Services\ApplicationState.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingApi.cs" />
     <Compile Include="SyncThing\SyncThingApiClient.cs" />
@@ -132,6 +137,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,6 +163,10 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="NotifyIcon\Icons\idle.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

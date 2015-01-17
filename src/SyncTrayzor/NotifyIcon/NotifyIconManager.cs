@@ -1,5 +1,6 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
+using SyncTrayzor.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace SyncTrayzor.NotifyIcon
     public interface INotifyIconManager
     {
         bool ShowOnlyOnClose { get; set; }
+        bool CloseToTray { get; set; }
 
-        void Setup(IScreen rootViewModel, Application application);
+        void Setup(IScreen rootViewModel);
 
         void HideToTray();
         void Show();
@@ -25,9 +27,9 @@ namespace SyncTrayzor.NotifyIcon
         private readonly IWindowManager windowManager;
         private readonly IViewManager viewManager;
         private readonly NotifyIconViewModel viewModel;
+        private readonly IApplicationState application;
 
         private IScreen rootViewModel;
-        private Application application;
         private TaskbarIcon taskbarIcon;
 
         private bool _showOnlyOnClose;
@@ -52,24 +54,24 @@ namespace SyncTrayzor.NotifyIcon
             }
         }
 
-        public NotifyIconManager(IWindowManager windowManager, IViewManager viewManager, NotifyIconViewModel viewModel)
+        public NotifyIconManager(IWindowManager windowManager, IViewManager viewManager, NotifyIconViewModel viewModel, IApplicationState application)
         {
             this.windowManager = windowManager;
             this.viewManager = viewManager;
             this.viewModel = viewModel;
+            this.application = application;
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
-                if (this.application.MainWindow == null)
+                if (!this.application.HasMainWindow)
                     this.windowManager.ShowWindow(this.rootViewModel);
             };
-            this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
+            this.viewModel.ExitRequested += (o, e) => this.rootViewModel.RequestClose();
         }
 
-        public void Setup(IScreen rootViewModel, Application application)
+        public void Setup(IScreen rootViewModel)
         {
             this.rootViewModel = rootViewModel;
-            this.application = application;
 
             this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
             this.viewManager.BindViewToModel(this.taskbarIcon, this.viewModel);
