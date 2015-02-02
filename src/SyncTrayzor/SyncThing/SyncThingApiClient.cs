@@ -1,4 +1,5 @@
 ﻿using Refit;
+using SyncTrayzor.SyncThing.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,28 +11,24 @@ namespace SyncTrayzor.SyncThing
 {
     public interface ISyncThingApiClient
     {
-        string ApiKey { get; set; }
-        Uri BaseAddress { get; set; }
+        void SetConnectionDetails(Uri baseAddress, string apiKey);
 
         Task ShutdownAsync();
+        Task<List<Event>> FetchEventsAsync(int since, int? limit = null);
     }
 
     public class SyncThingApiClient : ISyncThingApiClient
     {
-        private readonly HttpClient httpClient;
-        private readonly ISyncThingApi api;
+        private ISyncThingApi api;
 
-        public string ApiKey { get; set; }
-        public Uri BaseAddress
+        public void SetConnectionDetails(Uri baseAddress, string apiKey)
         {
-            get { return this.httpClient.BaseAddress; }
-            set { this.httpClient.BaseAddress = value; }
-        }
-
-        public SyncThingApiClient()
-        {
-            this.httpClient = new HttpClient(new AuthenticatedHttpClientHandler(() => this.ApiKey));
-            this.api = RestService.For<ISyncThingApi>(this.httpClient);
+            var httpClient = new HttpClient(new AuthenticatedHttpClientHandler(apiKey))
+            {
+                BaseAddress = baseAddress,
+                Timeout = TimeSpan.FromSeconds(70),
+            };
+            this.api = RestService.For<ISyncThingApi>(httpClient);
         }
 
         public Task ShutdownAsync()
@@ -40,24 +37,32 @@ namespace SyncTrayzor.SyncThing
             return this.api.ShutdownAsync();
         }
 
+        public Task<List<Event>> FetchEventsAsync(int since, int? limit)
+        {
+            if (limit == null)
+                return this.api.FetchEventsAsync(since);
+            else
+                return this.api.FetchEventsLimitAsync(since, limit.Value);
+        }
+
         private void EnsureSetup()
         {
-            if (this.BaseAddress == null)
-                throw new InvalidOperationException("BaseAddress not set");
+            if (this.api == null)
+                throw new InvalidOperationException("SetConnectionDetails not called");
         }
 
         private class AuthenticatedHttpClientHandler : HttpClientHandler
         {
-            private readonly Func<string> apiKey;
+            private readonly string apiKey;
 
-            public AuthenticatedHttpClientHandler(Func<string> apiKey)
+            public AuthenticatedHttpClientHandler(string apiKey)
             {
                 this.apiKey = apiKey;
             }
 
             protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
             {
-                request.Headers.Add("X-API-Key", this.apiKey());
+                request.Headers.Add("X-API-Key", this.apiKey);
                 return base.SendAsync(request, cancellationToken);
             }
         }

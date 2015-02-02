@@ -25,6 +25,8 @@ namespace SyncTrayzor.SyncThing
     {
         private readonly ISyncThingProcessRunner processRunner;
         private readonly ISyncThingApiClient apiClient;
+        private readonly ISyncThingEventWatcher eventWatcher;
+        private readonly string apiKey;
 
         public SyncThingState State { get; private set; }
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
@@ -33,22 +35,25 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string Address { get; set; }
 
-        public SyncThingManager(ISyncThingProcessRunner processRunner, ISyncThingApiClient apiClient)
+        public SyncThingManager(
+            ISyncThingProcessRunner processRunner,
+            ISyncThingApiClient apiClient,
+            ISyncThingEventWatcher eventWatcher)
         {
             this.processRunner = processRunner;
             this.apiClient = apiClient;
+            this.eventWatcher = eventWatcher;
 
             this.processRunner.ProcessStopped += (o, e) => this.SetState(SyncThingState.Stopped);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
 
-            var apiKey = "abc123";
-            this.apiClient.ApiKey = apiKey;
+            this.apiKey = "abc123";
             this.processRunner.ApiKey = apiKey;
         }
 
         public void Start()
         {
-            this.apiClient.BaseAddress = new Uri(this.Address);
+            this.apiClient.SetConnectionDetails(new Uri(this.Address), this.apiKey);
             this.processRunner.HostAddress = this.Address;
             this.processRunner.ExecutablePath = this.ExecutablePath;
 
@@ -76,9 +81,16 @@ namespace SyncTrayzor.SyncThing
             var oldState = this.State;
             this.State = state;
 
+            this.UpdateEventWatcherState(this.State);
+
             var handler = this.StateChanged;
             if (handler != null)
                 handler(this, new SyncThingStateChangedEventArgs(oldState, state));
+        }
+
+        private void UpdateEventWatcherState(SyncThingState state)
+        {
+            this.eventWatcher.Running = (state == SyncThingState.Running);
         }
 
         private void OnMessageLogged(string logMessage)

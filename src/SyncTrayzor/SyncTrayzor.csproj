@@ -89,9 +89,15 @@
     <Compile Include="Pages\ViewerViewModel.cs" />
     <Compile Include="RefitStubs.cs" />
     <Compile Include="Services\ApplicationState.cs" />
+    <Compile Include="SyncThing\Api\Event.cs" />
+    <Compile Include="SyncThing\Api\EventConverter.cs" />
+    <Compile Include="SyncThing\Api\EventType.cs" />
+    <Compile Include="SyncThing\Api\GenericEvent.cs" />
+    <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncThingApi.cs" />
+    <Compile Include="SyncThing\Api\SyncThingApi.cs" />
     <Compile Include="SyncThing\SyncThingApiClient.cs" />
+    <Compile Include="SyncThing\SyncThingEventWatcher.cs" />
     <Compile Include="SyncThing\SyncThingManager.cs" />
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />

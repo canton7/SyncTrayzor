@@ -25,8 +25,9 @@ namespace SyncTrayzor
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<AutostartProvider>().ToSelf().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
-            builder.Bind<ISyncThingApiClient>().To<SyncThingApiClient>();
-            builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>();
+            builder.Bind<ISyncThingApiClient>().To<SyncThingApiClient>().InSingletonScope();
+            builder.Bind<ISyncThingEventWatcher>().To<SyncThingEventWatcher>().InSingletonScope();
+            builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
             builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
         }
