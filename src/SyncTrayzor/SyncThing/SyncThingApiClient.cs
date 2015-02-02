@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using Newtonsoft.Json;
+using Refit;
 using SyncTrayzor.SyncThing.Api;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,13 @@ namespace SyncTrayzor.SyncThing
                 BaseAddress = baseAddress,
                 Timeout = TimeSpan.FromSeconds(70),
             };
-            this.api = RestService.For<ISyncThingApi>(httpClient);
+            this.api = RestService.For<ISyncThingApi>(httpClient, new RefitSettings()
+            {
+                JsonSerializerSettings = new JsonSerializerSettings()
+                {
+                    Converters = { new EventConverter() }
+                },
+            });
         }
 
         public Task ShutdownAsync()

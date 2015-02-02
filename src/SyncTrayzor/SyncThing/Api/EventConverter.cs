@@ -10,7 +10,13 @@ namespace SyncTrayzor.SyncThing.Api
 {
     public class EventConverter : JsonCreationConverter<Event>
     {
-        private static readonly Dictionary<EventType, Type> eventTypes = new Dictionary<EventType, Type>();
+        private static readonly Dictionary<EventType, Type> eventTypes = new Dictionary<EventType, Type>()
+        {
+            { EventType.RemoteIndexUpdated, typeof(RemoteIndexUpdatedEvent) },
+            { EventType.LocalIndexUpdated, typeof(LocalIndexUpdatedEvent) },
+            { EventType.ItemStarted, typeof(ItemStartedEvent) },
+            { EventType.StateChanged, typeof(StateChangedEvent) }
+        };
 
         protected override Event Create(Type objectType, JObject jObject)
         {

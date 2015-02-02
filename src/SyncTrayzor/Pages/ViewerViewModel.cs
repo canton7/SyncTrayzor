@@ -29,7 +29,7 @@ namespace SyncTrayzor.Pages
                 this.syncThingRunning = e.NewState == SyncThingState.Running || e.NewState == SyncThingState.Stopping;
 
                 if (e.NewState == SyncThingState.Running)
-                    this.Refresh();
+                    this.RefreshBrowser();
             };
         }
 

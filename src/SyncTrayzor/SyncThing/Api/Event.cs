@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.Api
 {
-    [JsonConverter(typeof(EventConverter))]
     public abstract class Event
     {
         [JsonProperty("id")]

@@ -19,12 +19,14 @@ namespace SyncTrayzor.SyncThing.Api
         /// <param name="jObject">contents of JSON object that will be deserialized</param>
         protected abstract T Create(Type objectType, JObject jObject);
 
+        protected bool AllowSubtype { get; set; }
+
         /// <summary>Determines if this converted is designed to deserialization to objects of the specified type.</summary>
         /// <param name="objectType">The target type for deserialization.</param>
         /// <returns>True if the type is supported.</returns>
         public override bool CanConvert(Type objectType)
         {
-            return typeof(T).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
+            return this.AllowSubtype ? typeof(T).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()) : typeof(T) == objectType;
         }
 
         /// <summary>Parses the json to the specified type.</summary>

@@ -93,7 +93,11 @@
     <Compile Include="SyncThing\Api\EventConverter.cs" />
     <Compile Include="SyncThing\Api\EventType.cs" />
     <Compile Include="SyncThing\Api\GenericEvent.cs" />
+    <Compile Include="SyncThing\Api\ItemStartedEvent.cs" />
     <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />
+    <Compile Include="SyncThing\Api\LocalIndexUpdatedEvent.cs" />
+    <Compile Include="SyncThing\Api\RemoteIndexUpdatedEvent.cs" />
+    <Compile Include="SyncThing\Api\StateChangedEvent.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
     <Compile Include="SyncThing\Api\SyncThingApi.cs" />
     <Compile Include="SyncThing\SyncThingApiClient.cs" />
