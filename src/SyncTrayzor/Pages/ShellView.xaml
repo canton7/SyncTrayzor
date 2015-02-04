@@ -7,7 +7,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Settings" Command="{s:Action ShowSettings}"/>
-                <MenuItem Header="_Exit" Command="{s:Action Exit}"/>
+                <MenuItem Header="_Exit" Command="{s:Action Shutdown}"/>
             </MenuItem>
         </Menu>
         

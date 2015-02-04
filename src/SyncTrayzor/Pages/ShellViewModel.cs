@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Pages
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : Screen, INotifyIconDelegate
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
@@ -97,20 +98,19 @@ namespace SyncTrayzor.Pages
             var vm = this.settingsViewModelFactory();
             this.windowManager.ShowDialog(vm);
         }
-        
-        public void Minimize()
-        {
-            base.RequestClose();
-        }
 
-        public void Exit()
+        public void CloseToTray()
         {
             this.RequestClose();
         }
 
-        public override void RequestClose(bool? dialogResult = null)
+        public void RestoreFromTray()
         {
-            // We can't use the normal channel here, since the application might be set to exit only on explitic shutdown
+            this.windowManager.ShowWindow(this);
+        }
+
+        public void Shutdown()
+        {
             this.application.Shutdown();
         }
     }

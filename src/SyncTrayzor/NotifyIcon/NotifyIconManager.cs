@@ -1,6 +1,5 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
-using SyncTrayzor.Pages;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using System;
@@ -17,20 +16,19 @@ namespace SyncTrayzor.NotifyIcon
         bool ShowOnlyOnClose { get; set; }
         bool CloseToTray { get; set; }
 
-        void Setup(ShellViewModel rootViewModel);
+        void Setup(INotifyIconDelegate rootViewModel);
 
         void EnsureIconVisible();
     }
 
     public class NotifyIconManager : INotifyIconManager
     {
-        private readonly IWindowManager windowManager;
         private readonly IViewManager viewManager;
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
         private readonly ISyncThingManager syncThingManager;
 
-        private ShellViewModel rootViewModel;
+        private INotifyIconDelegate rootViewModel;
         private TaskbarIcon taskbarIcon;
 
         private bool _showOnlyOnClose;
@@ -56,27 +54,23 @@ namespace SyncTrayzor.NotifyIcon
         }
 
         public NotifyIconManager(
-            IWindowManager windowManager,
             IViewManager viewManager,
             NotifyIconViewModel viewModel,
             IApplicationState application,
             ISyncThingManager syncThingManager)
         {
-            this.windowManager = windowManager;
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
             this.syncThingManager = syncThingManager;
 
-            this.viewModel.MainWindowVisible = true;
-
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
                 if (!this.application.HasMainWindow)
-                    this.windowManager.ShowWindow(this.rootViewModel);
+                    this.rootViewModel.RestoreFromTray();
             };
-            this.viewModel.WindowCloseRequested += (o, e) => this.rootViewModel.Minimize();
-            this.viewModel.ExitRequested += (o, e) => this.rootViewModel.RequestClose();
+            this.viewModel.WindowCloseRequested += (o, e) => this.rootViewModel.CloseToTray();
+            this.viewModel.ExitRequested += (o, e) => this.rootViewModel.Shutdown();
 
             this.syncThingManager.SyncStateChanged += (o, e) =>
             {
@@ -87,7 +81,7 @@ namespace SyncTrayzor.NotifyIcon
             };
         }
 
-        public void Setup(ShellViewModel rootViewModel)
+        public void Setup(INotifyIconDelegate rootViewModel)
         {
             this.rootViewModel = rootViewModel;
 
