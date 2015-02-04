@@ -15,7 +15,8 @@ namespace SyncTrayzor.SyncThing.Api
             { EventType.RemoteIndexUpdated, typeof(RemoteIndexUpdatedEvent) },
             { EventType.LocalIndexUpdated, typeof(LocalIndexUpdatedEvent) },
             { EventType.ItemStarted, typeof(ItemStartedEvent) },
-            { EventType.StateChanged, typeof(StateChangedEvent) }
+            { EventType.StateChanged, typeof(StateChangedEvent) },
+            { EventType.StartupComplete, typeof(StartupCompleteEvent) }
         };
 
         protected override Event Create(Type objectType, JObject jObject)

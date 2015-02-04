@@ -43,6 +43,7 @@ namespace SyncTrayzor.Pages
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
 
+            this.syncThingManager.ExecutablePath = "syncthing.exe"; // TEMP
             this.syncThingManager.StateChanged += (o, e) => Execute.OnUIThread(() => this.SyncThingState = e.NewState);
         }
 
@@ -52,7 +53,6 @@ namespace SyncTrayzor.Pages
         }
         public void Start()
         {
-            this.syncThingManager.ExecutablePath = "syncthing.exe"; // TEMP
             this.syncThingManager.Start();
         }
 
@@ -96,6 +96,11 @@ namespace SyncTrayzor.Pages
         {
             var vm = this.settingsViewModelFactory();
             this.windowManager.ShowDialog(vm);
+        }
+        
+        public void Minimize()
+        {
+            base.RequestClose();
         }
 
         public void Exit()

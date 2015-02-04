@@ -14,6 +14,7 @@ namespace SyncTrayzor.SyncThing
         bool Running { get; set; }
         SyncState SyncState { get; }
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
+        event EventHandler StartupComplete;
     }
 
     public class SyncThingEventWatcher : ISyncThingEventWatcher, IEventVisitor
@@ -38,10 +39,12 @@ namespace SyncTrayzor.SyncThing
 
         public SyncState SyncState { get; private set; }
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
+        public event EventHandler StartupComplete;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
         {
             this.apiClient = apiClient;
+            this.SyncState = SyncThing.SyncState.Idle;
         }
 
         private async void Start()
@@ -92,6 +95,13 @@ namespace SyncTrayzor.SyncThing
                 handler(this, new SyncStateChangedEventArgs(oldState, syncState));
         }
 
+        private void OnStartupComplete()
+        {
+            var handler = this.StartupComplete;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         #region IEventVisitor
 
         public void Accept(GenericEvent evt)
@@ -114,6 +124,11 @@ namespace SyncTrayzor.SyncThing
 
         public void Accept(ItemStartedEvent evt)
         {
+        }
+
+        public void Accept(StartupCompleteEvent evt)
+        {
+            this.OnStartupComplete();
         }
 
         #endregion

@@ -89,6 +89,7 @@
     <Compile Include="Pages\ViewerViewModel.cs" />
     <Compile Include="RefitStubs.cs" />
     <Compile Include="Services\ApplicationState.cs" />
+    <Compile Include="SyncThing\Api\Config.cs" />
     <Compile Include="SyncThing\Api\Event.cs" />
     <Compile Include="SyncThing\Api\EventConverter.cs" />
     <Compile Include="SyncThing\Api\EventType.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />
     <Compile Include="SyncThing\Api\LocalIndexUpdatedEvent.cs" />
     <Compile Include="SyncThing\Api\RemoteIndexUpdatedEvent.cs" />
+    <Compile Include="SyncThing\Api\StartupCompleteEvent.cs" />
     <Compile Include="SyncThing\Api\StateChangedEvent.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
     <Compile Include="SyncThing\Api\SyncThingApi.cs" />

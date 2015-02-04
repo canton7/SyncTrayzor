@@ -35,7 +35,7 @@ namespace SyncTrayzor
         protected override void Launch()
         {
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
-            notifyIconManager.Setup((IScreen)this.RootViewModel);
+            notifyIconManager.Setup((ShellViewModel)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
             if (this.Args.Length > 0 && this.Args[0] == "-minimized")

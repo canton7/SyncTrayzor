@@ -13,7 +13,18 @@
         <tb:TaskbarIcon.ContextMenu>
             <!-- Attached properties aren't inherited to ContextMenus -->
             <ContextMenu s:View.ActionTarget="{Binding}">
+                <ContextMenu.Resources>
+                    <s:BoolToVisibilityConverter x:Key="RestoreVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+                </ContextMenu.Resources>
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
+                <MenuItem Header="Restore" Command="{s:Action Restore, ActionNotFound=Disable}"
+                          Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
+                <MenuItem Header="Minimize" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                          Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                
+                <MenuItem Header="Start" Command="{s:Action Start, ActionNotFound=Disable}"/>
+                <MenuItem Header="Stop" Command="{s:Action Stop, ActionNotFound=Disable}"/>
+                
                 <MenuItem Header="Exit" Command="{s:Action Exit, ActionNotFound=Disable}"/>
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>

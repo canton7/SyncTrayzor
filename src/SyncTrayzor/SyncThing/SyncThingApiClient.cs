@@ -16,6 +16,7 @@ namespace SyncTrayzor.SyncThing
 
         Task ShutdownAsync();
         Task<List<Event>> FetchEventsAsync(int since, int? limit = null);
+        Task<Config> FetchConfigAsync();
     }
 
     public class SyncThingApiClient : ISyncThingApiClient
@@ -46,10 +47,17 @@ namespace SyncTrayzor.SyncThing
 
         public Task<List<Event>> FetchEventsAsync(int since, int? limit)
         {
+            this.EnsureSetup();
             if (limit == null)
                 return this.api.FetchEventsAsync(since);
             else
                 return this.api.FetchEventsLimitAsync(since, limit.Value);
+        }
+
+        public Task<Config> FetchConfigAsync()
+        {
+            this.EnsureSetup();
+            return this.api.FetchConfigAsync();
         }
 
         private void EnsureSetup()

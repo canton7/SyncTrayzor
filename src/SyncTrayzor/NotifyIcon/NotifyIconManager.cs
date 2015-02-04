@@ -1,5 +1,6 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
+using SyncTrayzor.Pages;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using System;
@@ -16,7 +17,7 @@ namespace SyncTrayzor.NotifyIcon
         bool ShowOnlyOnClose { get; set; }
         bool CloseToTray { get; set; }
 
-        void Setup(IScreen rootViewModel);
+        void Setup(ShellViewModel rootViewModel);
 
         void EnsureIconVisible();
     }
@@ -29,7 +30,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly IApplicationState application;
         private readonly ISyncThingManager syncThingManager;
 
-        private IScreen rootViewModel;
+        private ShellViewModel rootViewModel;
         private TaskbarIcon taskbarIcon;
 
         private bool _showOnlyOnClose;
@@ -67,11 +68,14 @@ namespace SyncTrayzor.NotifyIcon
             this.application = application;
             this.syncThingManager = syncThingManager;
 
+            this.viewModel.MainWindowVisible = true;
+
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
                 if (!this.application.HasMainWindow)
                     this.windowManager.ShowWindow(this.rootViewModel);
             };
+            this.viewModel.WindowCloseRequested += (o, e) => this.rootViewModel.Minimize();
             this.viewModel.ExitRequested += (o, e) => this.rootViewModel.RequestClose();
 
             this.syncThingManager.SyncStateChanged += (o, e) =>
@@ -83,7 +87,7 @@ namespace SyncTrayzor.NotifyIcon
             };
         }
 
-        public void Setup(IScreen rootViewModel)
+        public void Setup(ShellViewModel rootViewModel)
         {
             this.rootViewModel = rootViewModel;
 
@@ -101,12 +105,14 @@ namespace SyncTrayzor.NotifyIcon
 
         private void rootViewModelActivated(object sender, ActivationEventArgs e)
         {
+            this.viewModel.MainWindowVisible = true;
             if (this.ShowOnlyOnClose)
                 this.viewModel.Visible = false;
         }
 
         private void rootViewModelClosed(object sender, CloseEventArgs e)
         {
+            this.viewModel.MainWindowVisible = false;
             if (this.ShowOnlyOnClose)
                 this.viewModel.Visible = true;
         }

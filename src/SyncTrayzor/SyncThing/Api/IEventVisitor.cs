@@ -13,5 +13,6 @@ namespace SyncTrayzor.SyncThing.Api
         void Accept(LocalIndexUpdatedEvent evt);
         void Accept(StateChangedEvent evt);
         void Accept(ItemStartedEvent evt);
+        void Accept(StartupCompleteEvent evt);
     }
 }

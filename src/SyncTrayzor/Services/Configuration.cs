@@ -20,7 +20,7 @@ namespace SyncTrayzor.Services
         public Configuration()
         {
             this.ShowTrayIconOnlyOnClose = false;
-            this.CloseToTray = false;
+            this.CloseToTray = true;
             this.SyncThingAddress = "http://localhost:4567";
             this.StartOnLogon = false;
             this.StartMinimized = true;
