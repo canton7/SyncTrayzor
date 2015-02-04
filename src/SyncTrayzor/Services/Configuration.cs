@@ -31,18 +31,15 @@ namespace SyncTrayzor.Services
             this.WatchedFolders = new List<string>();
         }
 
-        public Configuration Clone()
+        public Configuration(Configuration other)
         {
-            return new Configuration()
-            {
-                ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose,
-                CloseToTray = this.CloseToTray,
-                SyncThingAddress = this.SyncThingAddress,
-                StartOnLogon = this.StartOnLogon,
-                StartMinimized = this.StartMinimized,
-                StartSyncThingAutomatically = this.StartSyncThingAutomatically,
-                WatchedFolders = this.WatchedFolders.ToList(),
-            };
+            this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
+            this.CloseToTray = other.CloseToTray;
+            this.SyncThingAddress = other.SyncThingAddress;
+            this.StartOnLogon = other.StartOnLogon;
+            this.StartMinimized = other.StartMinimized;
+            this.StartSyncThingAutomatically = other.StartSyncThingAutomatically;
+            this.WatchedFolders = other.WatchedFolders.ToList();
         }
     }
 }

@@ -56,8 +56,8 @@ namespace SyncTrayzor.Services
         {
             if (this.currentConfig == null)
                 this.currentConfig = this.LoadFromDisk();
-            
-            return this.currentConfig.Clone();
+
+            return new Configuration(this.currentConfig);
         }
 
         public void Save(Configuration config)
