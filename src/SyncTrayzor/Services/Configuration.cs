@@ -7,6 +7,28 @@ using System.Xml.Serialization;
 
 namespace SyncTrayzor.Services
 {
+    public class FolderConfiguration
+    {
+        public string ID { get; set; }
+        public bool IsWatched { get; set; }
+
+        public FolderConfiguration()
+        { }
+
+        public FolderConfiguration(string id, bool isWatched)
+        {
+            this.ID = id;
+            this.IsWatched = isWatched;
+        }
+
+        public FolderConfiguration(FolderConfiguration other)
+        {
+            this.ID = other.ID;
+            this.IsWatched = other.IsWatched;
+        }
+    }
+
+
     [XmlRoot("Configuration")]
     public class Configuration
     {
@@ -16,9 +38,8 @@ namespace SyncTrayzor.Services
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
         public bool StartSyncThingAutomatically { get; set; }
-
-        [XmlArrayItem("WatchedFolder")]
-        public List<string> WatchedFolders { get; set; }
+        [XmlArrayItem("Folder")]
+        public List<FolderConfiguration> Folders { get; set; }
 
         public Configuration()
         {
@@ -28,7 +49,7 @@ namespace SyncTrayzor.Services
             this.StartOnLogon = false;
             this.StartMinimized = true;
             this.StartSyncThingAutomatically = true;
-            this.WatchedFolders = new List<string>();
+            this.Folders = new List<FolderConfiguration>();
         }
 
         public Configuration(Configuration other)
@@ -39,7 +60,7 @@ namespace SyncTrayzor.Services
             this.StartOnLogon = other.StartOnLogon;
             this.StartMinimized = other.StartMinimized;
             this.StartSyncThingAutomatically = other.StartSyncThingAutomatically;
-            this.WatchedFolders = other.WatchedFolders.ToList();
+            this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
         }
     }
 }

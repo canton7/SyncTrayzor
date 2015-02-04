@@ -129,7 +129,7 @@ namespace SyncTrayzor.SyncThing
         private void OnSyncStateChanged(SyncStateChangedEventArgs e)
         {
             // There's a 'synced' event straight after starting - ignore it
-            if (DateTime.UtcNow - this.startedAt < TimeSpan.FromSeconds(30))
+            if (DateTime.UtcNow - this.startedAt < TimeSpan.FromSeconds(60))
                 return;
 
             var handler = this.SyncStateChanged;
