@@ -50,36 +50,48 @@ namespace SyncTrayzor.SyncThing
         private async void Start()
         {
             this.lastEventId = 0;
-
-            while (this._running)
+            try
             {
-                bool errored = false;
-
-                try
+                while (this._running)
                 {
-                    var events = await this.apiClient.FetchEventsAsync(this.lastEventId);
-                    foreach (var evt in events)
+                    bool errored = false;
+
+                    try
                     {
-                        this.lastEventId = Math.Max(this.lastEventId, evt.Id);
-                        System.Diagnostics.Debug.WriteLine(evt);
-                        evt.Visit(this);
+                        List<Event> events;
+                        // If we don't know what the latest event ID is (disconnection? new connection?), make sure we find out
+                        if (this.lastEventId == 0)
+                            events = await this.apiClient.FetchEventsAsync(0, 1);
+                        else
+                            events = await this.apiClient.FetchEventsAsync(this.lastEventId);
+
+                        foreach (var evt in events)
+                        {
+                            this.lastEventId = Math.Max(this.lastEventId, evt.Id);
+                            System.Diagnostics.Debug.WriteLine(evt);
+                            evt.Visit(this);
+                        }
                     }
-                }
-                catch (HttpRequestException)
-                {
-                    errored = true;
-                }
-                catch (IOException)
-                {
-                    // Socket forcibly closed
-                    break;
-                }
+                    catch (HttpRequestException)
+                    {
+                        errored = true;
+                    }
+                    catch (IOException)
+                    {
+                        // Socket forcibly closed. Could be a restart, could be a termination. We'll have to continue and quit if we're stopped
+                        // A restart means the lastEventId will be reset
+                        this.lastEventId = 0;
+                        errored = true;
+                    }
 
-                if (errored)
-                    await Task.Delay(1000);
+                    if (errored)
+                        await Task.Delay(1000);
+                }
             }
-
-            this._running = false;
+            finally
+            {
+                this._running = false;
+            }
         }
 
         private void OnSyncStateChanged(SyncState syncState)
