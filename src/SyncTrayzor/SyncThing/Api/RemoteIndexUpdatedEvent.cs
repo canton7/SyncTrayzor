@@ -24,6 +24,11 @@ namespace SyncTrayzor.SyncThing.Api
         [JsonProperty("data")]
         public RemoteIndexUpdatedEventData Data { get; set; }
 
+        public override void Visit(IEventVisitor visitor)
+        {
+            visitor.Accept(this);
+        }
+
         public override string ToString()
         {
             return String.Format("<RemoteIndexUpdatedEvent ID={0} Time={1} Device={2} Folder={3} Items={4}>", this.Id, this.Time, this.Data.Device, this.Data.Folder, this.Data.Items);

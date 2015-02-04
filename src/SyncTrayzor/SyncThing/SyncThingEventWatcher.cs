@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyncTrayzor.SyncThing.Api;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace SyncTrayzor.SyncThing
     public interface ISyncThingEventWatcher
     {
         bool Running { get; set; }
+        SyncState SyncState { get; }
+        event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
     }
 
-    public class SyncThingEventWatcher : ISyncThingEventWatcher
+    public class SyncThingEventWatcher : ISyncThingEventWatcher, IEventVisitor
     {
         private readonly ISyncThingApiClient apiClient;
 
@@ -32,6 +35,9 @@ namespace SyncTrayzor.SyncThing
                 }
             }
         }
+
+        public SyncState SyncState { get; private set; }
+        public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
         {
@@ -53,6 +59,7 @@ namespace SyncTrayzor.SyncThing
                     {
                         this.lastEventId = Math.Max(this.lastEventId, evt.Id);
                         System.Diagnostics.Debug.WriteLine(evt);
+                        evt.Visit(this);
                     }
                 }
                 catch (HttpRequestException)
@@ -71,5 +78,44 @@ namespace SyncTrayzor.SyncThing
 
             this._running = false;
         }
+
+        private void OnSyncStateChanged(SyncState syncState)
+        {
+            if (syncState == this.SyncState)
+                return;
+
+            var oldState = this.SyncState;
+            this.SyncState = syncState;
+
+            var handler = this.SyncStateChanged;
+            if (handler != null)
+                handler(this, new SyncStateChangedEventArgs(oldState, syncState));
+        }
+
+        #region IEventVisitor
+
+        public void Accept(GenericEvent evt)
+        {
+        }
+
+        public void Accept(RemoteIndexUpdatedEvent evt)
+        {
+        }
+
+        public void Accept(LocalIndexUpdatedEvent evt)
+        {
+        }
+
+        public void Accept(StateChangedEvent evt)
+        {
+            var state = evt.Data.To == "syncing" ? SyncState.Syncing : SyncState.Idle;
+            this.OnSyncStateChanged(state);
+        }
+
+        public void Accept(ItemStartedEvent evt)
+        {
+        }
+
+        #endregion
     }
 }

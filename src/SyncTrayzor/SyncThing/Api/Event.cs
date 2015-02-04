@@ -17,5 +17,7 @@ namespace SyncTrayzor.SyncThing.Api
 
         [JsonProperty("time")]
         public DateTime Time { get; set; }
+
+        public abstract void Visit(IEventVisitor visitor);
     }
 }

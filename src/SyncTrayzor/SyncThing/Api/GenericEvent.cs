@@ -8,6 +8,11 @@ namespace SyncTrayzor.SyncThing.Api
 {
     public class GenericEvent : Event
     {
+        public override void Visit(IEventVisitor visitor)
+        {
+            visitor.Accept(this);
+        }
+
         public override string ToString()
         {
             return String.Format("<GenericEvent ID={0} Type={1} Time={2}>", this.Id, this.Type, this.Time);

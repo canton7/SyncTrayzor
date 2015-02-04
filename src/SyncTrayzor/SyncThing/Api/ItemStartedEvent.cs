@@ -21,6 +21,11 @@ namespace SyncTrayzor.SyncThing.Api
         [JsonProperty("data")]
         public ItemStartedEventData Data { get; set; }
 
+        public override void Visit(IEventVisitor visitor)
+        {
+            visitor.Accept(this);
+        }
+
         public override string ToString()
         {
             return String.Format("<ItemStarted ID={0} Time={1} Item={2} Folder={3}>", this.Id, this.Time, this.Data.Item, this.Data.Folder);

@@ -33,6 +33,11 @@ namespace SyncTrayzor.SyncThing.Api
         [JsonProperty("data")]
         public StateChangedEventData Data { get; set; }
 
+        public override void Visit(IEventVisitor visitor)
+        {
+            visitor.Accept(this);
+        }
+
         public override string ToString()
         {
             return String.Format("<StateChangedEvent ID={0} Time={1} Folder={2} From={3} To={4} Duration={5}>", this.Id, this.Time, this.Data.Folder, this.Data.From, this.Data.To, this.Data.Duration);

@@ -10,8 +10,10 @@ namespace SyncTrayzor.SyncThing
     public interface ISyncThingManager : IDisposable
     {
         SyncThingState State { get; }
+        SyncState SyncState { get; }
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
+        event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
 
         string ExecutablePath { get; set; }
         string Address { get; set; }
@@ -29,8 +31,13 @@ namespace SyncTrayzor.SyncThing
         private readonly string apiKey;
 
         public SyncThingState State { get; private set; }
+        public SyncState SyncState
+        {
+            get { return this.eventWatcher.SyncState; }
+        }
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
+        public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
 
         public string ExecutablePath { get; set; }
         public string Address { get; set; }
@@ -46,6 +53,8 @@ namespace SyncTrayzor.SyncThing
 
             this.processRunner.ProcessStopped += (o, e) => this.SetState(SyncThingState.Stopped);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
+
+            this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
 
             this.apiKey = "abc123";
             this.processRunner.ApiKey = apiKey;
@@ -98,6 +107,13 @@ namespace SyncTrayzor.SyncThing
             var handler = this.MessageLogged;
             if (handler != null)
                 handler(this, new MessageLoggedEventArgs(logMessage));
+        }
+
+        private void OnSyncStateChanged(SyncStateChangedEventArgs e)
+        {
+            var handler = this.SyncStateChanged;
+            if (handler != null)
+                handler(this, e);
         }
 
         public void Dispose()

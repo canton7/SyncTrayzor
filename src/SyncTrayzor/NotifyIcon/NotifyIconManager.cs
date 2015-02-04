@@ -1,6 +1,7 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
 using SyncTrayzor.Services;
+using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,6 @@ namespace SyncTrayzor.NotifyIcon
         void Setup(IScreen rootViewModel);
 
         void EnsureIconVisible();
-        void ShowBaloonTip(string title, string text);
     }
 
     public class NotifyIconManager : INotifyIconManager
@@ -27,6 +27,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly IViewManager viewManager;
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
+        private readonly ISyncThingManager syncThingManager;
 
         private IScreen rootViewModel;
         private TaskbarIcon taskbarIcon;
@@ -53,12 +54,18 @@ namespace SyncTrayzor.NotifyIcon
             }
         }
 
-        public NotifyIconManager(IWindowManager windowManager, IViewManager viewManager, NotifyIconViewModel viewModel, IApplicationState application)
+        public NotifyIconManager(
+            IWindowManager windowManager,
+            IViewManager viewManager,
+            NotifyIconViewModel viewModel,
+            IApplicationState application,
+            ISyncThingManager syncThingManager)
         {
             this.windowManager = windowManager;
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
+            this.syncThingManager = syncThingManager;
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
@@ -66,6 +73,14 @@ namespace SyncTrayzor.NotifyIcon
                     this.windowManager.ShowWindow(this.rootViewModel);
             };
             this.viewModel.ExitRequested += (o, e) => this.rootViewModel.RequestClose();
+
+            this.syncThingManager.SyncStateChanged += (o, e) =>
+            {
+                if (e.SyncState == SyncState.Idle && e.PrevSyncState == SyncState.Syncing)
+                {
+                    this.taskbarIcon.ShowBalloonTip("Finished Syncing", "Finished Syncing", BalloonIcon.Info);
+                }
+            };
         }
 
         public void Setup(IScreen rootViewModel)
@@ -82,11 +97,6 @@ namespace SyncTrayzor.NotifyIcon
         public void EnsureIconVisible()
         {
             this.viewModel.Visible = true;
-        }
-
-        public void ShowBaloonTip(string title, string text)
-        {
-            this.taskbarIcon.ShowBalloonTip(title, text, BalloonIcon.Info);
         }
 
         private void rootViewModelActivated(object sender, ActivationEventArgs e)
