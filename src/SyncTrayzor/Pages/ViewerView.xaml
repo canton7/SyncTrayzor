@@ -13,6 +13,8 @@
                     xaml:WebBrowserUtilities.ExternalWindowOpened="{s:Action ExternalWindowOpened}"
                     Visibility="{Binding ShowWebBrowser, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" />
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Starting...</TextBlock>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                    Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Stopped</TextBlock>
     </Grid>
 </UserControl>

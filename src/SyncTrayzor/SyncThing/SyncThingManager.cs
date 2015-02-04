@@ -74,7 +74,7 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.ExecutablePath = this.ExecutablePath;
 
             this.processRunner.Start();
-            this.SetState(SyncThingState.Running);
+            this.SetState(SyncThingState.Starting);
         }
 
         public Task StopAsync()
@@ -106,7 +106,7 @@ namespace SyncTrayzor.SyncThing
 
         private void UpdateEventWatcherState(SyncThingState state)
         {
-            this.eventWatcher.Running = (state == SyncThingState.Running);
+            this.eventWatcher.Running = (state == SyncThingState.Starting || state == SyncThingState.Running);
         }
 
         private async void StartupComplete()
@@ -115,6 +115,8 @@ namespace SyncTrayzor.SyncThing
 
             var config = await this.apiClient.FetchConfigAsync();
             this.Folders = config.Folders.ToDictionary(x => x.ID, x => x.Path);
+
+            this.SetState(SyncThingState.Running);
         }
 
         private void OnMessageLogged(string logMessage)

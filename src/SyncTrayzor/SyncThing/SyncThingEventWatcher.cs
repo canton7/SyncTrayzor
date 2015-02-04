@@ -29,6 +29,9 @@ namespace SyncTrayzor.SyncThing
             get { return this._running; }
             set
             {
+                if (this._running == value)
+                    return;
+
                 this._running = value;
                 if (value)
                 {

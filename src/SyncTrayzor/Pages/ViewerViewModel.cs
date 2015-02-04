@@ -17,16 +17,18 @@ namespace SyncTrayzor.Pages
 
         public string Location { get; private set; }
         
-        private bool syncThingRunning { get; set; }
-        public bool ShowWebBrowser { get { return this.syncThingRunning; } }
-        public bool ShowSyncThingStopped { get { return !this.syncThingRunning; } }
+        private SyncThingState syncThingState { get; set; }
+
+        public bool ShowWebBrowser { get { return this.syncThingState == SyncThingState.Running || this.syncThingState == SyncThingState.Stopping; } }
+        public bool ShowSyncThingStarting { get { return this.syncThingState == SyncThingState.Starting; } }
+        public bool ShowSyncThingStopped { get { return this.syncThingState == SyncThingState.Stopped; ; } }
 
         public ViewerViewModel(ISyncThingManager syncThingManager)
         {
             this.syncThingManager = syncThingManager;
             this.syncThingManager.StateChanged += (o, e) =>
             {
-                this.syncThingRunning = e.NewState == SyncThingState.Running || e.NewState == SyncThingState.Stopping;
+                this.syncThingState = e.NewState;
 
                 if (e.NewState == SyncThingState.Running)
                     this.RefreshBrowser();

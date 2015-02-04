@@ -46,7 +46,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public bool CanStart
         {
-            get { return this.SyncThingState != SyncThingState.Running; }
+            get { return this.SyncThingState == SyncThingState.Stopped; }
         }
         public void Start()
         {
