@@ -7,7 +7,11 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Title="SettingsView" Height="300" Width="300">
+        Title="SettingsView" Height="300" Width="300"
+        ResizeMode="NoResize" SizeToContent="Height">
+    <Window.Resources>
+        <s:BoolToVisibilityConverter x:Key="NoWatchedFoldersVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+    </Window.Resources>
     <DockPanel Margin="10">
         <DockPanel.Resources>
             <Style TargetType="GroupBox">
@@ -38,8 +42,26 @@
                 </CheckBox>
             </DockPanel>
         </GroupBox>
+
+        <GroupBox DockPanel.Dock="Top" Header="Watched Folders">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Visibility="{Binding WatchedFolders, Converter={StaticResource NoWatchedFoldersVisibilityConverter}}">
+                    Folders unavailable. Please start SyncThing
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,10" Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                    The following folders will be watched for changes, which avoids polling.
+                </TextBlock>
+                <ItemsControl ItemsSource="{Binding WatchedFolders}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Folder}" IsChecked="{Binding IsSelected}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </GroupBox>
        
-        <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+        <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="75"/>
                 <ColumnDefinition/>

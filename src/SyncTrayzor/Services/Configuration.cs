@@ -17,6 +17,9 @@ namespace SyncTrayzor.Services
         public bool StartMinimized { get; set; }
         public bool StartSyncThingAutomatically { get; set; }
 
+        [XmlArrayItem("WatchedFolder")]
+        public List<string> WatchedFolders { get; set; }
+
         public Configuration()
         {
             this.ShowTrayIconOnlyOnClose = false;
@@ -25,6 +28,7 @@ namespace SyncTrayzor.Services
             this.StartOnLogon = false;
             this.StartMinimized = true;
             this.StartSyncThingAutomatically = true;
+            this.WatchedFolders = new List<string>();
         }
 
         public Configuration Clone()
@@ -37,6 +41,7 @@ namespace SyncTrayzor.Services
                 StartOnLogon = this.StartOnLogon,
                 StartMinimized = this.StartMinimized,
                 StartSyncThingAutomatically = this.StartSyncThingAutomatically,
+                WatchedFolders = this.WatchedFolders.ToList(),
             };
         }
     }
