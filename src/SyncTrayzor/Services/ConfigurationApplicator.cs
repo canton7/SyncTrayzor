@@ -29,11 +29,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager = syncThingManager;
             this.autostartProvider = autostartProvider;
 
-            this.syncThingManager.StateChanged += (o, e) =>
-            {
-                if (e.NewState == SyncThingState.Running)
-                    this.LoadFolders();
-            };
+            this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
         }
 
         public void ApplyConfiguration()

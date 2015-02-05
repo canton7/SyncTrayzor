@@ -11,6 +11,7 @@ namespace SyncTrayzor.SyncThing
     public interface ISyncThingManager : IDisposable
     {
         SyncThingState State { get; }
+        event EventHandler DataLoaded;
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
@@ -18,7 +19,7 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string Address { get; set; }
 
-        Dictionary<string, string> Folders { get; }
+        Dictionary<string, Folder> Folders { get; }
 
         void Start();
         Task StopAsync();
@@ -36,6 +37,7 @@ namespace SyncTrayzor.SyncThing
         private DateTime startedAt = DateTime.MinValue;
 
         public SyncThingState State { get; private set; }
+        public event EventHandler DataLoaded;
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
@@ -43,7 +45,7 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string Address { get; set; }
 
-        public Dictionary<string, string> Folders { get; private set; }
+        public Dictionary<string, Folder> Folders { get; private set; }
 
         public SyncThingManager(
             ISyncThingProcessRunner processRunner,
@@ -108,11 +110,12 @@ namespace SyncTrayzor.SyncThing
         private async void StartupComplete()
         {
             this.startedAt = DateTime.UtcNow;
+            this.SetState(SyncThingState.Running);
 
             var config = await this.apiClient.FetchConfigAsync();
-            this.Folders = config.Folders.ToDictionary(x => x.ID, x => x.Path);
+            this.Folders = config.Folders.ToDictionary(x => x.ID, x => new Folder(x.ID, x.Path));
 
-            this.SetState(SyncThingState.Running);
+            this.OnDataLoaded();
         }
 
         private void OnMessageLogged(string logMessage)
@@ -127,6 +130,11 @@ namespace SyncTrayzor.SyncThing
                 return;
 
             this.eventDispatcher.Raise(this.SyncStateChanged, e);
+        }
+
+        private void OnDataLoaded()
+        {
+            this.eventDispatcher.Raise(this.DataLoaded);
         }
 
         public void Dispose()

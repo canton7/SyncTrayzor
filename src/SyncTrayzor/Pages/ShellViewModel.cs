@@ -45,7 +45,7 @@ namespace SyncTrayzor.Pages
             this.Viewer.ConductWith(this);
 
             this.syncThingManager.ExecutablePath = "syncthing.exe"; // TEMP
-            this.syncThingManager.StateChanged += (o, e) => Execute.OnUIThread(() => this.SyncThingState = e.NewState);
+            this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
         }
 
         public bool CanStart
