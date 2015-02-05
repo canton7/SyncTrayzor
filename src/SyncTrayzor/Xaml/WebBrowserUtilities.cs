@@ -31,6 +31,8 @@ namespace SyncTrayzor.Xaml
                 var webBrowser = (WebBrowser)d;
                 if (e.NewValue != null)
                     webBrowser.Navigate((string)e.NewValue);
+                else
+                    webBrowser.Navigate("about:blank");
             }));
 
 

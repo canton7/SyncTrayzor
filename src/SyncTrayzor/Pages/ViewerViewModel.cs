@@ -33,6 +33,8 @@ namespace SyncTrayzor.Pages
 
                 if (e.NewState == SyncThingState.Running)
                     this.RefreshBrowser();
+                else
+                    this.Location = null;
             };
         }
 
