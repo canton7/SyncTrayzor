@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyncTrayzor.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingManager : ISyncThingManager
     {
+        private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly ISyncThingProcessRunner processRunner;
         private readonly ISyncThingApiClient apiClient;
         private readonly ISyncThingEventWatcher eventWatcher;
@@ -48,6 +50,7 @@ namespace SyncTrayzor.SyncThing
             ISyncThingApiClient apiClient,
             ISyncThingEventWatcher eventWatcher)
         {
+            this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
             this.apiClient = apiClient;
             this.eventWatcher = eventWatcher;
@@ -94,9 +97,7 @@ namespace SyncTrayzor.SyncThing
 
             this.UpdateEventWatcherState(this.State);
 
-            var handler = this.StateChanged;
-            if (handler != null)
-                handler(this, new SyncThingStateChangedEventArgs(oldState, state));
+            this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
         private void UpdateEventWatcherState(SyncThingState state)
@@ -116,9 +117,7 @@ namespace SyncTrayzor.SyncThing
 
         private void OnMessageLogged(string logMessage)
         {
-            var handler = this.MessageLogged;
-            if (handler != null)
-                handler(this, new MessageLoggedEventArgs(logMessage));
+            this.eventDispatcher.Raise(this.MessageLogged, new MessageLoggedEventArgs(logMessage));
         }
 
         private void OnSyncStateChanged(SyncStateChangedEventArgs e)
@@ -127,9 +126,7 @@ namespace SyncTrayzor.SyncThing
             if (DateTime.UtcNow - this.startedAt < TimeSpan.FromSeconds(60))
                 return;
 
-            var handler = this.SyncStateChanged;
-            if (handler != null)
-                handler(this, e);
+            this.eventDispatcher.Raise(this.SyncStateChanged, e);
         }
 
         public void Dispose()
