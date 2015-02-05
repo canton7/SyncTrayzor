@@ -69,7 +69,7 @@ namespace SyncTrayzor.Services
             watcher.Changed += OnChanged;
             watcher.Created += OnChanged;
             watcher.Deleted += OnChanged;
-            watcher.Renamed += OnChanged;
+            watcher.Renamed += OnRenamed;
 
             watcher.EnableRaisingEvents = true;
 
@@ -81,10 +81,19 @@ namespace SyncTrayzor.Services
             this.PathChanged(e.FullPath);
         }
 
+        private void OnRenamed(object source, RenamedEventArgs e)
+        {
+            this.PathChanged(e.FullPath);
+            this.PathChanged(e.OldFullPath);
+        }
+
         private void PathChanged(string path)
         {
+            if (!path.StartsWith(this.directory))
+                return;
+
             this.backoffTimer.Stop();
-            var subPath = this.ReducePathToSubPath(path);
+            var subPath = path.Substring(this.directory.Length);
 
             lock (this.currentNotifySubPathLock)
             {
@@ -95,12 +104,6 @@ namespace SyncTrayzor.Services
             }
 
             this.backoffTimer.Start();
-        }
-
-        private string ReducePathToSubPath(string path)
-        {
-            Trace.Assert(path.StartsWith(this.directory));
-            return path.Substring(this.directory.Length);
         }
 
         private string FindCommonPrefix(string path1, string path2)
