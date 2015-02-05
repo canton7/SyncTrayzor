@@ -63,7 +63,7 @@ namespace SyncTrayzor.Xaml
         private static void loadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
             var webBrowser = sender as WebBrowser;
-            if (webBrowser == null)
+            if (webBrowser == null || webBrowser.Document == null)
                 return;
 
             var serviceProvider = (IServiceProvider)webBrowser.Document;

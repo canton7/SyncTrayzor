@@ -30,6 +30,7 @@ namespace SyncTrayzor
             builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
             builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
+            builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
         }
 
         protected override void Launch()

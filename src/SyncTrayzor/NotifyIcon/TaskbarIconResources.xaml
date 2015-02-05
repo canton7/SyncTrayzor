@@ -19,7 +19,7 @@
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
                 <MenuItem Header="Restore" Command="{s:Action Restore, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
-                <MenuItem Header="Minimize" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                <MenuItem Header="Close to Tray" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
                 
                 <MenuItem Header="Start" Command="{s:Action Start, ActionNotFound=Disable}"/>

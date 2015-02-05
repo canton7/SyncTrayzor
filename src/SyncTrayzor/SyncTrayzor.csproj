@@ -90,6 +90,8 @@
     <Compile Include="Pages\ViewerViewModel.cs" />
     <Compile Include="RefitStubs.cs" />
     <Compile Include="Services\ApplicationState.cs" />
+    <Compile Include="Services\DirectoryWatcher.cs" />
+    <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\Api\Config.cs" />
     <Compile Include="SyncThing\Api\Event.cs" />
     <Compile Include="SyncThing\Api\EventConverter.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
+    <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
     <Compile Include="Xaml\WebBrowserUtilities.cs" />
   </ItemGroup>

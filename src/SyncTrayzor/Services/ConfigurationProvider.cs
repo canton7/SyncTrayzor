@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyncTrayzor.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace SyncTrayzor.Services
 
     public class ConfigurationProvider : IConfigurationProvider
     {
+        private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
         private Configuration currentConfig;
 
@@ -49,6 +51,7 @@ namespace SyncTrayzor.Services
 
         public ConfigurationProvider()
         {
+            this.eventDispatcher = new SynchronizedEventDispatcher(this);
             Directory.CreateDirectory(this.BasePath);
         }
 
@@ -83,9 +86,7 @@ namespace SyncTrayzor.Services
 
         private void OnConfigurationChanged(Configuration newConfiguration)
         {
-            var handler = this.ConfigurationChanged;
-            if (handler != null)
-                handler(this, new ConfigurationChangedEventArgs(newConfiguration));
+            this.eventDispatcher.Raise(this.ConfigurationChanged, new ConfigurationChangedEventArgs(newConfiguration));
         }
     }
 }

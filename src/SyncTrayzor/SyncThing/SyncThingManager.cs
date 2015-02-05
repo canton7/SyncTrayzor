@@ -11,19 +11,21 @@ namespace SyncTrayzor.SyncThing
     public interface ISyncThingManager : IDisposable
     {
         SyncThingState State { get; }
+        bool IsDataLoaded { get; }
         event EventHandler DataLoaded;
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
 
         string ExecutablePath { get; set; }
-        string Address { get; set; }
+        Uri Address { get; set; }
 
         Dictionary<string, Folder> Folders { get; }
 
         void Start();
         Task StopAsync();
         void Kill();
+        Task ScanAsync(string folderId, string subPath);
     }
 
     public class SyncThingManager : ISyncThingManager
@@ -37,13 +39,14 @@ namespace SyncTrayzor.SyncThing
         private DateTime startedAt = DateTime.MinValue;
 
         public SyncThingState State { get; private set; }
+        public bool IsDataLoaded { get; private set; }
         public event EventHandler DataLoaded;
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
 
         public string ExecutablePath { get; set; }
-        public string Address { get; set; }
+        public Uri Address { get; set; }
 
         public Dictionary<string, Folder> Folders { get; private set; }
 
@@ -69,8 +72,8 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
-            this.apiClient.SetConnectionDetails(new Uri(this.Address), this.apiKey);
-            this.processRunner.HostAddress = this.Address;
+            this.apiClient.SetConnectionDetails(this.Address, this.apiKey);
+            this.processRunner.HostAddress = this.Address.ToString();
             this.processRunner.ExecutablePath = this.ExecutablePath;
 
             this.processRunner.Start();
@@ -89,6 +92,11 @@ namespace SyncTrayzor.SyncThing
             this.SetState(SyncThingState.Stopped);
         }
 
+        public Task ScanAsync(string folderId, string subPath)
+        {
+            return this.apiClient.ScanAsync(folderId, subPath);
+        }
+
         private void SetState(SyncThingState state)
         {
             if (state == this.State)
@@ -97,7 +105,7 @@ namespace SyncTrayzor.SyncThing
             var oldState = this.State;
             this.State = state;
 
-            this.UpdateEventWatcherState(this.State);
+            this.UpdateEventWatcherState(state);
 
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
@@ -116,6 +124,7 @@ namespace SyncTrayzor.SyncThing
             this.Folders = config.Folders.ToDictionary(x => x.ID, x => new Folder(x.ID, x.Path));
 
             this.OnDataLoaded();
+            this.IsDataLoaded = true;
         }
 
         private void OnMessageLogged(string logMessage)

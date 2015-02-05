@@ -2,6 +2,7 @@
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -90,7 +91,7 @@ namespace SyncTrayzor.Pages
         }
         public void OpenBrowser()
         {
-            Process.Start(this.syncThingManager.Address);
+            Process.Start(this.syncThingManager.Address.NormalizeZeroHost().ToString());
         }
 
         public void ShowSettings()

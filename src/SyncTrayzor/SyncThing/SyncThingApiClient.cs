@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Refit;
 using SyncTrayzor.SyncThing.Api;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace SyncTrayzor.SyncThing
         Task ShutdownAsync();
         Task<List<Event>> FetchEventsAsync(int since, int? limit = null);
         Task<Config> FetchConfigAsync();
+        Task ScanAsync(string folderId, string subPath);
     }
 
     public class SyncThingApiClient : ISyncThingApiClient
@@ -27,7 +29,7 @@ namespace SyncTrayzor.SyncThing
         {
             var httpClient = new HttpClient(new AuthenticatedHttpClientHandler(apiKey))
             {
-                BaseAddress = baseAddress,
+                BaseAddress = baseAddress.NormalizeZeroHost(),
                 Timeout = TimeSpan.FromSeconds(70),
             };
             this.api = RestService.For<ISyncThingApi>(httpClient, new RefitSettings()
@@ -58,6 +60,12 @@ namespace SyncTrayzor.SyncThing
         {
             this.EnsureSetup();
             return this.api.FetchConfigAsync();
+        }
+
+        public Task ScanAsync(string folderId, string subPath)
+        {
+            this.EnsureSetup();
+            return this.api.ScanAsync(folderId, subPath);
         }
 
         private void EnsureSetup()

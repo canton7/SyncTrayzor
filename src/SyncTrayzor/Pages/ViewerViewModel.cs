@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Xaml;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,12 +39,12 @@ namespace SyncTrayzor.Pages
         public void RefreshBrowser()
         {
             this.Location = null;
-            this.Location = this.syncThingManager.Address;
+            this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
         }
 
         public void Navigating(NavigatingCancelEventArgs e)
         {
-            if ((e.Uri.Scheme == "http" || e.Uri.Scheme == "https") && e.Uri != new Uri(this.syncThingManager.Address))
+            if ((e.Uri.Scheme == "http" || e.Uri.Scheme == "https") && e.Uri != this.syncThingManager.Address.NormalizeZeroHost())
             {
                 e.Cancel = true;
                 Process.Start(e.Uri.ToString());

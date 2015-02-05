@@ -20,5 +20,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         [Post("/rest/shutdown")]
         Task ShutdownAsync();
+
+        [Post("/rest/scan")]
+        Task ScanAsync(string folder, string sub);
     }
 }
