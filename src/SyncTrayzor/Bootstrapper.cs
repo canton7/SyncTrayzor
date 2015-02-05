@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace SyncTrayzor
 {
@@ -52,6 +54,23 @@ namespace SyncTrayzor
         protected override void OnExit(System.Windows.ExitEventArgs e)
         {
             this.Container.Dispose();
+        }
+
+        protected override void OnUnhandledExecption(DispatcherUnhandledExceptionEventArgs e)
+        {
+            var windowManager = this.Container.Get<IWindowManager>();
+
+            var configurationException = e.Exception as ConfigurationException;
+            if (configurationException != null)
+            {
+                windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                e.Handled = true;
+            }
+            else
+            {
+                windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SyncTrayzor.Pages
 {
@@ -45,7 +46,6 @@ namespace SyncTrayzor.Pages
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
 
-            this.syncThingManager.ExecutablePath = "syncthing.exe"; // TEMP
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
         }
 
@@ -55,7 +55,14 @@ namespace SyncTrayzor.Pages
         }
         public void Start()
         {
-            this.syncThingManager.Start();
+            try
+            {
+                this.syncThingManager.Start();
+            }
+            catch (Exception e)
+            {
+                this.windowManager.ShowMessageBox(String.Format("Error starting SyncThing: {0}", e.Message), "Error starting SyncThing", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public bool CanStop

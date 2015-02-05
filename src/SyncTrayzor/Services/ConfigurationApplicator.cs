@@ -46,6 +46,7 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
 
             this.syncThingManager.Address = new Uri(configuration.SyncThingAddress);
+            this.syncThingManager.ExecutablePath = configuration.SyncThingPath;
 
             this.autostartProvider.SetAutoStart(configuration.StartOnLogon, configuration.StartMinimized);
 

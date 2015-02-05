@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace SyncTrayzor.Services
     [XmlRoot("Configuration")]
     public class Configuration
     {
+        public string SyncThingPath { get; set; }
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool CloseToTray { get; set; }
         public string SyncThingAddress { get; set; }
@@ -42,7 +44,12 @@ namespace SyncTrayzor.Services
         public List<FolderConfiguration> Folders { get; set; }
 
         public Configuration()
+            : this("")
+        { }
+
+        public Configuration(string basePath)
         {
+            this.SyncThingPath = Path.Combine(basePath, "syncthing.exe");
             this.ShowTrayIconOnlyOnClose = false;
             this.CloseToTray = true;
             this.SyncThingAddress = "http://localhost:8384";
@@ -54,6 +61,7 @@ namespace SyncTrayzor.Services
 
         public Configuration(Configuration other)
         {
+            this.SyncThingPath = other.SyncThingPath;
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
             this.CloseToTray = other.CloseToTray;
             this.SyncThingAddress = other.SyncThingAddress;

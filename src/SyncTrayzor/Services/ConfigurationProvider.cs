@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -37,10 +38,10 @@ namespace SyncTrayzor.Services
 
         public string BasePath
         {
-#if NDEBUG
-            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
+#if DEBUG
+            get { return ""; }
 #else
-            get { return "config"; }
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
 #endif
         }
 
@@ -52,7 +53,8 @@ namespace SyncTrayzor.Services
         public ConfigurationProvider()
         {
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
-            Directory.CreateDirectory(this.BasePath);
+            if (!String.IsNullOrWhiteSpace(this.BasePath))
+                Directory.CreateDirectory(this.BasePath);
         }
 
         public Configuration Load()
@@ -65,6 +67,7 @@ namespace SyncTrayzor.Services
 
         public void Save(Configuration config)
         {
+            this.EnsureConsistency(config);
             this.currentConfig = config;
             this.OnConfigurationChanged(config);
             using (var stream = File.Open(this.ConfigurationFilePath, FileMode.Create))
@@ -75,18 +78,38 @@ namespace SyncTrayzor.Services
 
         private Configuration LoadFromDisk()
         {
-            if (!File.Exists(this.ConfigurationFilePath))
-                return new Configuration();
+            Configuration configuration;
 
-            using (var stream = File.OpenRead(this.ConfigurationFilePath))
+            if (!File.Exists(this.ConfigurationFilePath))
             {
-                return (Configuration)this.serializer.Deserialize(stream);
+                configuration = new Configuration(this.BasePath);
             }
+            else
+            {
+                using (var stream = File.OpenRead(this.ConfigurationFilePath))
+                {
+                    configuration = (Configuration)this.serializer.Deserialize(stream);
+                }
+            }
+
+            return configuration;
+        }
+
+        private void EnsureConsistency(Configuration configuration)
+        {
+            if (!File.Exists(configuration.SyncThingPath))
+                throw new ConfigurationException(String.Format("Unable to find file {0}", configuration.SyncThingPath));
         }
 
         private void OnConfigurationChanged(Configuration newConfiguration)
         {
             this.eventDispatcher.Raise(this.ConfigurationChanged, new ConfigurationChangedEventArgs(newConfiguration));
         }
+    }
+
+    public class ConfigurationException : Exception
+    {
+        public ConfigurationException(string message) : base(message)
+        { }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
@@ -41,6 +42,9 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
+            if (!File.Exists(this.ExecutablePath))
+                throw new Exception(String.Format("Unable to find SyncThing at path {0}", this.ExecutablePath));
+
             var processStartInfo = new ProcessStartInfo()
             {
                 FileName = this.ExecutablePath,
