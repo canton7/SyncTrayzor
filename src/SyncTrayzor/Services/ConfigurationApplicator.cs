@@ -44,6 +44,7 @@ namespace SyncTrayzor.Services
         {
             this.notifyIconManager.CloseToTray = configuration.CloseToTray;
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
+            this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
 
             this.syncThingManager.Address = new Uri(configuration.SyncThingAddress);
             this.syncThingManager.ExecutablePath = configuration.SyncThingPath;

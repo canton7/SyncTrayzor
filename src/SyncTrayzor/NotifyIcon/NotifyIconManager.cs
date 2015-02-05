@@ -15,6 +15,7 @@ namespace SyncTrayzor.NotifyIcon
     {
         bool ShowOnlyOnClose { get; set; }
         bool CloseToTray { get; set; }
+        bool ShowSynchronizedBalloon { get; set; }
 
         void Setup(INotifyIconDelegate rootViewModel);
 
@@ -53,6 +54,8 @@ namespace SyncTrayzor.NotifyIcon
             }
         }
 
+        public bool ShowSynchronizedBalloon { get; set; }
+
         public NotifyIconManager(
             IViewManager viewManager,
             NotifyIconViewModel viewModel,
@@ -74,7 +77,7 @@ namespace SyncTrayzor.NotifyIcon
 
             this.syncThingManager.SyncStateChanged += (o, e) =>
             {
-                if (e.SyncState == SyncState.Idle && e.PrevSyncState == SyncState.Syncing)
+                if (this.ShowSynchronizedBalloon && e.SyncState == SyncState.Idle && e.PrevSyncState == SyncState.Syncing)
                 {
                     this.taskbarIcon.ShowBalloonTip("Finished Syncing", String.Format("{0}: Finished Syncing", e.FolderId), BalloonIcon.Info);
                 }

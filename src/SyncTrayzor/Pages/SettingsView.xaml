@@ -23,6 +23,7 @@
             <DockPanel>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}">Show Tray Icon only on close</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}">Show 'Synchronized' balloon messages</CheckBox>
             </DockPanel>
         </GroupBox>
         

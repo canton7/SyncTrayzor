@@ -36,6 +36,7 @@ namespace SyncTrayzor.Services
         public string SyncThingPath { get; set; }
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool CloseToTray { get; set; }
+        public bool ShowSynchronizedBalloon { get; set; }
         public string SyncThingAddress { get; set; }
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
@@ -52,6 +53,7 @@ namespace SyncTrayzor.Services
             this.SyncThingPath = Path.Combine(basePath, "syncthing.exe");
             this.ShowTrayIconOnlyOnClose = false;
             this.CloseToTray = true;
+            this.ShowSynchronizedBalloon = true;
             this.SyncThingAddress = "http://localhost:8384";
             this.StartOnLogon = false;
             this.StartMinimized = true;
@@ -64,6 +66,7 @@ namespace SyncTrayzor.Services
             this.SyncThingPath = other.SyncThingPath;
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
             this.CloseToTray = other.CloseToTray;
+            this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
             this.SyncThingAddress = other.SyncThingAddress;
             this.StartOnLogon = other.StartOnLogon;
             this.StartMinimized = other.StartMinimized;
