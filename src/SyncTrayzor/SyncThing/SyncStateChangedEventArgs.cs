@@ -15,11 +15,13 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncStateChangedEventArgs : EventArgs
     {
+        public string FolderId { get; private set; }
         public SyncState PrevSyncState { get; private set; }
         public SyncState SyncState { get; private set; }
 
-        public SyncStateChangedEventArgs(SyncState prevSyncState, SyncState syncState)
+        public SyncStateChangedEventArgs(string folderId, SyncState prevSyncState, SyncState syncState)
         {
+            this.FolderId = folderId;
             this.PrevSyncState = prevSyncState;
             this.SyncState = syncState;
         }

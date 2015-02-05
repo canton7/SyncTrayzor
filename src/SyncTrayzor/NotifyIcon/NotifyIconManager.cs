@@ -76,7 +76,7 @@ namespace SyncTrayzor.NotifyIcon
             {
                 if (e.SyncState == SyncState.Idle && e.PrevSyncState == SyncState.Syncing)
                 {
-                    this.taskbarIcon.ShowBalloonTip("Finished Syncing", "Finished Syncing", BalloonIcon.Info);
+                    this.taskbarIcon.ShowBalloonTip("Finished Syncing", String.Format("Finished Syncing {0}", e.FolderId), BalloonIcon.Info);
                 }
             };
         }

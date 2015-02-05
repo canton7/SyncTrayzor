@@ -10,7 +10,6 @@ namespace SyncTrayzor.SyncThing
     public interface ISyncThingManager : IDisposable
     {
         SyncThingState State { get; }
-        SyncState SyncState { get; }
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
@@ -35,10 +34,6 @@ namespace SyncTrayzor.SyncThing
         private DateTime startedAt = DateTime.MinValue;
 
         public SyncThingState State { get; private set; }
-        public SyncState SyncState
-        {
-            get { return this.eventWatcher.SyncState; }
-        }
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;

@@ -12,7 +12,6 @@ namespace SyncTrayzor.SyncThing
     public interface ISyncThingEventWatcher
     {
         bool Running { get; set; }
-        SyncState SyncState { get; }
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         event EventHandler StartupComplete;
     }
@@ -40,14 +39,12 @@ namespace SyncTrayzor.SyncThing
             }
         }
 
-        public SyncState SyncState { get; private set; }
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         public event EventHandler StartupComplete;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
         {
             this.apiClient = apiClient;
-            this.SyncState = SyncThing.SyncState.Idle;
         }
 
         private async void Start()
@@ -97,17 +94,11 @@ namespace SyncTrayzor.SyncThing
             }
         }
 
-        private void OnSyncStateChanged(SyncState syncState)
+        private void OnSyncStateChanged(string folderId, SyncState oldState, SyncState syncState)
         {
-            if (syncState == this.SyncState)
-                return;
-
-            var oldState = this.SyncState;
-            this.SyncState = syncState;
-
             var handler = this.SyncStateChanged;
             if (handler != null)
-                handler(this, new SyncStateChangedEventArgs(oldState, syncState));
+                handler(this, new SyncStateChangedEventArgs(folderId, oldState, syncState));
         }
 
         private void OnStartupComplete()
@@ -133,8 +124,9 @@ namespace SyncTrayzor.SyncThing
 
         public void Accept(StateChangedEvent evt)
         {
+            var oldState = evt.Data.From == "syncing" ? SyncState.Syncing : SyncState.Idle;
             var state = evt.Data.To == "syncing" ? SyncState.Syncing : SyncState.Idle;
-            this.OnSyncStateChanged(state);
+            this.OnSyncStateChanged(evt.Data.Folder, oldState, state);
         }
 
         public void Accept(ItemStartedEvent evt)
