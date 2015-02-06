@@ -38,6 +38,7 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
                 this.SyncThingSyncing = this.syncThingManager.Folders.Values.Any(x => x.SyncState == FolderSyncState.Syncing);
+                System.Diagnostics.Debug.WriteLine(String.Format("SYNCING: {0}", this.SyncThingSyncing));
             };
         }
 

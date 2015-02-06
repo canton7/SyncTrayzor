@@ -77,7 +77,9 @@ namespace SyncTrayzor.NotifyIcon
 
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
-                if (this.ShowSynchronizedBalloon && e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
+                if (this.ShowSynchronizedBalloon && this.syncThingManager.StartedAt.HasValue &&
+                    DateTime.UtcNow - this.syncThingManager.StartedAt.Value < TimeSpan.FromSeconds(60) &&
+                    e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
                 {
                     Application.Current.Dispatcher.CheckAccess(); // Double-check
                     this.taskbarIcon.ShowBalloonTip("Finished Syncing", String.Format("{0}: Finished Syncing", e.Folder.FolderId), BalloonIcon.Info);

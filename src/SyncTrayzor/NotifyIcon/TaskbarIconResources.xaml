@@ -5,11 +5,43 @@
     
     <BitmapImage x:Key="TaskbarIdleIcon" UriSource="Icons/idle.ico"/>
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="Icons/stopped.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="Icons/syncing_1.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing2Icon" UriSource="Icons/syncing_2.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing3Icon" UriSource="Icons/syncing_3.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing4Icon" UriSource="Icons/syncing_4.ico"/>
     
     <tb:TaskbarIcon x:Key="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                     DoubleClickCommand="{s:Action DoubleClick}"
                     MenuActivation="RightClick">
+        <tb:TaskbarIcon.Resources>
+            <Storyboard x:Key="IconAnimation">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IconSource" Duration="0:0:2" RepeatBehavior="Forever">
+                    <ObjectAnimationUsingKeyFrames.KeyFrames>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing1Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing2Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.0">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing3Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.5">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing4Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                    </ObjectAnimationUsingKeyFrames.KeyFrames>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </tb:TaskbarIcon.Resources>
         <tb:TaskbarIcon.Style>
             <Style TargetType="tb:TaskbarIcon">
                 <Setter Property="IconSource" Value="{StaticResource TaskbarIdleIcon}"/>
@@ -18,27 +50,13 @@
                         <Setter Property="IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
                     </DataTrigger>
 
-                    <DataTrigger Binding="{Binding SyncThingStarted}" Value="True">
+                    <DataTrigger Binding="{Binding SyncThingSyncing}" Value="True">
                         <DataTrigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IconSource" Duration="0:0:3" RepeatBehavior="Forever">
-                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:1">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <StaticResourceExtension ResourceKey="TaskbarStoppedIcon"/>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:2">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <StaticResourceExtension ResourceKey="TaskbarIdleIcon"/>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
-                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
+                            <BeginStoryboard Storyboard="{StaticResource IconAnimation}" Name="IconAnimation"/>
                         </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <StopStoryboard BeginStoryboardName="IconAnimation"/>
+                        </DataTrigger.ExitActions>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

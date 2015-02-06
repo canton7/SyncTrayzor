@@ -19,7 +19,7 @@ namespace SyncTrayzor.SyncThing
 
         string ExecutablePath { get; set; }
         Uri Address { get; set; }
-
+        DateTime? StartedAt { get; }
         Dictionary<string, Folder> Folders { get; }
 
         void Start();
@@ -36,7 +36,7 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly string apiKey;
 
-        private DateTime startedAt = DateTime.MinValue;
+        public DateTime? StartedAt { get; private set; }
 
         public SyncThingState State { get; private set; }
         public bool IsDataLoaded { get; private set; }
@@ -119,7 +119,7 @@ namespace SyncTrayzor.SyncThing
 
         private async void StartupComplete()
         {
-            this.startedAt = DateTime.UtcNow;
+            this.StartedAt = DateTime.UtcNow;
             this.SetState(SyncThingState.Running);
 
             var config = await this.apiClient.FetchConfigAsync();

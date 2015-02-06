@@ -224,6 +224,12 @@
   <ItemGroup>
     <Resource Include="NotifyIcon\Icons\stopped.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NotifyIcon\Icons\syncing_1.ico" />
+    <Resource Include="NotifyIcon\Icons\syncing_2.ico" />
+    <Resource Include="NotifyIcon\Icons\syncing_3.ico" />
+    <Resource Include="NotifyIcon\Icons\syncing_4.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
