@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
-    public class SyncStateChangedEventArgs : EventArgs
+    public class FolderSyncStateChangeEventArgs : EventArgs
     {
-        public string FolderId { get; private set; }
+        public Folder Folder { get; private set; }
         public FolderSyncState PrevSyncState { get; private set; }
         public FolderSyncState SyncState { get; private set; }
 
-        public SyncStateChangedEventArgs(string folderId, FolderSyncState prevSyncState, FolderSyncState syncState)
+        public FolderSyncStateChangeEventArgs(Folder folder, FolderSyncState prevSyncState, FolderSyncState syncState)
         {
-            this.FolderId = folderId;
+            this.Folder = folder;
             this.PrevSyncState = prevSyncState;
             this.SyncState = syncState;
         }

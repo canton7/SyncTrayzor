@@ -94,7 +94,7 @@ namespace SyncTrayzor.SyncThing
             }
         }
 
-        private void OnSyncStateChanged(string folderId, SyncState oldState, SyncState syncState)
+        private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)
         {
             var handler = this.SyncStateChanged;
             if (handler != null)
@@ -124,8 +124,8 @@ namespace SyncTrayzor.SyncThing
 
         public void Accept(StateChangedEvent evt)
         {
-            var oldState = evt.Data.From == "syncing" ? SyncState.Syncing : SyncState.Idle;
-            var state = evt.Data.To == "syncing" ? SyncState.Syncing : SyncState.Idle;
+            var oldState = evt.Data.From == "syncing" ? FolderSyncState.Syncing : FolderSyncState.Idle;
+            var state = evt.Data.To == "syncing" ? FolderSyncState.Syncing : FolderSyncState.Idle;
             this.OnSyncStateChanged(evt.Data.Folder, oldState, state);
         }
 

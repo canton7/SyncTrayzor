@@ -75,11 +75,12 @@ namespace SyncTrayzor.NotifyIcon
             this.viewModel.WindowCloseRequested += (o, e) => this.rootViewModel.CloseToTray();
             this.viewModel.ExitRequested += (o, e) => this.rootViewModel.Shutdown();
 
-            this.syncThingManager.SyncStateChanged += (o, e) =>
+            this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
-                if (this.ShowSynchronizedBalloon && e.SyncState == SyncState.Idle && e.PrevSyncState == SyncState.Syncing)
+                if (this.ShowSynchronizedBalloon && e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
                 {
-                    this.taskbarIcon.ShowBalloonTip("Finished Syncing", String.Format("{0}: Finished Syncing", e.FolderId), BalloonIcon.Info);
+                    Application.Current.Dispatcher.CheckAccess(); // Double-check
+                    this.taskbarIcon.ShowBalloonTip("Finished Syncing", String.Format("{0}: Finished Syncing", e.Folder.FolderId), BalloonIcon.Info);
                 }
             };
         }

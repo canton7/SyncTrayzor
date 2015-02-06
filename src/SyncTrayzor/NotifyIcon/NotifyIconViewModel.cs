@@ -21,12 +21,24 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncThingState SyncThingState { get; set; }
 
+        public bool SyncThingStarted
+        {
+            get { return this.SyncThingState != SyncThingState.Stopped; }
+        }
+
+        public bool SyncThingSyncing { get; private set; }
+
         public NotifyIconViewModel(ISyncThingManager syncThingManager)
         {
             this.syncThingManager = syncThingManager;
 
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
             this.SyncThingState = this.syncThingManager.State;
+
+            this.syncThingManager.FolderSyncStateChanged += (o, e) =>
+            {
+                this.SyncThingSyncing = this.syncThingManager.Folders.Values.Any(x => x.SyncState == FolderSyncState.Syncing);
+            };
         }
 
         public void DoubleClick()

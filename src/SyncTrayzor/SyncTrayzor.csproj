@@ -120,6 +120,7 @@
     <Compile Include="SyncThing\Api\StartupCompleteEvent.cs" />
     <Compile Include="SyncThing\Api\StateChangedEvent.cs" />
     <Compile Include="SyncThing\Folder.cs" />
+    <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
     <Compile Include="SyncThing\Api\SyncThingApi.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
@@ -219,6 +220,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="NotifyIcon\Icons\idle.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NotifyIcon\Icons\stopped.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

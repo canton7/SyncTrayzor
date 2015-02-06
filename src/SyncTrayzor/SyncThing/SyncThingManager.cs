@@ -15,7 +15,7 @@ namespace SyncTrayzor.SyncThing
         event EventHandler DataLoaded;
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
+        event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
 
         string ExecutablePath { get; set; }
         Uri Address { get; set; }
@@ -43,7 +43,7 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler DataLoaded;
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
+        public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
 
         public string ExecutablePath { get; set; }
         public Uri Address { get; set; }
@@ -55,6 +55,8 @@ namespace SyncTrayzor.SyncThing
             ISyncThingApiClient apiClient,
             ISyncThingEventWatcher eventWatcher)
         {
+            this.Folders = new Dictionary<string, Folder>();
+
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
             this.apiClient = apiClient;
@@ -134,11 +136,13 @@ namespace SyncTrayzor.SyncThing
 
         private void OnSyncStateChanged(SyncStateChangedEventArgs e)
         {
-            // There's a 'synced' event straight after starting - ignore it
-            if (DateTime.UtcNow - this.startedAt < TimeSpan.FromSeconds(60))
-                return;
+            Folder folder;
+            if (!this.Folders.TryGetValue(e.FolderId, out folder))
+                return; // We don't know about this folder
 
-            this.eventDispatcher.Raise(this.SyncStateChanged, e);
+            folder.SyncState = e.SyncState;
+
+            this.eventDispatcher.Raise(this.FolderSyncStateChanged, new FolderSyncStateChangeEventArgs(folder, e.PrevSyncState, e.SyncState));
         }
 
         private void OnDataLoaded()

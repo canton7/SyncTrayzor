@@ -4,12 +4,46 @@
                     xmlns:tb="http://www.hardcodet.net/taskbar">
     
     <BitmapImage x:Key="TaskbarIdleIcon" UriSource="Icons/idle.ico"/>
+    <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="Icons/stopped.ico"/>
     
     <tb:TaskbarIcon x:Key="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                     DoubleClickCommand="{s:Action DoubleClick}"
-                    MenuActivation="RightClick"
-                    IconSource="{StaticResource TaskbarIdleIcon}">
+                    MenuActivation="RightClick">
+        <tb:TaskbarIcon.Style>
+            <Style TargetType="tb:TaskbarIcon">
+                <Setter Property="IconSource" Value="{StaticResource TaskbarIdleIcon}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding SyncThingStarted}" Value="False">
+                        <Setter Property="IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding SyncThingStarted}" Value="True">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IconSource" Duration="0:0:3" RepeatBehavior="Forever">
+                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:1">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <StaticResourceExtension ResourceKey="TaskbarStoppedIcon"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:2">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <StaticResourceExtension ResourceKey="TaskbarIdleIcon"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </tb:TaskbarIcon.Style>
+        
         <tb:TaskbarIcon.ContextMenu>
             <!-- Attached properties aren't inherited to ContextMenus -->
             <ContextMenu s:View.ActionTarget="{Binding}">
