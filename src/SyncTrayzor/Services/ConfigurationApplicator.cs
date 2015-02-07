@@ -48,6 +48,7 @@ namespace SyncTrayzor.Services
 
             this.syncThingManager.Address = new Uri(configuration.SyncThingAddress);
             this.syncThingManager.ExecutablePath = configuration.SyncThingPath;
+            this.syncThingManager.ApiKey = configuration.SyncThingApiKey;
 
             this.autostartProvider.SetAutoStart(configuration.StartOnLogon, configuration.StartMinimized);
 

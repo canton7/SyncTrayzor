@@ -30,6 +30,9 @@ namespace SyncTrayzor.Services
 
     public class ConfigurationProvider : IConfigurationProvider
     {
+        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private const int apiKeyLength = 20;
+
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
         private Configuration currentConfig;
@@ -82,7 +85,7 @@ namespace SyncTrayzor.Services
 
             if (!File.Exists(this.ConfigurationFilePath))
             {
-                configuration = new Configuration(this.BasePath);
+                configuration = new Configuration(Path.Combine(this.BasePath, "syncthing.exe"), this.GenerateApiKey());
             }
             else
             {
@@ -99,6 +102,17 @@ namespace SyncTrayzor.Services
         {
             if (!File.Exists(configuration.SyncThingPath))
                 throw new ConfigurationException(String.Format("Unable to find file {0}", configuration.SyncThingPath));
+        }
+
+        private string GenerateApiKey()
+        {
+            var random = new Random();
+            var apiKey = new char[apiKeyLength];
+            for (int i = 0; i < apiKeyLength; i++)
+            {
+                apiKey[i] = apiKeyChars[random.Next(apiKeyChars.Length)];
+            }
+            return new string(apiKey);
         }
 
         private void OnConfigurationChanged(Configuration newConfiguration)

@@ -24,6 +24,7 @@ namespace SyncTrayzor.Pages
         public bool ShowSynchronizedBalloon { get; set; }
         public bool StartSyncThingAutomatically { get; set; }
         public string SyncThingAddress { get; set; }
+        public string SyncThingApiKey { get; set; }
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
         public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
@@ -41,6 +42,7 @@ namespace SyncTrayzor.Pages
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
             this.StartSyncThingAutomatically = configuration.StartSyncThingAutomatically;
             this.SyncThingAddress = configuration.SyncThingAddress;
+            this.SyncThingApiKey = configuration.SyncThingApiKey;
             this.StartOnLogon = configuration.StartOnLogon;
             this.StartMinimized = configuration.StartMinimized;
             this.WatchedFolders = new BindableCollection<WatchedFolder>(configuration.Folders.Select(x => new WatchedFolder()
@@ -59,6 +61,7 @@ namespace SyncTrayzor.Pages
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
             configuration.StartSyncThingAutomatically = this.StartSyncThingAutomatically;
             configuration.SyncThingAddress = this.SyncThingAddress;
+            configuration.SyncThingApiKey = this.SyncThingApiKey;
             configuration.StartOnLogon = this.StartOnLogon;
             configuration.StartMinimized = this.StartMinimized;
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();

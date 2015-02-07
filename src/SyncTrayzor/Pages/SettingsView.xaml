@@ -30,8 +30,10 @@
         <GroupBox DockPanel.Dock="Top" Header="SyncThing">
             <DockPanel>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start SyncThing on application start</CheckBox>
-                <TextBlock DockPanel.Dock="Top"> Address:</TextBlock>
-                <TextBox DockPanel.Dock="Top" Text="{Binding SyncThingAddress}"/>
+                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}">Address:</Label>
+                <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" Text="{Binding SyncThingAddress}"/>
+                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}">API Key:</Label>
+                <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey}"/>
             </DockPanel>
         </GroupBox>
         

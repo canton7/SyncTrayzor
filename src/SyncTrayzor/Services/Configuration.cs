@@ -41,16 +41,17 @@ namespace SyncTrayzor.Services
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
         public bool StartSyncThingAutomatically { get; set; }
+        public string SyncThingApiKey { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
 
         public Configuration()
-            : this("")
+            : this(null, null)
         { }
 
-        public Configuration(string basePath)
+        public Configuration(string syncThingPath, string syncThingApiKey)
         {
-            this.SyncThingPath = Path.Combine(basePath, "syncthing.exe");
+            this.SyncThingPath = syncThingPath;
             this.ShowTrayIconOnlyOnClose = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
@@ -58,6 +59,7 @@ namespace SyncTrayzor.Services
             this.StartOnLogon = false;
             this.StartMinimized = true;
             this.StartSyncThingAutomatically = true;
+            this.SyncThingApiKey = syncThingApiKey;
             this.Folders = new List<FolderConfiguration>();
         }
 
@@ -71,6 +73,7 @@ namespace SyncTrayzor.Services
             this.StartOnLogon = other.StartOnLogon;
             this.StartMinimized = other.StartMinimized;
             this.StartSyncThingAutomatically = other.StartSyncThingAutomatically;
+            this.SyncThingApiKey = other.SyncThingApiKey;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
         }
     }

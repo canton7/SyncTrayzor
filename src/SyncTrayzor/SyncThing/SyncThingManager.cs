@@ -20,6 +20,7 @@ namespace SyncTrayzor.SyncThing
         event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
         string ExecutablePath { get; set; }
+        string ApiKey { get; set; }
         Uri Address { get; set; }
         DateTime? StartedAt { get; }
         Dictionary<string, Folder> Folders { get; }
@@ -37,7 +38,6 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingApiClient apiClient;
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly ISyncThingConnectionsWatcher connectionsWatcher;
-        private readonly string apiKey;
 
         public DateTime? StartedAt { get; private set; }
 
@@ -51,6 +51,7 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
         public string ExecutablePath { get; set; }
+        public string ApiKey { get; set; }
         public Uri Address { get; set; }
 
         public Dictionary<string, Folder> Folders { get; private set; }
@@ -76,14 +77,12 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
 
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
-
-            this.apiKey = "abc123";
-            this.processRunner.ApiKey = apiKey;
         }
 
         public void Start()
         {
-            this.apiClient.SetConnectionDetails(this.Address, this.apiKey);
+            this.apiClient.SetConnectionDetails(this.Address, this.ApiKey);
+            this.processRunner.ApiKey = this.ApiKey;
             this.processRunner.HostAddress = this.Address.ToString();
             this.processRunner.ExecutablePath = this.ExecutablePath;
 
