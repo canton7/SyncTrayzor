@@ -21,6 +21,7 @@ namespace SyncTrayzor.SyncThing
 
         void Start();
         void Kill();
+        void KillAllSyncthingProcesses();
     }
 
     public class SyncThingProcessRunner : ISyncThingProcessRunner
@@ -118,10 +119,10 @@ namespace SyncTrayzor.SyncThing
         private static void KillProcessAndChildren(int pid)
         {
             var searcher = new ManagementObjectSearcher("Select * From Win32_Process Where ParentProcessID=" + pid);
-            var moc = searcher.Get();
-            foreach (ManagementObject mo in moc)
+            var managementObjectCollection = searcher.Get();
+            foreach (var managementObject in managementObjectCollection)
             {
-                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+                KillProcessAndChildren(Convert.ToInt32(managementObject["ProcessID"]));
             }
             try
             {
@@ -131,6 +132,14 @@ namespace SyncTrayzor.SyncThing
             catch (ArgumentException)
             {
                 // Process already exited.
+            }
+        }
+
+        public void KillAllSyncthingProcesses()
+        {
+            foreach (var process in Process.GetProcessesByName("syncthing"))
+            {
+                process.Kill();
             }
         }
     }

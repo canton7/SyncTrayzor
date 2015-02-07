@@ -9,6 +9,14 @@
                 <MenuItem Header="_Settings" Command="{s:Action ShowSettings}"/>
                 <MenuItem Header="_Exit" Command="{s:Action Shutdown}"/>
             </MenuItem>
+            <MenuItem Header="Syncthing">
+                <MenuItem Header="Start" Command="{s:Action Start}"/>
+                <MenuItem Header="Stop" Command="{s:Action Stop}"/>
+                <MenuItem Header="Kill" Command="{s:Action Kill}"/>
+                <MenuItem Header="Refresh Browser" Command="{s:Action RefreshBrowser}"/>
+                <MenuItem Header="Open External Browser" Command="{s:Action OpenBrowser}"/>
+                <MenuItem Header="Kill all Syncthing processes" Command="{s:Action KillAllSyncthingProcesses}"/>
+            </MenuItem>
         </Menu>
         
         <Grid>

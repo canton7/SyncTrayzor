@@ -101,6 +101,12 @@ namespace SyncTrayzor.Pages
             Process.Start(this.syncThingManager.Address.NormalizeZeroHost().ToString());
         }
 
+        public void KillAllSyncthingProcesses()
+        {
+            if (this.windowManager.ShowMessageBox("Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?", "Really?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                this.syncThingManager.KillAllSyncthingProcesses();
+        }
+
         public void ShowSettings()
         {
             var vm = this.settingsViewModelFactory();

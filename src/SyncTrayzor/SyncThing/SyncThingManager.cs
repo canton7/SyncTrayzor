@@ -28,6 +28,7 @@ namespace SyncTrayzor.SyncThing
         void Start();
         Task StopAsync();
         void Kill();
+        void KillAllSyncthingProcesses();
         Task ScanAsync(string folderId, string subPath);
     }
 
@@ -100,6 +101,11 @@ namespace SyncTrayzor.SyncThing
         {
             this.processRunner.Kill();
             this.SetState(SyncThingState.Stopped);
+        }
+
+        public void KillAllSyncthingProcesses()
+        {
+            this.processRunner.KillAllSyncthingProcesses();
         }
 
         public Task ScanAsync(string folderId, string subPath)
