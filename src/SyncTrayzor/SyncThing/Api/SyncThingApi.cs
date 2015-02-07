@@ -23,5 +23,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         [Post("/rest/scan")]
         Task ScanAsync(string folder, string sub);
+
+        [Get("/rest/system")]
+        Task<SystemInfo> FetchSystemInfoAsync();
     }
 }

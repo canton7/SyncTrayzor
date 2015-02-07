@@ -119,6 +119,7 @@
     <Compile Include="SyncThing\Api\RemoteIndexUpdatedEvent.cs" />
     <Compile Include="SyncThing\Api\StartupCompleteEvent.cs" />
     <Compile Include="SyncThing\Api\StateChangedEvent.cs" />
+    <Compile Include="SyncThing\Api\SystemInfo.cs" />
     <Compile Include="SyncThing\Folder.cs" />
     <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />

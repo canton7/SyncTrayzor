@@ -122,8 +122,17 @@ namespace SyncTrayzor.SyncThing
             this.StartedAt = DateTime.UtcNow;
             this.SetState(SyncThingState.Running);
 
-            var config = await this.apiClient.FetchConfigAsync();
-            this.Folders = config.Folders.ToDictionary(x => x.ID, x => new Folder(x.ID, x.Path));
+            var configTask = this.apiClient.FetchConfigAsync();
+            var systemTask = this.apiClient.FetchSystemInfoAsync();
+            await Task.WhenAll(configTask, systemTask);
+
+            var tilde = systemTask.Result.Tilde;
+
+            this.Folders = configTask.Result.Folders.ToDictionary(x => x.ID, x =>
+            {
+                var path = x.Path.Replace("~", tilde);
+                return new Folder(x.ID, path);
+            });
 
             this.OnDataLoaded();
             this.IsDataLoaded = true;

@@ -19,6 +19,7 @@ namespace SyncTrayzor.SyncThing
         Task<List<Event>> FetchEventsAsync(int since, int? limit = null);
         Task<Config> FetchConfigAsync();
         Task ScanAsync(string folderId, string subPath);
+        Task<SystemInfo> FetchSystemInfoAsync();
     }
 
     public class SyncThingApiClient : ISyncThingApiClient
@@ -66,6 +67,12 @@ namespace SyncTrayzor.SyncThing
         {
             this.EnsureSetup();
             return this.api.ScanAsync(folderId, subPath);
+        }
+
+        public Task<SystemInfo> FetchSystemInfoAsync()
+        {
+            this.EnsureSetup();
+            return this.api.FetchSystemInfoAsync();
         }
 
         private void EnsureSetup()
