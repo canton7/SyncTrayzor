@@ -49,6 +49,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icons\idle.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
@@ -194,6 +199,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
+    <Resource Include="Icons\idle.ico" />
+    <Resource Include="Icons\stopped.ico" />
+    <Resource Include="Icons\syncing_1.ico" />
+    <Resource Include="Icons\syncing_2.ico" />
+    <Resource Include="Icons\syncing_3.ico" />
+    <Resource Include="Icons\syncing_4.ico" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="SHDocVw">
@@ -223,18 +234,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="NotifyIcon\Icons\idle.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="NotifyIcon\Icons\stopped.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="NotifyIcon\Icons\syncing_1.ico" />
-    <Resource Include="NotifyIcon\Icons\syncing_2.ico" />
-    <Resource Include="NotifyIcon\Icons\syncing_3.ico" />
-    <Resource Include="NotifyIcon\Icons\syncing_4.ico" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
