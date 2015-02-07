@@ -11,6 +11,7 @@
         <WebBrowser xaml:WebBrowserUtilities.Location="{Binding Location}" Navigating="{s:Action Navigating}"
                     xaml:WebBrowserUtilities.PreventOpenExternalWindow="True"
                     xaml:WebBrowserUtilities.ExternalWindowOpened="{s:Action ExternalWindowOpened}"
+                    xaml:WebBrowserUtilities.DisableNavigationSounds="True"
                     Visibility="{Binding ShowWebBrowser, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" />
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                    Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Starting...</TextBlock>

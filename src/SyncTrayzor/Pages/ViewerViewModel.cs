@@ -30,18 +30,25 @@ namespace SyncTrayzor.Pages
             this.syncThingManager.StateChanged += (o, e) =>
             {
                 this.syncThingState = e.NewState;
-
-                if (e.NewState == SyncThingState.Running)
-                    this.RefreshBrowser();
-                else
-                    this.Location = null;
+                this.RefreshBrowser();
             };
         }
 
         public void RefreshBrowser()
         {
             this.Location = null;
-            this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
+            if (this.syncThingManager.State == SyncThingState.Running && this.IsActive)
+                this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
+        }
+
+        protected override void OnActivate()
+        {
+            this.RefreshBrowser();
+        }
+
+        protected override void OnDeactivate()
+        {
+            this.Location = null;
         }
 
         public void Navigating(NavigatingCancelEventArgs e)

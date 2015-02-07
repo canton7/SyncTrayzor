@@ -49,6 +49,18 @@ namespace SyncTrayzor.Pages
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
         }
 
+        protected override void OnActivate()
+        {
+            // Hacky workaround
+            ((IActivate)this.Viewer).Activate();
+        }
+
+        protected override void OnDeactivate()
+        {
+            // Hacky workaround
+            ((IDeactivate)this.Viewer).Deactivate();
+        }
+
         public bool CanStart
         {
             get { return this.SyncThingState == SyncThingState.Stopped; }

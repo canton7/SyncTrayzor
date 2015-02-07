@@ -36,6 +36,40 @@ namespace SyncTrayzor.Xaml
             }));
 
 
+        // http://blogs.microsoft.co.il/shair/2011/09/05/wpf-webbrowser-how-to-disable-sound/
+        private const int FeatureDisableNavigationSounds = 21;
+        private const int SetFeatureOnProcess = 0x00000002;
+
+        [DllImport("urlmon.dll")]
+        [PreserveSig]
+        [return: MarshalAs(UnmanagedType.Error)]
+        private static extern int CoInternetSetFeatureEnabled(int featureEntry, [MarshalAs(UnmanagedType.U4)] int dwFlags, bool fEnable);
+
+        public static bool GetDisableNavigationSounds(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(DisableNavigationSoundsProperty);
+        }
+
+        public static void SetDisableNavigationSounds(DependencyObject obj, bool value)
+        {
+            obj.SetValue(DisableNavigationSoundsProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for DisableNavigationSounds.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DisableNavigationSoundsProperty =
+            DependencyProperty.RegisterAttached("DisableNavigationSounds", typeof(bool), typeof(WebBrowserUtilities), new PropertyMetadata(false, (d, e) =>
+
+        {
+            if (!(e.NewValue is bool))
+                return;
+
+            if ((bool)e.NewValue)
+                CoInternetSetFeatureEnabled(FeatureDisableNavigationSounds, SetFeatureOnProcess, true);
+            else
+                CoInternetSetFeatureEnabled(FeatureDisableNavigationSounds, SetFeatureOnProcess, false);
+        }));
+
+
         public static bool GetPreventOpenExternalWindow(DependencyObject obj)
         {
             return (bool)obj.GetValue(PreventOpenExternalWindowProperty);
