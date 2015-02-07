@@ -31,6 +31,7 @@ namespace SyncTrayzor
             builder.Bind<ISyncThingEventWatcher>().To<SyncThingEventWatcher>().InSingletonScope();
             builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
             builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
+            builder.Bind<ISyncThingConnectionsWatcher>().To<SyncThingConnectionsWatcher>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
         }

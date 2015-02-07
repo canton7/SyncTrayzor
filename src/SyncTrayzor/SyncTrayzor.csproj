@@ -108,6 +108,7 @@
     <Compile Include="Services\DirectoryWatcher.cs" />
     <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\Api\Config.cs" />
+    <Compile Include="SyncThing\Api\Connections.cs" />
     <Compile Include="SyncThing\Api\Event.cs" />
     <Compile Include="SyncThing\Api\EventConverter.cs" />
     <Compile Include="SyncThing\Api\EventType.cs" />
@@ -126,6 +127,8 @@
     <Compile Include="SyncThing\Api\SyncThingApi.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingApiClient.cs" />
+    <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
+    <Compile Include="SyncThing\SyncThingConnectionsWatcher.cs" />
     <Compile Include="SyncThing\SyncThingEventWatcher.cs" />
     <Compile Include="SyncThing\SyncThingManager.cs" />
     <Compile Include="SyncThing\SyncThingPoller.cs" />

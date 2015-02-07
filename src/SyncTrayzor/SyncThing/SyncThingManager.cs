@@ -16,6 +16,8 @@ namespace SyncTrayzor.SyncThing
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
+        SyncThingConnectionStats TotalConnectionStats { get; }
+        event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
         string ExecutablePath { get; set; }
         Uri Address { get; set; }
@@ -34,6 +36,7 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingProcessRunner processRunner;
         private readonly ISyncThingApiClient apiClient;
         private readonly ISyncThingEventWatcher eventWatcher;
+        private readonly ISyncThingConnectionsWatcher connectionsWatcher;
         private readonly string apiKey;
 
         public DateTime? StartedAt { get; private set; }
@@ -44,6 +47,8 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
+        public SyncThingConnectionStats TotalConnectionStats { get; private set; }
+        public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
         public string ExecutablePath { get; set; }
         public Uri Address { get; set; }
@@ -53,7 +58,8 @@ namespace SyncTrayzor.SyncThing
         public SyncThingManager(
             ISyncThingProcessRunner processRunner,
             ISyncThingApiClient apiClient,
-            ISyncThingEventWatcher eventWatcher)
+            ISyncThingEventWatcher eventWatcher,
+            ISyncThingConnectionsWatcher connectionsWatcher)
         {
             this.Folders = new Dictionary<string, Folder>();
 
@@ -61,12 +67,15 @@ namespace SyncTrayzor.SyncThing
             this.processRunner = processRunner;
             this.apiClient = apiClient;
             this.eventWatcher = eventWatcher;
+            this.connectionsWatcher = connectionsWatcher;
 
             this.processRunner.ProcessStopped += (o, e) => this.SetState(SyncThingState.Stopped);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
 
             this.eventWatcher.StartupComplete += (o, e) => this.StartupComplete();
             this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
+
+            this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
             this.apiKey = "abc123";
             this.processRunner.ApiKey = apiKey;
@@ -107,14 +116,16 @@ namespace SyncTrayzor.SyncThing
             var oldState = this.State;
             this.State = state;
 
-            this.UpdateEventWatcherState(state);
+            this.UpdateWatchersState(state);
 
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
-        private void UpdateEventWatcherState(SyncThingState state)
+        private void UpdateWatchersState(SyncThingState state)
         {
-            this.eventWatcher.Running = (state == SyncThingState.Starting || state == SyncThingState.Running);
+            var running = (state == SyncThingState.Starting || state == SyncThingState.Running);
+            this.eventWatcher.Running = running;
+            this.connectionsWatcher.Running = running;
         }
 
         private async void StartupComplete()
@@ -152,6 +163,12 @@ namespace SyncTrayzor.SyncThing
             folder.SyncState = e.SyncState;
 
             this.eventDispatcher.Raise(this.FolderSyncStateChanged, new FolderSyncStateChangeEventArgs(folder, e.PrevSyncState, e.SyncState));
+        }
+
+        private void OnTotalConnectionStatsChanged(SyncThingConnectionStats stats)
+        {
+            this.TotalConnectionStats = stats;
+            this.eventDispatcher.Raise(this.TotalConnectionStatsChanged, new ConnectionStatsChangedEventArgs(stats));
         }
 
         private void OnDataLoaded()

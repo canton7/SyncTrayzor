@@ -26,5 +26,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         [Get("/rest/system")]
         Task<SystemInfo> FetchSystemInfoAsync();
+
+        [Get("/rest/connections")]
+        Task<Connections> FetchConnectionsAsync();
     }
 }

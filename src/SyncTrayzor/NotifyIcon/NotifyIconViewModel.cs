@@ -35,10 +35,10 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
             this.SyncThingState = this.syncThingManager.State;
 
-            this.syncThingManager.FolderSyncStateChanged += (o, e) =>
+            this.syncThingManager.TotalConnectionStatsChanged += (o, e) =>
             {
-                this.SyncThingSyncing = this.syncThingManager.Folders.Values.Any(x => x.SyncState == FolderSyncState.Syncing);
-                System.Diagnostics.Debug.WriteLine(String.Format("SYNCING: {0}", this.SyncThingSyncing));
+                var stats = e.TotalConnectionStats;
+                this.SyncThingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
             };
         }
 
