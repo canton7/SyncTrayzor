@@ -21,33 +21,16 @@
         
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="*" MinHeight="100"/>
             </Grid.RowDefinitions>
+            
+            <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <StackPanel.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Padding" Value="7,2"/>
-                        <Setter Property="Margin" Value="0,0,5,0"/>
-                    </Style>
-                </StackPanel.Resources>
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
 
-                <TextBlock Text="{Binding ExecutablePath}"/>
-                <Button Command="{s:Action Start}">Start</Button>
-                <Button Command="{s:Action Stop}">Stop</Button>
-                <Button Command="{s:Action Kill}">Kill</Button>
-                <Button Command="{s:Action RefreshBrowser}">Refresh Browser</Button>
-                <Button Command="{s:Action OpenBrowser}">Open External Browser</Button>
-            </StackPanel>
-
-            <ContentControl Grid.Row="1" s:View.Model="{Binding Viewer}"/>
-
-            <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
-
-            <ContentControl Grid.Row="3" s:View.Model="{Binding Console}" MinHeight="100"/>
+            <ContentControl Grid.Row="2" s:View.Model="{Binding Console}" MinHeight="100"/>
         </Grid>
     </DockPanel>
 </Window>
