@@ -127,6 +127,7 @@
     <Compile Include="SyncThing\SyncThingApiClient.cs" />
     <Compile Include="SyncThing\SyncThingEventWatcher.cs" />
     <Compile Include="SyncThing\SyncThingManager.cs" />
+    <Compile Include="SyncThing\SyncThingPoller.cs" />
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
