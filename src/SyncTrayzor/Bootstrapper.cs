@@ -3,6 +3,7 @@ using StyletIoC;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace SyncTrayzor
             builder.Bind<ISyncThingConnectionsWatcher>().To<SyncThingConnectionsWatcher>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
+            builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
+            builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
         }
 
         protected override void Launch()
@@ -50,6 +53,9 @@ namespace SyncTrayzor
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncThingAutomatically)
                 ((ShellViewModel)this.RootViewModel).Start();
+
+            // We don't care if this fails
+            this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
         }
 
         protected override void OnExit(System.Windows.ExitEventArgs e)

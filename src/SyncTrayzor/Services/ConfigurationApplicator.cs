@@ -1,4 +1,6 @@
 ﻿using SyncTrayzor.NotifyIcon;
+using SyncTrayzor.Properties;
+using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -16,13 +18,17 @@ namespace SyncTrayzor.Services
         private readonly ISyncThingManager syncThingManager;
         private readonly AutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
+        private readonly IGithubApiClient githubApiClient;
+        private readonly IUpdateChecker updateChecker;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
             INotifyIconManager notifyIconManager,
             ISyncThingManager syncThingManager,
             AutostartProvider autostartProvider,
-            IWatchedFolderMonitor watchedFolderMonitor)
+            IWatchedFolderMonitor watchedFolderMonitor,
+            IGithubApiClient githubApiClient,
+            IUpdateChecker updateChecker)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
@@ -31,11 +37,19 @@ namespace SyncTrayzor.Services
             this.syncThingManager = syncThingManager;
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
+            this.githubApiClient = githubApiClient;
+            this.updateChecker = updateChecker;
 
             // Do this before signing up for DataLoaded, so any changes we make don't trigger us again
             this.UpdateConfigOnInit();
 
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
+            this.updateChecker.VersionIgnored += (o, e) =>
+            {
+                var config = this.configurationProvider.Load();
+                config.LatestNotifiedVersion = e.IgnoredVersion;
+                this.configurationProvider.Save(config);
+            };
         }
 
         private void UpdateConfigOnInit()
@@ -53,6 +67,7 @@ namespace SyncTrayzor.Services
 
         public void ApplyConfiguration()
         {
+            this.githubApiClient.SetConnectionDetails(Settings.Default.GithubApiUrl);
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
@@ -69,6 +84,8 @@ namespace SyncTrayzor.Services
             this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
+
+            this.updateChecker.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
         }
 
         private void LoadFolders()

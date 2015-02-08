@@ -111,6 +111,11 @@
     <Compile Include="RefitStubs.cs" />
     <Compile Include="Services\ApplicationState.cs" />
     <Compile Include="Services\DirectoryWatcher.cs" />
+    <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
+    <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
+    <Compile Include="Services\UpdateChecker\IGithubApi.cs" />
+    <Compile Include="Services\UpdateChecker\Release.cs" />
+    <Compile Include="Services\UpdateChecker\ReleaseResponse.cs" />
     <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\Api\Config.cs" />
     <Compile Include="SyncThing\Api\Connections.cs" />
@@ -129,7 +134,7 @@
     <Compile Include="SyncThing\Folder.cs" />
     <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
-    <Compile Include="SyncThing\Api\SyncThingApi.cs" />
+    <Compile Include="SyncThing\Api\ISyncThingApi.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingApiClient.cs" />
     <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
