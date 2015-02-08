@@ -33,15 +33,15 @@ namespace SyncTrayzor.Services
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public string SyncThingPath { get; set; }
+        public string SyncthingPath { get; set; }
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
-        public string SyncThingAddress { get; set; }
+        public string SyncthingAddress { get; set; }
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
-        public bool StartSyncThingAutomatically { get; set; }
-        public string SyncThingApiKey { get; set; }
+        public bool StartSyncthingAutomatically { get; set; }
+        public string SyncthingApiKey { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
 
@@ -60,30 +60,30 @@ namespace SyncTrayzor.Services
 
         public Configuration(string syncThingPath, string syncThingApiKey)
         {
-            this.SyncThingPath = syncThingPath;
+            this.SyncthingPath = syncThingPath;
             this.ShowTrayIconOnlyOnClose = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
-            this.SyncThingAddress = "http://localhost:8384";
+            this.SyncthingAddress = "http://localhost:8384";
             this.StartOnLogon = false;
             this.StartMinimized = true;
-            this.StartSyncThingAutomatically = true;
-            this.SyncThingApiKey = syncThingApiKey;
+            this.StartSyncthingAutomatically = true;
+            this.SyncthingApiKey = syncThingApiKey;
             this.Folders = new List<FolderConfiguration>();
             this.LatestNotifiedVersion = null;
         }
 
         public Configuration(Configuration other)
         {
-            this.SyncThingPath = other.SyncThingPath;
+            this.SyncthingPath = other.SyncthingPath;
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
-            this.SyncThingAddress = other.SyncThingAddress;
+            this.SyncthingAddress = other.SyncthingAddress;
             this.StartOnLogon = other.StartOnLogon;
             this.StartMinimized = other.StartMinimized;
-            this.StartSyncThingAutomatically = other.StartSyncThingAutomatically;
-            this.SyncThingApiKey = other.SyncThingApiKey;
+            this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
+            this.SyncthingApiKey = other.SyncthingApiKey;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
         }

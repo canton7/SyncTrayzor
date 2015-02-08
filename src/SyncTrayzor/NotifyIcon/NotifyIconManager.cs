@@ -78,7 +78,7 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
                 if (this.ShowSynchronizedBalloon && this.syncThingManager.StartedAt.HasValue &&
-                    DateTime.UtcNow - this.syncThingManager.StartedAt.Value < TimeSpan.FromSeconds(60) &&
+                    DateTime.UtcNow - this.syncThingManager.StartedAt.Value > TimeSpan.FromSeconds(60) &&
                     e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
                 {
                     Application.Current.Dispatcher.CheckAccess(); // Double-check

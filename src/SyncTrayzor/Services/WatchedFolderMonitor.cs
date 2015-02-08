@@ -69,6 +69,11 @@ namespace SyncTrayzor.Services
 
         private void DirectoryChanged(string folderId, string subPath)
         {
+            Folder folder;
+            // If it's currently syncing, then don't refresh it
+            if (!this.syncThingManager.Folders.TryGetValue(folderId, out folder) || folder.SyncState == FolderSyncState.Syncing)
+                return;
+
             this.syncThingManager.ScanAsync(folderId, subPath.Replace(Path.DirectorySeparatorChar, '/'));
         }
     }

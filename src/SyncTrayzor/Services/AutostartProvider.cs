@@ -34,7 +34,7 @@ namespace SyncTrayzor.Services
             if (value != null)
             {
                 autoStart = true;
-                if (value.Trim().EndsWith("-minimized"))
+                if (value.Contains(" -minimized"))
                     startMinimized = true;
             }
 

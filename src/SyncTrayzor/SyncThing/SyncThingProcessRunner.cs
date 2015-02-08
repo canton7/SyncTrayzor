@@ -44,7 +44,7 @@ namespace SyncTrayzor.SyncThing
         public void Start()
         {
             if (!File.Exists(this.ExecutablePath))
-                throw new Exception(String.Format("Unable to find SyncThing at path {0}", this.ExecutablePath));
+                throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
 
             var processStartInfo = new ProcessStartInfo()
             {

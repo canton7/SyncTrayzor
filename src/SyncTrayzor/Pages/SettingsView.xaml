@@ -7,7 +7,7 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Title="SettingsView" Height="300" Width="300"
+        Title="SettingsView" Height="500" Width="300"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoWatchedFoldersVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
@@ -27,9 +27,9 @@
             </DockPanel>
         </GroupBox>
         
-        <GroupBox DockPanel.Dock="Top" Header="SyncThing">
+        <GroupBox DockPanel.Dock="Top" Header="Syncthing">
             <DockPanel>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start SyncThing on application start</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start Syncthing on application start</CheckBox>
                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}">Address:</Label>
                 <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" Text="{Binding SyncThingAddress}"/>
                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}">API Key:</Label>
@@ -49,7 +49,7 @@
         <GroupBox DockPanel.Dock="Top" Header="Watched Folders">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Visibility="{Binding WatchedFolders, Converter={StaticResource NoWatchedFoldersVisibilityConverter}}">
-                    Folders unavailable. Please start SyncThing
+                    Folders unavailable. Please start Syncthing
                 </TextBlock>
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,10" Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
                     The following folders will be watched for changes, which avoids polling.

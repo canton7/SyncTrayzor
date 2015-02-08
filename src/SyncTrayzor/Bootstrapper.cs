@@ -51,7 +51,7 @@ namespace SyncTrayzor
                 base.Launch();
 
             var config = this.Container.Get<IConfigurationProvider>().Load();
-            if (config.StartSyncThingAutomatically)
+            if (config.StartSyncthingAutomatically)
                 ((ShellViewModel)this.RootViewModel).Start();
 
             // We don't care if this fails

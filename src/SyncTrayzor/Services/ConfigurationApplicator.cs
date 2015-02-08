@@ -79,9 +79,9 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
 
-            this.syncThingManager.Address = new Uri(configuration.SyncThingAddress);
-            this.syncThingManager.ExecutablePath = configuration.SyncThingPath;
-            this.syncThingManager.ApiKey = configuration.SyncThingApiKey;
+            this.syncThingManager.Address = new Uri(configuration.SyncthingAddress);
+            this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
+            this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
 
             this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
 

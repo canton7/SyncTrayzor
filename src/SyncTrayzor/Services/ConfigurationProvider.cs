@@ -100,8 +100,8 @@ namespace SyncTrayzor.Services
 
         private void EnsureConsistency(Configuration configuration)
         {
-            if (!File.Exists(configuration.SyncThingPath))
-                throw new ConfigurationException(String.Format("Unable to find file {0}", configuration.SyncThingPath));
+            if (!File.Exists(configuration.SyncthingPath))
+                throw new ConfigurationException(String.Format("Unable to find file {0}", configuration.SyncthingPath));
         }
 
         private string GenerateApiKey()
