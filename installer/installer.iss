@@ -1,6 +1,7 @@
 #define AppExeName "SyncTrayzor.exe"
-#define AppSrc "..\src"
-#define AppBin "..\bin\Release"
+#define AppRoot ".."
+#define AppSrc AppRoot + "\src\SyncTrayzor"
+#define AppBin AppRoot +"\bin\Release"
 #define AppExe AppBin + "\SyncTrayzor.exe"
 #define AppName GetStringFileInfo(AppExe, "ProductName")
 #define AppVersion GetFileVersion(AppExe)
@@ -10,7 +11,7 @@
 
 
 [Setup]
-AppId={{0512E32C-CF12-4633-B836-DA29E0BAB2F5}
+AppId={{c004dcef-b848-46a5-9c30-4dbf736396fa}
 AppName={#AppName}
 AppVersion={#AppVersion}
 ;AppVerName={#AppName} {#AppVersion}
@@ -21,9 +22,10 @@ AppUpdatesURL={#AppURL}
 DefaultDirName={pf}\{#AppName}
 DefaultGroupName={#AppName}
 AllowNoIcons=yes
-LicenseFile={#AppSrc}\LICENSE.txt
-OutputBaseFilename={#AppName}Setup
-SetupIconFile={#AppSrc}\icon.ico
+LicenseFile={#AppRoot}\LICENSE.txt
+OutputDir="."
+OutputBaseFilename={#AppName}Setup_{#AppVersion}
+SetupIconFile={#AppSrc}\Icons\default.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -37,12 +39,11 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\{#AppExeName}.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\{#AppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\*.md"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\*.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "syncthing.exe"; DestDir: "{userappdata}\{#AppDataFolder}\syncthing.exe"
+Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "syncthing.exe"; DestDir: "{userappdata}\{#AppDataFolder}"
 Source: "dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 
 [Icons]

@@ -34,7 +34,7 @@ packages/
 *.nupkg
 
 #Installer
-installer/Output
+installer/SyncTrayzor*.exe
 
 *.gjq
 *.tmp

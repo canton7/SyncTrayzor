@@ -3,7 +3,7 @@
                     xmlns:s="https://github.com/canton7/Stylet"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
     
-    <BitmapImage x:Key="TaskbarIdleIcon" UriSource="../Icons/idle.ico"/>
+    <BitmapImage x:Key="TaskbarIdleIcon" UriSource="../Icons/default.ico"/>
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="../Icons/stopped.ico"/>
     <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="../Icons/syncing_1.ico"/>
     <BitmapImage x:Key="TaskbarSyncing2Icon" UriSource="../Icons/syncing_2.ico"/>
