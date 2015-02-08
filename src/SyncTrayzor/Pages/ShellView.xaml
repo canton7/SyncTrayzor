@@ -11,12 +11,15 @@
                 <MenuItem Header="_Exit" Command="{s:Action Shutdown}"/>
             </MenuItem>
             <MenuItem Header="Syncthing">
-                <MenuItem Header="Start" Command="{s:Action Start}"/>
-                <MenuItem Header="Stop" Command="{s:Action Stop}"/>
-                <MenuItem Header="Kill" Command="{s:Action Kill}"/>
-                <MenuItem Header="Refresh Browser" Command="{s:Action RefreshBrowser}"/>
-                <MenuItem Header="Open External Browser" Command="{s:Action OpenBrowser}"/>
-                <MenuItem Header="Kill all Syncthing processes" Command="{s:Action KillAllSyncthingProcesses}"/>
+                <MenuItem Header="_Start" Command="{s:Action Start}"/>
+                <MenuItem Header="S_top" Command="{s:Action Stop}"/>
+                <MenuItem Header="_Kill" Command="{s:Action Kill}"/>
+                <MenuItem Header="_Refresh Browser" Command="{s:Action RefreshBrowser}"/>
+                <MenuItem Header="_Open External Browser" Command="{s:Action OpenBrowser}"/>
+                <MenuItem Header="Kill _all Syncthing processes" Command="{s:Action KillAllSyncthingProcesses}"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Command="{s:Action ShowAbout}"/>
             </MenuItem>
         </Menu>
         

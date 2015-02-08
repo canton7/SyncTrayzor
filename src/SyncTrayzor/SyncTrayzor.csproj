@@ -99,6 +99,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NotifyIcon\INotifyIconDelegate.cs" />
+    <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Configuration.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="SyncThing\Api\RemoteIndexUpdatedEvent.cs" />
     <Compile Include="SyncThing\Api\StartupCompleteEvent.cs" />
     <Compile Include="SyncThing\Api\StateChangedEvent.cs" />
+    <Compile Include="SyncThing\Api\SyncthingVersion.cs" />
     <Compile Include="SyncThing\Api\SystemInfo.cs" />
     <Compile Include="SyncThing\Folder.cs" />
     <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
@@ -182,6 +184,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

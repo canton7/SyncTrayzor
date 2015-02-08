@@ -21,6 +21,7 @@ namespace SyncTrayzor.SyncThing
         Task ScanAsync(string folderId, string subPath);
         Task<SystemInfo> FetchSystemInfoAsync();
         Task<Connections> FetchConnectionsAsync();
+        Task<SyncthingVersion> FetchVersionAsync();
     }
 
     public class SyncThingApiClient : ISyncThingApiClient
@@ -80,6 +81,12 @@ namespace SyncTrayzor.SyncThing
         {
             this.EnsureSetup();
             return this.api.FetchConnectionsAsync();
+        }
+
+        public Task<SyncthingVersion> FetchVersionAsync()
+        {
+            this.EnsureSetup();
+            return this.api.FetchVersionAsync();
         }
 
         private void EnsureSetup()

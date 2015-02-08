@@ -31,5 +31,14 @@ namespace SyncTrayzor.Properties {
                 return ((global::System.Uri)(this["GithubApiUrl"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://github.com/canton7/SyncTrayzor")]
+        public string HomepageUrl {
+            get {
+                return ((string)(this["HomepageUrl"]));
+            }
+        }
     }
 }

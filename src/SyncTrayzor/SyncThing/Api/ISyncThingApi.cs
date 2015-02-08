@@ -29,5 +29,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         [Get("/rest/connections")]
         Task<Connections> FetchConnectionsAsync();
+
+        [Get("/rest/version")]
+        Task<SyncthingVersion> FetchVersionAsync();
     }
 }

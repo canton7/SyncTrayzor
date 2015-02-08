@@ -19,6 +19,7 @@ namespace SyncTrayzor.Pages
         private readonly ISyncThingManager syncThingManager;
         private readonly IApplicationState application;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
+        private readonly Func<AboutViewModel> aboutViewModelFactory;
 
         public string ExecutablePath { get; private set; }
         public ConsoleViewModel Console { get; private set; }
@@ -32,7 +33,8 @@ namespace SyncTrayzor.Pages
             IApplicationState application,
             ConsoleViewModel console,
             ViewerViewModel viewer,
-            Func<SettingsViewModel> settingsViewModelFactory)
+            Func<SettingsViewModel> settingsViewModelFactory,
+            Func<AboutViewModel> aboutViewModelFactory)
         {
             this.DisplayName = "SyncTrayzor";
 
@@ -42,6 +44,7 @@ namespace SyncTrayzor.Pages
             this.Console = console;
             this.Viewer = viewer;
             this.settingsViewModelFactory = settingsViewModelFactory;
+            this.aboutViewModelFactory = aboutViewModelFactory;
 
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
@@ -122,6 +125,12 @@ namespace SyncTrayzor.Pages
         public void ShowSettings()
         {
             var vm = this.settingsViewModelFactory();
+            this.windowManager.ShowDialog(vm);
+        }
+
+        public void ShowAbout()
+        {
+            var vm = this.aboutViewModelFactory();
             this.windowManager.ShowDialog(vm);
         }
 

@@ -5,5 +5,8 @@
     <Setting Name="GithubApiUrl" Type="System.Uri" Scope="Application">
       <Value Profile="(Default)">https://api.github.com/repos/canton7/SyncTrayzor</Value>
     </Setting>
+    <Setting Name="HomepageUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.Utils;
+﻿using SyncTrayzor.SyncThing.Api;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace SyncTrayzor.SyncThing
         Uri Address { get; set; }
         DateTime? StartedAt { get; }
         Dictionary<string, Folder> Folders { get; }
+        SyncthingVersion Version { get; }
 
         void Start();
         Task StopAsync();
@@ -56,6 +58,7 @@ namespace SyncTrayzor.SyncThing
         public Uri Address { get; set; }
 
         public Dictionary<string, Folder> Folders { get; private set; }
+        public SyncthingVersion Version { get; private set; }
 
         public SyncThingManager(
             ISyncThingProcessRunner processRunner,
@@ -74,7 +77,7 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.ProcessStopped += (o, e) => this.SetState(SyncThingState.Stopped);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
 
-            this.eventWatcher.StartupComplete += (o, e) => this.StartupComplete();
+            this.eventWatcher.StartupComplete += (o, e) => { var t = this.StartupCompleteAsync(); };
             this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
 
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
@@ -133,14 +136,15 @@ namespace SyncTrayzor.SyncThing
             this.connectionsWatcher.Running = running;
         }
 
-        private async void StartupComplete()
+        private async Task StartupCompleteAsync()
         {
             this.StartedAt = DateTime.UtcNow;
             this.SetState(SyncThingState.Running);
 
             var configTask = this.apiClient.FetchConfigAsync();
             var systemTask = this.apiClient.FetchSystemInfoAsync();
-            await Task.WhenAll(configTask, systemTask);
+            var versionTask = this.apiClient.FetchVersionAsync();
+            await Task.WhenAll(configTask, systemTask, versionTask);
 
             var tilde = systemTask.Result.Tilde;
 
@@ -149,6 +153,8 @@ namespace SyncTrayzor.SyncThing
                 var path = x.Path.Replace("~", tilde);
                 return new Folder(x.ID, path);
             });
+
+            this.Version = versionTask.Result;
 
             this.OnDataLoaded();
             this.IsDataLoaded = true;

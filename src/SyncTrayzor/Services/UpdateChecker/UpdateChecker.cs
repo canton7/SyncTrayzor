@@ -20,10 +20,26 @@ namespace SyncTrayzor.Services.UpdateChecker
         }
     }
 
+    public class VersionCheckResults
+    {
+        public Version LatestVersion { get; private set; }
+        public bool LatestVersionIsNewer { get; private set; }
+        public string LatestVersionDownloadUrl { get; private set; }
+
+        public VersionCheckResults(Version latestVersion, bool latestVersionIsNewer, string latestVersionDownloadUrl)
+        {
+            this.LatestVersion = latestVersion;
+            this.LatestVersionIsNewer = latestVersionIsNewer;
+            this.LatestVersionDownloadUrl = latestVersionDownloadUrl;
+        }
+    }
+
     public interface IUpdateChecker
     {
         event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         Version LatestIgnoredVersion { get; set; }
+
+        Task<VersionCheckResults> FetchUpdatesAsync();
         Task CheckForUpdatesAsync();
     }
 
@@ -41,23 +57,43 @@ namespace SyncTrayzor.Services.UpdateChecker
             this.apiClient = apiClient;
         }
 
+        public async Task<VersionCheckResults> FetchUpdatesAsync()
+        {
+            // We don't care if we fail
+            try
+            {
+                var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                var latestRelease = await this.apiClient.FetchLatestReleaseAsync();
+
+                if (latestRelease == null)
+                    return null;
+
+                return new VersionCheckResults(latestRelease.Version, latestRelease.Version > applicationVersion, latestRelease.DownloadUrl);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
         public async Task CheckForUpdatesAsync()
         {
-            var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var results = await this.FetchUpdatesAsync();
 
-            var latestRelease = await this.apiClient.FetchLatestReleaseAsync();
-
-            if (this.LatestIgnoredVersion != null && latestRelease.Version <= this.LatestIgnoredVersion)
+            if (results == null)
                 return;
 
-            if (latestRelease.Version > applicationVersion)
+            if (this.LatestIgnoredVersion != null && results.LatestVersion <= this.LatestIgnoredVersion)
+                return;
+
+            if (results.LatestVersionIsNewer)
             {
-                var msg = String.Format("A new version of SyncTrayzor is available! Do you want to download version {0}?", latestRelease.Version);
+                var msg = String.Format("A new version of SyncTrayzor is available! Do you want to download version {0}?", results.LatestVersion);
                 var result = this.windowManager.ShowMessageBox(msg, "Upgrade Version?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
-                    Process.Start(latestRelease.DownloadUrl);
+                    Process.Start(results.LatestVersionDownloadUrl);
                 else
-                    this.OnVersionIgnored(latestRelease.Version);
+                    this.OnVersionIgnored(results.LatestVersion);
             }
         }
 
