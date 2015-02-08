@@ -22,7 +22,6 @@ Installation
 ------------
 
 Grab the latest installer from the [releases](https://github.com/canton7/SyncTrayzor/releases) tab.
-If you don't like installers there's also a standalone .zip available there.
 
 
 Building from Source
