@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.ViewerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <WebBrowser xaml:WebBrowserUtilities.Location="{Binding Location}" Navigating="{s:Action Navigating}"
+                    xaml:WebBrowserUtilities.PreventOpenExternalWindow="True"
+                    xaml:WebBrowserUtilities.ExternalWindowOpened="{s:Action ExternalWindowOpened}"
+                    xaml:WebBrowserUtilities.DisableNavigationSounds="True"
+                    Visibility="{Binding ShowWebBrowser, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" />
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Starting...</TextBlock>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Stopped</TextBlock>
+    </Grid>
+</UserControl>

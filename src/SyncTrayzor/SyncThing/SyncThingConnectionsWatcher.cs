@@ -1,0 +1,68 @@
+﻿using SyncTrayzor.SyncThing.Api;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SyncTrayzor.SyncThing
+{
+    public class ConnectionStatsChangedEventArgs : EventArgs
+    {
+        public SyncThingConnectionStats TotalConnectionStats { get; private set; }
+
+        public ConnectionStatsChangedEventArgs(SyncThingConnectionStats totalConnectionStats)
+        {
+            this.TotalConnectionStats = totalConnectionStats;
+        }
+    }
+
+    public interface ISyncThingConnectionsWatcher : ISyncThingPoller
+    {
+        event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
+    }
+
+    public class SyncThingConnectionsWatcher : SyncThingPoller, ISyncThingConnectionsWatcher
+    {
+        private readonly ISyncThingApiClient apiClient;
+        
+        private DateTime lastPollCompletion;
+        private Connections prevConnections;
+
+        public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
+
+        public SyncThingConnectionsWatcher(ISyncThingApiClient apiClient)
+            : base(TimeSpan.FromSeconds(2))
+        {
+            this.apiClient = apiClient;
+        }
+
+        protected override async Task PollAsync()
+        {
+            var connections = await this.apiClient.FetchConnectionsAsync();
+            
+            var elapsed = DateTime.UtcNow - this.lastPollCompletion;
+            this.lastPollCompletion = DateTime.UtcNow;
+
+            if (this.prevConnections != null)
+            {
+                // Just do the total for now
+                var total = connections.Total;
+                var prevTotal = this.prevConnections.Total;
+                double inBytesPerSecond = (total.InBytesTotal - prevTotal.InBytesTotal) / elapsed.TotalSeconds;
+                double outBytesPerSecond = (total.OutBytesTotal - prevTotal.OutBytesTotal) / elapsed.TotalSeconds;
+
+                var totalStats = new SyncThingConnectionStats(total.InBytesTotal, total.OutBytesTotal, inBytesPerSecond, outBytesPerSecond);
+                this.OnTotalConnectionStatsChanged(totalStats);
+            }
+            this.prevConnections = connections;
+        }
+
+        private void OnTotalConnectionStatsChanged(SyncThingConnectionStats connectionStats)
+        {
+            var handler = this.TotalConnectionStatsChanged;
+            if (handler != null)
+                handler(this, new ConnectionStatsChangedEventArgs(connectionStats));
+        }
+    }
+}

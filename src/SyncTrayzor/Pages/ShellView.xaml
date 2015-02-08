@@ -1,0 +1,40 @@
+﻿<Window x:Class="SyncTrayzor.Pages.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="https://github.com/canton7/Stylet"
+        Title="ShellView" Height="700" Width="1100"
+        Icon="..\Icons\default.ico">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Settings" Command="{s:Action ShowSettings}"/>
+                <MenuItem Header="_Exit" Command="{s:Action Shutdown}"/>
+            </MenuItem>
+            <MenuItem Header="Syncthing">
+                <MenuItem Header="_Start" Command="{s:Action Start}"/>
+                <MenuItem Header="S_top" Command="{s:Action Stop}"/>
+                <MenuItem Header="_Kill" Command="{s:Action Kill}"/>
+                <MenuItem Header="_Refresh Browser" Command="{s:Action RefreshBrowser}"/>
+                <MenuItem Header="_Open External Browser" Command="{s:Action OpenBrowser}"/>
+                <MenuItem Header="Kill _all Syncthing processes" Command="{s:Action KillAllSyncthingProcesses}"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Command="{s:Action ShowAbout}"/>
+            </MenuItem>
+        </Menu>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*" MinHeight="100"/>
+            </Grid.RowDefinitions>
+            
+            <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
+
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
+
+            <ContentControl Grid.Row="2" s:View.Model="{Binding Console}" MinHeight="100"/>
+        </Grid>
+    </DockPanel>
+</Window>

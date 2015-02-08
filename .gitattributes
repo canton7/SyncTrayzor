@@ -1,0 +1,4 @@
+*.cs		eol=crlf
+*.xaml		eol=crlf
+*.sln		eol=crlf
+*.csproj	eol=crlf

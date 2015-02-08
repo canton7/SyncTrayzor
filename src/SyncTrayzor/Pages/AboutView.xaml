@@ -1,0 +1,40 @@
+﻿<Window x:Class="SyncTrayzor.Pages.AboutView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="https://github.com/canton7/Stylet"
+        Title="AboutView" Height="250" Width="250"
+        WindowStyle="None" SizeToContent="Width"
+        ShowInTaskbar="False">
+    <Window.Resources>
+        <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+    </Window.Resources>
+    <DockPanel LastChildFill="False" Margin="10">
+        <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
+            <TextBlock>Version:</TextBlock>
+            <TextBlock Text="{Binding Version}" Margin="5,0,0,0"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
+            <TextBlock>Syncthing Version:</TextBlock>
+            <TextBlock Text="{Binding SyncthingVersion}" Margin="5,0,0,0"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5"
+                    Visibility="{Binding NewerVersion, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+            <TextBlock Foreground="Red">New version available:</TextBlock>
+            <TextBlock Text="{Binding NewerVersion}" Margin="5,0,0,0"/>
+            <TextBlock Margin="5,0,0,0">
+                <Hyperlink Command="{s:Action DownloadNewerVersion}">
+                    <TextBlock>Download</TextBlock>
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <TextBlock DockPanel.Dock="Top">Created by Antony Male</TextBlock>
+        <TextBlock DockPanel.Dock="Top">Released under the MIT license</TextBlock>
+        <TextBlock DockPanel.Dock="Top" Margin="0,5">
+            <Hyperlink Command="{s:Action ShowHomepage}">
+                <TextBlock Text="{Binding HomepageUrl}"/>
+            </Hyperlink>
+        </TextBlock>
+        <Button Command="{s:Action Close}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,10,0,0" Padding="15,1">Close</Button>
+    </DockPanel>
+</Window>

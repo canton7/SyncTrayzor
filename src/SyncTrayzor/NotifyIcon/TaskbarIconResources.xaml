@@ -1,0 +1,85 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="https://github.com/canton7/Stylet"
+                    xmlns:tb="http://www.hardcodet.net/taskbar">
+    
+    <BitmapImage x:Key="TaskbarIdleIcon" UriSource="../Icons/default.ico"/>
+    <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="../Icons/stopped.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="../Icons/syncing_1.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing2Icon" UriSource="../Icons/syncing_2.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing3Icon" UriSource="../Icons/syncing_3.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing4Icon" UriSource="../Icons/syncing_4.ico"/>
+    
+    <tb:TaskbarIcon x:Key="TaskbarIcon"
+                    Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                    DoubleClickCommand="{s:Action DoubleClick}"
+                    MenuActivation="RightClick">
+        <tb:TaskbarIcon.Resources>
+            <Storyboard x:Key="IconAnimation">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IconSource" Duration="0:0:2" RepeatBehavior="Forever">
+                    <ObjectAnimationUsingKeyFrames.KeyFrames>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing1Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing2Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.0">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing3Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.5">
+                            <DiscreteObjectKeyFrame.Value>
+                                <StaticResourceExtension ResourceKey="TaskbarSyncing4Icon"/>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                    </ObjectAnimationUsingKeyFrames.KeyFrames>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </tb:TaskbarIcon.Resources>
+        <tb:TaskbarIcon.Style>
+            <Style TargetType="tb:TaskbarIcon">
+                <Setter Property="IconSource" Value="{StaticResource TaskbarIdleIcon}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding SyncThingStarted}" Value="False">
+                        <Setter Property="IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding SyncThingSyncing}" Value="True">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard Storyboard="{StaticResource IconAnimation}" Name="IconAnimation"/>
+                        </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <StopStoryboard BeginStoryboardName="IconAnimation"/>
+                        </DataTrigger.ExitActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </tb:TaskbarIcon.Style>
+        
+        <tb:TaskbarIcon.ContextMenu>
+            <!-- Attached properties aren't inherited to ContextMenus -->
+            <ContextMenu s:View.ActionTarget="{Binding}">
+                <ContextMenu.Resources>
+                    <s:BoolToVisibilityConverter x:Key="RestoreVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+                </ContextMenu.Resources>
+                <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
+                <MenuItem Header="Restore" Command="{s:Action Restore, ActionNotFound=Disable}"
+                          Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
+                <MenuItem Header="Close to Tray" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                          Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                
+                <MenuItem Header="Start" Command="{s:Action Start, ActionNotFound=Disable}"/>
+                <MenuItem Header="Stop" Command="{s:Action Stop, ActionNotFound=Disable}"/>
+                
+                <MenuItem Header="Exit" Command="{s:Action Exit, ActionNotFound=Disable}"/>
+            </ContextMenu>
+        </tb:TaskbarIcon.ContextMenu>
+        
+    </tb:TaskbarIcon>
+</ResourceDictionary>
