@@ -47,6 +47,8 @@ Source: "{#AppBin}\{#AppExeName}.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "syncthing.exe"; DestDir: "{userappdata}\{#AppDataFolder}"
 Source: "dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 
