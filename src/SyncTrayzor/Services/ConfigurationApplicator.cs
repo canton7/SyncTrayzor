@@ -32,7 +32,23 @@ namespace SyncTrayzor.Services
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
 
+            // Do this before signing up for DataLoaded, so any changes we make don't trigger us again
+            this.UpdateConfigOnInit();
+
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
+        }
+
+        private void UpdateConfigOnInit()
+        {
+            // If the user's manually updated the registry themselves, update our config to match
+            var config = this.configurationProvider.Load();
+            var autostartConfig = this.autostartProvider.GetCurrentSetup();
+            if (config.StartOnLogon != autostartConfig.AutoStart || config.StartMinimized != autostartConfig.StartMinimized)
+            {
+                config.StartOnLogon = autostartConfig.AutoStart;
+                config.StartMinimized = autostartConfig.StartMinimized;
+                this.configurationProvider.Save(config);
+            }
         }
 
         public void ApplyConfiguration()
@@ -50,7 +66,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.ExecutablePath = configuration.SyncThingPath;
             this.syncThingManager.ApiKey = configuration.SyncThingApiKey;
 
-            this.autostartProvider.SetAutoStart(configuration.StartOnLogon, configuration.StartMinimized);
+            this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
         }
