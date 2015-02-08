@@ -32,7 +32,12 @@ namespace SyncTrayzor.NotifyIcon
         {
             this.syncThingManager = syncThingManager;
 
-            this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
+            this.syncThingManager.StateChanged += (o, e) =>
+            {
+                this.SyncThingState = e.NewState;
+                if (e.NewState != SyncThingState.Running)
+                    this.SyncThingSyncing = false; // Just make sure we reset this...
+            };
             this.SyncThingState = this.syncThingManager.State;
 
             this.syncThingManager.TotalConnectionStatsChanged += (o, e) =>
