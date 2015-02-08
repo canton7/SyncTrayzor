@@ -31,7 +31,7 @@ namespace SyncTrayzor.Services
     public class ConfigurationProvider : IConfigurationProvider
     {
         private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        private const int apiKeyLength = 20;
+        private const int apiKeyLength = 40;
 
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));

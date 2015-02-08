@@ -57,10 +57,12 @@ namespace SyncTrayzor.Services
             // If the user's manually updated the registry themselves, update our config to match
             var config = this.configurationProvider.Load();
             var autostartConfig = this.autostartProvider.GetCurrentSetup();
-            if (config.StartOnLogon != autostartConfig.AutoStart || config.StartMinimized != autostartConfig.StartMinimized)
+            // We only know enough to change StartMinimized if autostartConfig.AutoStart is strue
+            if (config.StartOnLogon != autostartConfig.AutoStart || (autostartConfig.AutoStart && config.StartMinimized != autostartConfig.StartMinimized))
             {
+                if (autostartConfig.AutoStart)
+                    config.StartMinimized = autostartConfig.StartMinimized;
                 config.StartOnLogon = autostartConfig.AutoStart;
-                config.StartMinimized = autostartConfig.StartMinimized;
                 this.configurationProvider.Save(config);
             }
         }

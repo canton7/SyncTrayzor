@@ -52,7 +52,8 @@
   <PropertyGroup>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons\idle.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
@@ -210,7 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
-    <Resource Include="Icons\idle.ico" />
     <Resource Include="Icons\stopped.ico" />
     <Resource Include="Icons\syncing_1.ico" />
     <Resource Include="Icons\syncing_2.ico" />
@@ -245,7 +245,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\default.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
