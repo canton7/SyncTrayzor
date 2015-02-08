@@ -43,6 +43,7 @@ Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
 Source: "{#AppBin}\{#AppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\{#AppExeName}.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
