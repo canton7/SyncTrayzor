@@ -42,7 +42,7 @@ namespace SyncTrayzor.Services
         public string BasePath
         {
 #if DEBUG
-            get { return ""; }
+            get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
 #else
             get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
 #endif
