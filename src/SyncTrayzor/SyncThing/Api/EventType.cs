@@ -20,6 +20,7 @@ namespace SyncTrayzor.SyncThing.Api
         RemoteIndexUpdated,
         LocalIndexUpdated,
         ItemStarted,
+        ItemFinished,
         StateChanged,
         FolderRejected,
         DeviceRejected,
