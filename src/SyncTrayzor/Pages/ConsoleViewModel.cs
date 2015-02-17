@@ -11,7 +11,7 @@ namespace SyncTrayzor.Pages
 {
     public class ConsoleViewModel : Screen
     {
-        private const int maxLogMessages = 500;
+        private const int maxLogMessages = 1500;
 
         private readonly ISyncThingManager syncThingManager;
 

@@ -7,6 +7,23 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.Api
 {
+    public class ItemFinishedEventDataError
+    {
+        [JsonProperty("Op")]
+        public string Op { get; set; }
+
+        [JsonProperty("Path")]
+        public string Path { get; set; }
+
+        [JsonProperty("Err")]
+        public int ErrorCode { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("<Error Op={0} Path={1} Err={2}>", this.Op, this.Path, this.ErrorCode);
+        }
+    }
+
     public class ItemFinishedEventData
     {
         [JsonProperty("item")]
@@ -16,7 +33,7 @@ namespace SyncTrayzor.SyncThing.Api
         public string Folder { get; set; }
 
         [JsonProperty("error")]
-        public string Error { get; set; }
+        public ItemFinishedEventDataError Error { get; set; }
     }
 
     public class ItemFinishedEvent : Event

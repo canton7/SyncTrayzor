@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.NotifyIcon
 {
-    public interface INotifyIconDelegate : IScreen
+    public interface INotifyIconDelegate : IScreenState
     {
         void CloseToTray();
         void RestoreFromTray();
