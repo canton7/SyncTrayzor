@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,23 @@ namespace SyncTrayzor.Pages
 {
     public class ConsoleViewModel : Screen
     {
+        private const int maxLogMessages = 500;
+
         private readonly ISyncThingManager syncThingManager;
 
-        public string LogMessages { get; private set; }
+        public ObservableQueue<string> LogMessages { get; private set; }
 
         public ConsoleViewModel(ISyncThingManager syncThingManager)
         {
             this.syncThingManager = syncThingManager;
-            this.LogMessages = "";
+            this.LogMessages = new ObservableQueue<string>();
 
-            // TODO: UGLY!
-            this.syncThingManager.MessageLogged += (o, e) => Execute.OnUIThread(() => this.LogMessages += e.LogMessage + "\n");
+            this.syncThingManager.MessageLogged += (o, e) =>
+            {
+                this.LogMessages.Enqueue(e.LogMessage);
+                if (this.LogMessages.Count > maxLogMessages)
+                    this.LogMessages.Dequeue();
+            };
         }
     }
 }

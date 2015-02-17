@@ -8,13 +8,27 @@
              xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBox xaml:TextBoxUtilities.AlwaysScrollToEnd="True"
+        <ScrollViewer VerticalScrollBarVisibility="Auto" xaml:ScrollViewerUtilities.ScrollToEndSource="{Binding LogMessages}">
+            <ItemsControl ItemsSource="{Binding LogMessages}" VirtualizingPanel.IsVirtualizing="True">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBox Text="{Binding Mode=OneWay}" 
+                                 FontFamily="Consolas"
+                                 FontSize="11"
+                                 IsReadOnly="True"
+                                 BorderThickness="0"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!--<TextBox xaml:TextBoxUtilities.AlwaysScrollToEnd="True"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  FontFamily="Consolas"
                  FontSize="11"
                  IsReadOnly="True"
                  UndoLimit="0"
-                 Text="{Binding LogMessages}"/>
+                 Text="{Binding LogMessages}"/>-->
     </Grid>
 </UserControl>
