@@ -1,3 +1,9 @@
+v1.0.1
+------
+
+ - Add support for new ItemFinished event
+ - Handle lots of log messages in quick successino
+
 v1.0.0
 ------
 
