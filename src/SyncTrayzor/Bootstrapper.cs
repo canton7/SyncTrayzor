@@ -17,11 +17,6 @@ namespace SyncTrayzor
 {
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
-        protected override void Configure()
-        {
-            Stylet.Logging.LogManager.Enabled = true;
-        }
-
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
@@ -39,17 +34,23 @@ namespace SyncTrayzor
             builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
         }
 
-        protected override void Launch()
+        protected override void Configure()
         {
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
+        }
 
+        protected override void Launch()
+        {
             if (this.Args.Length > 0 && this.Args[0] == "-minimized")
                 this.Container.Get<INotifyIconManager>().EnsureIconVisible();
             else
                 base.Launch();
+        }
 
+        protected override void OnLaunch()
+        {
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncthingAutomatically)
                 ((ShellViewModel)this.RootViewModel).Start();
@@ -58,12 +59,7 @@ namespace SyncTrayzor
             this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
         }
 
-        protected override void OnExit(System.Windows.ExitEventArgs e)
-        {
-            this.Container.Dispose();
-        }
-
-        protected override void OnUnhandledExecption(DispatcherUnhandledExceptionEventArgs e)
+        protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
             var windowManager = this.Container.Get<IWindowManager>();
 
@@ -77,7 +73,6 @@ namespace SyncTrayzor
             {
                 windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
     }
 }

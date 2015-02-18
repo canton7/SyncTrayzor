@@ -103,6 +103,10 @@ namespace SyncTrayzor.SyncThing
         {
         }
 
+        public void Accept(ItemFinishedEvent evt)
+        {
+        }
+
         public void Accept(StartupCompleteEvent evt)
         {
             this.OnStartupComplete();

@@ -15,6 +15,7 @@ namespace SyncTrayzor.SyncThing.Api
             { EventType.RemoteIndexUpdated, typeof(RemoteIndexUpdatedEvent) },
             { EventType.LocalIndexUpdated, typeof(LocalIndexUpdatedEvent) },
             { EventType.ItemStarted, typeof(ItemStartedEvent) },
+            { EventType.ItemFinished, typeof(ItemFinishedEvent) },
             { EventType.StateChanged, typeof(StateChangedEvent) },
             { EventType.StartupComplete, typeof(StartupCompleteEvent) }
         };

@@ -54,6 +54,13 @@ namespace SyncTrayzor.Services
 
         private void UpdateConfigOnInit()
         {
+#if !DEBUG
+            this.UpdateAutostart();
+#endif
+        }
+
+        private void UpdateAutostart()
+        {
             // If the user's manually updated the registry themselves, update our config to match
             var config = this.configurationProvider.Load();
             var autostartConfig = this.autostartProvider.GetCurrentSetup();

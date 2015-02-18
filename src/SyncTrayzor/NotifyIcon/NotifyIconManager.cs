@@ -39,7 +39,7 @@ namespace SyncTrayzor.NotifyIcon
             set
             {
                 this._showOnlyOnClose = value;
-                this.viewModel.Visible = !this._showOnlyOnClose; // Assume this setting can only be changed when the RootViewModel isn't closed
+                this.viewModel.Visible = !this._showOnlyOnClose || this.rootViewModel.State == ScreenState.Closed;
             }
         }
 

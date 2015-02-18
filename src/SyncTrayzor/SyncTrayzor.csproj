@@ -68,9 +68,8 @@
     <Reference Include="Refit">
       <HintPath>..\packages\refit.2.2.0\lib\Net45\Refit.dll</HintPath>
     </Reference>
-    <Reference Include="Stylet, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Stylet.1.0.7\lib\net45\Stylet.dll</HintPath>
+    <Reference Include="Stylet">
+      <HintPath>..\packages\Stylet.1.1.0\lib\net45\Stylet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -125,6 +124,7 @@
     <Compile Include="SyncThing\Api\EventType.cs" />
     <Compile Include="SyncThing\Api\GenericEvent.cs" />
     <Compile Include="SyncThing\Api\IEventVisitor.cs" />
+    <Compile Include="SyncThing\Api\ItemFinishedEvent.cs" />
     <Compile Include="SyncThing\Api\ItemStartedEvent.cs" />
     <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />
     <Compile Include="SyncThing\Api\LocalIndexUpdatedEvent.cs" />
@@ -147,8 +147,10 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
+    <Compile Include="Xaml\ScrollViewerUtilities.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
     <Compile Include="Xaml\WebBrowserUtilities.cs" />
   </ItemGroup>
