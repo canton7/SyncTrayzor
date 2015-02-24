@@ -10,7 +10,7 @@ namespace SyncTrayzor.SyncThing.Api
     public class SystemInfo
     {
         [JsonProperty("alloc")]
-        public int AllocatedMemoryInUse { get; set; }
+        public long AllocatedMemoryInUse { get; set; }
 
         [JsonProperty("cpuPercent")]
         public float CpuPercent { get; set; }
@@ -18,13 +18,13 @@ namespace SyncTrayzor.SyncThing.Api
         // Ignore extAnnounceOK for now
 
         [JsonProperty("goroutines")]
-        public int GoRoutines { get; set; }
+        public long GoRoutines { get; set; }
 
         [JsonProperty("myID")]
         public string MyID { get; set; }
 
         [JsonProperty("sys")]
-        public int AllocatedMemoryTotal { get; set; }
+        public long AllocatedMemoryTotal { get; set; }
 
         [JsonProperty("tilde")]
         public string Tilde { get; set; }

@@ -22,7 +22,7 @@ namespace SyncTrayzor.SyncThing.Api
         public string Folder { get; set; }
 
         [JsonProperty("size")]
-        public int Size { get; set; }
+        public long Size { get; set; }
     }
 
     public class LocalIndexUpdatedEvent : Event
