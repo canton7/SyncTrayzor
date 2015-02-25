@@ -13,19 +13,19 @@ namespace SyncTrayzor.SyncThing.Api
         public string Name { get; set; }
 
         [JsonProperty("Flags")]
-        public int Flags { get; set; }
+        public long Flags { get; set; }
 
         [JsonProperty("Modified")]
         public long Modified { get; set; } // Is this supposed to be a DateTime?
 
         [JsonProperty("Version")]
-        public int Version { get; set; }
+        public long Version { get; set; }
 
         [JsonProperty("LocalVersion")]
-        public int LocalVersion { get; set; }
+        public long LocalVersion { get; set; }
 
         [JsonProperty("NumBlocks")]
-        public int NumBlocks { get; set; }
+        public long NumBlocks { get; set; }
     }
 
     public class ItemStartedEventData

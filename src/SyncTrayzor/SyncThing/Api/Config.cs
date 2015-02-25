@@ -22,12 +22,12 @@ namespace SyncTrayzor.SyncThing.Api
         public bool ReadOnly { get; set; }
 
         [JsonProperty("RescanIntervalS")]
-        public int RescanIntervalSeconds { get; set; }
+        public long RescanIntervalSeconds { get; set; }
 
         public TimeSpan RescanInterval
         {
             get { return TimeSpan.FromSeconds(this.RescanIntervalSeconds); }
-            set { this.RescanIntervalSeconds = (int)value.TotalSeconds; }
+            set { this.RescanIntervalSeconds = (long)value.TotalSeconds; }
         }
     }
 
@@ -55,7 +55,7 @@ namespace SyncTrayzor.SyncThing.Api
     public class Config
     {
         [JsonProperty("Version")]
-        public int Version { get; set; }
+        public long Version { get; set; }
 
         [JsonProperty("Folders")]
         public List<ConfigFolder> Folders { get; set; }

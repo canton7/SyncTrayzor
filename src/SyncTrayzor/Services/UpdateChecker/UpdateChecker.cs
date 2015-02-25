@@ -88,7 +88,7 @@ namespace SyncTrayzor.Services.UpdateChecker
 
             if (results.LatestVersionIsNewer)
             {
-                var msg = String.Format("A new version of SyncTrayzor is available! Do you want to download version {0}?", results.LatestVersion);
+                var msg = String.Format("A new version of SyncTrayzor is available! Do you want to download version {0}?\n\nYou will not be prompted for this version again.", results.LatestVersion);
                 var result = this.windowManager.ShowMessageBox(msg, "Upgrade Version?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                     Process.Start(results.LatestVersionDownloadUrl);

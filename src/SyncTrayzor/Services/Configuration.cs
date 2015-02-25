@@ -65,7 +65,7 @@ namespace SyncTrayzor.Services
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.SyncthingAddress = "http://localhost:8384";
-            this.StartOnLogon = false;
+            this.StartOnLogon = true;
             this.StartMinimized = true;
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = syncThingApiKey;

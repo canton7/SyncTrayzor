@@ -14,10 +14,10 @@ namespace SyncTrayzor.SyncThing.Api
         public DateTime At { get; set; }
 
         [JsonProperty("InBytesTotal")]
-        public int InBytesTotal { get; set; }
+        public long InBytesTotal { get; set; }
 
         [JsonProperty("OutBytesTotal")]
-        public int OutBytesTotal { get; set; }
+        public long OutBytesTotal { get; set; }
 
         [JsonProperty("Address")]
         public string Address { get; set; }

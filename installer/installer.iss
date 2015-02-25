@@ -1,7 +1,7 @@
 #define AppExeName "SyncTrayzor.exe"
 #define AppRoot ".."
 #define AppSrc AppRoot + "\src\SyncTrayzor"
-#define AppBin AppRoot +"\bin\Release"
+#define AppBin AppRoot +"\bin\x64\Release"
 #define AppExe AppBin + "\SyncTrayzor.exe"
 #define AppName GetStringFileInfo(AppExe, "ProductName")
 #define AppVersion GetFileVersion(AppExe)
@@ -27,25 +27,29 @@ LicenseFile={#AppRoot}\LICENSE.txt
 OutputDir="."
 OutputBaseFilename={#AppName}Setup
 SetupIconFile={#AppSrc}\Icons\default.ico
-Compression=lzma
+Compression=lzma2/max
 SolidCompression=yes
 PrivilegesRequired=admin
+ArchitecturesInstallIn64BitMode=x64
+ArchitecturesAllowed=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "startonlogon"; Description: "Start SyncTrayzor automatically on logon"; GroupDescription: "Autostart"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\{#AppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\{#AppExeName}.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\*.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\*.dat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
@@ -56,9 +60,6 @@ Source: "dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: 
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#AppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon
-
-[Registry]
-Root: HKCU; Subkey: "{#RunRegKey}"; ValueType: string; ValueName: "SyncTrayzor"; ValueData: """{app}\{#AppExeName}"" -minimized"; Tasks: startonlogon
 
 [Run]
 Filename: "{tmp}\dotNet451Setup.exe"; Parameters: "/passive /promptrestart"; Check: FrameworkIsNotInstalled; StatusMsg: "Microsoft .NET Framework 4.5.1 is being installed. Please wait..."
@@ -74,12 +75,16 @@ begin
   result := not exists or (release < 378758);
 end;
 
-procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  if CurUninstallStep = usPostUninstall then
-  begin
-    if RegValueExists(HKEY_CURRENT_USER, '{#RunRegKey}', 'SyncTrayzor') then
-      RegDeleteValue(HKEY_CURRENT_USER, '{#RunRegKey}', 'SyncTrayzor');
+  if CurStep = ssInstall then begin
+    { Since we're shifting from 32-bit to 64-bit, clean up the 32-bit installation dir }
+    if DirExists(ExpandConstant('{pf32}\SyncTrayzor')) then
+      DelTree(ExpandConstant('{pf32}\SyncTrayzor'), True, True, True);
+
+    { If we mistakenly wrote to the admin user's registry before, undo that now }
+    if RegValueExists(HKCU64, ExpandConstant('{#RunRegKey}'), 'SyncTrayzor') then
+      RegDeleteValue(HKCU64, ExpandConstant('{#RunRegKey}'), 'SyncTrayzor');
   end;
 end;
 

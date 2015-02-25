@@ -7,15 +7,16 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Title="SettingsView" Height="500" Width="300"
+        Title="SettingsView" Height="500" Width="400"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
-        <s:BoolToVisibilityConverter x:Key="NoWatchedFoldersVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+        <s:BoolToVisibilityConverter x:Key="InverseVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
     </Window.Resources>
     <DockPanel Margin="10">
         <DockPanel.Resources>
             <Style TargetType="GroupBox">
                 <Setter Property="Padding" Value="5"/>
+                <Setter Property="Margin" Value="0,5,0,5"/>
             </Style>    
         </DockPanel.Resources>
         
@@ -37,10 +38,18 @@
             </DockPanel>
         </GroupBox>
         
-        <GroupBox DockPanel.Dock="Top" Header="Autostart">
+        <GroupBox DockPanel.Dock="Top" Header="Start on Login">
             <DockPanel>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartOnLogon}">Automatically start on login</CheckBox>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartMinimized}" IsEnabled="{Binding StartOnLogon}">
+                <TextBlock DockPanel.Dock="Top" Visibility="{Binding CanReadAndWriteAutostart, Converter={StaticResource InverseVisibilityConverter}}"
+                           TextWrapping="WrapWithOverflow" Margin="0,0,0,5">
+                    Permission denied. Please start SyncTrayzor as an Administrator to change these settings.
+                </TextBlock>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartOnLogon}"
+                          IsEnabled="{Binding CanWriteAutostart}" Visibility="{Binding CanReadOrWriteAutostart, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                          Automatically start on login
+                </CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartMinimized}"
+                          IsEnabled="{Binding StartMinimizedEnabled}" Visibility="{Binding CanReadOrWriteAutostart, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
                     Start Minimized
                 </CheckBox>
             </DockPanel>
@@ -48,7 +57,7 @@
 
         <GroupBox DockPanel.Dock="Top" Header="Watched Folders">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Visibility="{Binding WatchedFolders, Converter={StaticResource NoWatchedFoldersVisibilityConverter}}">
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Visibility="{Binding WatchedFolders, Converter={StaticResource InverseVisibilityConverter}}">
                     Folders unavailable. Please start Syncthing
                 </TextBlock>
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,10" Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">

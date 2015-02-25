@@ -8,12 +8,12 @@ namespace SyncTrayzor.SyncThing
 {
     public class SyncThingConnectionStats
     {
-        public int InBytesTotal { get; private set; }
-        public int OutBytesTotal { get; private set; }
+        public long InBytesTotal { get; private set; }
+        public long OutBytesTotal { get; private set; }
         public double InBytesPerSecond { get; private set; }
         public double OutBytesPerSecond { get; private set; }
 
-        public SyncThingConnectionStats(int inBytesTotal, int outBytesTotal, double inBytesPerSecond, double outBytesPerSecond)
+        public SyncThingConnectionStats(long inBytesTotal, long outBytesTotal, double inBytesPerSecond, double outBytesPerSecond)
         {
             this.InBytesTotal = inBytesTotal;
             this.OutBytesTotal = outBytesTotal;

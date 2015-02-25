@@ -28,6 +28,7 @@ namespace SyncTrayzor.SyncThing
         
         private DateTime lastPollCompletion;
         private Connections prevConnections;
+        private bool haveNotifiedOfNoChange;
 
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
@@ -49,11 +50,24 @@ namespace SyncTrayzor.SyncThing
                 // Just do the total for now
                 var total = connections.Total;
                 var prevTotal = this.prevConnections.Total;
-                double inBytesPerSecond = (total.InBytesTotal - prevTotal.InBytesTotal) / elapsed.TotalSeconds;
-                double outBytesPerSecond = (total.OutBytesTotal - prevTotal.OutBytesTotal) / elapsed.TotalSeconds;
 
-                var totalStats = new SyncThingConnectionStats(total.InBytesTotal, total.OutBytesTotal, inBytesPerSecond, outBytesPerSecond);
-                this.OnTotalConnectionStatsChanged(totalStats);
+                if (total.InBytesTotal != prevTotal.InBytesTotal || total.OutBytesTotal != prevTotal.OutBytesTotal)
+                {
+                    this.haveNotifiedOfNoChange = false;
+
+                    double inBytesPerSecond = (total.InBytesTotal - prevTotal.InBytesTotal) / elapsed.TotalSeconds;
+                    double outBytesPerSecond = (total.OutBytesTotal - prevTotal.OutBytesTotal) / elapsed.TotalSeconds;
+
+                    var totalStats = new SyncThingConnectionStats(total.InBytesTotal, total.OutBytesTotal, inBytesPerSecond, outBytesPerSecond);
+                    this.OnTotalConnectionStatsChanged(totalStats);
+                }
+                else if (!this.haveNotifiedOfNoChange)
+                {
+                    this.haveNotifiedOfNoChange = true;
+
+                    var totalStats = new SyncThingConnectionStats(total.InBytesTotal, total.OutBytesTotal, 0, 0);
+                    this.OnTotalConnectionStatsChanged(totalStats);
+                }
             }
             this.prevConnections = connections;
         }

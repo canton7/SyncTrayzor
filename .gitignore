@@ -35,6 +35,7 @@ packages/
 
 #Installer
 installer/SyncTrayzor*.exe
+installer/syncthing.exe
 
 *.gjq
 *.tmp

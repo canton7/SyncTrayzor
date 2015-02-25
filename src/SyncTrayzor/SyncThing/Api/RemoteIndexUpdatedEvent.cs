@@ -16,7 +16,7 @@ namespace SyncTrayzor.SyncThing.Api
         public string Folder { get; set; }
 
         [JsonProperty("items")]
-        public int Items { get; set; }
+        public long Items { get; set; }
     }
 
     public class RemoteIndexUpdatedEvent : Event
