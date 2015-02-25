@@ -16,7 +16,7 @@ namespace SyncTrayzor.Services
 
         private readonly INotifyIconManager notifyIconManager;
         private readonly ISyncThingManager syncThingManager;
-        private readonly AutostartProvider autostartProvider;
+        private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
         private readonly IGithubApiClient githubApiClient;
         private readonly IUpdateChecker updateChecker;
@@ -25,7 +25,7 @@ namespace SyncTrayzor.Services
             IConfigurationProvider configurationProvider,
             INotifyIconManager notifyIconManager,
             ISyncThingManager syncThingManager,
-            AutostartProvider autostartProvider,
+            IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
             IGithubApiClient githubApiClient,
             IUpdateChecker updateChecker)
@@ -61,6 +61,10 @@ namespace SyncTrayzor.Services
 
         private void UpdateAutostart()
         {
+            // Don't have permission? Meh
+            if (!this.autostartProvider.CanRead)
+                return;
+
             // If the user's manually updated the registry themselves, update our config to match
             var config = this.configurationProvider.Load();
             var autostartConfig = this.autostartProvider.GetCurrentSetup();
@@ -90,7 +94,9 @@ namespace SyncTrayzor.Services
             this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
 
-            this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
+            // Don't have permission? Meh
+            if (this.autostartProvider.CanWrite)
+                this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

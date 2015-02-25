@@ -25,11 +25,27 @@ namespace SyncTrayzor.Pages
         public bool StartSyncThingAutomatically { get; set; }
         public string SyncThingAddress { get; set; }
         public string SyncThingApiKey { get; set; }
+
+        public bool CanReadAutostart { get; set; }
+        public bool CanWriteAutostart { get; set; }
+        public bool CanReadOrWriteAutostart
+        {
+            get { return this.CanReadAutostart || this.CanWriteAutostart; }
+        }
+        public bool CanReadAndWriteAutostart
+        {
+            get { return this.CanReadAutostart && this.CanWriteAutostart; }
+        }
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
+        public bool StartMinimizedEnabled
+        {
+            get { return this.CanReadAndWriteAutostart && this.StartOnLogon; }
+        }
+
         public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
 
-        public SettingsViewModel(IConfigurationProvider configurationProvider)
+        public SettingsViewModel(IConfigurationProvider configurationProvider, IAutostartProvider autostartProvider)
         {
             this.DisplayName = "Settings";
 
@@ -50,6 +66,9 @@ namespace SyncTrayzor.Pages
                 Folder = x.ID,
                 IsSelected = x.IsWatched
             }));
+
+            this.CanReadAutostart = autostartProvider.CanRead;
+            this.CanWriteAutostart = autostartProvider.CanWrite;
         }
 
         public void Save()
