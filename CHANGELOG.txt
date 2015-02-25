@@ -1,3 +1,10 @@
+v1.0.2
+------
+
+ - Fix memory leaks
+ - Reduce memory usage by switching from WPF's WebBrowser to CefSharp
+ - Move from int -> long for most of the Syncthing API, allowing e.g. repos larger than 3.8GB
+
 v1.0.1
 ------
 
