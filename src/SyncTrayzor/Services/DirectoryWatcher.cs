@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,6 +24,8 @@ namespace SyncTrayzor.Services
 
     public class DirectoryWatcher : IDisposable
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly string directory;
         private readonly FileSystemWatcher watcher;
 
@@ -125,7 +128,7 @@ namespace SyncTrayzor.Services
 
         private void OnDirectoryChanged(string subPath)
         {
-            Debug.WriteLine(String.Format("Path Changed: {0}", subPath));
+            logger.Debug("Path Changed: {0}", Path.Combine(this.directory, subPath));
             var handler = this.DirectoryChanged;
             if (handler != null)
                 handler(this, new DirectoryChangedEventArgs(this.directory, subPath));

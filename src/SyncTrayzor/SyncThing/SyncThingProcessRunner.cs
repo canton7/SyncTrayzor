@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,6 +27,7 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingProcessRunner : ISyncThingProcessRunner
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly string[] defaultArguments = new[] { "-no-browser" };
 
         private Process process;
@@ -110,6 +112,7 @@ namespace SyncTrayzor.SyncThing
 
         private void OnMessageLogged(string logMessage)
         {
+            logger.Debug(logMessage);
             var handler = this.MessageLogged;
             if (handler != null)
                 handler(this, new MessageLoggedEventArgs(logMessage));

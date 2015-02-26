@@ -1,4 +1,5 @@
-﻿using Stylet;
+﻿using NLog;
+using Stylet;
 using StyletIoC;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
@@ -36,6 +37,8 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().BasePath);
+
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
@@ -62,6 +65,8 @@ namespace SyncTrayzor
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
             var windowManager = this.Container.Get<IWindowManager>();
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Error("An unhandled exception occurred", e.Exception);
 
             var configurationException = e.Exception as ConfigurationException;
             if (configurationException != null)

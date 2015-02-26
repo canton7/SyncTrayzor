@@ -24,6 +24,8 @@ namespace SyncTrayzor.Services
     {
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        string BasePath { get; }
+
         Configuration Load();
         void Save(Configuration config);
     }

@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.SyncThing.Api;
+﻿using NLog;
+using SyncTrayzor.SyncThing.Api;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,7 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly ISyncThingApiClient apiClient;
 
         private int lastEventId;
@@ -50,7 +52,7 @@ namespace SyncTrayzor.SyncThing
                 foreach (var evt in events)
                 {
                     this.lastEventId = Math.Max(this.lastEventId, evt.Id);
-                    System.Diagnostics.Debug.WriteLine(evt);
+                    logger.Debug(evt);
                     evt.Visit(this);
                 }
             }

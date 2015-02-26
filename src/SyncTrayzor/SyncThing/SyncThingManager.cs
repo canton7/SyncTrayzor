@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.SyncThing.Api;
+﻿using NLog;
+using SyncTrayzor.SyncThing.Api;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingManager : ISyncThingManager
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly ISyncThingProcessRunner processRunner;
         private readonly ISyncThingApiClient apiClient;
@@ -85,13 +88,21 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
-            this.apiClient.SetConnectionDetails(this.Address, this.ApiKey);
-            this.processRunner.ApiKey = this.ApiKey;
-            this.processRunner.HostAddress = this.Address.ToString();
-            this.processRunner.ExecutablePath = this.ExecutablePath;
+            try
+            {
+                this.apiClient.SetConnectionDetails(this.Address, this.ApiKey);
+                this.processRunner.ApiKey = this.ApiKey;
+                this.processRunner.HostAddress = this.Address.ToString();
+                this.processRunner.ExecutablePath = this.ExecutablePath;
 
-            this.processRunner.Start();
-            this.SetState(SyncThingState.Starting);
+                this.processRunner.Start();
+                this.SetState(SyncThingState.Starting);
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error starting SyncThing", e);
+                throw;
+            }
         }
 
         public Task StopAsync()
