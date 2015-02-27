@@ -33,6 +33,7 @@ namespace SyncTrayzor.SyncThing
         void Kill();
         void KillAllSyncthingProcesses();
         Task ScanAsync(string folderId, string subPath);
+        Task ReloadIgnoresAsync(string folderId);
     }
 
     public class SyncThingManager : ISyncThingManager
@@ -127,6 +128,16 @@ namespace SyncTrayzor.SyncThing
         public Task ScanAsync(string folderId, string subPath)
         {
             return this.apiClient.ScanAsync(folderId, subPath);
+        }
+
+        public async Task ReloadIgnoresAsync(string folderId)
+        {
+            Folder folder;
+            if (!this.Folders.TryGetValue(folderId, out folder))
+                return;
+
+            var ignores = await this.apiClient.FetchIgnoresAsync(folderId);
+            folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
         }
 
         private void SetState(SyncThingState state)
