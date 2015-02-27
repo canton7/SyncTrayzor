@@ -20,5 +20,10 @@ namespace SyncTrayzor.SyncThing.Api
 
         [JsonProperty("version")]
         public string Version { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("<Version arch={0} longVersion={1} os={2} version={3}>", this.Arch, this.LongVersion, this.OS, this.Version);
+        }
     }
 }

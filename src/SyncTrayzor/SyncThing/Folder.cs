@@ -17,11 +17,13 @@ namespace SyncTrayzor.SyncThing
         public string FolderId { get; private set; }
         public string Path { get; private set; }
         public FolderSyncState SyncState { get; set; }
+        public HashSet<string> SyncthingPaths { get; private set; }
 
         public Folder(string folderId, string path)
         {
             this.FolderId = folderId;
             this.Path = path;
+            this.SyncthingPaths = new HashSet<string>();
         }
     }
 }

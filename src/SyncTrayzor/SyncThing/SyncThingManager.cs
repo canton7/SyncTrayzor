@@ -82,6 +82,8 @@ namespace SyncTrayzor.SyncThing
 
             this.eventWatcher.StartupComplete += (o, e) => { var t = this.StartupCompleteAsync(); };
             this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
+            this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
+            this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
 
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
         }
@@ -169,6 +171,24 @@ namespace SyncTrayzor.SyncThing
 
             this.OnDataLoaded();
             this.IsDataLoaded = true;
+        }
+
+        private void ItemStarted(string folderId, string item)
+        {
+            Folder folder;
+            if (!this.Folders.TryGetValue(folderId, out folder))
+                return; // Don't know about it
+
+            folder.SyncthingPaths.Add(item);
+        }
+
+        private void ItemFinished(string folderId, string item)
+        {
+            Folder folder;
+            if (!this.Folders.TryGetValue(folderId, out folder))
+                return; // Don't know about it
+
+            folder.SyncthingPaths.Remove(item);
         }
 
         private void OnMessageLogged(string logMessage)

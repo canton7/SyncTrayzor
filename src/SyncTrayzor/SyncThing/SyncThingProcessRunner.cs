@@ -45,6 +45,8 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
+            logger.Info("Starting syncthing: ", this.ExecutablePath);
+
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
 
@@ -72,6 +74,7 @@ namespace SyncTrayzor.SyncThing
 
         public void Kill()
         {
+            logger.Info("Killing Syncthing process");
             this.KillInternal();
         }
 
@@ -105,6 +108,7 @@ namespace SyncTrayzor.SyncThing
 
         private void OnProcessStopped()
         {
+            logger.Info("Syncthing process stopped");
             var handler = this.ProcessStopped;
             if (handler != null)
                 handler(this, EventArgs.Empty);

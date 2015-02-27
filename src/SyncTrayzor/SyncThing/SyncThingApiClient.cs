@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NLog;
 using Refit;
 using SyncTrayzor.SyncThing.Api;
 using SyncTrayzor.Utils;
@@ -26,6 +27,7 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingApiClient : ISyncThingApiClient
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private ISyncThingApi api;
 
         public void SetConnectionDetails(Uri baseAddress, string apiKey)
@@ -46,6 +48,7 @@ namespace SyncTrayzor.SyncThing
 
         public Task ShutdownAsync()
         {
+            logger.Info("Requesting API shutdown");
             this.EnsureSetup();
             return this.api.ShutdownAsync();
         }
@@ -59,22 +62,27 @@ namespace SyncTrayzor.SyncThing
                 return this.api.FetchEventsLimitAsync(since, limit.Value);
         }
 
-        public Task<Config> FetchConfigAsync()
+        public async Task<Config> FetchConfigAsync()
         {
             this.EnsureSetup();
-            return this.api.FetchConfigAsync();
+            var config = await this.api.FetchConfigAsync();
+            logger.Debug("Fetched configuration: {0}", config);
+            return config;
         }
 
         public Task ScanAsync(string folderId, string subPath)
         {
+            logger.Debug("Scanning folder: {0} subPath: {1}", folderId, subPath);
             this.EnsureSetup();
             return this.api.ScanAsync(folderId, subPath);
         }
 
-        public Task<SystemInfo> FetchSystemInfoAsync()
+        public async Task<SystemInfo> FetchSystemInfoAsync()
         {
             this.EnsureSetup();
-            return this.api.FetchSystemInfoAsync();
+            var systemInfo = await this.api.FetchSystemInfoAsync();
+            logger.Debug("Fetched system info: {0}", systemInfo);
+            return systemInfo;
         }
 
         public Task<Connections> FetchConnectionsAsync()
@@ -83,10 +91,12 @@ namespace SyncTrayzor.SyncThing
             return this.api.FetchConnectionsAsync();
         }
 
-        public Task<SyncthingVersion> FetchVersionAsync()
+        public async Task<SyncthingVersion> FetchVersionAsync()
         {
             this.EnsureSetup();
-            return this.api.FetchVersionAsync();
+            var version = await this.api.FetchVersionAsync();
+            logger.Debug("Fetched version: {0}", version);
+            return version;
         }
 
         private void EnsureSetup()

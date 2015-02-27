@@ -10,10 +10,24 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
+    public class ItemStateChangedEventArgs : EventArgs
+    {
+        public string Folder { get; private set; }
+        public string Item { get; private set; }
+
+        public ItemStateChangedEventArgs(string folder, string item)
+        {
+            this.Folder = folder;
+            this.Item = item;
+        }
+    }
+
     public interface ISyncThingEventWatcher : ISyncThingPoller
     {
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         event EventHandler StartupComplete;
+        event EventHandler<ItemStateChangedEventArgs> ItemStarted;
+        event EventHandler<ItemStateChangedEventArgs> ItemFinished;
     }
 
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
@@ -25,6 +39,8 @@ namespace SyncTrayzor.SyncThing
 
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         public event EventHandler StartupComplete;
+        public event EventHandler<ItemStateChangedEventArgs> ItemStarted;
+        public event EventHandler<ItemStateChangedEventArgs> ItemFinished;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
             : base(TimeSpan.Zero)
@@ -80,6 +96,20 @@ namespace SyncTrayzor.SyncThing
                 handler(this, EventArgs.Empty);
         }
 
+        private void OnItemStarted(string folder, string item)
+        {
+            var handler = this.ItemStarted;
+            if (handler != null)
+                handler(this, new ItemStateChangedEventArgs(folder, item));
+        }
+
+        private void OnItemFinished(string folder, string item)
+        {
+            var handler = this.ItemFinished;
+            if (handler != null)
+                handler(this, new ItemStateChangedEventArgs(folder, item));
+        }
+
         #region IEventVisitor
 
         public void Accept(GenericEvent evt)
@@ -103,10 +133,12 @@ namespace SyncTrayzor.SyncThing
 
         public void Accept(ItemStartedEvent evt)
         {
+            this.OnItemStarted(evt.Data.Folder, evt.Data.Item);
         }
 
         public void Accept(ItemFinishedEvent evt)
         {
+            this.OnItemFinished(evt.Data.Folder, evt.Data.Item);
         }
 
         public void Accept(StartupCompleteEvent evt)

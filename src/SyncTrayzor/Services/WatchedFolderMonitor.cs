@@ -15,6 +15,8 @@ namespace SyncTrayzor.Services
 
     public class WatchedFolderMonitor : IWatchedFolderMonitor
     {
+        // Paths we don't alert Syncthing about
+        private static readonly string[] specialPaths = new[] { ".stversions", ".stignore", ".stfolder" };
         private readonly ISyncThingManager syncThingManager;
         private readonly List<DirectoryWatcher> directoryWatchers = new List<DirectoryWatcher>();
 
@@ -61,10 +63,33 @@ namespace SyncTrayzor.Services
                     continue;
 
                 var watcher = new DirectoryWatcher(folder.Path);
-                watcher.DirectoryChanged += (o, e) =>  this.DirectoryChanged(folder.FolderId, e.SubPath);
+                watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.PreviewDirectoryChanged(folder.FolderId, e.SubPath); 
+                watcher.DirectoryChanged += (o, e) => this.DirectoryChanged(folder.FolderId, e.SubPath);
 
                 this.directoryWatchers.Add(watcher);
             }
+        }
+
+        // Returns true to cancel
+        private bool PreviewDirectoryChanged(string folderId, string subPath)
+        {
+            // Is it a syncthing temp path?
+            if (subPath.StartsWith("~syncthing~"))
+                return true;
+
+            var firstPartOfSubPath = Path.GetDirectoryName(subPath);
+            if (String.IsNullOrEmpty(firstPartOfSubPath))
+                firstPartOfSubPath = subPath;
+
+            if (specialPaths.Contains(firstPartOfSubPath))
+                return true;
+
+            // If that path was just written by Syncthing, abort!
+            Folder folder;
+            if (!this.syncThingManager.Folders.TryGetValue(folderId, out folder))
+                return false;
+
+            return folder.SyncState == FolderSyncState.Syncing || folder.SyncthingPaths.Contains(subPath);
         }
 
         private void DirectoryChanged(string folderId, string subPath)

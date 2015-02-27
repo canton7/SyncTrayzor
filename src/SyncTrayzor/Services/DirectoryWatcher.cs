@@ -22,6 +22,14 @@ namespace SyncTrayzor.Services
         }
     }
 
+    public class PreviewDirectoryChangedEventArgs : DirectoryChangedEventArgs
+    {
+        public bool Cancel { get; set; }
+
+        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath)
+            : base(directoryPath, subPath) { }
+    }
+
     public class DirectoryWatcher : IDisposable
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -33,7 +41,7 @@ namespace SyncTrayzor.Services
         private string currentNotifyingSubPath;
         private readonly Timer backoffTimer;
 
-
+        public event EventHandler<PreviewDirectoryChangedEventArgs> PreviewDirectoryChanged;
         public event EventHandler<DirectoryChangedEventArgs> DirectoryChanged;
 
         public DirectoryWatcher(string directory)
@@ -95,9 +103,11 @@ namespace SyncTrayzor.Services
             if (!path.StartsWith(this.directory))
                 return;
 
-            this.backoffTimer.Stop();
             var subPath = path.Substring(this.directory.Length);
+            if (this.OnPreviewDirectoryChanged(subPath))
+                return;
 
+            this.backoffTimer.Stop();
             lock (this.currentNotifySubPathLock)
             {
                 if (this.currentNotifyingSubPath == null)
@@ -126,9 +136,23 @@ namespace SyncTrayzor.Services
             return String.Join(Path.DirectorySeparatorChar.ToString(), result);
         }
 
+        // Return true to cancel
+        private bool OnPreviewDirectoryChanged(string subPath)
+        {
+            var handler = this.PreviewDirectoryChanged;
+            if (handler != null)
+            {
+                var ea = new PreviewDirectoryChangedEventArgs(this.directory, subPath);
+                handler(this, ea);
+                logger.Debug("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.directory, subPath), ea.Cancel);
+                return ea.Cancel;
+            }
+            return false;
+        }
+
         private void OnDirectoryChanged(string subPath)
         {
-            logger.Debug("Path Changed: {0}", Path.Combine(this.directory, subPath));
+            logger.Info("Path Changed: {0}", Path.Combine(this.directory, subPath));
             var handler = this.DirectoryChanged;
             if (handler != null)
                 handler(this, new DirectoryChangedEventArgs(this.directory, subPath));
