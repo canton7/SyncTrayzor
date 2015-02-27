@@ -44,7 +44,7 @@ namespace SyncTrayzor.Services
         public event EventHandler<PreviewDirectoryChangedEventArgs> PreviewDirectoryChanged;
         public event EventHandler<DirectoryChangedEventArgs> DirectoryChanged;
 
-        public DirectoryWatcher(string directory)
+        public DirectoryWatcher(string directory, TimeSpan backoffInterval)
         {
             this.directory = directory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
@@ -53,7 +53,7 @@ namespace SyncTrayzor.Services
             this.backoffTimer = new Timer()
             {
                 AutoReset = false,
-                Interval = 1000.0, // ms
+                Interval = backoffInterval.TotalMilliseconds,
             };
             this.backoffTimer.Elapsed += (o, e) =>
             {

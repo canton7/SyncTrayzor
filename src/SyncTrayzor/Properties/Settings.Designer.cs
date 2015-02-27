@@ -40,5 +40,14 @@ namespace SyncTrayzor.Properties {
                 return ((string)(this["HomepageUrl"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int DirectoryWatcherBackoffSec {
+            get {
+                return ((int)(this["DirectoryWatcherBackoffSec"]));
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace SyncTrayzor.Services
     public interface IWatchedFolderMonitor
     {
         IEnumerable<string> WatchedFolderIDs { get; set; }
+        TimeSpan BackoffInterval { get; set; }
     }
 
     public class WatchedFolderMonitor : IWatchedFolderMonitor
@@ -34,6 +35,8 @@ namespace SyncTrayzor.Services
                 this.Reset();
             }
         }
+
+        public TimeSpan BackoffInterval { get; set; }
 
         public WatchedFolderMonitor(ISyncThingManager syncThingManager)
         {
@@ -63,7 +66,7 @@ namespace SyncTrayzor.Services
                 if (!this.syncThingManager.Folders.TryGetValue(watchedFolder, out folder))
                     continue;
 
-                var watcher = new DirectoryWatcher(folder.Path);
+                var watcher = new DirectoryWatcher(folder.Path, this.BackoffInterval);
                 watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.PreviewDirectoryChanged(folder.FolderId, e.SubPath); 
                 watcher.DirectoryChanged += (o, e) => this.DirectoryChanged(folder.FolderId, e.SubPath);
 
