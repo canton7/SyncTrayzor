@@ -36,8 +36,6 @@ namespace SyncTrayzor.Pages
                 this.RefreshBrowser();
             };
 
-            Cef.Initialize(new CefSettings());
-
             this.Bind(x => x.WebBrowser, (o, e) =>
             {
                 if (e.NewValue == null)
@@ -47,6 +45,12 @@ namespace SyncTrayzor.Pages
                 webBrowser.RequestHandler = this;
                 webBrowser.LifeSpanHandler = this;
             });
+
+            this.StateChanged += (o, e) =>
+            {
+                if (e.NewState == ScreenState.Active && (e.PreviousState == ScreenState.Initial || e.PreviousState == ScreenState.Closed))
+                    Cef.Initialize(new CefSettings());
+            };
         }
 
         public void RefreshBrowser()
@@ -64,6 +68,19 @@ namespace SyncTrayzor.Pages
         protected override void OnDeactivate()
         {
             this.Location = "about:blank";
+        }
+
+        protected override void OnClose()
+        {
+            // This is such a dirty, horrible, hacky thing to do...
+            // So it turns out that doesn't like being shut down, then re-initialized, see http://www.magpcss.org/ceforum/viewtopic.php?f=6&t=10807&start=10
+            // and others. However, if we wait a little while (presumably for the WebBrowser to die and all open connections to the subprocess
+            // to close), then kill it in a very dirty way (by killing the process rather than calling Cef.Shutdown), it springs back to life
+            // when Cef.Initialize is called again.
+            // I'm not 100% it's not leaking something somewhere, but it seems to work, and saves 50MB of idle memory usage
+            // However, I'm not comfortable enough with this to enable it permanently yet
+            //await Task.Delay(5000);
+            //CefSharpHelper.TerminateCefSharpProcess();
         }
 
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)
