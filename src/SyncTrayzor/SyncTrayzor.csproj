@@ -151,6 +151,7 @@
     <Compile Include="SyncThing\Api\EventType.cs" />
     <Compile Include="SyncThing\Api\GenericEvent.cs" />
     <Compile Include="SyncThing\Api\IEventVisitor.cs" />
+    <Compile Include="SyncThing\Api\Ignores.cs" />
     <Compile Include="SyncThing\Api\ItemFinishedEvent.cs" />
     <Compile Include="SyncThing\Api\ItemStartedEvent.cs" />
     <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />

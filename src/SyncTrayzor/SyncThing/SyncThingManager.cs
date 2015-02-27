@@ -161,12 +161,14 @@ namespace SyncTrayzor.SyncThing
 
             var tilde = systemTask.Result.Tilde;
 
-            this.Folders = configTask.Result.Folders.ToDictionary(x => x.ID, x =>
+            var folderConstructionTasks = configTask.Result.Folders.Select(async folder =>
             {
-                var path = x.Path.Replace("~", tilde);
-                return new Folder(x.ID, path);
+                var ignores = await this.apiClient.FetchIgnoresAsync(folder.ID);
+                var path = folder.Path.Replace("~", tilde);
+                return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
             });
 
+            this.Folders = (await Task.WhenAll(folderConstructionTasks)).ToDictionary(x => x.FolderId, x => x);
             this.Version = versionTask.Result;
 
             this.OnDataLoaded();

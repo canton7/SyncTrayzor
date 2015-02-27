@@ -23,6 +23,7 @@ namespace SyncTrayzor.SyncThing
         Task<SystemInfo> FetchSystemInfoAsync();
         Task<Connections> FetchConnectionsAsync();
         Task<SyncthingVersion> FetchVersionAsync();
+        Task<Ignores> FetchIgnoresAsync(string folderId);
     }
 
     public class SyncThingApiClient : ISyncThingApiClient
@@ -97,6 +98,14 @@ namespace SyncTrayzor.SyncThing
             var version = await this.api.FetchVersionAsync();
             logger.Debug("Fetched version: {0}", version);
             return version;
+        }
+
+        public async Task<Ignores> FetchIgnoresAsync(string folderId)
+        {
+            this.EnsureSetup();
+            var ignores = await this.api.FetchIgnoresAsync(folderId);
+            logger.Debug("Fetched ignores for folderid {0}: {1}", folderId, ignores);
+            return ignores;
         }
 
         private void EnsureSetup()
