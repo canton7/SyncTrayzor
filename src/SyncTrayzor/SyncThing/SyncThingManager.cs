@@ -20,6 +20,7 @@ namespace SyncTrayzor.SyncThing
         event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
         SyncThingConnectionStats TotalConnectionStats { get; }
         event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
+        event EventHandler ProcessExitedWithError;
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
@@ -56,6 +57,7 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
         public SyncThingConnectionStats TotalConnectionStats { get; private set; }
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
+        public event EventHandler ProcessExitedWithError;
 
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
@@ -78,7 +80,7 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher = eventWatcher;
             this.connectionsWatcher = connectionsWatcher;
 
-            this.processRunner.ProcessStopped += (o, e) => this.SetState(SyncThingState.Stopped);
+            this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
 
             this.eventWatcher.StartupComplete += (o, e) => { var t = this.StartupCompleteAsync(); };
@@ -160,6 +162,13 @@ namespace SyncTrayzor.SyncThing
             this.connectionsWatcher.Running = running;
         }
 
+        private void ProcessStopped(SyncThingExitStatus exitStatus)
+        {
+            this.SetState(SyncThingState.Stopped);
+            if (exitStatus == SyncThingExitStatus.Error)
+                this.OnProcessExitedWithError();
+        }
+
         private async Task StartupCompleteAsync()
         {
             this.StartedAt = DateTime.UtcNow;
@@ -229,6 +238,11 @@ namespace SyncTrayzor.SyncThing
         private void OnDataLoaded()
         {
             this.eventDispatcher.Raise(this.DataLoaded);
+        }
+
+        private void OnProcessExitedWithError()
+        {
+            this.eventDispatcher.Raise(this.ProcessExitedWithError);
         }
 
         public void Dispose()

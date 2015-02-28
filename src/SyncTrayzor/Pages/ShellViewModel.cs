@@ -50,6 +50,7 @@ namespace SyncTrayzor.Pages
             this.Viewer.ConductWith(this);
 
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
+            this.syncThingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
         }
 
         public bool CanStart
@@ -120,6 +121,14 @@ namespace SyncTrayzor.Pages
         {
             var vm = this.aboutViewModelFactory();
             this.windowManager.ShowDialog(vm);
+        }
+
+        public void ShowExitedWithError()
+        {
+            var msg = "Failed to start Syncthing.\n\n" +
+                "Please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing " +
+                "processes alive. Please use the menu option \"Syncthing -> Kill all Syncthing processes\" to stop them.";
+            this.windowManager.ShowMessageBox(msg, "Syncthing failed to start", icon: MessageBoxImage.Error);
         }
 
         public void CloseToTray()

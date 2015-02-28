@@ -11,6 +11,26 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
+    public enum SyncThingExitStatus
+    {
+        // From https://github.com/syncthing/syncthing/blob/master/cmd/syncthing/main.go#L67
+        Success = 0,
+        Error = 1,
+        NoUpgradeAvailable = 2,
+        Restarting = 3,
+        Upgrading = 4
+    }
+
+    public class ProcessStoppedEventArgs : EventArgs
+    {
+        public SyncThingExitStatus ExitStatus { get; private set; }
+
+        public ProcessStoppedEventArgs(SyncThingExitStatus exitStatus)
+        {
+            this.ExitStatus = exitStatus;
+        }
+    }
+
     public interface ISyncThingProcessRunner : IDisposable
     {
         string ExecutablePath { get; set; }
@@ -18,7 +38,7 @@ namespace SyncTrayzor.SyncThing
         string HostAddress { get; set; }
 
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        event EventHandler ProcessStopped;
+        event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
         void Start();
         void Kill();
@@ -37,7 +57,7 @@ namespace SyncTrayzor.SyncThing
         public string HostAddress { get; set; }
 
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        public event EventHandler ProcessStopped;
+        public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
         public SyncThingProcessRunner()
         {
@@ -108,10 +128,11 @@ namespace SyncTrayzor.SyncThing
 
         private void OnProcessStopped()
         {
-            logger.Info("Syncthing process stopped");
+            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode; 
+            logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
             var handler = this.ProcessStopped;
             if (handler != null)
-                handler(this, EventArgs.Empty);
+                handler(this, new ProcessStoppedEventArgs(exitStatus));
         }
 
         private void OnMessageLogged(string logMessage)
