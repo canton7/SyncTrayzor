@@ -32,5 +32,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         [Get("/rest/version")]
         Task<SyncthingVersion> FetchVersionAsync();
+
+        [Get("/rest/ignores")]
+        Task<Ignores> FetchIgnoresAsync(string folder);
     }
 }

@@ -7,7 +7,7 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Title="SettingsView" Height="500" Width="400"
+        Height="500" Width="400"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="InverseVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
@@ -72,16 +72,10 @@
                 </ItemsControl>
             </DockPanel>
         </GroupBox>
-       
-        <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="0,10,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="75"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="75"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" IsDefault="True" Command="{s:Action Save}">Save</Button>
-            <Button Grid.Column="2" IsCancel="True" Command="{s:Action Cancel}">Cancel</Button>
-        </Grid>
+        
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button IsCancel="True" Command="{s:Action Cancel}">Cancel</Button>
+            <Button IsDefault="True" Command="{s:Action Save}">Save</Button>
+        </StackPanel>
     </DockPanel>
 </Window>

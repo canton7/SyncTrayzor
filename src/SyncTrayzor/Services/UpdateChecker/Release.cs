@@ -10,11 +10,13 @@ namespace SyncTrayzor.Services.UpdateChecker
     {
         public Version Version { get; private set; }
         public string DownloadUrl { get; private set; }
+        public string Body { get; private set; }
 
-        public Release(Version version, string downloadUrl)
+        public Release(Version version, string downloadUrl, string body)
         {
             this.Version = version;
             this.DownloadUrl = downloadUrl;
+            this.Body = body;
         }
     }
 }

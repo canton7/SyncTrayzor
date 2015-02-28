@@ -1,4 +1,5 @@
-﻿using Stylet;
+﻿using NLog;
+using Stylet;
 using StyletIoC;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
@@ -36,6 +37,8 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().BasePath);
+
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
@@ -43,7 +46,7 @@ namespace SyncTrayzor
 
         protected override void Launch()
         {
-            if (this.Args.Length > 0 && this.Args[0] == "-minimized")
+            if (this.Args.Contains("-minimized"))
                 this.Container.Get<INotifyIconManager>().EnsureIconVisible();
             else
                 base.Launch();
@@ -52,7 +55,7 @@ namespace SyncTrayzor
         protected override void OnLaunch()
         {
             var config = this.Container.Get<IConfigurationProvider>().Load();
-            if (config.StartSyncthingAutomatically)
+            if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();
 
             // We don't care if this fails
@@ -62,6 +65,8 @@ namespace SyncTrayzor
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
             var windowManager = this.Container.Get<IWindowManager>();
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Error("An unhandled exception occurred", e.Exception);
 
             var configurationException = e.Exception as ConfigurationException;
             if (configurationException != null)
@@ -71,7 +76,10 @@ namespace SyncTrayzor
             }
             else
             {
-                windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var vm = this.Container.Get<UnhandledExceptionViewModel>();
+                vm.Exception = e.Exception;
+                windowManager.ShowDialog(vm);
+                //windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -38,7 +38,7 @@ namespace SyncTrayzor.Services.UpdateChecker
                                 where asset != null
                                 let version = new Version(release.TagName.TrimStart('v'))
                                 orderby version descending
-                                select new Release(version, asset.DownloadUrl)).FirstOrDefault();
+                                select new Release(version, asset.DownloadUrl, release.Body)).FirstOrDefault();
 
             return latestRelease;
         }

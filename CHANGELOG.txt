@@ -1,3 +1,18 @@
+Changelog
+=========
+
+v1.0.3
+------
+
+ - Improve directory watching
+   - Don't notify Syncthing if path is currently being synchronized
+   - Don't notify Syncthing if path is ignored
+   - Handle removed/re-created folders (e.g. USB and network drives)
+ - Better UI for updates, if Syncthing fails to start, or if an unhandled exception occurs
+ - Double-clicking tray icon always brings window into foreground
+ - Start logging to an external log file
+ - Add -noautostart command-line flag
+
 v1.0.2
 ------
 

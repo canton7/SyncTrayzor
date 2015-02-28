@@ -29,5 +29,5 @@ Building from Source
 
 You'll need [Visual Studio 2013](http://www.visualstudio.com/en-us/news/vs2013-community-vs.aspx).
 Clone/download the repository, open `src\SyncTrayzor.sln`, and compile.
-For Debug builds, you'll need to [download syncthing.exe](https://github.com/syncthing/syncthing/releases) and place it in the `bin\Debug` folder.
+For Debug builds, you'll need to [download syncthing.exe](https://github.com/syncthing/syncthing/releases) and place it in the `bin\x86\Debug` or `bin\x64\Debug` folder, as appropriate.
 For Release builds, you'll need to place it in `%APPDATA%\SyncTrayzor`. 

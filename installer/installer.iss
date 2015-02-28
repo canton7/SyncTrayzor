@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\*.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppBin}\*.exe"; Excludes: "*.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\{#AppExeName}.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppBin}\*.pdb"; DestDir: "{app}"; Flags: ignoreversion

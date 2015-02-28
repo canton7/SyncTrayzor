@@ -8,5 +8,14 @@
     <Setting Name="HomepageUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor</Value>
     </Setting>
+    <Setting Name="DirectoryWatcherBackoffMilliseconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="DirectoryWatcherFolderExistenceCheckMilliseconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="IssuesUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor/issues</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

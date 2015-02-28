@@ -2,8 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
-        Title="ShellView" Height="700" Width="1100"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+        Height="700" Width="1100"
         Icon="..\Icons\default.ico">
+    <i:Interaction.Behaviors>
+        <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
+    </i:Interaction.Behaviors>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">

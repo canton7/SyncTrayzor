@@ -40,5 +40,32 @@ namespace SyncTrayzor.Properties {
                 return ((string)(this["HomepageUrl"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public int DirectoryWatcherBackoffMilliseconds {
+            get {
+                return ((int)(this["DirectoryWatcherBackoffMilliseconds"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public int DirectoryWatcherFolderExistenceCheckMilliseconds {
+            get {
+                return ((int)(this["DirectoryWatcherFolderExistenceCheckMilliseconds"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://github.com/canton7/SyncTrayzor/issues")]
+        public string IssuesUrl {
+            get {
+                return ((string)(this["IssuesUrl"]));
+            }
+        }
     }
 }

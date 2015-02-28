@@ -11,10 +11,15 @@ namespace SyncTrayzor.Services
     public interface IWatchedFolderMonitor
     {
         IEnumerable<string> WatchedFolderIDs { get; set; }
+        TimeSpan BackoffInterval { get; set; }
+        TimeSpan FolderExistenceCheckingInterval { get; set; }
     }
 
     public class WatchedFolderMonitor : IWatchedFolderMonitor
     {
+        // Paths we don't alert Syncthing about
+        private static readonly string ignoresFilePath = ".stignore";
+        private static readonly string[] specialPaths = new[] { ".stversions", ".stfolder", "~syncthing~", ".syncthing." };
         private readonly ISyncThingManager syncThingManager;
         private readonly List<DirectoryWatcher> directoryWatchers = new List<DirectoryWatcher>();
 
@@ -31,6 +36,9 @@ namespace SyncTrayzor.Services
                 this.Reset();
             }
         }
+
+        public TimeSpan BackoffInterval { get; set; }
+        public TimeSpan FolderExistenceCheckingInterval { get; set; }
 
         public WatchedFolderMonitor(ISyncThingManager syncThingManager)
         {
@@ -60,11 +68,48 @@ namespace SyncTrayzor.Services
                 if (!this.syncThingManager.Folders.TryGetValue(watchedFolder, out folder))
                     continue;
 
-                var watcher = new DirectoryWatcher(folder.Path);
-                watcher.DirectoryChanged += (o, e) =>  this.DirectoryChanged(folder.FolderId, e.SubPath);
+                var watcher = new DirectoryWatcher(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
+                watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.PreviewDirectoryChanged(folder.FolderId, e.SubPath); 
+                watcher.DirectoryChanged += (o, e) => this.DirectoryChanged(folder.FolderId, e.SubPath);
 
                 this.directoryWatchers.Add(watcher);
             }
+        }
+
+        // Returns true to cancel
+        private bool PreviewDirectoryChanged(string folderId, string subPath)
+        {
+            // Is it a syncthing temp/special path?
+            if (specialPaths.Any(x => subPath.StartsWith(x)))
+                return true;
+
+            if (subPath == ignoresFilePath)
+            {
+                // Extra: tell SyncThing to update its ignores list
+                this.syncThingManager.ReloadIgnoresAsync(folderId);
+                return true;
+            }
+
+            // If that path was just written by Syncthing, abort!
+            Folder folder;
+            if (!this.syncThingManager.Folders.TryGetValue(folderId, out folder))
+                return true;
+
+            if (folder.SyncState == FolderSyncState.Syncing || folder.SyncthingPaths.Contains(subPath))
+                return true;
+
+            // Syncthing applies regex from the top down - if a parent is ignored, all of its children are by default
+            var pathParts = subPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            var cumulative = String.Empty;
+            foreach (var pathPart in pathParts)
+            {
+                cumulative = Path.Combine(cumulative, pathPart);
+                // If there's an include match on it, and not an exclude match, we ignore it
+                if (folder.Ignores.IncludeRegex.Any(x => x.Match(cumulative).Success) && !folder.Ignores.ExcludeRegex.Any(x => x.Match(cumulative).Success))
+                    return true;
+            }
+
+            return false;
         }
 
         private void DirectoryChanged(string folderId, string subPath)

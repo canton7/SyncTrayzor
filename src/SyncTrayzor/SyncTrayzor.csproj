@@ -84,6 +84,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PropertyChanged">
       <HintPath>..\packages\PropertyChanged.Fody.1.49.0\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
       <Private>False</Private>
@@ -100,6 +103,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -123,7 +127,9 @@
     </Compile>
     <Compile Include="NotifyIcon\INotifyIconDelegate.cs" />
     <Compile Include="Pages\AboutViewModel.cs" />
+    <Compile Include="Pages\NewVersionAlertViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
+    <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Configuration.cs" />
     <Compile Include="Services\ConfigurationApplicator.cs" />
@@ -148,6 +154,7 @@
     <Compile Include="SyncThing\Api\EventType.cs" />
     <Compile Include="SyncThing\Api\GenericEvent.cs" />
     <Compile Include="SyncThing\Api\IEventVisitor.cs" />
+    <Compile Include="SyncThing\Api\Ignores.cs" />
     <Compile Include="SyncThing\Api\ItemFinishedEvent.cs" />
     <Compile Include="SyncThing\Api\ItemStartedEvent.cs" />
     <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />
@@ -176,6 +183,7 @@
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\ScrollViewerUtilities.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
+    <Compile Include="Xaml\ActivateBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
@@ -220,6 +228,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\NewVersionAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -228,7 +240,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\UnhandledExceptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\ViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -28,5 +28,11 @@ namespace SyncTrayzor.SyncThing.Api
 
         [JsonProperty("tilde")]
         public string Tilde { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("<SystemInfo alloc={0} cpuPercent={1} goroutines={2} myId={3} sys={4} tilde={5}>",
+                this.AllocatedMemoryInUse, this.CpuPercent, this.GoRoutines, this.MyID, this.AllocatedMemoryTotal, this.Tilde);
+        }
     }
 }

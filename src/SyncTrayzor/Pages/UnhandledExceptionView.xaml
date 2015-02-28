@@ -1,0 +1,33 @@
+﻿<Window x:Class="SyncTrayzor.Pages.UnhandledExceptionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="https://github.com/canton7/Stylet"
+        Height="400" Width="600">
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Image Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"
+                   Stretch="None" Margin="0,0,10,0"/>
+            <TextBlock TextWrapping="Wrap">
+                Oops! Something went badly wrong.<LineBreak/>
+                SyncTrayzor is going to have to close. Sorry about that
+            </TextBlock>
+        </StackPanel>
+        
+        <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" TextWrapping="Wrap">
+            Please open an issue at
+            <Hyperlink Command="{s:Action ShowIssues}">
+                <TextBlock Text="{Binding IssuesUrl}"/>
+            </Hyperlink>
+            and include the following information:
+        </TextBlock>
+
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}">Close</Button>
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,10">
+            You may be asked to provide a log file. You can find this in:<LineBreak/>
+            <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0"
+                     Text="{Binding LogFilePath, Mode=OneWay}"/>
+        </TextBlock>
+
+        <TextBox IsReadOnly="True" Text="{Binding ErrorMessage, Mode=OneWay}"/>
+    </DockPanel>
+</Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +11,26 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
+    public enum SyncThingExitStatus
+    {
+        // From https://github.com/syncthing/syncthing/blob/master/cmd/syncthing/main.go#L67
+        Success = 0,
+        Error = 1,
+        NoUpgradeAvailable = 2,
+        Restarting = 3,
+        Upgrading = 4
+    }
+
+    public class ProcessStoppedEventArgs : EventArgs
+    {
+        public SyncThingExitStatus ExitStatus { get; private set; }
+
+        public ProcessStoppedEventArgs(SyncThingExitStatus exitStatus)
+        {
+            this.ExitStatus = exitStatus;
+        }
+    }
+
     public interface ISyncThingProcessRunner : IDisposable
     {
         string ExecutablePath { get; set; }
@@ -17,7 +38,7 @@ namespace SyncTrayzor.SyncThing
         string HostAddress { get; set; }
 
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        event EventHandler ProcessStopped;
+        event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
         void Start();
         void Kill();
@@ -26,6 +47,7 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingProcessRunner : ISyncThingProcessRunner
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly string[] defaultArguments = new[] { "-no-browser" };
 
         private Process process;
@@ -35,7 +57,7 @@ namespace SyncTrayzor.SyncThing
         public string HostAddress { get; set; }
 
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        public event EventHandler ProcessStopped;
+        public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
         public SyncThingProcessRunner()
         {
@@ -43,6 +65,8 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
+            logger.Info("Starting syncthing: ", this.ExecutablePath);
+
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
 
@@ -70,6 +94,7 @@ namespace SyncTrayzor.SyncThing
 
         public void Kill()
         {
+            logger.Info("Killing Syncthing process");
             this.KillInternal();
         }
 
@@ -103,13 +128,16 @@ namespace SyncTrayzor.SyncThing
 
         private void OnProcessStopped()
         {
+            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode; 
+            logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
             var handler = this.ProcessStopped;
             if (handler != null)
-                handler(this, EventArgs.Empty);
+                handler(this, new ProcessStoppedEventArgs(exitStatus));
         }
 
         private void OnMessageLogged(string logMessage)
         {
+            logger.Debug(logMessage);
             var handler = this.MessageLogged;
             if (handler != null)
                 handler(this, new MessageLoggedEventArgs(logMessage));
