@@ -10,7 +10,7 @@ namespace SyncTrayzor.NotifyIcon
     public interface INotifyIconDelegate : IScreenState
     {
         void CloseToTray();
-        void RestoreFromTray();
+        void EnsureInForeground();
         void Shutdown();
     }
 }

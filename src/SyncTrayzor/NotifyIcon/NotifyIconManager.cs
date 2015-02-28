@@ -69,8 +69,7 @@ namespace SyncTrayzor.NotifyIcon
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
-                if (!this.application.HasMainWindow)
-                    this.rootViewModel.RestoreFromTray();
+                this.rootViewModel.EnsureInForeground();
             };
             this.viewModel.WindowCloseRequested += (o, e) => this.rootViewModel.CloseToTray();
             this.viewModel.ExitRequested += (o, e) => this.rootViewModel.Shutdown();

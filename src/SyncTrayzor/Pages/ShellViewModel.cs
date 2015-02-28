@@ -21,6 +21,7 @@ namespace SyncTrayzor.Pages
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly Func<AboutViewModel> aboutViewModelFactory;
 
+        public bool WindowActivated { get; set; }
         public string ExecutablePath { get; private set; }
         public ConsoleViewModel Console { get; private set; }
         public ViewerViewModel Viewer { get; private set; }
@@ -136,9 +137,12 @@ namespace SyncTrayzor.Pages
             this.RequestClose();
         }
 
-        public void RestoreFromTray()
+        public void EnsureInForeground()
         {
-            this.windowManager.ShowWindow(this);
+            if (!this.application.HasMainWindow)
+                this.windowManager.ShowWindow(this);
+            else
+                this.WindowActivated = true;
         }
 
         public void Shutdown()
