@@ -46,7 +46,7 @@ namespace SyncTrayzor
 
         protected override void Launch()
         {
-            if (this.Args.Length > 0 && this.Args[0] == "-minimized")
+            if (this.Args.Contains("-minimized"))
                 this.Container.Get<INotifyIconManager>().EnsureIconVisible();
             else
                 base.Launch();
@@ -55,7 +55,7 @@ namespace SyncTrayzor
         protected override void OnLaunch()
         {
             var config = this.Container.Get<IConfigurationProvider>().Load();
-            if (config.StartSyncthingAutomatically)
+            if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();
 
             // We don't care if this fails
