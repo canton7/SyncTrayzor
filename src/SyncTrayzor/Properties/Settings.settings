@@ -11,5 +11,8 @@
     <Setting Name="DirectoryWatcherBackoffMilliseconds" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2000</Value>
     </Setting>
+    <Setting Name="DirectoryWatcherFolderExistenceCheckMilliseconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

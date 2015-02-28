@@ -49,5 +49,14 @@ namespace SyncTrayzor.Properties {
                 return ((int)(this["DirectoryWatcherBackoffMilliseconds"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public int DirectoryWatcherFolderExistenceCheckMilliseconds {
+            get {
+                return ((int)(this["DirectoryWatcherFolderExistenceCheckMilliseconds"]));
+            }
+        }
     }
 }

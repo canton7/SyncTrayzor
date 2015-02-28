@@ -47,6 +47,7 @@ namespace SyncTrayzor.SyncThing
         {
             this.FolderId = folderId;
             this.Path = path;
+            this.SyncState = FolderSyncState.Idle;
             this.SyncthingPaths = new HashSet<string>();
             this.Ignores = ignores;
         }
