@@ -14,6 +14,7 @@
             <Button IsDefault="True" Command="{s:Action Download}">Yes</Button>
             <Button IsCancel="True" Command="{s:Action Close}">No</Button>
         </StackPanel>
-        <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{Binding Changelog}"/>
+        <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{Binding Changelog}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
     </DockPanel>
 </Window>
