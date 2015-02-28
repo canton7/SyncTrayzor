@@ -35,5 +35,8 @@ namespace SyncTrayzor.Services.UpdateChecker
 
         [JsonProperty("assets")]
         public List<ReleaseAssetResponse> Assets { get; set; }
+
+        [JsonProperty("body")]
+        public string Body { get; set; }
     }
 }

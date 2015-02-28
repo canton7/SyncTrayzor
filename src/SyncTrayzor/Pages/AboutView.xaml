@@ -35,6 +35,6 @@
                 <TextBlock Text="{Binding HomepageUrl}"/>
             </Hyperlink>
         </TextBlock>
-        <Button Command="{s:Action Close}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,10,0,0" Padding="15,1">Close</Button>
+        <Button Command="{s:Action Close}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom">Close</Button>
     </DockPanel>
 </Window>

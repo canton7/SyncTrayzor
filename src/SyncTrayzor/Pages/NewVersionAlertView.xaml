@@ -1,0 +1,19 @@
+﻿<Window x:Class="SyncTrayzor.Pages.NewVersionAlertView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="https://github.com/canton7/Stylet"
+        Height="400" Width="400">
+    <DockPanel Margin="10">
+        <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
+            A new version of SyncTrayzor is available!<LineBreak/><LineBreak/>
+            Version: <TextBlock Text="{Binding Version}"/><LineBreak/><LineBreak/>
+            Do you want to download it now? You won't be prompted again for this version.
+        </TextBlock>
+        <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0">Changelog:</TextBlock>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button IsDefault="True" Command="{s:Action Download}">Yes</Button>
+            <Button IsCancel="True" Command="{s:Action Close}">No</Button>
+        </StackPanel>
+        <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{Binding Changelog}"/>
+    </DockPanel>
+</Window>

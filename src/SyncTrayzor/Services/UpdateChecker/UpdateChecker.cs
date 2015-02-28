@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,12 +26,14 @@ namespace SyncTrayzor.Services.UpdateChecker
         public Version LatestVersion { get; private set; }
         public bool LatestVersionIsNewer { get; private set; }
         public string LatestVersionDownloadUrl { get; private set; }
+        public string LatestVersionChangelog { get; private set; }
 
-        public VersionCheckResults(Version latestVersion, bool latestVersionIsNewer, string latestVersionDownloadUrl)
+        public VersionCheckResults(Version latestVersion, bool latestVersionIsNewer, string latestVersionDownloadUrl, string latestVersionChangelog)
         {
             this.LatestVersion = latestVersion;
             this.LatestVersionIsNewer = latestVersionIsNewer;
             this.LatestVersionDownloadUrl = latestVersionDownloadUrl;
+            this.LatestVersionChangelog = latestVersionChangelog;
         }
     }
 
@@ -47,14 +50,19 @@ namespace SyncTrayzor.Services.UpdateChecker
     {
         private readonly IWindowManager windowManager;
         private readonly IGithubApiClient apiClient;
+        private readonly Func<NewVersionAlertViewModel> newersionAlertViewModelFactory;
 
         public Version LatestIgnoredVersion { get; set; }
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
 
-        public UpdateChecker(IWindowManager windowManager, IGithubApiClient apiClient)
+        public UpdateChecker(
+            IWindowManager windowManager,
+            IGithubApiClient apiClient,
+            Func<NewVersionAlertViewModel> newVersionAlertViewModelFactory)
         {
             this.windowManager = windowManager;
             this.apiClient = apiClient;
+            this.newersionAlertViewModelFactory = newVersionAlertViewModelFactory;
         }
 
         public async Task<VersionCheckResults> FetchUpdatesAsync()
@@ -68,7 +76,7 @@ namespace SyncTrayzor.Services.UpdateChecker
                 if (latestRelease == null)
                     return null;
 
-                return new VersionCheckResults(latestRelease.Version, latestRelease.Version > applicationVersion, latestRelease.DownloadUrl);
+                return new VersionCheckResults(latestRelease.Version, latestRelease.Version > applicationVersion, latestRelease.DownloadUrl, latestRelease.Body);
             }
             catch (Exception)
             {
@@ -88,9 +96,11 @@ namespace SyncTrayzor.Services.UpdateChecker
 
             if (results.LatestVersionIsNewer)
             {
-                var msg = String.Format("A new version of SyncTrayzor is available! Do you want to download version {0}?\n\nYou will not be prompted for this version again.", results.LatestVersion);
-                var result = this.windowManager.ShowMessageBox(msg, "Upgrade Version?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
+                var vm = this.newersionAlertViewModelFactory();
+                vm.Changelog = results.LatestVersionChangelog;
+                vm.Version = results.LatestVersion;
+                var result = this.windowManager.ShowDialog(vm);
+                if (result == true)
                     Process.Start(results.LatestVersionDownloadUrl);
                 else
                     this.OnVersionIgnored(results.LatestVersion);
