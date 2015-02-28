@@ -76,7 +76,10 @@ namespace SyncTrayzor
             }
             else
             {
-                windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var vm = this.Container.Get<UnhandledExceptionViewModel>();
+                vm.Exception = e.Exception;
+                windowManager.ShowDialog(vm);
+                //windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

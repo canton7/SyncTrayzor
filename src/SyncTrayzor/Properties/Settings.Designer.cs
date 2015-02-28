@@ -58,5 +58,14 @@ namespace SyncTrayzor.Properties {
                 return ((int)(this["DirectoryWatcherFolderExistenceCheckMilliseconds"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://github.com/canton7/SyncTrayzor/issues")]
+        public string IssuesUrl {
+            get {
+                return ((string)(this["IssuesUrl"]));
+            }
+        }
     }
 }

@@ -126,11 +126,9 @@
     </Compile>
     <Compile Include="NotifyIcon\INotifyIconDelegate.cs" />
     <Compile Include="Pages\AboutViewModel.cs" />
-    <Compile Include="Pages\NewVersionAlertView.xaml.cs">
-      <DependentUpon>NewVersionAlertView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
+    <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Configuration.cs" />
     <Compile Include="Services\ConfigurationApplicator.cs" />
@@ -237,6 +235,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UnhandledExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
