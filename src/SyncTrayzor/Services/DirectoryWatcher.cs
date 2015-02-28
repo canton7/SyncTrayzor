@@ -46,6 +46,9 @@ namespace SyncTrayzor.Services
 
         public DirectoryWatcher(string directory, TimeSpan backoffInterval)
         {
+            if (backoffInterval.Ticks < 0)
+                throw new ArgumentException("backoffInterval must be > 0");
+
             this.directory = directory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
             this.watcher = this.CreateWatcher(this.directory);

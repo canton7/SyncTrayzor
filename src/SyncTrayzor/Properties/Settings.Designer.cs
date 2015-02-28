@@ -43,10 +43,10 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int DirectoryWatcherBackoffSec {
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public int DirectoryWatcherBackoffMilliseconds {
             get {
-                return ((int)(this["DirectoryWatcherBackoffSec"]));
+                return ((int)(this["DirectoryWatcherBackoffMilliseconds"]));
             }
         }
     }

@@ -81,7 +81,7 @@ namespace SyncTrayzor.Services
         public void ApplyConfiguration()
         {
             this.githubApiClient.SetConnectionDetails(Settings.Default.GithubApiUrl);
-            this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromSeconds(Settings.Default.DirectoryWatcherBackoffSec);
+            this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
 
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }

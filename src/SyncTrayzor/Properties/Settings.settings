@@ -8,8 +8,8 @@
     <Setting Name="HomepageUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor</Value>
     </Setting>
-    <Setting Name="DirectoryWatcherBackoffSec" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">2</Value>
+    <Setting Name="DirectoryWatcherBackoffMilliseconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2000</Value>
     </Setting>
   </Settings>
 </SettingsFile>
