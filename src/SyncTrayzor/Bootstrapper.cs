@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using CefSharp;
+using NLog;
 using Stylet;
 using StyletIoC;
 using SyncTrayzor.NotifyIcon;
@@ -42,6 +43,8 @@ namespace SyncTrayzor
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
+
+            Cef.Initialize();
         }
 
         protected override void Launch()
@@ -79,7 +82,6 @@ namespace SyncTrayzor
                 var vm = this.Container.Get<UnhandledExceptionViewModel>();
                 vm.Exception = e.Exception;
                 windowManager.ShowDialog(vm);
-                //windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
