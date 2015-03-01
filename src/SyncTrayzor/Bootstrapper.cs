@@ -9,6 +9,7 @@ using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,9 @@ namespace SyncTrayzor
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
             Cef.Initialize();
+            // Horrible workaround for a CefSharp crash on logout/shutdown
+            // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
+            this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
         }
 
         protected override void Launch()
