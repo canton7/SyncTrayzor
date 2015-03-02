@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.0.4
+------
+
+  - Handle Syncthing upgrades (previously would require a 'Kill all syncthing processes' then 'Start')
+  - Fix crash when logging out / shutting down with SyncTrayzor opened (caused by embedded browser component)
+  - Don't unload browser when minimized. This means that open Syncthing dialogs aren't closed when minimizing
+  - Reduce memory usage if SyncTrayzor is never restored from tray
+  - UI tweaks and fixes
+  - Add VC++ x64 Redist to the installer
+
 v1.0.3
 ------
 
