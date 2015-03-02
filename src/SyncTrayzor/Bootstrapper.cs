@@ -46,6 +46,8 @@ namespace SyncTrayzor
             this.Container.Get<IAutostartProvider>().IsEnabled = false;
 #endif
 
+            this.Container.Get<IConfigurationProvider>().EnsureEnvironmentConsistency();
+
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();

@@ -26,6 +26,7 @@ namespace SyncTrayzor.Services
 
         string BasePath { get; }
 
+        void EnsureEnvironmentConsistency();
         Configuration Load();
         void Save(Configuration config);
     }
@@ -41,13 +42,28 @@ namespace SyncTrayzor.Services
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        public string ExePath
+        {
+            get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
+        }
+
         public string BasePath
         {
 #if DEBUG
-            get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
+            get { return this.ExePath; }
 #else
             get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
 #endif
+        }
+        
+        public string SyncThingPath
+        {
+            get { return Path.Combine(this.BasePath, "syncthing.exe"); }
+        }
+
+        public string SyncThingBackupPath
+        {
+            get { return Path.Combine(this.ExePath, "syncthing.exe"); }
         }
 
         public string ConfigurationFilePath
@@ -58,8 +74,21 @@ namespace SyncTrayzor.Services
         public ConfigurationProvider()
         {
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
+        }
+
+        public void EnsureEnvironmentConsistency()
+        {
             if (!String.IsNullOrWhiteSpace(this.BasePath))
                 Directory.CreateDirectory(this.BasePath);
+
+            if (!File.Exists(this.ConfigurationFilePath))
+            {
+                var configuration = new Configuration(this.SyncThingPath, this.GenerateApiKey());
+                this.Save(configuration);
+            }
+
+            if (!File.Exists(this.SyncThingPath) && File.Exists(this.SyncThingBackupPath))
+                File.Copy(this.SyncThingBackupPath, this.SyncThingPath);
         }
 
         public Configuration Load()
@@ -72,7 +101,7 @@ namespace SyncTrayzor.Services
 
         public void Save(Configuration config)
         {
-            this.EnsureConsistency(config);
+            this.EnsureConfigurationFileConsistency(config);
             this.currentConfig = config;
             this.OnConfigurationChanged(config);
             using (var stream = File.Open(this.ConfigurationFilePath, FileMode.Create))
@@ -83,24 +112,13 @@ namespace SyncTrayzor.Services
 
         private Configuration LoadFromDisk()
         {
-            Configuration configuration;
-
-            if (!File.Exists(this.ConfigurationFilePath))
+            using (var stream = File.OpenRead(this.ConfigurationFilePath))
             {
-                configuration = new Configuration(Path.Combine(this.BasePath, "syncthing.exe"), this.GenerateApiKey());
+                return (Configuration)this.serializer.Deserialize(stream);
             }
-            else
-            {
-                using (var stream = File.OpenRead(this.ConfigurationFilePath))
-                {
-                    configuration = (Configuration)this.serializer.Deserialize(stream);
-                }
-            }
-
-            return configuration;
         }
 
-        private void EnsureConsistency(Configuration configuration)
+        private void EnsureConfigurationFileConsistency(Configuration configuration)
         {
             if (!File.Exists(configuration.SyncthingPath))
                 throw new ConfigurationException(String.Format("Unable to find file {0}", configuration.SyncthingPath));

@@ -54,7 +54,7 @@ Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "syncthing.exe"; DestDir: "{userappdata}\{#AppDataFolder}"
+Source: "syncthing.exe"; DestDir: "{app}"
 Source: "dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 
 [Icons]
