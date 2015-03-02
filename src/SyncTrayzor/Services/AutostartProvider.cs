@@ -12,6 +12,7 @@ namespace SyncTrayzor.Services
 {
     public interface IAutostartProvider
     {
+        bool IsEnabled { get; set; }
         bool CanRead { get; }
         bool CanWrite { get; }
 
@@ -29,17 +30,30 @@ namespace SyncTrayzor.Services
     {
         private const string applicationName = "SyncTrayzor";
 
-        public bool CanRead { get; private set; }
-        public bool CanWrite { get; private set; }
+        public bool IsEnabled { get; set; }
+
+        private bool _canRead;
+        public bool CanRead
+        {
+            get { return this.IsEnabled && this._canRead; }
+        }
+
+        private bool _canWrite;
+        public bool CanWrite
+        {
+            get { return this.IsEnabled && this._canWrite; }
+        }
 
         public AutostartProvider()
         {
+            this.IsEnabled = true; // Default
+
             // Check our access
             try
             {
                 this.OpenRegistryKey(true).Dispose();
-                this.CanWrite = true;
-                this.CanRead = true;
+                this._canWrite = true;
+                this._canRead = true;
                 return;
             }
             catch (SecurityException) { }
@@ -47,7 +61,7 @@ namespace SyncTrayzor.Services
             try
             {
                 this.OpenRegistryKey(false).Dispose();
-                this.CanRead = true;
+                this._canRead = true;
             }
             catch (SecurityException) { }
         }

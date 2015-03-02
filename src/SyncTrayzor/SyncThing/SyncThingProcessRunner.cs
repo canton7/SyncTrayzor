@@ -48,7 +48,7 @@ namespace SyncTrayzor.SyncThing
     public class SyncThingProcessRunner : ISyncThingProcessRunner
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly string[] defaultArguments = new[] { "-no-browser" };
+        private static readonly string[] defaultArguments = new[] { "-no-browser", "-no-restart" };
 
         private Process process;
 
@@ -102,8 +102,7 @@ namespace SyncTrayzor.SyncThing
         {
             if (this.process != null)
             {
-                KillProcessAndChildren(this.process.Id);
-                this.process = null;
+                this.process.Kill();
             }
         }
 
@@ -130,9 +129,17 @@ namespace SyncTrayzor.SyncThing
         {
             SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode; 
             logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
-            var handler = this.ProcessStopped;
-            if (handler != null)
-                handler(this, new ProcessStoppedEventArgs(exitStatus));
+            if (exitStatus == SyncThingExitStatus.Restarting || exitStatus == SyncThingExitStatus.Upgrading)
+            {
+                logger.Info("Syncthing process requested restart, so restarting");
+                this.Start();
+            }
+            else
+            {
+                var handler = this.ProcessStopped;
+                if (handler != null)
+                    handler(this, new ProcessStoppedEventArgs(exitStatus));
+            }
         }
 
         private void OnMessageLogged(string logMessage)
@@ -141,26 +148,6 @@ namespace SyncTrayzor.SyncThing
             var handler = this.MessageLogged;
             if (handler != null)
                 handler(this, new MessageLoggedEventArgs(logMessage));
-        }
-
-        // http://stackoverflow.com/questions/5901679/kill-process-tree-programatically-in-c-sharp
-        private static void KillProcessAndChildren(int pid)
-        {
-            var searcher = new ManagementObjectSearcher("Select * From Win32_Process Where ParentProcessID=" + pid);
-            var managementObjectCollection = searcher.Get();
-            foreach (var managementObject in managementObjectCollection)
-            {
-                KillProcessAndChildren(Convert.ToInt32(managementObject["ProcessID"]));
-            }
-            try
-            {
-                Process proc = Process.GetProcessById(pid);
-                proc.Kill();
-            }
-            catch (ArgumentException)
-            {
-                // Process already exited.
-            }
         }
 
         public void KillAllSyncthingProcesses()

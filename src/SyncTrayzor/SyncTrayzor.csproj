@@ -94,9 +94,9 @@
     <Reference Include="Refit">
       <HintPath>..\packages\refit.2.2.0\lib\Net45\Refit.dll</HintPath>
     </Reference>
-    <Reference Include="Stylet, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Stylet, Version=1.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Stylet.1.1.3\lib\net45\Stylet.dll</HintPath>
+      <HintPath>..\packages\Stylet.1.1.4\lib\net45\Stylet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -178,6 +178,7 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\CefSharpHelper.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />

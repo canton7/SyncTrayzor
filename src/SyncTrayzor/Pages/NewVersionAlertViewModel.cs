@@ -14,7 +14,7 @@ namespace SyncTrayzor.Pages
 
         public NewVersionAlertViewModel()
         {
-            this.DisplayName = "New Version Available";
+            this.DisplayName = "SyncTrayzor update available";
         }
 
         public void Download()

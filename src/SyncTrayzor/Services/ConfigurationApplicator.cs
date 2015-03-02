@@ -54,9 +54,7 @@ namespace SyncTrayzor.Services
 
         private void UpdateConfigOnInit()
         {
-#if !DEBUG
             this.UpdateAutostart();
-#endif
         }
 
         private void UpdateAutostart()
@@ -97,6 +95,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
 
+            // Debug builds never set autostart
             // Don't have permission? Meh
             if (this.autostartProvider.CanWrite)
                 this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });

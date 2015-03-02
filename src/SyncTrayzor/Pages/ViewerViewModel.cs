@@ -45,29 +45,18 @@ namespace SyncTrayzor.Pages
                 webBrowser.RequestHandler = this;
                 webBrowser.LifeSpanHandler = this;
             });
+        }
 
-            this.StateChanged += (o, e) =>
-            {
-                if (e.NewState == ScreenState.Active && (e.PreviousState == ScreenState.Initial || e.PreviousState == ScreenState.Closed))
-                    Cef.Initialize(new CefSettings());
-            };
+        protected override void OnInitialActivate()
+        {
+            Cef.Initialize();
         }
 
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
-            if (this.syncThingManager.State == SyncThingState.Running && this.IsActive)
+            if (this.syncThingManager.State == SyncThingState.Running)
                 this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
-        }
-
-        protected override void OnActivate()
-        {
-            this.RefreshBrowser();
-        }
-
-        protected override void OnDeactivate()
-        {
-            this.Location = "about:blank";
         }
 
         protected override void OnClose()

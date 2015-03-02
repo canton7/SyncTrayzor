@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using CefSharp;
+using NLog;
 using Stylet;
 using StyletIoC;
 using SyncTrayzor.NotifyIcon;
@@ -8,6 +9,7 @@ using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,9 +41,18 @@ namespace SyncTrayzor
         {
             GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().BasePath);
 
+            // Must be done before ConfigurationApplicator.ApplyConfiguration
+#if DEBUG
+            this.Container.Get<IAutostartProvider>().IsEnabled = false;
+#endif
+
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
+
+            // Horrible workaround for a CefSharp crash on logout/shutdown
+            // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
+            this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
         }
 
         protected override void Launch()
@@ -79,7 +90,6 @@ namespace SyncTrayzor
                 var vm = this.Container.Get<UnhandledExceptionViewModel>();
                 vm.Exception = e.Exception;
                 windowManager.ShowDialog(vm);
-                //windowManager.ShowMessageBox(String.Format("Unhandled error: {0}", e.Exception.Message), "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
