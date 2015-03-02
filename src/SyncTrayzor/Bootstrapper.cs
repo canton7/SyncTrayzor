@@ -72,7 +72,8 @@ namespace SyncTrayzor
                 ((ShellViewModel)this.RootViewModel).Start();
 
             // We don't care if this fails
-            this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
+            if (config.NotifyOfNewVersions)
+                this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)

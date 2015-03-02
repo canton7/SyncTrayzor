@@ -22,6 +22,8 @@ namespace SyncTrayzor.Pages
         public bool ShowTrayIconOnlyOnClose { get; set;}
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool NotifyOfNewVersions { get; set; }
+
         public bool StartSyncThingAutomatically { get; set; }
         public string SyncThingAddress { get; set; }
         public string SyncThingApiKey { get; set; }
@@ -56,6 +58,7 @@ namespace SyncTrayzor.Pages
             this.ShowTrayIconOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.CloseToTray = configuration.CloseToTray;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
+            this.NotifyOfNewVersions = configuration.NotifyOfNewVersions;
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
             this.SyncThingAddress = configuration.SyncthingAddress;
             this.SyncThingApiKey = configuration.SyncthingApiKey;
@@ -78,6 +81,7 @@ namespace SyncTrayzor.Pages
             configuration.ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose;
             configuration.CloseToTray = this.CloseToTray;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
+            configuration.NotifyOfNewVersions = this.NotifyOfNewVersions;
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;
             configuration.SyncthingAddress = this.SyncThingAddress;
             configuration.SyncthingApiKey = this.SyncThingApiKey;

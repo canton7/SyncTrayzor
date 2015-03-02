@@ -20,11 +20,12 @@
             </Style>    
         </DockPanel.Resources>
         
-        <GroupBox DockPanel.Dock="Top" Header="Tray Icon">
+        <GroupBox DockPanel.Dock="Top" Header="SyncTrayzor">
             <DockPanel>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}">Show Tray Icon only on close</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}">Show 'Synchronized' balloon messages</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}">Alert if a new version of SyncTrayzor is available</CheckBox>
             </DockPanel>
         </GroupBox>
         
