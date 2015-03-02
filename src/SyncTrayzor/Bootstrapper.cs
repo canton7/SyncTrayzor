@@ -50,7 +50,6 @@ namespace SyncTrayzor
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
-            Cef.Initialize();
             // Horrible workaround for a CefSharp crash on logout/shutdown
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();

@@ -47,10 +47,15 @@ namespace SyncTrayzor.Pages
             });
         }
 
+        protected override void OnInitialActivate()
+        {
+            Cef.Initialize();
+        }
+
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
-            if (this.syncThingManager.State == SyncThingState.Running && this.IsActive)
+            if (this.syncThingManager.State == SyncThingState.Running)
                 this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
         }
 
