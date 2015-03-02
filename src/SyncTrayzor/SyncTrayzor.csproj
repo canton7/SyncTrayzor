@@ -178,6 +178,7 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\CefSharpHelper.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
