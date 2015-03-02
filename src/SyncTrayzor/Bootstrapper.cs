@@ -41,6 +41,11 @@ namespace SyncTrayzor
         {
             GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().BasePath);
 
+            // Must be done before ConfigurationApplicator.ApplyConfiguration
+#if DEBUG
+            this.Container.Get<IAutostartProvider>().IsEnabled = false;
+#endif
+
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
