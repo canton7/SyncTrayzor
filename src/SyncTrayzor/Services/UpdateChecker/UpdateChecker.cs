@@ -1,4 +1,5 @@
-﻿using Stylet;
+﻿using NLog;
+using Stylet;
 using SyncTrayzor.Pages;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,11 @@ namespace SyncTrayzor.Services.UpdateChecker
             this.LatestVersionDownloadUrl = latestVersionDownloadUrl;
             this.LatestVersionChangelog = latestVersionChangelog;
         }
+
+        public override string ToString()
+        {
+            return String.Format("<VersionCheckResults LatestVersion={0} IsNewer={1} DownloadUrl={2}>", this.LatestVersion, this.LatestVersionIsNewer, this.LatestVersionDownloadUrl);
+        }
     }
 
     public interface IUpdateChecker
@@ -48,6 +54,8 @@ namespace SyncTrayzor.Services.UpdateChecker
 
     public class UpdateChecker : IUpdateChecker
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly IWindowManager windowManager;
         private readonly IGithubApiClient apiClient;
         private readonly Func<NewVersionAlertViewModel> newersionAlertViewModelFactory;
@@ -74,12 +82,18 @@ namespace SyncTrayzor.Services.UpdateChecker
                 var latestRelease = await this.apiClient.FetchLatestReleaseAsync();
 
                 if (latestRelease == null)
+                {
+                    logger.Info("No suitable releases found");
                     return null;
+                }
 
-                return new VersionCheckResults(latestRelease.Version, latestRelease.Version > applicationVersion, latestRelease.DownloadUrl, latestRelease.Body);
+                var results = new VersionCheckResults(latestRelease.Version, latestRelease.Version > applicationVersion, latestRelease.DownloadUrl, latestRelease.Body);
+                logger.Info("Found new version: {0}", results);
+                return results;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.Warn("Fetching updates failed with an error", e);
                 return null;
             }
         }
@@ -101,9 +115,15 @@ namespace SyncTrayzor.Services.UpdateChecker
                 vm.Version = results.LatestVersion;
                 var result = this.windowManager.ShowDialog(vm);
                 if (result == true)
+                {
+                    logger.Info("Proceeding to download URL {0}", results.LatestVersionDownloadUrl);
                     Process.Start(results.LatestVersionDownloadUrl);
+                }
                 else
+                {
+                    logger.Info("Ignoring version {0}", results.LatestVersion);
                     this.OnVersionIgnored(results.LatestVersion);
+                }
             }
         }
 
