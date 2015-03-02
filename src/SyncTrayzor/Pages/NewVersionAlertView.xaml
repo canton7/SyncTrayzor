@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
-        Height="400" Width="400">
+        Width="400" MaxHeight="600"
+        SizeToContent="Height">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
             A new version of SyncTrayzor is available!<LineBreak/><LineBreak/>
