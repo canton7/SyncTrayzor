@@ -147,6 +147,14 @@ namespace SyncTrayzor.SyncThing
             if (state == this.State)
                 return;
 
+            // We really need a proper state machine here....
+            // There's a race if Syncthing can't start because the database is locked by another process on the same port
+            // In this case, we see the process as having failed, but the event watcher chimes in a split-second later with the 'Started' event.
+            // This runs the risk of transitioning us from Stopped -> Starting -> Stopepd -> Running, which is bad news for everyone
+            // So, get around this by enforcing strict state transitions.
+            if (this.State == SyncThingState.Stopped && state == SyncThingState.Running)
+                return;
+
             var oldState = this.State;
             this.State = state;
 

@@ -58,12 +58,7 @@ namespace SyncTrayzor.SyncThing
         {
             try
             {
-                List<Event> events;
-                // If we don't know what the latest event ID is (disconnection? new connection?), make sure we find out
-                if (this.lastEventId == 0)
-                    events = await this.apiClient.FetchEventsAsync(0, 1);
-                else
-                    events = await this.apiClient.FetchEventsAsync(this.lastEventId);
+                var events = await this.apiClient.FetchEventsAsync(this.lastEventId);
 
                 foreach (var evt in events)
                 {
