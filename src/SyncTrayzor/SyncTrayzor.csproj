@@ -180,6 +180,7 @@
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Utils\CefSharpHelper.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
+    <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\ScrollViewerUtilities.cs" />
