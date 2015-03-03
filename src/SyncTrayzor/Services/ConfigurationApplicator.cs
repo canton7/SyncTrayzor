@@ -94,6 +94,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.Address = new Uri(configuration.SyncthingAddress);
             this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
+            this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
 
             // Debug builds never set autostart
             // Don't have permission? Meh

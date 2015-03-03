@@ -26,6 +26,7 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
         Uri Address { get; set; }
+        string SyncthingTraceFacilities { get; set; }
         DateTime? StartedAt { get; }
         SyncthingVersion Version { get; }
 
@@ -76,6 +77,7 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public Uri Address { get; set; }
+        public string SyncthingTraceFacilities { get; set; }
 
         // Folders is a ConcurrentDictionary, which suffices for most access
         // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
@@ -124,6 +126,7 @@ namespace SyncTrayzor.SyncThing
                 this.processRunner.ApiKey = this.ApiKey;
                 this.processRunner.HostAddress = this.Address.ToString();
                 this.processRunner.ExecutablePath = this.ExecutablePath;
+                this.processRunner.Traces = this.SyncthingTraceFacilities;
 
                 this.processRunner.Start();
                 this.SetState(SyncThingState.Starting);

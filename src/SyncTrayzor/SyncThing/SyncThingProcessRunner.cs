@@ -36,6 +36,7 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
         string HostAddress { get; set; }
+        string Traces { get; set; }
 
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
@@ -55,6 +56,7 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
+        public string Traces { get; set; }
 
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
@@ -81,10 +83,16 @@ namespace SyncTrayzor.SyncThing
                 RedirectStandardOutput = true,
             };
 
+            if (!String.IsNullOrWhiteSpace(this.Traces))
+            {
+                processStartInfo.EnvironmentVariables["STTRACE"] = this.Traces;
+            }
+
             this.process = Process.Start(processStartInfo);
 
             this.process.EnableRaisingEvents = true;
             this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
+            this.process.ErrorDataReceived += (o, e) => this.DataReceived(e.Data);
 
             this.process.BeginOutputReadLine();
             this.process.BeginErrorReadLine();

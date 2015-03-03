@@ -47,6 +47,8 @@ namespace SyncTrayzor.Pages
 
         public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
 
+        public string TraceVariables { get; set; }
+
         public SettingsViewModel(IConfigurationProvider configurationProvider, IAutostartProvider autostartProvider)
         {
             this.DisplayName = "Settings";
@@ -69,6 +71,7 @@ namespace SyncTrayzor.Pages
                 Folder = x.ID,
                 IsSelected = x.IsWatched
             }));
+            this.TraceVariables = configuration.SyncthingTraceFacilities;
 
             this.CanReadAutostart = autostartProvider.CanRead;
             this.CanWriteAutostart = autostartProvider.CanWrite;
@@ -88,6 +91,7 @@ namespace SyncTrayzor.Pages
             configuration.StartOnLogon = this.StartOnLogon;
             configuration.StartMinimized = this.StartMinimized;
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
+            configuration.SyncthingTraceFacilities = String.IsNullOrWhiteSpace(this.TraceVariables) ? null : this.TraceVariables;
 
             this.configurationProvider.Save(configuration);
             this.RequestClose(true);
