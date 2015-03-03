@@ -36,10 +36,10 @@ namespace SyncTrayzor.Services
 
         private readonly string directory;
 
-        private readonly object currentNotifySubPathLock = new object();
         private readonly Timer backoffTimer;
         private readonly Timer existenceCheckingTimer;
 
+        private readonly object currentNotifyingSubPathLock = new object();
         private string currentNotifyingSubPath;
         private FileSystemWatcher watcher;
 
@@ -63,7 +63,7 @@ namespace SyncTrayzor.Services
             this.backoffTimer.Elapsed += (o, e) =>
             {
                 string currentNotifyingSubPath;
-                lock (this.currentNotifySubPathLock)
+                lock (this.currentNotifyingSubPathLock)
                 {
                     currentNotifyingSubPath = this.currentNotifyingSubPath;
                     this.currentNotifyingSubPath = null;
@@ -131,7 +131,7 @@ namespace SyncTrayzor.Services
                 return;
 
             this.backoffTimer.Stop();
-            lock (this.currentNotifySubPathLock)
+            lock (this.currentNotifyingSubPathLock)
             {
                 if (this.currentNotifyingSubPath == null)
                     this.currentNotifyingSubPath = subPath;

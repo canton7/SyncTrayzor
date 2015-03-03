@@ -2,6 +2,7 @@
 using SyncTrayzor.SyncThing.Api;
 using SyncTrayzor.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,13 +27,16 @@ namespace SyncTrayzor.SyncThing
         string ApiKey { get; set; }
         Uri Address { get; set; }
         DateTime? StartedAt { get; }
-        Dictionary<string, Folder> Folders { get; }
         SyncthingVersion Version { get; }
 
         void Start();
         Task StopAsync();
         void Kill();
         void KillAllSyncthingProcesses();
+
+        bool TryFetchFolderById(string folderId, out Folder folder);
+        IReadOnlyCollection<Folder> FetchAllFolders();
+
         Task ScanAsync(string folderId, string subPath);
         Task ReloadIgnoresAsync(string folderId);
     }
@@ -57,16 +61,33 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
-        public SyncThingConnectionStats TotalConnectionStats { get; private set; }
+
+        private readonly object totalConnectionStatsLock = new object();
+        private SyncThingConnectionStats _totalConnectionStats;
+        public SyncThingConnectionStats TotalConnectionStats
+        {
+            get { lock (this.totalConnectionStatsLock) { return this._totalConnectionStats; } }
+            set { lock (this.totalConnectionStatsLock) { this._totalConnectionStats = value; } }
+        }
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
+
         public event EventHandler ProcessExitedWithError;
 
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public Uri Address { get; set; }
 
-        private readonly SemaphoreSlim foldersLock = new SemaphoreSlim(1, 1);
-        public Dictionary<string, Folder> Folders { get; private set; }
+        // Folders is a ConcurrentDictionary, which suffices for most access
+        // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
+        // to create a memory barrier. The lock is only used when setting/fetching the field, not when accessing the
+        // Folders dictionary itself.
+        private readonly object foldersLock = new object();
+        private ConcurrentDictionary<string, Folder> _folders;
+        private ConcurrentDictionary<string, Folder> folders
+        {
+            get { lock (this.foldersLock) { return this._folders; } }
+            set { lock (this.foldersLock) { this._folders = value; } }
+        }
 
         public SyncthingVersion Version { get; private set; }
 
@@ -76,7 +97,7 @@ namespace SyncTrayzor.SyncThing
             ISyncThingEventWatcher eventWatcher,
             ISyncThingConnectionsWatcher connectionsWatcher)
         {
-            this.Folders = new Dictionary<string, Folder>();
+            this.folders = new ConcurrentDictionary<string, Folder>();
 
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
@@ -131,6 +152,16 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.KillAllSyncthingProcesses();
         }
 
+        public bool TryFetchFolderById(string folderId, out Folder folder)
+        {
+            return this.folders.TryGetValue(folderId, out folder);
+        }
+
+        public IReadOnlyCollection<Folder> FetchAllFolders()
+        {
+            return new List<Folder>(this.folders.Values).AsReadOnly();
+        }
+
         public Task ScanAsync(string folderId, string subPath)
         {
             return this.apiClient.ScanAsync(folderId, subPath);
@@ -138,15 +169,12 @@ namespace SyncTrayzor.SyncThing
 
         public async Task ReloadIgnoresAsync(string folderId)
         {
-            using (await this.foldersLock.WaitAsyncDisposable())
-            {
-                Folder folder;
-                if (!this.Folders.TryGetValue(folderId, out folder))
-                    return;
+            Folder folder;
+            if (!this.folders.TryGetValue(folderId, out folder))
+                return;
 
-                var ignores = await this.apiClient.FetchIgnoresAsync(folderId);
-                folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
-            }
+            var ignores = await this.apiClient.FetchIgnoresAsync(folderId);
+            folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
         }
 
         private void SetState(SyncThingState state)
@@ -166,10 +194,9 @@ namespace SyncTrayzor.SyncThing
                     return;
 
                 this.State = state;
-
-                this.UpdateWatchersState(state);
             }
 
+            this.UpdateWatchersState(state);
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
@@ -206,11 +233,9 @@ namespace SyncTrayzor.SyncThing
                 return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
             });
 
-            var folders = (await Task.WhenAll(folderConstructionTasks)).ToDictionary(x => x.FolderId, x => x);
-            using (await this.foldersLock.WaitAsyncDisposable())
-            {
-                this.Folders = folders;
-            }
+            var folders = await Task.WhenAll(folderConstructionTasks);
+            this.folders = new ConcurrentDictionary<string, Folder>(folders.Select(x => new KeyValuePair<string, Folder>(x.FolderId, x)));
+
             this.Version = versionTask.Result;
 
             this.OnDataLoaded();
@@ -220,22 +245,19 @@ namespace SyncTrayzor.SyncThing
         private void ItemStarted(string folderId, string item)
         {
             Folder folder;
-            if (!this.Folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out folder))
                 return; // Don't know about it
 
-            folder.SyncthingPaths.Add(item);
+            folder.AddSyncingPath(item);
         }
 
         private void ItemFinished(string folderId, string item)
         {
-            using (this.foldersLock.WaitDisposable())
-            {
-                Folder folder;
-                if (!this.Folders.TryGetValue(folderId, out folder))
-                    return; // Don't know about it
+            Folder folder;
+            if (!this.folders.TryGetValue(folderId, out folder))
+                return; // Don't know about it
 
-                folder.SyncthingPaths.Remove(item);
-            }
+            folder.RemoveSyncingPath(item);
         }
 
         private void OnMessageLogged(string logMessage)
@@ -246,13 +268,10 @@ namespace SyncTrayzor.SyncThing
         private void OnSyncStateChanged(SyncStateChangedEventArgs e)
         {
             Folder folder;
-            using (this.foldersLock.WaitDisposable())
-            {
-                if (!this.Folders.TryGetValue(e.FolderId, out folder))
-                    return; // We don't know about this folder
+            if (!this.folders.TryGetValue(e.FolderId, out folder))
+                return; // We don't know about this folder
 
-                folder.SyncState = e.SyncState;
-            }
+            folder.SyncState = e.SyncState;
 
             this.eventDispatcher.Raise(this.FolderSyncStateChanged, new FolderSyncStateChangeEventArgs(folder, e.PrevSyncState, e.SyncState));
         }

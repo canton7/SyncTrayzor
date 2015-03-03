@@ -18,19 +18,23 @@ namespace SyncTrayzor.SyncThing
         private readonly TimeSpan pollingInterval;
         private readonly TimeSpan erroredWaitInterval;
 
+        private readonly object runningLock = new object();
         private bool _running;
         public bool Running
         {
-            get { return this._running; }
+            get { lock (this.runningLock) { return this._running; } }
             set
             {
-                if (this._running == value)
-                    return;
-
-                this._running = value;
-                if (value)
+                lock (this.runningLock)
                 {
-                    this.Start();
+                    if (this._running == value)
+                        return;
+
+                    this._running = value;
+                    if (value)
+                    {
+                        this.Start();
+                    }
                 }
             }
         }
@@ -49,7 +53,7 @@ namespace SyncTrayzor.SyncThing
         {
             try
             {
-                while (this._running)
+                while (this.Running)
                 {
                     bool errored = false;
 
@@ -75,7 +79,7 @@ namespace SyncTrayzor.SyncThing
             }
             finally
             {
-                this._running = false;
+                this.Running = false;
             }
         }
 

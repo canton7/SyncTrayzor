@@ -108,13 +108,14 @@ namespace SyncTrayzor.Services
         private void LoadFolders()
         {
             var configuration = this.configurationProvider.Load();
+            var folderIds = this.syncThingManager.FetchAllFolders().Select(x => x.FolderId).ToList();
 
-            foreach (var newKey in this.syncThingManager.Folders.Keys.Except(configuration.Folders.Select(x => x.ID)))
+            foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
             {
                 configuration.Folders.Add(new FolderConfiguration(newKey, true));
             }
 
-            configuration.Folders = configuration.Folders.Where(x => this.syncThingManager.Folders.Keys.Contains(x.ID)).ToList();
+            configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
 
             this.configurationProvider.Save(configuration);
         }
