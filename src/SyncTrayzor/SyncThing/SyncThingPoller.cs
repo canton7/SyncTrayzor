@@ -72,6 +72,11 @@ namespace SyncTrayzor.SyncThing
                         // Socket forcibly closed. Could be a restart, could be a termination. We'll have to continue and quit if we're stopped
                         errored = true;
                     }
+                    catch (OperationCanceledException)
+                    {
+                        // Not entirely sure why this can occur. Blame Refit
+                        errored = true;
+                    }
 
                     if (errored)
                         await Task.Delay(this.erroredWaitInterval);
