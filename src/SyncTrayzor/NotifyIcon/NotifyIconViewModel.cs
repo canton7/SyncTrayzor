@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,9 @@ namespace SyncTrayzor.NotifyIcon
 {
     public class NotifyIconViewModel : PropertyChangedBase
     {
+        private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
+        private readonly Func<SettingsViewModel> settingsViewModelFactory;
 
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
@@ -28,9 +31,14 @@ namespace SyncTrayzor.NotifyIcon
 
         public bool SyncThingSyncing { get; private set; }
 
-        public NotifyIconViewModel(ISyncThingManager syncThingManager)
+        public NotifyIconViewModel(
+            IWindowManager windowManager,
+            ISyncThingManager syncThingManager,
+            Func<SettingsViewModel> settingsViewModelFactory)
         {
+            this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
+            this.settingsViewModelFactory = settingsViewModelFactory;
 
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -50,6 +58,12 @@ namespace SyncTrayzor.NotifyIcon
         public void DoubleClick()
         {
             this.OnWindowOpenRequested();
+        }
+
+        public void ShowSettings()
+        {
+            var vm = this.settingsViewModelFactory();
+            this.windowManager.ShowDialog(vm);
         }
 
         public void Restore()
