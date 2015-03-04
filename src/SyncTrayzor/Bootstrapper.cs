@@ -39,7 +39,7 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
-            GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().BasePath);
+            GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().RoamingPath);
 
             // Must be done before ConfigurationApplicator.ApplyConfiguration
 #if DEBUG

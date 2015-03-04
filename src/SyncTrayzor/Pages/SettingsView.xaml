@@ -75,10 +75,21 @@
         </GroupBox>
         
         <Expander DockPanel.Dock="Top" Header="Advanced">
-            <DockPanel>
-                <Label DockPanel.Dock="Top" Target="{x:Reference TraceVariables}">Syncthing Trace Variables:</Label>
-                <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables}"/>
-            </DockPanel>
+            <GroupBox>
+                <DockPanel>
+                    <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}">
+                        <TextBlock TextWrapping="Wrap">
+                            Use custom home directory for Syncthing.
+                            <TextBlock.ToolTip>
+                                This will mean that SyncTrayzor will see a different set of configured folders to any
+                                other Syncthing instances on your computer.
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </CheckBox>
+                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}">Syncthing Trace Variables:</Label>
+                    <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables}"/>
+                </DockPanel>
+            </GroupBox>
         </Expander>
         
         <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right">

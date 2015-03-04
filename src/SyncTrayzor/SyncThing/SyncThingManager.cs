@@ -27,6 +27,7 @@ namespace SyncTrayzor.SyncThing
         string ApiKey { get; set; }
         Uri Address { get; set; }
         string SyncthingTraceFacilities { get; set; }
+        string SyncthingCustomHomeDir { get; set; }
         DateTime? StartedAt { get; }
         SyncthingVersion Version { get; }
 
@@ -77,6 +78,7 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public Uri Address { get; set; }
+        public string SyncthingCustomHomeDir { get; set; }
         public string SyncthingTraceFacilities { get; set; }
 
         // Folders is a ConcurrentDictionary, which suffices for most access
@@ -126,6 +128,7 @@ namespace SyncTrayzor.SyncThing
                 this.processRunner.ApiKey = this.ApiKey;
                 this.processRunner.HostAddress = this.Address.ToString();
                 this.processRunner.ExecutablePath = this.ExecutablePath;
+                this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
                 this.processRunner.Traces = this.SyncthingTraceFacilities;
 
                 this.processRunner.Start();

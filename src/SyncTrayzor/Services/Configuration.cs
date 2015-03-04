@@ -43,6 +43,7 @@ namespace SyncTrayzor.Services
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
         public string SyncthingTraceFacilities { get; set; }
+        public bool SyncthingUseCustomHome { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
         public bool NotifyOfNewVersions { get; set; }
@@ -72,6 +73,7 @@ namespace SyncTrayzor.Services
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = syncThingApiKey;
             this.SyncthingTraceFacilities = null;
+            this.SyncthingUseCustomHome = false;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.LatestNotifiedVersion = null;
@@ -89,6 +91,7 @@ namespace SyncTrayzor.Services
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
             this.SyncthingTraceFacilities = other.SyncthingTraceFacilities;
+            this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.NotifyOfNewVersions = other.NotifyOfNewVersions;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;

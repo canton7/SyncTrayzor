@@ -36,6 +36,7 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
         string HostAddress { get; set; }
+        string CustomHomeDir { get; set; }
         string Traces { get; set; }
 
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
@@ -56,6 +57,7 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
+        public string CustomHomeDir { get; set; }
         public string Traces { get; set; }
 
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
@@ -116,11 +118,19 @@ namespace SyncTrayzor.SyncThing
 
         private IEnumerable<string> GenerateArguments()
         {
-            return defaultArguments.Concat(new[]
+            var args = new List<string>(defaultArguments)
             {
                 String.Format("-gui-apikey=\"{0}\"", this.ApiKey),
                 String.Format("-gui-address=\"{0}\"", this.HostAddress)
-            });
+            };
+
+            if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
+            {
+                args.Add(String.Format("-home=\"{0}\"", this.CustomHomeDir));
+                args.Add(String.Format("-logfile=\"{0}\"", Path.Combine(this.CustomHomeDir, "syncthing.log")));
+            }
+
+            return args;
         }
 
         private void DataReceived(string data)

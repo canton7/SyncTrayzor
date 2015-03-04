@@ -24,7 +24,8 @@ namespace SyncTrayzor.Services
     {
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
-        string BasePath { get; }
+        string RoamingPath { get; }
+        string SyncthingAlternateHomePath { get; }
 
         void EnsureEnvironmentConsistency();
         Configuration Load();
@@ -47,7 +48,7 @@ namespace SyncTrayzor.Services
             get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
         }
 
-        public string BasePath
+        public string RoamingPath
         {
 #if DEBUG
             get { return this.ExePath; }
@@ -55,10 +56,24 @@ namespace SyncTrayzor.Services
             get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
 #endif
         }
+
+        public string LocalPath
+        {
+#if DEBUG
+            get { return this.ExePath; }
+#else
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SyncTrayzor"); }
+#endif
+        }
+
+        public string SyncthingAlternateHomePath
+        {
+            get { return Path.Combine(this.LocalPath, "syncthing-home"); }
+        }
         
         public string SyncThingPath
         {
-            get { return Path.Combine(this.BasePath, "syncthing.exe"); }
+            get { return Path.Combine(this.RoamingPath, "syncthing.exe"); }
         }
 
         public string SyncThingBackupPath
@@ -68,7 +83,7 @@ namespace SyncTrayzor.Services
 
         public string ConfigurationFilePath
         {
-            get { return Path.Combine(this.BasePath, "config.xml"); }
+            get { return Path.Combine(this.RoamingPath, "config.xml"); }
         }
 
         public ConfigurationProvider()
@@ -78,8 +93,8 @@ namespace SyncTrayzor.Services
 
         public void EnsureEnvironmentConsistency()
         {
-            if (!String.IsNullOrWhiteSpace(this.BasePath))
-                Directory.CreateDirectory(this.BasePath);
+            if (!String.IsNullOrWhiteSpace(this.RoamingPath))
+                Directory.CreateDirectory(this.RoamingPath);
 
             if (!File.Exists(this.ConfigurationFilePath))
             {

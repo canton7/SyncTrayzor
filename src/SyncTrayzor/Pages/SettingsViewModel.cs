@@ -47,6 +47,7 @@ namespace SyncTrayzor.Pages
 
         public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
 
+        public bool SyncthingUseCustomHome { get; set; }
         public string TraceVariables { get; set; }
 
         public SettingsViewModel(IConfigurationProvider configurationProvider, IAutostartProvider autostartProvider)
@@ -71,6 +72,7 @@ namespace SyncTrayzor.Pages
                 Folder = x.ID,
                 IsSelected = x.IsWatched
             }));
+            this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
             this.TraceVariables = configuration.SyncthingTraceFacilities;
 
             this.CanReadAutostart = autostartProvider.CanRead;
@@ -91,6 +93,7 @@ namespace SyncTrayzor.Pages
             configuration.StartOnLogon = this.StartOnLogon;
             configuration.StartMinimized = this.StartMinimized;
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
+            configuration.SyncthingUseCustomHome = this.SyncthingUseCustomHome;
             configuration.SyncthingTraceFacilities = String.IsNullOrWhiteSpace(this.TraceVariables) ? null : this.TraceVariables;
 
             this.configurationProvider.Save(configuration);

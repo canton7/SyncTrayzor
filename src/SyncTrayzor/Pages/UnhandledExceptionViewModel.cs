@@ -31,7 +31,7 @@ namespace SyncTrayzor.Pages
             this.DisplayName = "Error!";
 
             this.IssuesUrl = Settings.Default.IssuesUrl;
-            this.LogFilePath = configurationProvider.BasePath;
+            this.LogFilePath = configurationProvider.RoamingPath;
         }
 
         public void ShowIssues()

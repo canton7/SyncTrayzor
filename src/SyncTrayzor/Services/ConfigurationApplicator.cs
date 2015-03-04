@@ -95,6 +95,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
+            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingAlternateHomePath : null;
 
             // Debug builds never set autostart
             // Don't have permission? Meh
