@@ -13,6 +13,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
             <TextBlock>Version:</TextBlock>
             <TextBlock Text="{Binding Version}" Margin="5,0,0,0"/>
+            <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">(portable)</TextBlock>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
             <TextBlock>Syncthing Version:</TextBlock>
@@ -28,8 +29,8 @@
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Top">Created by Antony Male</TextBlock>
-        <TextBlock DockPanel.Dock="Top">Released under the MIT license</TextBlock>
+        <TextBlock DockPanel.Dock="Top">Created by Antony Male.</TextBlock>
+        <TextBlock DockPanel.Dock="Top">Released under the MIT license.</TextBlock>
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>

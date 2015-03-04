@@ -58,22 +58,22 @@ namespace SyncTrayzor.Services
         }
 
         public Configuration()
-            : this(null, null)
+            : this(null, null, false)
         { }
 
-        public Configuration(string syncThingPath, string syncThingApiKey)
+        public Configuration(string syncThingPath, string syncThingApiKey, bool isPortableMode)
         {
             this.SyncthingPath = syncThingPath;
             this.ShowTrayIconOnlyOnClose = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.SyncthingAddress = "http://localhost:8384";
-            this.StartOnLogon = true;
+            this.StartOnLogon = !isPortableMode;
             this.StartMinimized = true;
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = syncThingApiKey;
             this.SyncthingTraceFacilities = null;
-            this.SyncthingUseCustomHome = false;
+            this.SyncthingUseCustomHome = isPortableMode;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.LatestNotifiedVersion = null;

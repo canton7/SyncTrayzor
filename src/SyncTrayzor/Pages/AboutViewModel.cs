@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
@@ -18,18 +19,20 @@ namespace SyncTrayzor.Pages
         private readonly IUpdateChecker updateChecker;
 
         public string Version { get; set; }
+        public bool IsPortable { get; set; }
         public string SyncthingVersion { get; set; }
         public string HomepageUrl { get; set; }
 
         public string NewerVersion { get; set; }
         private string newerVersionDownloadUrl;
 
-        public AboutViewModel(ISyncThingManager syncThingManager, IUpdateChecker updateChecker)
+        public AboutViewModel(ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider, IUpdateChecker updateChecker)
         {
             this.syncThingManager = syncThingManager;
             this.updateChecker = updateChecker;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            this.IsPortable = configurationProvider.IsPortableMode;
             this.HomepageUrl = Settings.Default.HomepageUrl;
 
             this.SyncthingVersion = this.syncThingManager.Version == null ? "Unknown" : this.syncThingManager.Version.Version;

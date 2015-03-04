@@ -4,6 +4,7 @@ using Stylet;
 using StyletIoC;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
+using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
@@ -46,7 +47,14 @@ namespace SyncTrayzor
             this.Container.Get<IAutostartProvider>().IsEnabled = false;
 #endif
 
-            this.Container.Get<IConfigurationProvider>().EnsureEnvironmentConsistency();
+            var configurationProvider = this.Container.Get<IConfigurationProvider>();
+            // Debug builds are always 'portable'
+#if DEBUG
+            configurationProvider.IsPortableMode = true;
+#else
+            configurationProvider.IsPortableMode = Settings.Default.PortableMode;
+#endif
+            configurationProvider.EnsureEnvironmentConsistency();
 
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);

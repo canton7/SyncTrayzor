@@ -24,6 +24,7 @@ namespace SyncTrayzor.Services
     {
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        bool IsPortableMode { get; set; }
         string RoamingPath { get; }
         string SyncthingAlternateHomePath { get; }
 
@@ -43,6 +44,8 @@ namespace SyncTrayzor.Services
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        public bool IsPortableMode { get; set; }
+
         public string ExePath
         {
             get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
@@ -50,20 +53,22 @@ namespace SyncTrayzor.Services
 
         public string RoamingPath
         {
-#if DEBUG
-            get { return this.ExePath; }
-#else
-            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
-#endif
+            get
+            {
+                return this.IsPortableMode ?
+                    this.ExePath :
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor");
+            }
         }
 
         public string LocalPath
         {
-#if DEBUG
-            get { return this.ExePath; }
-#else
-            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SyncTrayzor"); }
-#endif
+            get
+            {
+                return this.IsPortableMode ?
+                    this.ExePath :
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SyncTrayzor");
+            }
         }
 
         public string SyncthingAlternateHomePath
@@ -98,7 +103,7 @@ namespace SyncTrayzor.Services
 
             if (!File.Exists(this.ConfigurationFilePath))
             {
-                var configuration = new Configuration(this.SyncThingPath, this.GenerateApiKey());
+                var configuration = new Configuration(this.SyncThingPath, this.GenerateApiKey(), this.IsPortableMode);
                 this.Save(configuration);
             }
 
