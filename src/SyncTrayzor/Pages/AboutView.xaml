@@ -13,7 +13,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
             <TextBlock>Version:</TextBlock>
             <TextBlock Text="{Binding Version}" Margin="5,0,0,0"/>
-            <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">(portable)</TextBlock>
+            <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"> (portable)</TextBlock>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
             <TextBlock>Syncthing Version:</TextBlock>

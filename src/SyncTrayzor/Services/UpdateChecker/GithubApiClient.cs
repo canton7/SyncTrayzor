@@ -34,11 +34,10 @@ namespace SyncTrayzor.Services.UpdateChecker
 
             var latestRelease = (from release in releases
                                 where !release.IsDraft && !release.IsPrerelease
-                                let asset = release.Assets.FirstOrDefault(asset => asset.ContentType == "application/octet-stream")
-                                where asset != null
+                                where release.Assets.Any(assert => assert.ContentType == "application/octet-stream")
                                 let version = new Version(release.TagName.TrimStart('v'))
                                 orderby version descending
-                                select new Release(version, asset.DownloadUrl, release.Body)).FirstOrDefault();
+                                select new Release(version, release.Url, release.Body)).FirstOrDefault();
 
             return latestRelease;
         }
