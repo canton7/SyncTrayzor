@@ -93,8 +93,8 @@ namespace SyncTrayzor.Services
 
         public void EnsureEnvironmentConsistency()
         {
-            if (!String.IsNullOrWhiteSpace(this.RoamingPath))
-                Directory.CreateDirectory(this.RoamingPath);
+            if (!File.Exists(Path.GetDirectoryName(this.ConfigurationFilePath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(this.ConfigurationFilePath));
 
             if (!File.Exists(this.ConfigurationFilePath))
             {
