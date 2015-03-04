@@ -145,7 +145,9 @@ namespace SyncTrayzor.SyncThing
 
         private void OnProcessStopped()
         {
-            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode; 
+            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode;
+            this.process = null;
+
             logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
             if (exitStatus == SyncThingExitStatus.Restarting || exitStatus == SyncThingExitStatus.Upgrading)
             {
