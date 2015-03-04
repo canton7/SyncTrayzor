@@ -69,7 +69,7 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
-            logger.Info("Starting syncthing: ", this.ExecutablePath);
+            logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
@@ -125,10 +125,7 @@ namespace SyncTrayzor.SyncThing
             };
 
             if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
-            {
                 args.Add(String.Format("-home=\"{0}\"", this.CustomHomeDir));
-                args.Add(String.Format("-logfile=\"{0}\"", Path.Combine(this.CustomHomeDir, "syncthing.log")));
-            }
 
             return args;
         }
