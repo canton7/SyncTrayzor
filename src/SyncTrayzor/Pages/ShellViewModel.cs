@@ -60,14 +60,7 @@ namespace SyncTrayzor.Pages
         }
         public void Start()
         {
-            try
-            {
-                this.syncThingManager.Start();
-            }
-            catch (Exception e)
-            {
-                this.windowManager.ShowMessageBox(String.Format("Error starting SyncThing: {0}", e.Message), "Error starting SyncThing", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            this.syncThingManager.Start();
         }
 
         public bool CanStop
