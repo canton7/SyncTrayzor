@@ -40,13 +40,6 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
-            GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().RoamingPath);
-
-            // Must be done before ConfigurationApplicator.ApplyConfiguration
-#if DEBUG
-            this.Container.Get<IAutostartProvider>().IsEnabled = false;
-#endif
-
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
             // Debug builds are always 'portable'
 #if DEBUG
@@ -55,6 +48,13 @@ namespace SyncTrayzor
             configurationProvider.IsPortableMode = Settings.Default.PortableMode;
 #endif
             configurationProvider.EnsureEnvironmentConsistency();
+
+            GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.RoamingPath);
+
+            // Must be done before ConfigurationApplicator.ApplyConfiguration
+#if DEBUG
+            this.Container.Get<IAutostartProvider>().IsEnabled = false;
+#endif
 
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
