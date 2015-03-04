@@ -41,3 +41,4 @@ installer/syncthing.exe
 *.tmp
 Coverage
 RefitStubs.cs
+SyncTrayzorPortable
