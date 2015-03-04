@@ -12,6 +12,8 @@ namespace SyncTrayzor.Pages
         public Version Version { get; set; }
         public string Changelog { get; set; }
 
+        public bool DontRemindMe { get; private set; }
+
         public NewVersionAlertViewModel()
         {
             this.DisplayName = "SyncTrayzor update available";
@@ -22,8 +24,14 @@ namespace SyncTrayzor.Pages
             this.RequestClose(true);
         }
 
-        public void Close()
+        public void RemindLater()
         {
+            this.RequestClose(false);
+        }
+
+        public void DontRemind()
+        {
+            this.DontRemindMe = true;
             this.RequestClose(false);
         }
     }
