@@ -25,7 +25,7 @@ namespace SyncTrayzor.Services
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
         bool IsPortableMode { get; set; }
-        string RoamingPath { get; }
+        string LogFilePath { get; }
         string SyncthingAlternateHomePath { get; }
 
         void EnsureEnvironmentConsistency();
@@ -53,32 +53,27 @@ namespace SyncTrayzor.Services
 
         public string RoamingPath
         {
-            get
-            {
-                return this.IsPortableMode ?
-                    this.ExePath :
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor");
-            }
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SyncTrayzor"); }
         }
 
         public string LocalPath
         {
-            get
-            {
-                return this.IsPortableMode ?
-                    this.ExePath :
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SyncTrayzor");
-            }
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SyncTrayzor"); }
+        }
+
+        public string LogFilePath
+        {
+            get { return this.IsPortableMode ? Path.Combine(this.ExePath, "logs") : Path.Combine(this.RoamingPath); }
         }
 
         public string SyncthingAlternateHomePath
         {
-            get { return Path.Combine(this.LocalPath, "syncthing-home"); }
+            get { return this.IsPortableMode ? Path.Combine(this.ExePath, "data", "syncthing") : Path.Combine(this.LocalPath, "syncthing"); }
         }
         
         public string SyncThingPath
         {
-            get { return Path.Combine(this.RoamingPath, "syncthing.exe"); }
+            get { return this.IsPortableMode ? Path.Combine(this.ExePath, "syncthing.exe") : Path.Combine(this.RoamingPath, "syncthing.exe"); }
         }
 
         public string SyncThingBackupPath
@@ -88,7 +83,7 @@ namespace SyncTrayzor.Services
 
         public string ConfigurationFilePath
         {
-            get { return Path.Combine(this.RoamingPath, "config.xml"); }
+            get { return this.IsPortableMode ? Path.Combine(this.ExePath, "data", "config.xml") : Path.Combine(this.RoamingPath, "config.xml"); }
         }
 
         public ConfigurationProvider()

@@ -49,7 +49,7 @@ namespace SyncTrayzor
 #endif
             configurationProvider.EnsureEnvironmentConsistency();
 
-            GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.RoamingPath);
+            GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.LogFilePath);
 
             // Must be done before ConfigurationApplicator.ApplyConfiguration
 #if DEBUG
