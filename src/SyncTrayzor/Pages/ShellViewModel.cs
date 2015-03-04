@@ -127,7 +127,9 @@ namespace SyncTrayzor.Pages
         public void ShowExitedWithError()
         {
             var msg = "Failed to start Syncthing.\n\n" +
-                "Please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing " +
+                "Please read the log to determine the cause.\n\n" +
+                "If \"FATAL: Cannot open database appears\", please close any other open " +
+                "instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing " +
                 "processes alive. Please use the menu option \"Syncthing -> Kill all Syncthing processes\" to stop them, then use \"Syncthing -> Start\" to start Syncthing again.";
             this.windowManager.ShowMessageBox(msg, "Syncthing failed to start", icon: MessageBoxImage.Error);
         }
