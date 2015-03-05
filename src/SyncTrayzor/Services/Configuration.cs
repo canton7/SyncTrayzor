@@ -38,8 +38,6 @@ namespace SyncTrayzor.Services
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
         public string SyncthingAddress { get; set; }
-        public bool StartOnLogon { get; set; }
-        public bool StartMinimized { get; set; }
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
         public string SyncthingTraceFacilities { get; set; }
@@ -68,8 +66,6 @@ namespace SyncTrayzor.Services
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.SyncthingAddress = "http://localhost:8384";
-            this.StartOnLogon = !isPortableMode;
-            this.StartMinimized = true;
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = syncThingApiKey;
             this.SyncthingTraceFacilities = null;
@@ -86,8 +82,6 @@ namespace SyncTrayzor.Services
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
             this.SyncthingAddress = other.SyncthingAddress;
-            this.StartOnLogon = other.StartOnLogon;
-            this.StartMinimized = other.StartMinimized;
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
             this.SyncthingTraceFacilities = other.SyncthingTraceFacilities;

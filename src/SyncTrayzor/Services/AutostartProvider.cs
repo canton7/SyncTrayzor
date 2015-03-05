@@ -13,10 +13,10 @@ namespace SyncTrayzor.Services
 {
     public interface IAutostartProvider
     {
-        bool IsEnabled { get; set; }
         bool CanRead { get; }
         bool CanWrite { get; }
 
+        void UpdatePathToSelf();
         AutostartConfiguration GetCurrentSetup();
         void SetAutoStart(AutostartConfiguration config);
     }
@@ -37,30 +37,17 @@ namespace SyncTrayzor.Services
         private const string applicationName = "SyncTrayzor";
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public bool IsEnabled { get; set; }
-
-        private bool _canRead;
-        public bool CanRead
-        {
-            get { return this.IsEnabled && this._canRead; }
-        }
-
-        private bool _canWrite;
-        public bool CanWrite
-        {
-            get { return this.IsEnabled && this._canWrite; }
-        }
+        public bool CanRead { get; private set; }
+        public bool CanWrite { get; private set; }
 
         public AutostartProvider()
         {
-            this.IsEnabled = true; // Default
-
             // Check our access
             try
             {
                 this.OpenRegistryKey(true).Dispose();
-                this._canWrite = true;
-                this._canRead = true;
+                this.CanWrite = true;
+                this.CanRead = true;
                 logger.Info("Have read/write access to the registry");
                 return;
             }
@@ -69,7 +56,7 @@ namespace SyncTrayzor.Services
             try
             {
                 this.OpenRegistryKey(false).Dispose();
-                this._canRead = true;
+                this.CanRead = true;
                 logger.Info("Have read-only access to the registry");
                 return;
             }
@@ -81,6 +68,15 @@ namespace SyncTrayzor.Services
         private RegistryKey OpenRegistryKey(bool writable)
         {
             return Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable);
+        }
+
+        public void UpdatePathToSelf()
+        {
+            if (!this.CanWrite)
+                throw new InvalidOperationException("Don't have permission to write to the registry");
+
+            var config = this.GetCurrentSetup();
+            this.SetAutoStart(config);
         }
 
         public AutostartConfiguration GetCurrentSetup()

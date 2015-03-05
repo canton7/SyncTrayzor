@@ -24,6 +24,7 @@ namespace SyncTrayzor.Services
     {
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        bool HadToCreateConfiguration { get; }
         bool IsPortableMode { get; set; }
         string LogFilePath { get; }
         string SyncthingAlternateHomePath { get; }
@@ -44,6 +45,7 @@ namespace SyncTrayzor.Services
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        public bool HadToCreateConfiguration { get; private set; }
         public bool IsPortableMode { get; set; }
 
         public string ExePath
@@ -98,6 +100,7 @@ namespace SyncTrayzor.Services
 
             if (!File.Exists(this.ConfigurationFilePath))
             {
+                this.HadToCreateConfiguration = true;
                 var configuration = new Configuration(this.SyncThingPath, this.GenerateApiKey(), this.IsPortableMode);
                 this.Save(configuration);
             }

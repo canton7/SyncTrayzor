@@ -51,10 +51,23 @@ namespace SyncTrayzor
 
             GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.LogFilePath);
 
-            // Must be done before ConfigurationApplicator.ApplyConfiguration
-#if DEBUG
-            this.Container.Get<IAutostartProvider>().IsEnabled = false;
+            var autostartProvider = this.Container.Get<IAutostartProvider>();
+
+            if (autostartProvider.CanWrite)
+            {
+                // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
+                // Else, keep the config as it was, but update the path to us (if we're not in debug)
+                if (!configurationProvider.IsPortableMode && configurationProvider.HadToCreateConfiguration)
+                {
+                    autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
+                }
+                else
+                {
+#if !DEBUG
+                    autostartProvider.UpdatePathToSelf();
 #endif
+                }
+            }
 
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);

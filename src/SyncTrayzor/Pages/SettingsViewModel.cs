@@ -18,6 +18,7 @@ namespace SyncTrayzor.Pages
     public class SettingsViewModel : Screen
     {
         private readonly IConfigurationProvider configurationProvider;
+        private readonly IAutostartProvider autostartProvider;
 
         public bool ShowTrayIconOnlyOnClose { get; set;}
         public bool CloseToTray { get; set; }
@@ -55,6 +56,7 @@ namespace SyncTrayzor.Pages
             this.DisplayName = "Settings";
 
             this.configurationProvider = configurationProvider;
+            this.autostartProvider = autostartProvider;
 
             var configuration = this.configurationProvider.Load();
 
@@ -65,8 +67,16 @@ namespace SyncTrayzor.Pages
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
             this.SyncThingAddress = configuration.SyncthingAddress;
             this.SyncThingApiKey = configuration.SyncthingApiKey;
-            this.StartOnLogon = configuration.StartOnLogon;
-            this.StartMinimized = configuration.StartMinimized;
+
+            this.CanReadAutostart = this.autostartProvider.CanRead;
+            this.CanWriteAutostart = this.autostartProvider.CanWrite;
+            if (this.autostartProvider.CanRead)
+            {
+                var currentSetup = this.autostartProvider.GetCurrentSetup();
+                this.StartOnLogon = currentSetup.AutoStart;
+                this.StartMinimized = currentSetup.StartMinimized;
+            }
+            
             this.WatchedFolders = new BindableCollection<WatchedFolder>(configuration.Folders.Select(x => new WatchedFolder()
             {
                 Folder = x.ID,
@@ -74,9 +84,6 @@ namespace SyncTrayzor.Pages
             }));
             this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
             this.TraceVariables = configuration.SyncthingTraceFacilities;
-
-            this.CanReadAutostart = autostartProvider.CanRead;
-            this.CanWriteAutostart = autostartProvider.CanWrite;
         }
 
         public void Save()
@@ -90,8 +97,13 @@ namespace SyncTrayzor.Pages
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;
             configuration.SyncthingAddress = this.SyncThingAddress;
             configuration.SyncthingApiKey = this.SyncThingApiKey;
-            configuration.StartOnLogon = this.StartOnLogon;
-            configuration.StartMinimized = this.StartMinimized;
+
+            if (this.autostartProvider.CanWrite)
+            {
+                var autostartConfig = new AutostartConfiguration() { AutoStart = this.StartOnLogon, StartMinimized = this.StartMinimized };
+                this.autostartProvider.SetAutoStart(autostartConfig);
+            }
+
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
             configuration.SyncthingUseCustomHome = this.SyncthingUseCustomHome;
             configuration.SyncthingTraceFacilities = String.IsNullOrWhiteSpace(this.TraceVariables) ? null : this.TraceVariables;

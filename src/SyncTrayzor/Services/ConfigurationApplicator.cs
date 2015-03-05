@@ -40,9 +40,6 @@ namespace SyncTrayzor.Services
             this.githubApiClient = githubApiClient;
             this.updateChecker = updateChecker;
 
-            // Do this before signing up for DataLoaded, so any changes we make don't trigger us again
-            this.UpdateConfigOnInit();
-
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
             this.updateChecker.VersionIgnored += (o, e) =>
             {
@@ -50,30 +47,6 @@ namespace SyncTrayzor.Services
                 config.LatestNotifiedVersion = e.IgnoredVersion;
                 this.configurationProvider.Save(config);
             };
-        }
-
-        private void UpdateConfigOnInit()
-        {
-            this.UpdateAutostart();
-        }
-
-        private void UpdateAutostart()
-        {
-            // Don't have permission? Meh
-            if (!this.autostartProvider.CanRead)
-                return;
-
-            // If the user's manually updated the registry themselves, update our config to match
-            var config = this.configurationProvider.Load();
-            var autostartConfig = this.autostartProvider.GetCurrentSetup();
-            // We only know enough to change StartMinimized if autostartConfig.AutoStart is strue
-            if (config.StartOnLogon != autostartConfig.AutoStart || (autostartConfig.AutoStart && config.StartMinimized != autostartConfig.StartMinimized))
-            {
-                if (autostartConfig.AutoStart)
-                    config.StartMinimized = autostartConfig.StartMinimized;
-                config.StartOnLogon = autostartConfig.AutoStart;
-                this.configurationProvider.Save(config);
-            }
         }
 
         public void ApplyConfiguration()
@@ -96,11 +69,6 @@ namespace SyncTrayzor.Services
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
             this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingAlternateHomePath : null;
-
-            // Debug builds never set autostart
-            // Don't have permission? Meh
-            if (this.autostartProvider.CanWrite)
-                this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
