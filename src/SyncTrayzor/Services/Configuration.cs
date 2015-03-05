@@ -35,6 +35,7 @@ namespace SyncTrayzor.Services
     {
         public string SyncthingPath { get; set; }
         public bool ShowTrayIconOnlyOnClose { get; set; }
+        public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
         public string SyncthingAddress { get; set; }
@@ -63,6 +64,7 @@ namespace SyncTrayzor.Services
         {
             this.SyncthingPath = syncThingPath;
             this.ShowTrayIconOnlyOnClose = false;
+            this.MinimizeToTray = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.SyncthingAddress = "http://localhost:8384";
@@ -79,6 +81,7 @@ namespace SyncTrayzor.Services
         {
             this.SyncthingPath = other.SyncthingPath;
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
+            this.MinimizeToTray = other.MinimizeToTray;
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
             this.SyncthingAddress = other.SyncthingAddress;

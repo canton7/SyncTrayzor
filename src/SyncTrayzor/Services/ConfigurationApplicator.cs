@@ -60,6 +60,7 @@ namespace SyncTrayzor.Services
 
         private void ApplyNewConfiguration(Configuration configuration)
         {
+            this.notifyIconManager.MinimizeToTray = configuration.MinimizeToTray;
             this.notifyIconManager.CloseToTray = configuration.CloseToTray;
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;

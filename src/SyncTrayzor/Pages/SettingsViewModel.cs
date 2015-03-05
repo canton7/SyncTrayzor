@@ -21,6 +21,7 @@ namespace SyncTrayzor.Pages
         private readonly IAutostartProvider autostartProvider;
 
         public bool ShowTrayIconOnlyOnClose { get; set;}
+        public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
         public bool NotifyOfNewVersions { get; set; }
@@ -61,6 +62,7 @@ namespace SyncTrayzor.Pages
             var configuration = this.configurationProvider.Load();
 
             this.ShowTrayIconOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
+            this.MinimizeToTray = configuration.MinimizeToTray;
             this.CloseToTray = configuration.CloseToTray;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
             this.NotifyOfNewVersions = configuration.NotifyOfNewVersions;
@@ -91,6 +93,7 @@ namespace SyncTrayzor.Pages
             var configuration = this.configurationProvider.Load();
 
             configuration.ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose;
+            configuration.MinimizeToTray = this.MinimizeToTray;
             configuration.CloseToTray = this.CloseToTray;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
             configuration.NotifyOfNewVersions = this.NotifyOfNewVersions;

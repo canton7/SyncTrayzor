@@ -136,8 +136,7 @@ namespace SyncTrayzor.Pages
         {
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
-            else
-                this.WindowActivated = true;
+            this.WindowActivated = true;
         }
 
         public void Shutdown()
