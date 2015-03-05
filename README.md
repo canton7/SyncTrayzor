@@ -30,6 +30,9 @@ If you already have SyncTrayzor installed, this will update it.
 
 ### Standalone
 
+First, you'll need .net 4.5. [Download the offline](http://www.microsoft.com/en-gb/download/details.aspx?id=42642) or
+[web installer](http://www.microsoft.com/en-gb/download/details.aspx?id=42643) if you don't have it installed already.
+
 Grab the latest standalone .zip from the [releases](https://github.com/canton7/SyncTrayzor/releases) tab.
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
