@@ -1,23 +1,21 @@
 require 'rexml/document'
+begin
+  require 'albacore'
+rescue LoadError
+  warn "Please run 'gem install albacore --pre'"
+  exit 1
+end
+
+ISCC = '"C:\Program Files (x86)\Inno Setup 5\ISCC.exe"'
 
 BIN_DIR = 'bin/x64/Release'
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
 
 PORTABLE_OUTPUT_DIR = File.absolute_path('SyncTrayzorPortable')
-PORTABLE_FILES = FileList[
-  File.join(BIN_DIR, '*.exe'),
-  File.join(BIN_DIR, '*.exe.config'),
-  File.join(BIN_DIR, '*.dll'),
-  File.join(BIN_DIR, '*.pdb'),
-  File.join(BIN_DIR, '*.pak'),
-  File.join(BIN_DIR, '*.dat'),
-  File.join(BIN_DIR, 'locales', '*'),
-  File.join(SRC_DIR, 'Icons', 'default.ico'),
-  '*.md',
-  '*.txt',
-  File.join(INSTALLER_DIR, 'syncthing.exe')
-].exclude('*.vshost*')
+
+CONFIG = ENV['CONFIG'] || 'Release'
+PLATFORM = ENV['PLATFORM'] || 'x64'
 
 def cp_to_portable(src)
   dest = File.join(PORTABLE_OUTPUT_DIR, src)
@@ -25,7 +23,20 @@ def cp_to_portable(src)
   cp src, dest
 end
 
-desc "Create the portable release directory"
+desc 'Build the project'
+build :build do |b|
+  b.sln = 'src/SyncTrayzor.sln'
+  b.target = [:Clean, :Build]
+  b.prop 'Configuration', CONFIG
+  b.prop 'Platform', PLATFORM
+end
+
+task :installer do
+  rm File.join(INSTALLER_DIR, 'SyncTrayzorSetup.exe')
+  sh ISCC, File.join(INSTALLER_DIR, 'installer.iss')
+end
+
+desc 'Create the portable release directory'
 task :portable do
   rm_rf PORTABLE_OUTPUT_DIR
   mkdir_p PORTABLE_OUTPUT_DIR
@@ -69,3 +80,6 @@ task :portable do
     doc.write(f)
   end
 end
+
+desc 'Build and package everything'
+task :package => [:build, :installer, :portable]
