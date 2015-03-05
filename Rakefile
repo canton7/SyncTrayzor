@@ -11,6 +11,7 @@ ISCC = '"C:\Program Files (x86)\Inno Setup 5\ISCC.exe"'
 BIN_DIR = 'bin/x64/Release'
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
+INSTALLER = File.join(INSTALLER_DIR, 'SyncTrayzorSetup.exe')
 
 PORTABLE_OUTPUT_DIR = File.absolute_path('SyncTrayzorPortable')
 
@@ -32,7 +33,7 @@ build :build do |b|
 end
 
 task :installer do
-  rm File.join(INSTALLER_DIR, 'SyncTrayzorSetup.exe')
+  rm INSTALLER if File.exist?(INSTALLER)
   sh ISCC, File.join(INSTALLER_DIR, 'installer.iss')
 end
 
@@ -83,3 +84,9 @@ end
 
 desc 'Build and package everything'
 task :package => [:build, :installer, :portable]
+
+desc 'Remove portable and installer'
+task :clean do
+  rm_rf PORTABLE_OUTPUT_DIR if File.exist?(PORTABLE_OUTPUT_DIR)
+  rm INSTALLER if File.exist?(INSTALLER)
+end
