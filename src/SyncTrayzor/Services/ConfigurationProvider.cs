@@ -41,6 +41,8 @@ namespace SyncTrayzor.Services
 
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
+
+        private readonly object currentConfigLock = new object();
         private Configuration currentConfig;
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
@@ -111,21 +113,27 @@ namespace SyncTrayzor.Services
 
         public Configuration Load()
         {
-            if (this.currentConfig == null)
-                this.currentConfig = this.LoadFromDisk();
+            lock (this.currentConfigLock)
+            {
+                if (this.currentConfig == null)
+                    this.currentConfig = this.LoadFromDisk();
 
-            return new Configuration(this.currentConfig);
+                return new Configuration(this.currentConfig);
+            }
         }
 
         public void Save(Configuration config)
         {
             this.EnsureConfigurationFileConsistency(config);
-            this.currentConfig = config;
-            this.OnConfigurationChanged(config);
-            using (var stream = File.Open(this.ConfigurationFilePath, FileMode.Create))
+            lock (this.currentConfigLock)
             {
-                this.serializer.Serialize(stream, config);
+                this.currentConfig = config;
+                using (var stream = File.Open(this.ConfigurationFilePath, FileMode.Create))
+                {
+                    this.serializer.Serialize(stream, config);
+                }
             }
+            this.OnConfigurationChanged(config);
         }
 
         private Configuration LoadFromDisk()
