@@ -55,6 +55,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
+            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncThingPath;
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
@@ -66,10 +67,9 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
 
             this.syncThingManager.Address = new Uri(configuration.SyncthingAddress);
-            this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
-            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingAlternateHomePath : null;
+            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingCustomHomePage : null;
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

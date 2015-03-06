@@ -27,7 +27,8 @@ namespace SyncTrayzor.Services
         bool HadToCreateConfiguration { get; }
         bool IsPortableMode { get; set; }
         string LogFilePath { get; }
-        string SyncthingAlternateHomePath { get; }
+        string SyncThingPath { get; }
+        string SyncthingCustomHomePage { get; }
 
         void EnsureEnvironmentConsistency();
         Configuration Load();
@@ -70,7 +71,7 @@ namespace SyncTrayzor.Services
             get { return this.IsPortableMode ? Path.Combine(this.ExePath, "logs") : Path.Combine(this.RoamingPath); }
         }
 
-        public string SyncthingAlternateHomePath
+        public string SyncthingCustomHomePage
         {
             get { return this.IsPortableMode ? Path.Combine(this.ExePath, "data", "syncthing") : Path.Combine(this.LocalPath, "syncthing"); }
         }
@@ -100,14 +101,18 @@ namespace SyncTrayzor.Services
             if (!File.Exists(Path.GetDirectoryName(this.ConfigurationFilePath)))
                 Directory.CreateDirectory(Path.GetDirectoryName(this.ConfigurationFilePath));
 
-            // Do this *before* creating config
-            if (!File.Exists(this.SyncThingPath) && File.Exists(this.SyncThingBackupPath))
-                File.Copy(this.SyncThingBackupPath, this.SyncThingPath);
+            if (!File.Exists(this.SyncThingPath))
+            {
+                if (File.Exists(this.SyncThingBackupPath))
+                    File.Copy(this.SyncThingBackupPath, this.SyncThingPath);
+                else
+                    throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.SyncThingPath, this.SyncThingBackupPath));
+            }   
 
             if (!File.Exists(this.ConfigurationFilePath))
             {
                 this.HadToCreateConfiguration = true;
-                var configuration = new Configuration(this.SyncThingPath, this.GenerateApiKey(), this.IsPortableMode);
+                var configuration = new Configuration(this.GenerateApiKey(), this.IsPortableMode);
                 this.Save(configuration);
             }
         }
@@ -125,7 +130,6 @@ namespace SyncTrayzor.Services
 
         public void Save(Configuration config)
         {
-            this.EnsureConfigurationFileConsistency(config);
             lock (this.currentConfigLock)
             {
                 this.currentConfig = config;
@@ -143,12 +147,6 @@ namespace SyncTrayzor.Services
             {
                 return (Configuration)this.serializer.Deserialize(stream);
             }
-        }
-
-        private void EnsureConfigurationFileConsistency(Configuration configuration)
-        {
-            if (!File.Exists(configuration.SyncthingPath))
-                throw new ConfigurationException(String.Format("Unable to find file {0}", configuration.SyncthingPath));
         }
 
         private string GenerateApiKey()

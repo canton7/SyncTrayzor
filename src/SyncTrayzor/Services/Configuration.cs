@@ -33,7 +33,6 @@ namespace SyncTrayzor.Services
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public string SyncthingPath { get; set; }
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
@@ -57,12 +56,11 @@ namespace SyncTrayzor.Services
         }
 
         public Configuration()
-            : this(null, null, false)
+            : this(null, false)
         { }
 
-        public Configuration(string syncThingPath, string syncThingApiKey, bool isPortableMode)
+        public Configuration(string syncThingApiKey, bool isPortableMode)
         {
-            this.SyncthingPath = syncThingPath;
             this.ShowTrayIconOnlyOnClose = false;
             this.MinimizeToTray = false;
             this.CloseToTray = true;
@@ -79,7 +77,6 @@ namespace SyncTrayzor.Services
 
         public Configuration(Configuration other)
         {
-            this.SyncthingPath = other.SyncthingPath;
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
             this.MinimizeToTray = other.MinimizeToTray;
             this.CloseToTray = other.CloseToTray;
