@@ -36,6 +36,9 @@
                 <TextBlock Text="{Binding HomepageUrl}"/>
             </Hyperlink>
         </TextBlock>
+        <TextBlock DockPanel.Dock="Top" Margin="0,5">
+            <Hyperlink Command="{s:Action ShowLicenses}">Show Licenses</Hyperlink>
+        </TextBlock>
         <Button Command="{s:Action Close}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom">Close</Button>
     </DockPanel>
 </Window>

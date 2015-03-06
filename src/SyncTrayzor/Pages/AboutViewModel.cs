@@ -15,8 +15,10 @@ namespace SyncTrayzor.Pages
 {
     public class AboutViewModel : Screen
     {
+        private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IUpdateChecker updateChecker;
+        private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
 
         public string Version { get; set; }
         public bool IsPortable { get; set; }
@@ -26,10 +28,17 @@ namespace SyncTrayzor.Pages
         public string NewerVersion { get; set; }
         private string newerVersionDownloadUrl;
 
-        public AboutViewModel(ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider, IUpdateChecker updateChecker)
+        public AboutViewModel(
+            IWindowManager windowManager,
+            ISyncThingManager syncThingManager,
+            IConfigurationProvider configurationProvider,
+            IUpdateChecker updateChecker,
+            Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory)
         {
+            this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.updateChecker = updateChecker;
+            this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.IsPortable = configurationProvider.IsPortableMode;
@@ -74,6 +83,12 @@ namespace SyncTrayzor.Pages
                 return;
 
             Process.Start(this.newerVersionDownloadUrl);
+        }
+
+        public void ShowLicenses()
+        {
+            var vm = this.thirdPartyComponentsViewModelFactory();
+            this.windowManager.ShowDialog(vm);
         }
 
         public void Close()
