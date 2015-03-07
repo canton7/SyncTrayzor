@@ -12,9 +12,9 @@ Features include:
  - Has a built-in web browser, so you don't need to fire up an external browser.
  - Optionally starts on login, so you don't need to set up Syncthing as a service.
  - Can watch your folders for changes, so you don't have to poll them frequently:
-    - Syncthing on its own has to poll your folders, to see if any files have changed.
-    - SyncTrayzor will watch your folders for changes, and alert Syncthing the second any files change.
-    - This means you can increase the polling interval in Syncthing, avoid the resource usage of high-frequency polling, but still have any changes propagated straight away.
+    - Syncthing on its own has to poll your folders, in order to see if any files have changed.
+    - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
+    - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
     - Folder watching respects the ignores configured in Syncthing.
  - Tray icon indicates when synchronization is occurring.
  - Optional tray messages when folders have finished syncing.
@@ -51,12 +51,12 @@ Good question. The answer depends on whether you installed SyncTrayzor using the
 SyncTrayzor will install itself into `C:\Program Files\SyncTrayzor`. 
 
 By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayor`, and let Syncthing use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
-It will also create a registry key at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`, which will let it start when you log in.
+It will also create a registry key at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor` the first time that it is run, which will let it start when you log in.
 
 You can delete this registry key by unchecking "Automatically start on login" in the settings.
 
 If you check "Use custom home directory or Syncthing" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing` for its database.
-This is useful if you want to keep a system copy of Syncthing, and the Syncthing managed by SyncTrayzor, separate.
+This is useful if you want to keep the copy of Syncthing managed by SyncTrayzor separate from another copy running on your machine.
 
 ### Standalone
 
