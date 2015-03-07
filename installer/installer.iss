@@ -76,19 +76,6 @@ begin
   result := not exists or (release < 378758);
 end;
 
-procedure CurStepChanged(CurStep: TSetupStep);
-begin
-  if CurStep = ssInstall then begin
-    { Since we're shifting from 32-bit to 64-bit, clean up the 32-bit installation dir }
-    if DirExists(ExpandConstant('{pf32}\SyncTrayzor')) then
-      DelTree(ExpandConstant('{pf32}\SyncTrayzor'), True, True, True);
-
-    { If we mistakenly wrote to the admin user's registry before, undo that now }
-    if RegValueExists(HKCU64, ExpandConstant('{#RunRegKey}'), 'SyncTrayzor') then
-      RegDeleteValue(HKCU64, ExpandConstant('{#RunRegKey}'), 'SyncTrayzor');
-  end;
-end;
-
 [UninstallDelete]
-Type: files; Name: "{userappdata}\{#AppDataFolder}\config.xml"
-Type: dirifempty; Name: "{userappdata}\{#AppDataFolder}"
+Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
+Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
