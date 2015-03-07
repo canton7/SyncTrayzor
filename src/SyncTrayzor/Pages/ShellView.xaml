@@ -5,6 +5,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         Height="700" Width="1100"
+        Title="SyncTrayzor"
         Icon="..\Icons\default.ico">
     <i:Interaction.Behaviors>
         <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>

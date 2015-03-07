@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         Width="600" MaxHeight="600"
+        Title="SyncTrayzor Update Available"
         SizeToContent="Height">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">

@@ -37,8 +37,6 @@ namespace SyncTrayzor.Pages
             Func<SettingsViewModel> settingsViewModelFactory,
             Func<AboutViewModel> aboutViewModelFactory)
         {
-            this.DisplayName = "SyncTrayzor";
-
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.application = application;

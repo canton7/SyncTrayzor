@@ -54,8 +54,6 @@ namespace SyncTrayzor.Pages
 
         public SettingsViewModel(IConfigurationProvider configurationProvider, IAutostartProvider autostartProvider)
         {
-            this.DisplayName = "Settings";
-
             this.configurationProvider = configurationProvider;
             this.autostartProvider = autostartProvider;
 
