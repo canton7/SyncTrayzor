@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.Utils;
+﻿using NLog;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +29,7 @@ namespace SyncTrayzor.Services
         bool IsPortableMode { get; set; }
         string LogFilePath { get; }
         string SyncThingPath { get; }
-        string SyncthingCustomHomePage { get; }
+        string SyncthingCustomHomePath { get; }
 
         void EnsureEnvironmentConsistency();
         Configuration Load();
@@ -40,6 +41,7 @@ namespace SyncTrayzor.Services
         private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         private const int apiKeyLength = 40;
 
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
 
@@ -71,7 +73,7 @@ namespace SyncTrayzor.Services
             get { return this.IsPortableMode ? Path.Combine(this.ExePath, "logs") : Path.Combine(this.RoamingPath); }
         }
 
-        public string SyncthingCustomHomePage
+        public string SyncthingCustomHomePath
         {
             get { return this.IsPortableMode ? Path.Combine(this.ExePath, "data", "syncthing") : Path.Combine(this.LocalPath, "syncthing"); }
         }
@@ -98,6 +100,14 @@ namespace SyncTrayzor.Services
 
         public void EnsureEnvironmentConsistency()
         {
+            logger.Debug("IsPortableMode: {0}", this.IsPortableMode);
+            logger.Debug("ExePath: {0}", this.ExePath);
+            logger.Debug("LogFilePath: {0}", this.LogFilePath);
+            logger.Debug("SyncthingCustomHomePath: {0}", this.LogFilePath);
+            logger.Debug("SyncThingPath: {0}", this.SyncThingPath);
+            logger.Debug("SyncThingBackupPath: {0}", this.SyncThingBackupPath);
+            logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
+
             if (!File.Exists(Path.GetDirectoryName(this.ConfigurationFilePath)))
                 Directory.CreateDirectory(Path.GetDirectoryName(this.ConfigurationFilePath));
 
@@ -124,12 +134,14 @@ namespace SyncTrayzor.Services
                 if (this.currentConfig == null)
                     this.currentConfig = this.LoadFromDisk();
 
+                logger.Info("Loaded configuration: {0}", this.currentConfig);
                 return new Configuration(this.currentConfig);
             }
         }
 
         public void Save(Configuration config)
         {
+            logger.Debug("Saving configuration: {0}", config);
             lock (this.currentConfigLock)
             {
                 this.currentConfig = config;

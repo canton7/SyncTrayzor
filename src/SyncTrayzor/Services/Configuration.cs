@@ -27,6 +27,11 @@ namespace SyncTrayzor.Services
             this.ID = other.ID;
             this.IsWatched = other.IsWatched;
         }
+
+        public override string ToString()
+        {
+            return String.Format("<Folder ID={0} IsWatched={1}>", this.ID, this.IsWatched);
+        }
     }
 
 
@@ -89,6 +94,16 @@ namespace SyncTrayzor.Services
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.NotifyOfNewVersions = other.NotifyOfNewVersions;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
+                "SyncthingAddress={4} StartSyncthingAutomatically={5} SyncthingApiKey={6} SyncthingTraceFacilities={7} " +
+                "SyncthingUseCustomHome={8} Folders=[{9}] NotifyOfNewVersions={10} LastNotifiedVersion={11}>",
+                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.SyncthingAddress,
+                this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities, this.SyncthingUseCustomHome,
+                String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion);
         }
     }
 }
