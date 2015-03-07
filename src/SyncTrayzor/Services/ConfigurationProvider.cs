@@ -114,13 +114,23 @@ namespace SyncTrayzor.Services
             if (!File.Exists(this.SyncThingPath))
             {
                 if (File.Exists(this.SyncThingBackupPath))
+                {
+                    logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", this.SyncThingPath, this.SyncThingBackupPath);
                     File.Copy(this.SyncThingBackupPath, this.SyncThingPath);
+                }
                 else
                     throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.SyncThingPath, this.SyncThingBackupPath));
-            }   
+            }
+            else if (this.SyncThingPath != this.SyncThingBackupPath && File.Exists(this.SyncThingBackupPath) &&
+                File.GetLastWriteTimeUtc(this.SyncThingPath) < File.GetLastWriteTimeUtc(this.SyncThingBackupPath))
+            {
+                logger.Info("Syncthing at {0} is older than at {1}, so overwriting from backup", this.SyncThingPath, this.SyncThingBackupPath);
+                File.Copy(this.SyncThingBackupPath, this.SyncThingPath, true);
+            }
 
             if (!File.Exists(this.ConfigurationFilePath))
             {
+                logger.Info("Configuration file {0} doesn't exist, so creating", this.ConfigurationFilePath);
                 this.HadToCreateConfiguration = true;
                 var configuration = new Configuration(this.GenerateApiKey(), this.IsPortableMode);
                 this.Save(configuration);
