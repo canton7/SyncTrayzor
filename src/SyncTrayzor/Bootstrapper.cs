@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -112,6 +113,12 @@ namespace SyncTrayzor
                 vm.Exception = e.Exception;
                 windowManager.ShowDialog(vm);
             }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
+            this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
         }
     }
 }
