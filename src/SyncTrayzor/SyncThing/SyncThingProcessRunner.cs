@@ -132,7 +132,8 @@ namespace SyncTrayzor.SyncThing
 
         private void DataReceived(string data)
         {
-            this.OnMessageLogged(data);
+            if (!String.IsNullOrWhiteSpace(data))
+                this.OnMessageLogged(data);
         }
 
         public void Dispose()
