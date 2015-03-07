@@ -27,23 +27,29 @@ namespace SyncTrayzor.Services
             this.ID = other.ID;
             this.IsWatched = other.IsWatched;
         }
+
+        public override string ToString()
+        {
+            return String.Format("<Folder ID={0} IsWatched={1}>", this.ID, this.IsWatched);
+        }
     }
 
 
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public string SyncthingPath { get; set; }
         public bool ShowTrayIconOnlyOnClose { get; set; }
+        public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
         public string SyncthingAddress { get; set; }
-        public bool StartOnLogon { get; set; }
-        public bool StartMinimized { get; set; }
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
+        public string SyncthingTraceFacilities { get; set; }
+        public bool SyncthingUseCustomHome { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
+        public bool NotifyOfNewVersions { get; set; }
 
         [XmlIgnore]
         public Version LatestNotifiedVersion { get; set; }
@@ -55,37 +61,49 @@ namespace SyncTrayzor.Services
         }
 
         public Configuration()
-            : this(null, null)
+            : this(null, false)
         { }
 
-        public Configuration(string syncThingPath, string syncThingApiKey)
+        public Configuration(string syncThingApiKey, bool isPortableMode)
         {
-            this.SyncthingPath = syncThingPath;
             this.ShowTrayIconOnlyOnClose = false;
+            this.MinimizeToTray = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.SyncthingAddress = "http://localhost:8384";
-            this.StartOnLogon = true;
-            this.StartMinimized = true;
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = syncThingApiKey;
+            this.SyncthingTraceFacilities = null;
+            this.SyncthingUseCustomHome = isPortableMode;
             this.Folders = new List<FolderConfiguration>();
+            this.NotifyOfNewVersions = true;
             this.LatestNotifiedVersion = null;
         }
 
         public Configuration(Configuration other)
         {
-            this.SyncthingPath = other.SyncthingPath;
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
+            this.MinimizeToTray = other.MinimizeToTray;
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
             this.SyncthingAddress = other.SyncthingAddress;
-            this.StartOnLogon = other.StartOnLogon;
-            this.StartMinimized = other.StartMinimized;
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
+            this.SyncthingTraceFacilities = other.SyncthingTraceFacilities;
+            this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
+            this.NotifyOfNewVersions = other.NotifyOfNewVersions;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
+                "SyncthingAddress={4} StartSyncthingAutomatically={5} SyncthingApiKey={6} SyncthingTraceFacilities={7} " +
+                "SyncthingUseCustomHome={8} Folders=[{9}] NotifyOfNewVersions={10} LastNotifiedVersion={11}>",
+                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.SyncthingAddress,
+                this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities, this.SyncthingUseCustomHome,
+                String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion);
         }
     }
 }

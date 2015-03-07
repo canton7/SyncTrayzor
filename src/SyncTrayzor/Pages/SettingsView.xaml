@@ -7,7 +7,8 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Height="500" Width="400"
+        Height="600" Width="400"
+        Title="Settings"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="InverseVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
@@ -20,11 +21,13 @@
             </Style>    
         </DockPanel.Resources>
         
-        <GroupBox DockPanel.Dock="Top" Header="Tray Icon">
+        <GroupBox DockPanel.Dock="Top" Header="SyncTrayzor">
             <DockPanel>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}">Show Tray Icon only on close</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}">Show 'Synchronized' balloon messages</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}">Alert if a new version of SyncTrayzor is available</CheckBox>
             </DockPanel>
         </GroupBox>
         
@@ -72,6 +75,24 @@
                 </ItemsControl>
             </DockPanel>
         </GroupBox>
+        
+        <Expander DockPanel.Dock="Top" Header="Advanced">
+            <GroupBox>
+                <DockPanel>
+                    <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}">
+                        <TextBlock TextWrapping="Wrap">
+                            Use custom home directory for Syncthing.
+                            <TextBlock.ToolTip>
+                                This will mean that SyncTrayzor will see a different set of configured folders to any
+                                other Syncthing instances on your computer.
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </CheckBox>
+                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}">Syncthing Trace Variables:</Label>
+                    <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables}"/>
+                </DockPanel>
+            </GroupBox>
+        </Expander>
         
         <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button IsCancel="True" Command="{s:Action Cancel}">Cancel</Button>

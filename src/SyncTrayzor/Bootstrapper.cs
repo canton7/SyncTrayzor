@@ -4,6 +4,7 @@ using Stylet;
 using StyletIoC;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
+using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -39,12 +41,31 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
-            GlobalDiagnosticsContext.Set("LogFilePath", this.Container.Get<IConfigurationProvider>().BasePath);
-
-            // Must be done before ConfigurationApplicator.ApplyConfiguration
+            var configurationProvider = this.Container.Get<IConfigurationProvider>();
+            // Debug builds are always 'portable'
 #if DEBUG
-            this.Container.Get<IAutostartProvider>().IsEnabled = false;
+            configurationProvider.IsPortableMode = true;
+#else
+            configurationProvider.IsPortableMode = Settings.Default.PortableMode;
 #endif
+            configurationProvider.EnsureEnvironmentConsistency();
+
+            GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.LogFilePath);
+
+            var autostartProvider = this.Container.Get<IAutostartProvider>();
+#if DEBUG
+            autostartProvider.IsEnabled = false;
+#endif
+
+            if (autostartProvider.CanWrite)
+            {
+                // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
+                // Else, keep the config as it was, but update the path to us (if we're not in debug)
+                if (!configurationProvider.IsPortableMode && configurationProvider.HadToCreateConfiguration)
+                    autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
+                else
+                    autostartProvider.UpdatePathToSelf();
+            }
 
             var notifyIconManager = this.Container.Get<INotifyIconManager>();
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
@@ -70,7 +91,8 @@ namespace SyncTrayzor
                 ((ShellViewModel)this.RootViewModel).Start();
 
             // We don't care if this fails
-            this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
+            if (config.NotifyOfNewVersions)
+                this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
@@ -91,6 +113,12 @@ namespace SyncTrayzor
                 vm.Exception = e.Exception;
                 windowManager.ShowDialog(vm);
             }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
+            this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
         }
     }
 }

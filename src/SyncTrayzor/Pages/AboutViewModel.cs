@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
@@ -14,22 +15,33 @@ namespace SyncTrayzor.Pages
 {
     public class AboutViewModel : Screen
     {
+        private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IUpdateChecker updateChecker;
+        private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
 
         public string Version { get; set; }
+        public bool IsPortable { get; set; }
         public string SyncthingVersion { get; set; }
         public string HomepageUrl { get; set; }
 
         public string NewerVersion { get; set; }
         private string newerVersionDownloadUrl;
 
-        public AboutViewModel(ISyncThingManager syncThingManager, IUpdateChecker updateChecker)
+        public AboutViewModel(
+            IWindowManager windowManager,
+            ISyncThingManager syncThingManager,
+            IConfigurationProvider configurationProvider,
+            IUpdateChecker updateChecker,
+            Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory)
         {
+            this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.updateChecker = updateChecker;
+            this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            this.IsPortable = configurationProvider.IsPortableMode;
             this.HomepageUrl = Settings.Default.HomepageUrl;
 
             this.SyncthingVersion = this.syncThingManager.Version == null ? "Unknown" : this.syncThingManager.Version.Version;
@@ -71,6 +83,13 @@ namespace SyncTrayzor.Pages
                 return;
 
             Process.Start(this.newerVersionDownloadUrl);
+        }
+
+        public void ShowLicenses()
+        {
+            var vm = this.thirdPartyComponentsViewModelFactory();
+            this.windowManager.ShowDialog(vm);
+            this.RequestClose(true);
         }
 
         public void Close()

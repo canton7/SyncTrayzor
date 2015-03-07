@@ -28,10 +28,8 @@ namespace SyncTrayzor.Pages
 
         public UnhandledExceptionViewModel(IConfigurationProvider configurationProvider)
         {
-            this.DisplayName = "Error!";
-
             this.IssuesUrl = Settings.Default.IssuesUrl;
-            this.LogFilePath = configurationProvider.BasePath;
+            this.LogFilePath = configurationProvider.LogFilePath;
         }
 
         public void ShowIssues()

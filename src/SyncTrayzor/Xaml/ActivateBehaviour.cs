@@ -9,9 +9,9 @@ using System.Windows.Interactivity;
 namespace SyncTrayzor.Xaml
 {
     // From http://stackoverflow.com/a/12254217/1086121
-    public class ActivateBehaviour : Behavior<Window>
+    public class ActivateBehaviour : DetachingBehaviour<Window>
     {
-        private bool isActivated;
+        private bool altering;
 
         public bool Activated
         {
@@ -19,28 +19,27 @@ namespace SyncTrayzor.Xaml
             set { SetValue(ActivatedProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Activated.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ActivatedProperty =
             DependencyProperty.Register("Activated", typeof(bool), typeof(ActivateBehaviour),
             new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (d, e) =>
             {
-                var behavior = (ActivateBehaviour)d;
-                if (!behavior.Activated || behavior.isActivated)
+                var behaviour = (ActivateBehaviour)d;
+                if (behaviour.altering || !(bool)e.NewValue)
                     return;
-                // The Activated property is set to true but the Activated event (tracked by the
-                // isActivated field) hasn't been fired. Go ahead and activate the window.
-                if (behavior.AssociatedObject.WindowState == WindowState.Minimized)
-                    behavior.AssociatedObject.WindowState = WindowState.Normal;
-                behavior.AssociatedObject.Activate();
+
+                if (behaviour.AssociatedObject.WindowState == WindowState.Minimized)
+                    behaviour.AssociatedObject.WindowState = WindowState.Normal;
+
+                behaviour.AssociatedObject.Activate();
             }));
 
-        protected override void OnAttached()
+        protected override void AttachHandlers()
         {
             AssociatedObject.Activated += OnActivated;
             AssociatedObject.Deactivated += OnDeactivated;
         }
 
-        protected override void OnDetaching()
+        protected override void DetachHandlers()
         {
             AssociatedObject.Activated -= OnActivated;
             AssociatedObject.Deactivated -= OnDeactivated;
@@ -48,13 +47,13 @@ namespace SyncTrayzor.Xaml
 
         private void OnActivated(object sender, EventArgs eventArgs)
         {
-            this.isActivated = true;
+            this.altering = true;
             Activated = true;
+            this.altering = false;
         }
 
         private void OnDeactivated(object sender, EventArgs eventArgs)
         {
-            this.isActivated = false;
             Activated = false;
         }
     }

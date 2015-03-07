@@ -14,6 +14,7 @@ namespace SyncTrayzor.NotifyIcon
     public interface INotifyIconManager
     {
         bool ShowOnlyOnClose { get; set; }
+        bool MinimizeToTray { get; set; }
         bool CloseToTray { get; set; }
         bool ShowSynchronizedBalloon { get; set; }
 
@@ -43,15 +44,13 @@ namespace SyncTrayzor.NotifyIcon
             }
         }
 
+        public bool MinimizeToTray { get; set; }
+
         private bool _closeToTray;
         public bool CloseToTray
         {
             get { return this._closeToTray; }
-            set
-            {
-                this._closeToTray = value;
-                this.application.ShutdownMode = this._closeToTray ? ShutdownMode.OnExplicitShutdown : ShutdownMode.OnMainWindowClose;
-            }
+            set { this._closeToTray = value; this.SetShutdownMode(); }
         }
 
         public bool ShowSynchronizedBalloon { get; set; }
@@ -86,6 +85,11 @@ namespace SyncTrayzor.NotifyIcon
             };
         }
 
+        private void SetShutdownMode()
+        {
+            this.application.ShutdownMode = this._closeToTray ? ShutdownMode.OnExplicitShutdown : ShutdownMode.OnMainWindowClose;
+        }
+
         public void Setup(INotifyIconDelegate rootViewModel)
         {
             this.rootViewModel = rootViewModel;
@@ -94,6 +98,7 @@ namespace SyncTrayzor.NotifyIcon
             this.viewManager.BindViewToModel(this.taskbarIcon, this.viewModel);
 
             this.rootViewModel.Activated += rootViewModelActivated;
+            this.rootViewModel.Deactivated += rootViewModelDeactivated;
             this.rootViewModel.Closed += rootViewModelClosed;
         }
 
@@ -104,9 +109,29 @@ namespace SyncTrayzor.NotifyIcon
 
         private void rootViewModelActivated(object sender, ActivationEventArgs e)
         {
+            // If it's minimize to tray, not close to tray, then we'll have set the shutdown mode to OnExplicitShutdown just before closing
+            // In this case, re-set Shutdownmode
+            this.SetShutdownMode();
+
             this.viewModel.MainWindowVisible = true;
             if (this.ShowOnlyOnClose)
                 this.viewModel.Visible = false;
+        }
+
+        private void rootViewModelDeactivated(object sender, DeactivationEventArgs e)
+        {
+            if (this.MinimizeToTray)
+            {
+                // Don't do this if it's shutting down
+                if (this.application.HasMainWindow)
+                    this.application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+                this.rootViewModel.CloseToTray();
+
+                this.viewModel.MainWindowVisible = false;
+                if (this.ShowOnlyOnClose)
+                    this.viewModel.Visible = true;
+            }
         }
 
         private void rootViewModelClosed(object sender, CloseEventArgs e)

@@ -36,6 +36,8 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
         string HostAddress { get; set; }
+        string CustomHomeDir { get; set; }
+        string Traces { get; set; }
 
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
@@ -55,6 +57,8 @@ namespace SyncTrayzor.SyncThing
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
+        public string CustomHomeDir { get; set; }
+        public string Traces { get; set; }
 
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
@@ -65,7 +69,7 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
-            logger.Info("Starting syncthing: ", this.ExecutablePath);
+            logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
@@ -81,10 +85,16 @@ namespace SyncTrayzor.SyncThing
                 RedirectStandardOutput = true,
             };
 
+            if (!String.IsNullOrWhiteSpace(this.Traces))
+            {
+                processStartInfo.EnvironmentVariables["STTRACE"] = this.Traces;
+            }
+
             this.process = Process.Start(processStartInfo);
 
             this.process.EnableRaisingEvents = true;
             this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
+            this.process.ErrorDataReceived += (o, e) => this.DataReceived(e.Data);
 
             this.process.BeginOutputReadLine();
             this.process.BeginErrorReadLine();
@@ -108,16 +118,22 @@ namespace SyncTrayzor.SyncThing
 
         private IEnumerable<string> GenerateArguments()
         {
-            return defaultArguments.Concat(new[]
+            var args = new List<string>(defaultArguments)
             {
                 String.Format("-gui-apikey=\"{0}\"", this.ApiKey),
                 String.Format("-gui-address=\"{0}\"", this.HostAddress)
-            });
+            };
+
+            if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
+                args.Add(String.Format("-home=\"{0}\"", this.CustomHomeDir));
+
+            return args;
         }
 
         private void DataReceived(string data)
         {
-            this.OnMessageLogged(data);
+            if (!String.IsNullOrWhiteSpace(data))
+                this.OnMessageLogged(data);
         }
 
         public void Dispose()
@@ -127,7 +143,9 @@ namespace SyncTrayzor.SyncThing
 
         private void OnProcessStopped()
         {
-            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode; 
+            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode;
+            this.process = null;
+
             logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
             if (exitStatus == SyncThingExitStatus.Restarting || exitStatus == SyncThingExitStatus.Upgrading)
             {

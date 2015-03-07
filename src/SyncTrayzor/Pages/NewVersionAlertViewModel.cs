@@ -12,18 +12,21 @@ namespace SyncTrayzor.Pages
         public Version Version { get; set; }
         public string Changelog { get; set; }
 
-        public NewVersionAlertViewModel()
-        {
-            this.DisplayName = "SyncTrayzor update available";
-        }
+        public bool DontRemindMe { get; private set; }
 
         public void Download()
         {
             this.RequestClose(true);
         }
 
-        public void Close()
+        public void RemindLater()
         {
+            this.RequestClose(false);
+        }
+
+        public void DontRemind()
+        {
+            this.DontRemindMe = true;
             this.RequestClose(false);
         }
     }

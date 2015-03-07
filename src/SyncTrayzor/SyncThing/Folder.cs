@@ -15,23 +15,26 @@ namespace SyncTrayzor.SyncThing
 
     public class FolderIgnores
     {
-        public List<string> IgnorePatterns { get; private set; }
-        public List<Regex> IncludeRegex { get; private set; }
-        public List<Regex> ExcludeRegex { get; private set; }
+        public IReadOnlyList<string> IgnorePatterns { get; private set; }
+        public IReadOnlyList<Regex> IncludeRegex { get; private set; }
+        public IReadOnlyList<Regex> ExcludeRegex { get; private set; }
 
         public FolderIgnores(List<string> ignores, List<string> patterns)
         {
             this.IgnorePatterns = ignores;
-            this.IncludeRegex = new List<Regex>();
-            this.ExcludeRegex = new List<Regex>();
+            var includeRegex = new List<Regex>();
+            var excludeRegex = new List<Regex>();
 
             foreach (var pattern in patterns)
             {
                 if (pattern.StartsWith("(?exclude)"))
-                    this.ExcludeRegex.Add(new Regex(pattern.Substring("(?exclude)".Length)));
+                    excludeRegex.Add(new Regex(pattern.Substring("(?exclude)".Length)));
                 else
-                    this.IncludeRegex.Add(new Regex(pattern));
+                    includeRegex.Add(new Regex(pattern));
             }
+
+            this.IncludeRegex = includeRegex.AsReadOnly();
+            this.ExcludeRegex = excludeRegex.AsReadOnly();
         }
     }
 
@@ -39,17 +42,57 @@ namespace SyncTrayzor.SyncThing
     {
         public string FolderId { get; private set; }
         public string Path { get; private set; }
-        public FolderSyncState SyncState { get; set; }
-        public HashSet<string> SyncthingPaths { get; private set; }
-        public FolderIgnores Ignores { get; set; }
+
+        private readonly object syncStateLock = new object();
+        private FolderSyncState _syncState;
+        public FolderSyncState SyncState
+        {
+            get { lock (this.syncStateLock) { return this._syncState; } }
+            set { lock (this.syncStateLock) { this._syncState = value; } }
+        }
+
+        private readonly object syncingPathsLock = new object();
+        private HashSet<string> syncingPaths { get; set; }
+
+        private readonly object ignoresLock = new object();
+        private FolderIgnores _ignores;
+        public FolderIgnores Ignores
+        {
+            get { lock (this.ignoresLock) { return this._ignores; } }
+            set { lock (this.ignoresLock) { this._ignores = value; } }
+        }
 
         public Folder(string folderId, string path, FolderIgnores ignores)
         {
             this.FolderId = folderId;
             this.Path = path;
             this.SyncState = FolderSyncState.Idle;
-            this.SyncthingPaths = new HashSet<string>();
-            this.Ignores = ignores;
+            this.syncingPaths = new HashSet<string>();
+            this._ignores = ignores;
+        }
+
+        public bool IsSyncingPath(string path)
+        {
+            lock (this.syncingPathsLock)
+            {
+                return this.syncingPaths.Contains(path);
+            }
+        }
+
+        public void AddSyncingPath(string path)
+        {
+            lock (this.syncingPathsLock)
+            {
+                this.syncingPaths.Add(path);
+            }
+        }
+
+        public void RemoveSyncingPath(string path)
+        {
+            lock (this.syncingPathsLock)
+            {
+                this.syncingPaths.Remove(path);
+            }
         }
     }
 }

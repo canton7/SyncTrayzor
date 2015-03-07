@@ -2,6 +2,7 @@
 using SyncTrayzor.SyncThing.Api;
 using SyncTrayzor.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,14 +26,19 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
         Uri Address { get; set; }
+        string SyncthingTraceFacilities { get; set; }
+        string SyncthingCustomHomeDir { get; set; }
         DateTime? StartedAt { get; }
-        Dictionary<string, Folder> Folders { get; }
         SyncthingVersion Version { get; }
 
         void Start();
         Task StopAsync();
         void Kill();
         void KillAllSyncthingProcesses();
+
+        bool TryFetchFolderById(string folderId, out Folder folder);
+        IReadOnlyCollection<Folder> FetchAllFolders();
+
         Task ScanAsync(string folderId, string subPath);
         Task ReloadIgnoresAsync(string folderId);
     }
@@ -49,21 +55,44 @@ namespace SyncTrayzor.SyncThing
 
         public DateTime? StartedAt { get; private set; }
 
+        private readonly object stateLock = new object();
         public SyncThingState State { get; private set; }
+
         public bool IsDataLoaded { get; private set; }
         public event EventHandler DataLoaded;
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
-        public SyncThingConnectionStats TotalConnectionStats { get; private set; }
+
+        private readonly object totalConnectionStatsLock = new object();
+        private SyncThingConnectionStats _totalConnectionStats;
+        public SyncThingConnectionStats TotalConnectionStats
+        {
+            get { lock (this.totalConnectionStatsLock) { return this._totalConnectionStats; } }
+            set { lock (this.totalConnectionStatsLock) { this._totalConnectionStats = value; } }
+        }
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
+
         public event EventHandler ProcessExitedWithError;
 
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public Uri Address { get; set; }
+        public string SyncthingCustomHomeDir { get; set; }
+        public string SyncthingTraceFacilities { get; set; }
 
-        public Dictionary<string, Folder> Folders { get; private set; }
+        // Folders is a ConcurrentDictionary, which suffices for most access
+        // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
+        // to create a memory barrier. The lock is only used when setting/fetching the field, not when accessing the
+        // Folders dictionary itself.
+        private readonly object foldersLock = new object();
+        private ConcurrentDictionary<string, Folder> _folders;
+        private ConcurrentDictionary<string, Folder> folders
+        {
+            get { lock (this.foldersLock) { return this._folders; } }
+            set { lock (this.foldersLock) { this._folders = value; } }
+        }
+
         public SyncthingVersion Version { get; private set; }
 
         public SyncThingManager(
@@ -72,7 +101,7 @@ namespace SyncTrayzor.SyncThing
             ISyncThingEventWatcher eventWatcher,
             ISyncThingConnectionsWatcher connectionsWatcher)
         {
-            this.Folders = new Dictionary<string, Folder>();
+            this.folders = new ConcurrentDictionary<string, Folder>();
 
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
@@ -99,6 +128,8 @@ namespace SyncTrayzor.SyncThing
                 this.processRunner.ApiKey = this.ApiKey;
                 this.processRunner.HostAddress = this.Address.ToString();
                 this.processRunner.ExecutablePath = this.ExecutablePath;
+                this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
+                this.processRunner.Traces = this.SyncthingTraceFacilities;
 
                 this.processRunner.Start();
                 this.SetState(SyncThingState.Starting);
@@ -127,6 +158,16 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.KillAllSyncthingProcesses();
         }
 
+        public bool TryFetchFolderById(string folderId, out Folder folder)
+        {
+            return this.folders.TryGetValue(folderId, out folder);
+        }
+
+        public IReadOnlyCollection<Folder> FetchAllFolders()
+        {
+            return new List<Folder>(this.folders.Values).AsReadOnly();
+        }
+
         public Task ScanAsync(string folderId, string subPath)
         {
             return this.apiClient.ScanAsync(folderId, subPath);
@@ -135,7 +176,7 @@ namespace SyncTrayzor.SyncThing
         public async Task ReloadIgnoresAsync(string folderId)
         {
             Folder folder;
-            if (!this.Folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out folder))
                 return;
 
             var ignores = await this.apiClient.FetchIgnoresAsync(folderId);
@@ -144,22 +185,24 @@ namespace SyncTrayzor.SyncThing
 
         private void SetState(SyncThingState state)
         {
-            if (state == this.State)
-                return;
-
-            // We really need a proper state machine here....
-            // There's a race if Syncthing can't start because the database is locked by another process on the same port
-            // In this case, we see the process as having failed, but the event watcher chimes in a split-second later with the 'Started' event.
-            // This runs the risk of transitioning us from Stopped -> Starting -> Stopepd -> Running, which is bad news for everyone
-            // So, get around this by enforcing strict state transitions.
-            if (this.State == SyncThingState.Stopped && state == SyncThingState.Running)
-                return;
-
             var oldState = this.State;
-            this.State = state;
+            lock (this.stateLock)
+            {
+                if (state == this.State)
+                    return;
+
+                // We really need a proper state machine here....
+                // There's a race if Syncthing can't start because the database is locked by another process on the same port
+                // In this case, we see the process as having failed, but the event watcher chimes in a split-second later with the 'Started' event.
+                // This runs the risk of transitioning us from Stopped -> Starting -> Stopepd -> Running, which is bad news for everyone
+                // So, get around this by enforcing strict state transitions.
+                if (this.State == SyncThingState.Stopped && state == SyncThingState.Running)
+                    return;
+
+                this.State = state;
+            }
 
             this.UpdateWatchersState(state);
-
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
@@ -196,7 +239,9 @@ namespace SyncTrayzor.SyncThing
                 return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
             });
 
-            this.Folders = (await Task.WhenAll(folderConstructionTasks)).ToDictionary(x => x.FolderId, x => x);
+            var folders = await Task.WhenAll(folderConstructionTasks);
+            this.folders = new ConcurrentDictionary<string, Folder>(folders.Select(x => new KeyValuePair<string, Folder>(x.FolderId, x)));
+
             this.Version = versionTask.Result;
 
             this.OnDataLoaded();
@@ -206,19 +251,19 @@ namespace SyncTrayzor.SyncThing
         private void ItemStarted(string folderId, string item)
         {
             Folder folder;
-            if (!this.Folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out folder))
                 return; // Don't know about it
 
-            folder.SyncthingPaths.Add(item);
+            folder.AddSyncingPath(item);
         }
 
         private void ItemFinished(string folderId, string item)
         {
             Folder folder;
-            if (!this.Folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out folder))
                 return; // Don't know about it
 
-            folder.SyncthingPaths.Remove(item);
+            folder.RemoveSyncingPath(item);
         }
 
         private void OnMessageLogged(string logMessage)
@@ -229,7 +274,7 @@ namespace SyncTrayzor.SyncThing
         private void OnSyncStateChanged(SyncStateChangedEventArgs e)
         {
             Folder folder;
-            if (!this.Folders.TryGetValue(e.FolderId, out folder))
+            if (!this.folders.TryGetValue(e.FolderId, out folder))
                 return; // We don't know about this folder
 
             folder.SyncState = e.SyncState;

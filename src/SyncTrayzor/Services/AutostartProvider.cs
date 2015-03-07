@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace SyncTrayzor.Services
         bool CanRead { get; }
         bool CanWrite { get; }
 
+        void UpdatePathToSelf();
         AutostartConfiguration GetCurrentSetup();
         void SetAutoStart(AutostartConfiguration config);
     }
@@ -24,11 +26,17 @@ namespace SyncTrayzor.Services
     {
         public bool AutoStart { get; set; }
         public bool StartMinimized { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("<AutostartConfiguration AutoStart={0} StartMinimized={1}>", this.AutoStart, this.StartMinimized);
+        }
     }
 
     public class AutostartProvider : IAutostartProvider
     {
         private const string applicationName = "SyncTrayzor";
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public bool IsEnabled { get; set; }
 
@@ -46,7 +54,8 @@ namespace SyncTrayzor.Services
 
         public AutostartProvider()
         {
-            this.IsEnabled = true; // Default
+            // Default
+            this.IsEnabled = true;
 
             // Check our access
             try
@@ -54,6 +63,7 @@ namespace SyncTrayzor.Services
                 this.OpenRegistryKey(true).Dispose();
                 this._canWrite = true;
                 this._canRead = true;
+                logger.Info("Have read/write access to the registry");
                 return;
             }
             catch (SecurityException) { }
@@ -62,13 +72,26 @@ namespace SyncTrayzor.Services
             {
                 this.OpenRegistryKey(false).Dispose();
                 this._canRead = true;
+                logger.Info("Have read-only access to the registry");
+                return;
             }
             catch (SecurityException) { }
+
+            logger.Info("Have no access to the registry");
         }
 
         private RegistryKey OpenRegistryKey(bool writable)
         {
             return Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable);
+        }
+
+        public void UpdatePathToSelf()
+        {
+            if (!this.CanWrite)
+                throw new InvalidOperationException("Don't have permission to write to the registry");
+
+            var config = this.GetCurrentSetup();
+            this.SetAutoStart(config);
         }
 
         public AutostartConfiguration GetCurrentSetup()
@@ -90,13 +113,17 @@ namespace SyncTrayzor.Services
                 }
             }
 
-            return new AutostartConfiguration() { AutoStart = autoStart, StartMinimized = startMinimized };
+            var config = new AutostartConfiguration() { AutoStart = autoStart, StartMinimized = startMinimized };
+            logger.Info("GetCurrentSetup determined that the current configuration is: {0}", config);
+            return config;
         }
 
         public void SetAutoStart(AutostartConfiguration config)
         {
             if (!this.CanWrite)
                 throw new InvalidOperationException("Don't have permission to write to the registry");
+
+            logger.Info("Setting AutoStart to {0}", config);
 
             using (var registryKey = this.OpenRegistryKey(true))
             {
@@ -105,10 +132,12 @@ namespace SyncTrayzor.Services
                 if (config.AutoStart)
                 {
                     var path = String.Format("\"{0}\"{1}", Assembly.GetExecutingAssembly().Location, config.StartMinimized ? " -minimized" : "");
+                    logger.Debug("Autostart path: {0}", path);
                     registryKey.SetValue(applicationName, path);
                 }
                 else if (keyExists)
                 {
+                    logger.Debug("Removing pre-existing registry key");
                     registryKey.DeleteValue(applicationName);
                 }
             }

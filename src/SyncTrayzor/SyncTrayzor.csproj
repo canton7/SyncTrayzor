@@ -129,6 +129,7 @@
     <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
+    <Compile Include="Pages\ThirdPartyComponentsViewModel.cs" />
     <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Configuration.cs" />
@@ -180,8 +181,10 @@
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Utils\CefSharpHelper.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
+    <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
+    <Compile Include="Xaml\DetachingBehaviour.cs" />
     <Compile Include="Xaml\ScrollViewerUtilities.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
     <Compile Include="Xaml\ActivateBehaviour.cs" />
@@ -241,6 +244,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ThirdPartyComponentsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\UnhandledExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -249,7 +256,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xaml\Styles.xaml">
+    <Page Include="Xaml\Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -292,6 +299,33 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\default.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\Syncthing.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\Stylet.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\CefSharp.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\CEF.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\NLog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\Refit.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\NotifyIcon.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\Json.NET.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\Fody.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

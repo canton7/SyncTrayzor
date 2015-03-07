@@ -11,7 +11,7 @@
             
             <s:ApplicationLoader.MergedDictionaries>
                 <ResourceDictionary Source="NotifyIcon/TaskbarIconResources.xaml"/>
-                <ResourceDictionary Source="Xaml/Styles.xaml"/>
+                <ResourceDictionary Source="Xaml/Resources.xaml"/>
             </s:ApplicationLoader.MergedDictionaries>
         </s:ApplicationLoader>
     </Application.Resources>

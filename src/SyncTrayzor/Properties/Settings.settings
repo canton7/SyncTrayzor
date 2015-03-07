@@ -17,5 +17,8 @@
     <Setting Name="IssuesUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor/issues</Value>
     </Setting>
+    <Setting Name="PortableMode" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

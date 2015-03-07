@@ -60,6 +60,10 @@ namespace SyncTrayzor.SyncThing
             {
                 var events = await this.apiClient.FetchEventsAsync(this.lastEventId);
 
+                // We can be aborted in the time it takes to fetch the events
+                if (!this.Running)
+                    return;
+
                 foreach (var evt in events)
                 {
                     this.lastEventId = Math.Max(this.lastEventId, evt.Id);

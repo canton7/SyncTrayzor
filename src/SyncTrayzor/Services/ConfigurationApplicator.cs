@@ -40,9 +40,6 @@ namespace SyncTrayzor.Services
             this.githubApiClient = githubApiClient;
             this.updateChecker = updateChecker;
 
-            // Do this before signing up for DataLoaded, so any changes we make don't trigger us again
-            this.UpdateConfigOnInit();
-
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
             this.updateChecker.VersionIgnored += (o, e) =>
             {
@@ -52,53 +49,27 @@ namespace SyncTrayzor.Services
             };
         }
 
-        private void UpdateConfigOnInit()
-        {
-            this.UpdateAutostart();
-        }
-
-        private void UpdateAutostart()
-        {
-            // Don't have permission? Meh
-            if (!this.autostartProvider.CanRead)
-                return;
-
-            // If the user's manually updated the registry themselves, update our config to match
-            var config = this.configurationProvider.Load();
-            var autostartConfig = this.autostartProvider.GetCurrentSetup();
-            // We only know enough to change StartMinimized if autostartConfig.AutoStart is strue
-            if (config.StartOnLogon != autostartConfig.AutoStart || (autostartConfig.AutoStart && config.StartMinimized != autostartConfig.StartMinimized))
-            {
-                if (autostartConfig.AutoStart)
-                    config.StartMinimized = autostartConfig.StartMinimized;
-                config.StartOnLogon = autostartConfig.AutoStart;
-                this.configurationProvider.Save(config);
-            }
-        }
-
         public void ApplyConfiguration()
         {
             this.githubApiClient.SetConnectionDetails(Settings.Default.GithubApiUrl);
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
+            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncThingPath;
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
         private void ApplyNewConfiguration(Configuration configuration)
         {
+            this.notifyIconManager.MinimizeToTray = configuration.MinimizeToTray;
             this.notifyIconManager.CloseToTray = configuration.CloseToTray;
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
 
             this.syncThingManager.Address = new Uri(configuration.SyncthingAddress);
-            this.syncThingManager.ExecutablePath = configuration.SyncthingPath;
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
-
-            // Debug builds never set autostart
-            // Don't have permission? Meh
-            if (this.autostartProvider.CanWrite)
-                this.autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = configuration.StartOnLogon, StartMinimized = configuration.StartMinimized });
+            this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
+            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingCustomHomePath : null;
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
@@ -108,13 +79,14 @@ namespace SyncTrayzor.Services
         private void LoadFolders()
         {
             var configuration = this.configurationProvider.Load();
+            var folderIds = this.syncThingManager.FetchAllFolders().Select(x => x.FolderId).ToList();
 
-            foreach (var newKey in this.syncThingManager.Folders.Keys.Except(configuration.Folders.Select(x => x.ID)))
+            foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
             {
                 configuration.Folders.Add(new FolderConfiguration(newKey, true));
             }
 
-            configuration.Folders = configuration.Folders.Where(x => this.syncThingManager.Folders.Keys.Contains(x.ID)).ToList();
+            configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
 
             this.configurationProvider.Save(configuration);
         }

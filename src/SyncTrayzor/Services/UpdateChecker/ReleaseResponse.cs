@@ -9,9 +9,6 @@ namespace SyncTrayzor.Services.UpdateChecker
 {
     public class ReleaseAssetResponse
     {
-        [JsonProperty("browser_download_url")]
-        public string DownloadUrl { get; set; }
-
         [JsonProperty("content_type")]
         public string ContentType { get; set; }
     }
@@ -23,6 +20,9 @@ namespace SyncTrayzor.Services.UpdateChecker
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("html_url")]
+        public string Url { get; set; }
 
         [JsonProperty("draft")]
         public bool IsDraft { get; set; }

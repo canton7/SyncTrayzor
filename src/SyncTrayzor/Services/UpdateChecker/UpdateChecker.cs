@@ -58,7 +58,7 @@ namespace SyncTrayzor.Services.UpdateChecker
 
         private readonly IWindowManager windowManager;
         private readonly IGithubApiClient apiClient;
-        private readonly Func<NewVersionAlertViewModel> newersionAlertViewModelFactory;
+        private readonly Func<NewVersionAlertViewModel> newVersionAlertViewModelFactory;
 
         public Version LatestIgnoredVersion { get; set; }
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
@@ -70,7 +70,7 @@ namespace SyncTrayzor.Services.UpdateChecker
         {
             this.windowManager = windowManager;
             this.apiClient = apiClient;
-            this.newersionAlertViewModelFactory = newVersionAlertViewModelFactory;
+            this.newVersionAlertViewModelFactory = newVersionAlertViewModelFactory;
         }
 
         public async Task<VersionCheckResults> FetchUpdatesAsync()
@@ -110,7 +110,7 @@ namespace SyncTrayzor.Services.UpdateChecker
 
             if (results.LatestVersionIsNewer)
             {
-                var vm = this.newersionAlertViewModelFactory();
+                var vm = this.newVersionAlertViewModelFactory();
                 vm.Changelog = results.LatestVersionChangelog;
                 vm.Version = results.LatestVersion;
                 var result = this.windowManager.ShowDialog(vm);
@@ -119,10 +119,14 @@ namespace SyncTrayzor.Services.UpdateChecker
                     logger.Info("Proceeding to download URL {0}", results.LatestVersionDownloadUrl);
                     Process.Start(results.LatestVersionDownloadUrl);
                 }
-                else
+                else if (vm.DontRemindMe)
                 {
                     logger.Info("Ignoring version {0}", results.LatestVersion);
                     this.OnVersionIgnored(results.LatestVersion);
+                }
+                else
+                {
+                    logger.Info("Not installing version {0}, but will remind on next start", results.LatestVersion);
                 }
             }
         }
