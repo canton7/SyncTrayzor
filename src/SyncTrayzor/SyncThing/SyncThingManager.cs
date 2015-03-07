@@ -4,6 +4,7 @@ using SyncTrayzor.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -235,7 +236,9 @@ namespace SyncTrayzor.SyncThing
             var folderConstructionTasks = configTask.Result.Folders.Select(async folder =>
             {
                 var ignores = await this.apiClient.FetchIgnoresAsync(folder.ID);
-                var path = folder.Path.Replace("~", tilde);
+                var path = folder.Path;
+                if (path.StartsWith("~"))
+                    path = Path.Combine(tilde, path.Substring(1));
                 return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
             });
 
