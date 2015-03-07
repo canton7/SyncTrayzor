@@ -76,6 +76,14 @@ If you uncheck "Use custom home directory or Syncthing" in the settings, then Sy
 The portable version won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
 
 
+Other FAQs
+----------
+ 
+### No x86 release?
+
+I haven't heard of anyone using x86 in a very long time now. If you're the exception, let me know (open an issue) and I'll start pushing out x86 builds.
+
+
 Building from Source
 --------------------
 
