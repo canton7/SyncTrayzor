@@ -89,6 +89,7 @@ namespace SyncTrayzor.Pages
         {
             var vm = this.thirdPartyComponentsViewModelFactory();
             this.windowManager.ShowDialog(vm);
+            this.RequestClose(true);
         }
 
         public void Close()

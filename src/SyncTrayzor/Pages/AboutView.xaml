@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
-        Height="250" Width="250"
-        WindowStyle="None" SizeToContent="Width"
+        Height="300" Width="250"
+        WindowStyle="None" SizeToContent="WidthAndHeight"
         ShowInTaskbar="False">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
@@ -13,9 +13,9 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
             <TextBlock>Version:</TextBlock>
             <TextBlock Text="{Binding Version}" Margin="5,0,0,0"/>
-            <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"> (portable)</TextBlock>
+            <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" Margin="5,0,0,0">(portable)</TextBlock>
         </StackPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
             <TextBlock>Syncthing Version:</TextBlock>
             <TextBlock Text="{Binding SyncthingVersion}" Margin="5,0,0,0"/>
         </StackPanel>
@@ -29,16 +29,16 @@
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Top">Created by Antony Male.</TextBlock>
-        <TextBlock DockPanel.Dock="Top">Released under the MIT license.</TextBlock>
+        <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0">Created by Antony Male.</TextBlock>
+        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5">Released under the MIT license.</TextBlock>
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>
             </Hyperlink>
         </TextBlock>
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
-            <Hyperlink Command="{s:Action ShowLicenses}">Show Licenses</Hyperlink>
+            <Hyperlink Command="{s:Action ShowLicenses}">Show Open Source Licenses</Hyperlink>
         </TextBlock>
-        <Button Command="{s:Action Close}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom">Close</Button>
+        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,5,0,0">Close</Button>
     </DockPanel>
 </Window>
