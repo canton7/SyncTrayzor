@@ -41,6 +41,15 @@ Grab the latest standalone .zip from the [releases](https://github.com/canton7/S
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
 
+What will SyncTrayzor do to Syncthing?
+--------------------------------------
+
+It's worth noting that SyncTrayzor will override the 'GUI Listen Address' and 'API Key' in Syncthing's configuration.
+This is because it needs to fully control these values, in order to ensure that it can communicate with Syncthing.
+
+However, you can set these values in File -> Settings, if you want to customise them.
+
+
 What will SyncTrayzor do to my system?
 --------------------------------------
 
