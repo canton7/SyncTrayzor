@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.0.5
+------
+
+ - Replace syncthing.exe in APPDATA if it goes missing for some reason
+ - Add option to run Syncthing with a custom home directory
+ - Add portable build
+ - Add 'Minimize to Tray' option
+ - Improve error messages and logging
+ - Close Synchthing gracefully on application exit
+
 v1.0.4
 ------
 
