@@ -33,11 +33,26 @@
         
         <GroupBox DockPanel.Dock="Top" Header="Syncthing">
             <DockPanel>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start Syncthing on application start</CheckBox>
-                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}">Address:</Label>
-                <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" Text="{Binding SyncThingAddress}"/>
-                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}">API Key:</Label>
-                <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey}"/>
+                <DockPanel.Resources>
+                    <ToolTip x:Key="AddressOverride">
+                        SyncTrayzor overrides the "GUI Listen Address" specified in Syncthing's configuration. However,
+                        you can set it to whatever value you like here.
+                    </ToolTip>
+                    <ToolTip x:Key="APIKeyOverride">
+                        SyncTrayzor overrides the API key specified in Syncthing's configuration. However,
+                        you can set it to whatever value you like here.
+                    </ToolTip>
+                </DockPanel.Resources>
+                
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start Syncthing when SyncTrayzor starts</CheckBox>
+
+                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" ToolTip="{StaticResource AddressOverride}">GUI Listen Address:</Label>
+                <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress}"/>
+
+                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}" ToolTip="{StaticResource APIKeyOverride}">API Key:</Label>
+                <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey}"  ToolTip="{StaticResource APIKeyOverride}"/>
+                
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,5,0,0">You must restart Syncthing for changes in these settings to take effect</TextBlock>
             </DockPanel>
         </GroupBox>
         
