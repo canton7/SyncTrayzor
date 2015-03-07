@@ -124,7 +124,8 @@ namespace SyncTrayzor.Services
             else if (this.SyncThingPath != this.SyncThingBackupPath && File.Exists(this.SyncThingBackupPath) &&
                 File.GetLastWriteTimeUtc(this.SyncThingPath) < File.GetLastWriteTimeUtc(this.SyncThingBackupPath))
             {
-                logger.Info("Syncthing at {0} is older than at {1}, so overwriting from backup", this.SyncThingPath, this.SyncThingBackupPath);
+                logger.Info("Syncthing at {0} is older ({1}) than at {2} ({3}, so overwriting from backup",
+                    this.SyncThingPath, File.GetLastWriteTimeUtc(this.SyncThingPath), this.SyncThingBackupPath, File.GetLastWriteTimeUtc(this.SyncThingBackupPath));
                 File.Copy(this.SyncThingBackupPath, this.SyncThingPath, true);
             }
 
@@ -144,7 +145,6 @@ namespace SyncTrayzor.Services
                 if (this.currentConfig == null)
                     this.currentConfig = this.LoadFromDisk();
 
-                logger.Info("Loaded configuration: {0}", this.currentConfig);
                 return new Configuration(this.currentConfig);
             }
         }
@@ -167,7 +167,9 @@ namespace SyncTrayzor.Services
         {
             using (var stream = File.OpenRead(this.ConfigurationFilePath))
             {
-                return (Configuration)this.serializer.Deserialize(stream);
+                var config = (Configuration)this.serializer.Deserialize(stream);
+                logger.Info("Loaded configuration: {0}", config);
+                return config;
             }
         }
 
