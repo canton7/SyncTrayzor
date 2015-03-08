@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.6
+------
+
+ - Include high-quality icon (thanks to d4k0)
+ - Improve settings dialog around API key and GUI Host Address
+ - Add 32-bit build
+
 v1.0.5
 ------
 

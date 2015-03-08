@@ -264,7 +264,7 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
     <Resource Include="Icons\stopped.ico" />
-    <Resource Include="Icons\syncing_1.ico" />
+    <Resource Include="Icons\default_tray.ico" />
     <Resource Include="Icons\syncing_2.ico" />
     <Resource Include="Icons\syncing_3.ico" />
     <Resource Include="Icons\syncing_4.ico" />

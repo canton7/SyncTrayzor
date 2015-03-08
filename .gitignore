@@ -34,8 +34,9 @@ packages/
 *.nupkg
 
 #Installer
-installer/SyncTrayzor*.exe
-installer/syncthing.exe
+SyncTrayzorSetup*.exe
+SyncTrayzorPortable*
+syncthing.exe
 
 *.gjq
 *.tmp
