@@ -1,7 +1,8 @@
 #define AppExeName "SyncTrayzor.exe"
-#define AppRoot ".."
+#define AppRoot "..\.."
+#define Arch "x86"
 #define AppSrc AppRoot + "\src\SyncTrayzor"
-#define AppBin AppRoot +"\bin\x64\Release"
+#define AppBin AppRoot +"\bin\" + Arch + "\Release"
 #define AppExe AppBin + "\SyncTrayzor.exe"
 #define AppName GetStringFileInfo(AppExe, "ProductName")
 #define AppVersion GetFileVersion(AppExe)
@@ -12,8 +13,8 @@
 
 
 [Setup]
-AppId={{c004dcef-b848-46a5-9c30-4dbf736396fa}
-AppName={#AppName}
+AppId={{c9bab27b-d754-4b62-ad8c-3509e1cac15c}
+AppName={#AppName} ({#Arch})
 AppVersion={#AppVersion}
 ;AppVerName={#AppName} {#AppVersion}
 AppPublisher={#AppPublisher}
@@ -25,13 +26,11 @@ DefaultGroupName={#AppName}
 AllowNoIcons=yes
 LicenseFile={#AppRoot}\LICENSE.txt
 OutputDir="."
-OutputBaseFilename={#AppName}Setup
+OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
 Compression=lzma2/max
 SolidCompression=yes
 PrivilegesRequired=admin
-ArchitecturesInstallIn64BitMode=x64
-ArchitecturesAllowed=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -55,7 +54,7 @@ Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "syncthing.exe"; DestDir: "{app}"
-Source: "dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
+Source: "..\dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
