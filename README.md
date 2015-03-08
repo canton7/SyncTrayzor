@@ -41,6 +41,22 @@ Grab the latest standalone .zip from the [releases](https://github.com/canton7/S
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
 
+Known Issues
+------------
+
+There are a couple of knows issues with SyncTrayzor. Fixes are on the way, but until then here's a head-up:
+
+ - SyncTrayzor can't currently handle the HTTP Basic Authentication which Syncthing uses to password-protect the GUI.
+   The symptoms are the UI not loading, or showing 'Not Authorized' (if it's not loading, go to Syncthing -> Refresh Browser and 'Not Authorized' should appear).
+   The short-term fix is to either remove the password-protection on the GUI, or use an external browser (go to Syncthing -> Open External Browser).
+   See [Issue #13](https://github.com/canton7/SyncTrayzor/issues/13).
+
+ - SyncTrayzor executes Syncthing from AppData, which some anti-malware tools won't allow. The symtom is an exception with the message
+   "System.ComponentModel.Win32Exception (0x80004005): This program is blocked by group policy. For more information, contact your system administrator" when trying to
+   start Syncthing. Better error reporting is on its way, but please whitelist `C:\Users\<You>\AppData\Roaming\SyncTrayzor\syncthing.exe` (if you used the installer,
+   otherwise whereever your portable installation is) in your anti-malware program's settings. See [Issue #12](https://github.com/canton7/SyncTrayzor/issues/12).
+
+
 What will SyncTrayzor do to Syncthing?
 --------------------------------------
 
