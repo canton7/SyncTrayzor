@@ -95,6 +95,13 @@ namespace SyncTrayzor.Pages
                 Process.Start(request.Url);
                 return true;
             }
+
+            // See https://github.com/canton7/SyncTrayzor/issues/13
+            // and https://github.com/cefsharp/CefSharp/issues/534#issuecomment-60694502
+            var headers = request.Headers;
+            headers["X-API-Key"] += this.syncThingManager.ApiKey;
+            request.Headers = headers;
+
             return false;
         }
 
