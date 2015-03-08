@@ -2,10 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="https://github.com/canton7/Stylet"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
-    
-    <BitmapImage x:Key="TaskbarIdleIcon" UriSource="pack://application:,,,/Icons/default.ico"/>
-    <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/stopped.ico"/>
-    <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="pack://application:,,,/Icons/syncing_1.ico"/>
+
+    <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
+    <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
     <BitmapImage x:Key="TaskbarSyncing2Icon" UriSource="pack://application:,,,/Icons/syncing_2.ico"/>
     <BitmapImage x:Key="TaskbarSyncing3Icon" UriSource="pack://application:,,,/Icons/syncing_3.ico"/>
     <BitmapImage x:Key="TaskbarSyncing4Icon" UriSource="pack://application:,,,/Icons/syncing_4.ico"/>
@@ -44,7 +43,7 @@
         </tb:TaskbarIcon.Resources>
         <tb:TaskbarIcon.Style>
             <Style TargetType="tb:TaskbarIcon">
-                <Setter Property="IconSource" Value="{StaticResource TaskbarIdleIcon}"/>
+                <Setter Property="IconSource" Value="{StaticResource TaskbarSyncing1Icon}"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding SyncThingStarted}" Value="False">
                         <Setter Property="IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
