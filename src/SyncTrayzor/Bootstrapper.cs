@@ -22,6 +22,8 @@ namespace SyncTrayzor
 {
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
+        private bool exiting;
+
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
@@ -97,9 +99,16 @@ namespace SyncTrayzor
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
-            var windowManager = this.Container.Get<IWindowManager>();
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("An unhandled exception occurred", e.Exception);
+            LogManager.Flush();
+
+            // If we're shutting down, we're not going to be able to display an error dialog....
+            // We've logged it. Nothing else we can do.
+            if (this.exiting)
+                return;
+
+            var windowManager = this.Container.Get<IWindowManager>();
 
             var configurationException = e.Exception as ConfigurationException;
             if (configurationException != null)
@@ -117,6 +126,8 @@ namespace SyncTrayzor
 
         protected override void OnExit(ExitEventArgs e)
         {
+            this.exiting = true;
+
             // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
             this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
         }
