@@ -21,7 +21,7 @@
             </Style>
         </DockPanel.Resources>
 
-        <GroupBox DockPanel.Dock="Top" Header="SyncTrayzor" Height="126">
+        <GroupBox DockPanel.Dock="Top" Header="SyncTrayzor">
             <DockPanel>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
@@ -110,7 +110,7 @@
             </GroupBox>
         </Expander>
 
-        <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" Height="37" HorizontalAlignment="Right" Width="204" VerticalAlignment="Bottom">
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button IsCancel="True" Command="{s:Action Cancel}">Cancel</Button>
             <Button IsDefault="True" Command="{s:Action Save}">Save</Button>
         </StackPanel>
