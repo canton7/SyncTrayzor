@@ -29,7 +29,7 @@ namespace SyncTrayzor.SyncThing
         Uri Address { get; set; }
         string SyncthingTraceFacilities { get; set; }
         string SyncthingCustomHomeDir { get; set; }
-        DateTime? StartedAt { get; }
+        DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
 
         void Start();
@@ -54,7 +54,13 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly ISyncThingConnectionsWatcher connectionsWatcher;
 
-        public DateTime? StartedAt { get; private set; }
+        private DateTime _lastConnectivityEventTime;
+        private readonly object lastConnectivityEventTimeLock = new object();
+        public DateTime LastConnectivityEventTime
+        {
+            get { lock (this.lastConnectivityEventTimeLock) { return this._lastConnectivityEventTime; } }
+            private set { lock (this.lastConnectivityEventTimeLock) { this._lastConnectivityEventTime = value; } }
+        }
 
         private readonly object stateLock = new object();
         public SyncThingState State { get; private set; }
@@ -103,6 +109,7 @@ namespace SyncTrayzor.SyncThing
             ISyncThingConnectionsWatcher connectionsWatcher)
         {
             this.folders = new ConcurrentDictionary<string, Folder>();
+            this.LastConnectivityEventTime = DateTime.UtcNow;
 
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
@@ -117,6 +124,8 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
             this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
             this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
+            this.eventWatcher.DeviceConnected += (o, e) => this.DeviceConnectedOrDisconnected();
+            this.eventWatcher.DeviceDisconnected += (o, e) => this.DeviceConnectedOrDisconnected();
 
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
         }
@@ -223,7 +232,7 @@ namespace SyncTrayzor.SyncThing
 
         private async Task StartupCompleteAsync()
         {
-            this.StartedAt = DateTime.UtcNow;
+            this.LastConnectivityEventTime = DateTime.UtcNow;
             this.SetState(SyncThingState.Running);
 
             var configTask = this.apiClient.FetchConfigAsync();
@@ -267,6 +276,11 @@ namespace SyncTrayzor.SyncThing
                 return; // Don't know about it
 
             folder.RemoveSyncingPath(item);
+        }
+
+        private void DeviceConnectedOrDisconnected()
+        {
+            this.LastConnectivityEventTime = DateTime.UtcNow;
         }
 
         private void OnMessageLogged(string logMessage)

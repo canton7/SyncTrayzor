@@ -1,4 +1,4 @@
-﻿<Window x:Class="SyncTrayzor.Pages.SettingsView"
+<Window x:Class="SyncTrayzor.Pages.SettingsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
@@ -7,7 +7,7 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Height="600" Width="400"
+        Width="400"
         Title="Settings"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
@@ -18,9 +18,9 @@
             <Style TargetType="GroupBox">
                 <Setter Property="Padding" Value="5"/>
                 <Setter Property="Margin" Value="0,5,0,5"/>
-            </Style>    
+            </Style>
         </DockPanel.Resources>
-        
+
         <GroupBox DockPanel.Dock="Top" Header="SyncTrayzor">
             <DockPanel>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
@@ -28,9 +28,10 @@
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}">Show Tray Icon only on close</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}">Show 'Synchronized' balloon messages</CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}">Alert if a new version of SyncTrayzor is available</CheckBox>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ObfuscateDeviceIDs}">Obfuscate device IDs in the log view</CheckBox>
             </DockPanel>
         </GroupBox>
-        
+
         <GroupBox DockPanel.Dock="Top" Header="Syncthing">
             <DockPanel>
                 <DockPanel.Resources>
@@ -43,7 +44,7 @@
                         you can set it to whatever value you like here.
                     </ToolTip>
                 </DockPanel.Resources>
-                
+
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start Syncthing when SyncTrayzor starts</CheckBox>
 
                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" ToolTip="{StaticResource AddressOverride}">GUI Listen Address:</Label>
@@ -51,11 +52,11 @@
 
                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}" ToolTip="{StaticResource APIKeyOverride}">API Key:</Label>
                 <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey}"  ToolTip="{StaticResource APIKeyOverride}"/>
-                
+
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,5,0,0">You must restart Syncthing for changes in these settings to take effect</TextBlock>
             </DockPanel>
         </GroupBox>
-        
+
         <GroupBox DockPanel.Dock="Top" Header="Start on Login">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Visibility="{Binding CanReadAndWriteAutostart, Converter={StaticResource InverseVisibilityConverter}}"
@@ -64,7 +65,7 @@
                 </TextBlock>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartOnLogon}"
                           IsEnabled="{Binding CanWriteAutostart}" Visibility="{Binding CanReadOrWriteAutostart, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                          Automatically start on login
+                    Automatically start on login
                 </CheckBox>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartMinimized}"
                           IsEnabled="{Binding StartMinimizedEnabled}" Visibility="{Binding CanReadOrWriteAutostart, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
@@ -90,7 +91,7 @@
                 </ItemsControl>
             </DockPanel>
         </GroupBox>
-        
+
         <Expander DockPanel.Dock="Top" Header="Advanced">
             <GroupBox>
                 <DockPanel>
@@ -108,7 +109,7 @@
                 </DockPanel>
             </GroupBox>
         </Expander>
-        
+
         <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button IsCancel="True" Command="{s:Action Cancel}">Cancel</Button>
             <Button IsDefault="True" Command="{s:Action Save}">Save</Button>

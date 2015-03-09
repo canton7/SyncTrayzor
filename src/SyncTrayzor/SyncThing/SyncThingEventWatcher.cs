@@ -28,6 +28,8 @@ namespace SyncTrayzor.SyncThing
         event EventHandler StartupComplete;
         event EventHandler<ItemStateChangedEventArgs> ItemStarted;
         event EventHandler<ItemStateChangedEventArgs> ItemFinished;
+        event EventHandler DeviceConnected;
+        event EventHandler DeviceDisconnected;
     }
 
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
@@ -41,6 +43,8 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler StartupComplete;
         public event EventHandler<ItemStateChangedEventArgs> ItemStarted;
         public event EventHandler<ItemStateChangedEventArgs> ItemFinished;
+        public event EventHandler DeviceConnected;
+        public event EventHandler DeviceDisconnected;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
             : base(TimeSpan.Zero)
@@ -109,6 +113,20 @@ namespace SyncTrayzor.SyncThing
                 handler(this, new ItemStateChangedEventArgs(folder, item));
         }
 
+        private void OnDeviceConnected()
+        {
+            var handler = this.DeviceConnected;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void OnDeviceDisconnected()
+        {
+            var handler = this.DeviceDisconnected;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         #region IEventVisitor
 
         public void Accept(GenericEvent evt)
@@ -143,6 +161,16 @@ namespace SyncTrayzor.SyncThing
         public void Accept(StartupCompleteEvent evt)
         {
             this.OnStartupComplete();
+        }
+
+        public void Accept(DeviceConnectedEvent evt)
+        {
+            this.OnDeviceConnected();
+        }
+
+        public void Accept(DeviceDisconnectedEvent evt)
+        {
+            this.OnDeviceDisconnected();
         }
 
         #endregion

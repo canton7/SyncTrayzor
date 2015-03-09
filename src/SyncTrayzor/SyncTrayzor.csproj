@@ -150,6 +150,8 @@
     <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\Api\Config.cs" />
     <Compile Include="SyncThing\Api\Connections.cs" />
+    <Compile Include="SyncThing\Api\DeviceConnectedEvent.cs" />
+    <Compile Include="SyncThing\Api\DeviceDisconnectedEvent.cs" />
     <Compile Include="SyncThing\Api\Event.cs" />
     <Compile Include="SyncThing\Api\EventConverter.cs" />
     <Compile Include="SyncThing\Api\EventType.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Utils\CefSharpHelper.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
+    <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
