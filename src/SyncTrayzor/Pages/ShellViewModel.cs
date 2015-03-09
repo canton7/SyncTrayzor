@@ -58,7 +58,7 @@ namespace SyncTrayzor.Pages
         }
         public void Start()
         {
-            this.syncThingManager.Start();
+            this.syncThingManager.StartWithErrorDialog(this.windowManager);
         }
 
         public bool CanStop
