@@ -17,7 +17,9 @@ namespace SyncTrayzor.SyncThing.Api
             { EventType.ItemStarted, typeof(ItemStartedEvent) },
             { EventType.ItemFinished, typeof(ItemFinishedEvent) },
             { EventType.StateChanged, typeof(StateChangedEvent) },
-            { EventType.StartupComplete, typeof(StartupCompleteEvent) }
+            { EventType.StartupComplete, typeof(StartupCompleteEvent) },
+            { EventType.DeviceConnected, typeof(DeviceConnectedEvent) },
+            { EventType.DeviceDisconnected, typeof(DeviceDisconnectedEvent) },
         };
 
         protected override Event Create(Type objectType, JObject jObject)

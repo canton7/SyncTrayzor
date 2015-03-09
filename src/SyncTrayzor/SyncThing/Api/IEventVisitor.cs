@@ -15,5 +15,7 @@ namespace SyncTrayzor.SyncThing.Api
         void Accept(ItemStartedEvent evt);
         void Accept(ItemFinishedEvent evt);
         void Accept(StartupCompleteEvent evt);
+        void Accept(DeviceConnectedEvent evt);
+        void Accept(DeviceDisconnectedEvent evt);
     }
 }
