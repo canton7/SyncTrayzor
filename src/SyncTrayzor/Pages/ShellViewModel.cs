@@ -22,7 +22,6 @@ namespace SyncTrayzor.Pages
         private readonly Func<AboutViewModel> aboutViewModelFactory;
 
         public bool WindowActivated { get; set; }
-        public string ExecutablePath { get; private set; }
         public ConsoleViewModel Console { get; private set; }
         public ViewerViewModel Viewer { get; private set; }
 
