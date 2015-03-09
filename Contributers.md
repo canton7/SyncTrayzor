@@ -5,3 +5,4 @@ The following individuals have contributed in same way towards making SyncTrayzo
 
  - [Joel Kåberg](https://github.com/jkaberg): SyncTrayzor's first user! Caught bugs I would never have spotted.
  - [d4k0](https://github.com/d4k0): Fixed some icon problems.
+ - [Adrian Rudnik](https://github.com/kreischweide): SyncTrayzor's first PR! Added device ID obfuscation
