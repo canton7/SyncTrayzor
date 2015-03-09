@@ -38,7 +38,7 @@ namespace SyncTrayzor.Services
 
     public class ConfigurationProvider : IConfigurationProvider
     {
-        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
         private const int apiKeyLength = 40;
 
         private readonly Logger logger = LogManager.GetCurrentClassLogger();

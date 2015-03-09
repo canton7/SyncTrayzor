@@ -1,3 +1,4 @@
+using FluentValidation;
 using Stylet;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
@@ -13,6 +14,24 @@ namespace SyncTrayzor.Pages
     {
         public string Folder { get; set; }
         public bool IsSelected { get; set; }
+    }
+
+    public class SettingsViewModelValidator : AbstractValidator<SettingsViewModel>
+    {
+        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
+
+        public SettingsViewModelValidator()
+        {
+            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage("Should not be empty");
+            RuleFor(x => x.SyncThingAddress).Must(str =>
+            {
+                Uri uri;
+                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString() &&
+                    (uri.Scheme == "http" || uri.Scheme == "https");
+            }).WithMessage("Must be a valid URL");
+
+            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage("Should not be empty");
+        }
     }
 
     public class SettingsViewModel : Screen
@@ -53,7 +72,11 @@ namespace SyncTrayzor.Pages
         public bool SyncthingUseCustomHome { get; set; }
         public string TraceVariables { get; set; }
 
-        public SettingsViewModel(IConfigurationProvider configurationProvider, IAutostartProvider autostartProvider)
+        public SettingsViewModel(
+            IConfigurationProvider configurationProvider,
+            IAutostartProvider autostartProvider,
+            IModelValidator<SettingsViewModel> validator)
+            : base(validator)
         {
             this.configurationProvider = configurationProvider;
             this.autostartProvider = autostartProvider;
@@ -89,6 +112,16 @@ namespace SyncTrayzor.Pages
             this.TraceVariables = configuration.SyncthingTraceFacilities;
         }
 
+        protected override void OnValidationStateChanged(IEnumerable<string> changedProperties)
+        {
+            base.OnValidationStateChanged(changedProperties);
+            this.NotifyOfPropertyChange(() => this.CanSave);
+        }
+
+        public bool CanSave
+        {
+            get { return !this.HasErrors; }
+        }
         public void Save()
         {
             var configuration = this.configurationProvider.Load();

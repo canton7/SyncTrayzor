@@ -19,6 +19,8 @@
                 <Setter Property="Padding" Value="5"/>
                 <Setter Property="Margin" Value="0,5,0,5"/>
             </Style>
+
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource ControlValidationError}"/>
         </DockPanel.Resources>
 
         <GroupBox DockPanel.Dock="Top" Header="SyncTrayzor">
@@ -48,10 +50,10 @@
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}">Start Syncthing when SyncTrayzor starts</CheckBox>
 
                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" ToolTip="{StaticResource AddressOverride}">GUI Listen Address:</Label>
-                <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress}"/>
+                <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}" ToolTip="{StaticResource APIKeyOverride}">API Key:</Label>
-                <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey}"  ToolTip="{StaticResource APIKeyOverride}"/>
+                <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey, UpdateSourceTrigger=PropertyChanged}"  ToolTip="{StaticResource APIKeyOverride}"/>
 
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,5,0,0">You must restart Syncthing for changes in these settings to take effect</TextBlock>
             </DockPanel>
@@ -105,7 +107,7 @@
                         </TextBlock>
                     </CheckBox>
                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}">Syncthing Trace Variables:</Label>
-                    <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables}"/>
+                    <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
             </GroupBox>
         </Expander>
