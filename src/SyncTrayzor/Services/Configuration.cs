@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,6 +50,7 @@ namespace SyncTrayzor.Services
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
         public bool NotifyOfNewVersions { get; set; }
+        public bool ObfuscateDeviceIDs { get; set; }
 
         [XmlIgnore]
         public Version LatestNotifiedVersion { get; set; }
@@ -77,6 +78,7 @@ namespace SyncTrayzor.Services
             this.SyncthingUseCustomHome = isPortableMode;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
+            this.ObfuscateDeviceIDs = false;
             this.LatestNotifiedVersion = null;
         }
 
@@ -93,6 +95,7 @@ namespace SyncTrayzor.Services
             this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.NotifyOfNewVersions = other.NotifyOfNewVersions;
+            this.ObfuscateDeviceIDs = other.ObfuscateDeviceIDs;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
         }
 
@@ -100,10 +103,10 @@ namespace SyncTrayzor.Services
         {
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
                 "SyncthingAddress={4} StartSyncthingAutomatically={5} SyncthingApiKey={6} SyncthingTraceFacilities={7} " +
-                "SyncthingUseCustomHome={8} Folders=[{9}] NotifyOfNewVersions={10} LastNotifiedVersion={11}>",
+                "SyncthingUseCustomHome={8} Folders=[{9}] NotifyOfNewVersions={10} LastNotifiedVersion={11} ObfuscateDeviceIDs={12}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.SyncthingAddress,
                 this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities, this.SyncthingUseCustomHome,
-                String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion);
+                String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs);
         }
     }
 }
