@@ -16,6 +16,7 @@ namespace SyncTrayzor.Pages
         private const int maxLogMessages = 1500;
 
         private readonly ISyncThingManager syncThingManager;
+        private readonly IConfigurationProvider configurationProvider;
 
         public ObservableQueue<string> LogMessages { get; private set; }
 
@@ -24,10 +25,16 @@ namespace SyncTrayzor.Pages
             IConfigurationProvider configurationProvider
             )
         {
+            this.syncThingManager = syncThingManager;
+            this.configurationProvider = configurationProvider;
+            this.LogMessages = new ObservableQueue<string>();
+
             var configuration = configurationProvider.Load();
 
-            this.syncThingManager = syncThingManager;
-            this.LogMessages = new ObservableQueue<string>();
+            configurationProvider.ConfigurationChanged += (o, e) =>
+            {
+                configuration = configurationProvider.Load();
+            };
 
             this.syncThingManager.MessageLogged += (o, e) =>
             {
