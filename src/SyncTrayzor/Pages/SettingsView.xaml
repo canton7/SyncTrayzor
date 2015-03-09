@@ -7,7 +7,7 @@
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
-        Height="600" Width="400"
+        Width="400"
         Title="Settings"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
