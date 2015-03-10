@@ -4,6 +4,7 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+        xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="700" Width="1100"
         Title="SyncTrayzor"
         Icon="..\Icons\default_tray.ico">

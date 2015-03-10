@@ -8,12 +8,12 @@ using System.Windows.Data;
 
 namespace SyncTrayzor.Localization
 {
-    public class LocaliseConverter : DependencyObject, IValueConverter, IMultiValueConverter
+    public class LocalizeConverter : DependencyObject, IValueConverter, IMultiValueConverter
     {
         /// <summary>
         /// This singleton avoid the need to declare a resource before using the class. Instead use {x:Static ...}
         /// </summary>
-        public static readonly LocaliseConverter Singleton = new LocaliseConverter();
+        public static readonly LocalizeConverter Singleton = new LocalizeConverter();
 
         /// <summary>
         /// Can be set, in which case it is used as the key for the property given to Convert
@@ -25,7 +25,7 @@ namespace SyncTrayzor.Localization
         }
 
         public static readonly DependencyProperty KeyProperty =
-            DependencyProperty.Register("Key", typeof(string), typeof(LocaliseConverter), null);
+            DependencyProperty.Register("Key", typeof(string), typeof(LocalizeConverter), null);
 
         public IValueConverter Converter
         {
@@ -34,8 +34,19 @@ namespace SyncTrayzor.Localization
         }
 
         public static readonly DependencyProperty ConverterProperty =
-            DependencyProperty.Register("Converter", typeof(IValueConverter), typeof(LocaliseConverter), null);
+            DependencyProperty.Register("Converter", typeof(IValueConverter), typeof(LocalizeConverter), null);
 
+
+        public string StringFormat
+        {
+            get { return (string)GetValue(StringFormatProperty); }
+            set { SetValue(StringFormatProperty, value); }
+        }
+
+        public static readonly DependencyProperty StringFormatProperty =
+            DependencyProperty.Register("StringFormat", typeof(string), typeof(LocalizeConverter), new PropertyMetadata(null));
+
+        
         /// <summary>
         /// If Key is specified, Takes a resource key in Key, and binds to the argument. Else uses value as the key
         /// </summary>
@@ -53,6 +64,9 @@ namespace SyncTrayzor.Localization
                 result = Localizer.Translate((string)value);
             else
                 result = null;
+
+            if (this.StringFormat != null)
+                result = String.Format(this.StringFormat, result);
 
             return result;
         }

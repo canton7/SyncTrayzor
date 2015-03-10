@@ -50,56 +50,56 @@ namespace SyncTrayzor.Localization
                 return String.Format(this.StringFormat ?? "{0}", Localizer.Translate(this.Key));
             }
 
-            if (this.ValueBinding != null || this.ValueBindings != null)
-            {
-                var converter = new LocaliseConverter();
-                if (this.Key != null)
-                    converter.Key = this.Key;
-                else
-                    return null;
+            var converter = new LocalizeConverter();
+            converter.StringFormat = this.StringFormat;
 
-                if (this.ValueBinding != null)
-                {
-                    converter.Converter = this.ValueBinding.Converter;
-                    this.ValueBinding.Converter = converter;
-                    return this.ValueBinding.ProvideValue(serviceProvider);
-                }
-                else
-                {
-                    // TODO: Chain converters here somehow?
-                    this.ValueBindings.Converter = converter;
-                    return this.ValueBindings.ProvideValue(serviceProvider);
-                }
-            }
-
-            if (this.KeyBinding != null)
+            // Single binding case
+            if (this.KeyBinding != null && this.ValueBinding == null && this.ValueBindings == null)
             {
-                var converter = new LocaliseConverter();
+                // Don't set the key, so it'll assume the binding is the key
                 converter.Converter = this.KeyBinding.Converter;
                 this.KeyBinding.Converter = converter;
                 return this.KeyBinding.ProvideValue(serviceProvider);
             }
-
-            // We're returning a string, no binding
-
-            string result = null;
-
-            if (this.Key != null)
+            if (this.KeyBinding == null && this.ValueBinding != null && this.ValueBindings == null)
             {
-                result = Localizer.Translate(this.Key);
+                // Set the key, it'll interpret the binding as the value
+                converter.Key = this.Key;
+                converter.Converter = this.ValueBinding.Converter;
+                this.ValueBinding.Converter = converter;
+                return this.ValueBinding.ProvideValue(serviceProvider);
             }
-            else if (this.KeyBinding != null)
+            if (this.KeyBinding == null && this.ValueBinding == null && this.ValueBindings != null)
             {
-                var key = this.KeyBinding.ProvideValue(serviceProvider) as string;
-                if (key == null)
-                    return null;
-                result = Localizer.Translate(key);
+                converter.Key = this.Key;
+                // No converter allowed here
+                this.ValueBindings.Converter = converter;
+                return this.ValueBindings.ProvideValue(serviceProvider);
             }
 
-            if (this.StringFormat != null)
-                result = String.Format(this.StringFormat, result);
+            MultiBinding multiBinding;
 
-            return result;
+            // OK, multibinding cases
+            // If this.ValueBindings is set, we'll hijack that
+            // Otherwise, we'll create our own
+            if (this.ValueBindings != null)
+            {
+                // Not setting converter.Converter - no support yet
+                multiBinding = this.ValueBindings;
+            }
+            else // this.ValueBinding != null, according to preconditions
+            {
+                multiBinding = new MultiBinding();
+                multiBinding.Bindings.Add(this.ValueBinding);
+            }
+
+            multiBinding.Converter = converter;
+            if (this.Key != null) // Can't hit this case if ValueBinding != null
+                converter.Key = this.Key;
+            else
+                multiBinding.Bindings.Insert(0, this.KeyBinding);
+
+            return multiBinding.ProvideValue(serviceProvider);
         }
     }
 }
