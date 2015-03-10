@@ -106,7 +106,6 @@ namespace SyncTrayzor
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("An unhandled exception occurred", e.Exception);
-            LogManager.Flush();
 
             // If we're shutting down, we're not going to be able to display an error dialog....
             // We've logged it. Nothing else we can do.
@@ -135,7 +134,6 @@ namespace SyncTrayzor
                 // Don't re-throw. Nasty stuff happens if we throw an exception while trying to handle an unhandled exception
                 // For starters, the event log shows the wrong exception - this one, instead of the root cause
                 logger.Error("Unhandled exception while trying to display unhandled exception window", exception);
-                LogManager.Flush();
             }
         }
 
