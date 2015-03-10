@@ -109,7 +109,8 @@ namespace SyncTrayzor.Pages
 
         bool IRequestHandler.OnCertificateError(IWebBrowser browser, CefErrorCode errorCode, string requestUrl)
         {
-            return false;
+            // We expect cert errors from Syncthing
+            return true;
         }
 
         void IRequestHandler.OnPluginCrashed(IWebBrowser browser, string pluginPath)
