@@ -25,6 +25,9 @@ namespace SyncTrayzor.NotifyIcon
 
     public class NotifyIconManager : INotifyIconManager
     {
+        // Amount of time to squish 'synced' messages for after a connectivity event
+        private static readonly TimeSpan syncedDeadTime = TimeSpan.FromSeconds(10);
+
         private readonly IViewManager viewManager;
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
@@ -76,7 +79,7 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
                 if (this.ShowSynchronizedBalloon &&
-                    DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > TimeSpan.FromSeconds(5) &&
+                    DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
                     e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
                 {
                     Application.Current.Dispatcher.CheckAccess(); // Double-check
