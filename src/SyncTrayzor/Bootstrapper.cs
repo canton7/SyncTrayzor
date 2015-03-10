@@ -1,4 +1,5 @@
 ﻿using CefSharp;
+using FluentValidation;
 using NLog;
 using Stylet;
 using StyletIoC;
@@ -8,6 +9,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,6 +41,9 @@ namespace SyncTrayzor
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
             builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
+
+            builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
+            builder.Bind(typeof(IValidator<>)).ToAllImplementations();
         }
 
         protected override void Configure()

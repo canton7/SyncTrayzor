@@ -6,4 +6,27 @@
         <Setter Property="Margin" Value="10,0,0,0"/>
         <Setter Property="Padding" Value="30,0"/>
     </Style>
+
+    <Style x:Key="ControlValidationError" TargetType="{x:Type Control}">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,2,40,20" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="False">
+                        <TextBlock DockPanel.Dock="Bottom" HorizontalAlignment="Left" Width="{Binding ElementName=CustomAdorner, Path=ActualWidth}"
+Foreground="OrangeRed" TextTrimming="WordEllipsis"
+Text="{Binding ElementName=CustomAdorner,Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"/>
+                        <Border Background="OrangeRed" DockPanel.Dock="Right" Margin="5,0,0,0" VerticalAlignment="Top"
+Width="20" Height="20" CornerRadius="5">
+                            <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="center" FontWeight="Bold" Foreground="white" />
+                        </Border>
+                        <Border BorderBrush="red" BorderThickness="1">
+                            <AdornedElementPlaceholder Name="CustomAdorner" VerticalAlignment="Center"/>
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
