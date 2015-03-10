@@ -117,4 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutView_CreatedByAuthor" xml:space="preserve">
+    <value>Created by Antony Male.</value>
+  </data>
+  <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
+    <value>New version available:</value>
+  </data>
+  <data name="AboutView_ReleasedLicense" xml:space="preserve">
+    <value>Released under the MIT license.</value>
+  </data>
+  <data name="AboutView_ShowOtherLicenses" xml:space="preserve">
+    <value>Show Open Source Licenses</value>
+  </data>
+  <data name="AboutView_SyncthingVersion" xml:space="preserve">
+    <value>Syncthing Version:</value>
+  </data>
+  <data name="AboutView_Version" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Menu_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Menu_File_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Menu_File_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Menu_Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Menu_Help_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Menu_Syncthing" xml:space="preserve">
+    <value>Syncthing</value>
+  </data>
+  <data name="Menu_Syncthing_Kill" xml:space="preserve">
+    <value>Kill</value>
+  </data>
+  <data name="Menu_Syncthing_KillAll" xml:space="preserve">
+    <value>Kill all Syncthing processes</value>
+  </data>
+  <data name="Menu_Syncthing_OpenExternal" xml:space="preserve">
+    <value>Open in external browser</value>
+  </data>
+  <data name="Menu_Syncthing_Refresh" xml:space="preserve">
+    <value>Refresh browser</value>
+  </data>
+  <data name="Menu_Syncthing_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Menu_Syncthing_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
 </root>
