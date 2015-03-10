@@ -43,7 +43,7 @@ namespace SyncTrayzor
             builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
-            builder.Bind(typeof(IValidator<>)).ToAllImplementations();
+            builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
         }
 
         protected override void Configure()
