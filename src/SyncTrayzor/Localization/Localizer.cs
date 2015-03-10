@@ -1,4 +1,4 @@
-﻿using SyncTrayzor.Properties;
+﻿using SyncTrayzor.Properties.Strings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace SyncTrayzor.Localization
     {
         public static string Translate(string key, params object[] parameters)
         {
-            var format = Resources.ResourceManager.GetString(key, Properties.Resources.Culture);
+            var format = Resources.ResourceManager.GetString(key);
             
             if (format == null)
                 return "!" + key + (parameters.Length > 0 ? ":" + String.Join(",", parameters) : "") + "!";
