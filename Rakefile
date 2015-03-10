@@ -6,24 +6,64 @@ rescue LoadError
   exit 1
 end
 
-ISCC = '"C:\Program Files (x86)\Inno Setup 5\ISCC.exe"'
+ISCC = 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
+unless File.exist?(ISCC)
+  warn "Please install Inno Setup" 
+  exit 1
+end
 
-BIN_DIR_64 = 'bin/x64/Release'
-BIN_DIR_86 = 'bin/x86/Release'
+CONFIG = ENV['CONFIG'] || 'Release'
 
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
 
-INSTALLER_64 = File.join(INSTALLER_DIR, 'x64')
-INSTALLER_86 = File.join(INSTALLER_DIR, 'x86')
+class ArchDirConfig
+  attr_reader :arch
+  attr_reader :bin_dir
+  attr_reader :installer_dir
+  attr_reader :installer_output
+  attr_reader :installer_iss
+  attr_reader :portable_output_dir
 
-INSTALLER_64_OUTPUT = File.join(INSTALLER_64, 'SyncTrayzorSetup-x64.exe')
-INSTALLER_86_OUTPUT = File.join(INSTALLER_86, 'SyncTrayzorSetup-x86.exe')
+  def initialize(arch)
+    @arch = arch
+    @bin_dir = "bin/#{@arch}/#{CONFIG}"
+    @installer_dir = File.join(INSTALLER_DIR, @arch)
+    @installer_output = File.join(@installer_dir, "SyncTrayzorSetup-#{@arch}.exe")
+    @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
+    @portable_output_dir = File.absolute_path("SyncTrayzorPortable-#{@arch}")
+  end
+end
 
-PORTABLE_OUTPUT_DIR_64 = File.absolute_path('SyncTrayzorPortable-x64')
-PORTABLE_OUTPUT_DIR_86 = File.absolute_path('SyncTrayzorPortable-x86')
+ARCH_CONFIG = [ArchDirConfig.new('x64'), ArchDirConfig.new('x86')]
 
-CONFIG = ENV['CONFIG'] || 'Release'
+namespace :build do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Build the project (#{arch_config.arch})"
+    build arch_config.arch do |b|
+      b.sln = 'src/SyncTrayzor.sln'
+      b.target = [:Clean, :Build]
+      b.prop 'Configuration', CONFIG
+      b.prop 'Platform', arch_config.arch
+    end
+  end
+end
+
+desc 'Build both 64-bit and 32-bit binaries'
+task :build => ARCH_CONFIG.map{ |x| :"build:#{x.arch}" }
+
+namespace :installer do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Create the installer (#{arch_config.arch})"
+    task arch_config.arch do
+      rm arch_config.installer_output if File.exist?(arch_config.installer_output)
+      sh %Q{"#{ISCC}"}, arch_config.installer_iss
+    end
+  end
+end
+
+desc 'Build both 64-bit and 32-bit installers'
+task :installer => ARCH_CONFIG.map{ |x| :"installer:#{x.arch}" }
 
 def cp_to_portable(ouput_dir, src)
   dest = File.join(ouput_dir, src)
@@ -31,107 +71,77 @@ def cp_to_portable(ouput_dir, src)
   cp src, dest
 end
 
-desc 'Build the project (64-bit)'
-build :buildx64 do |b|
-  b.sln = 'src/SyncTrayzor.sln'
-  b.target = [:Clean, :Build]
-  b.prop 'Configuration', CONFIG
-  b.prop 'Platform', 'x64'
-end
+namespace :portable do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Create the portable package (#{arch_config.arch})"
+    task arch_config.arch do
+      rm_rf arch_config.portable_output_dir
+      mkdir_p arch_config.portable_output_dir
 
-desc 'Build the project (32-bit)'
-build :buildx86 do |b|
-  b.sln = 'src/SyncTrayzor.sln'
-  b.target = [:Clean, :Build]
-  b.prop 'Configuration', CONFIG
-  b.prop 'Platform', 'x86'
-end
+      Dir.chdir(arch_config.bin_dir) do
+        files = FileList[
+          '*.exe',
+          '*.exe.config',
+          '*.dll',
+          '*.pdb',
+          '*.pak',
+          '*.dat',
+          File.join('locales', '*'),
+        ].exclude('*.vshost.*')
 
-desc 'Build both 64-bit and 32-bit binaries'
-task :build => [:buildx64, :buildx86]
+        files.each do |file|
+          cp_to_portable(arch_config.portable_output_dir, file)
+        end
+      end
 
-def create_installer(output_file, installer_dir, iss_name)
-  rm output_file if File.exist?(output_file)
-  sh ISCC, File.join(installer_dir, iss_name)
-end
+      cp File.join(SRC_DIR, 'Icons', 'default.ico'), arch_config.portable_output_dir
 
-desc 'Create 64-bit installer'
-task :installerx64 do
-  create_installer(INSTALLER_64_OUTPUT, INSTALLER_64, 'installer-x64.iss')
-end
+      FileList['*.md', '*.txt'].each do |file|
+        cp_to_portable(arch_config.portable_output_dir, file)
+      end
+      
+      Dir.chdir(arch_config.installer_dir) do
+        FileList['syncthing.exe', '*.dll'].each do |file|
+          cp_to_portable(arch_config.portable_output_dir, file)
+        end
+      end
 
-desc 'Create 32-bit installer'
-task :installerx86 do
-  create_installer(INSTALLER_86_OUTPUT, INSTALLER_86, 'installer-x86.iss')
-end
-
-desc 'Create 32-bit and 64-bit installers'
-task :installer => [:installerx64, :installerx86]
-
-def create_portable(bin_dir, output_dir, installer_platform_dir)
-  rm_rf output_dir
-  mkdir_p output_dir
-
-  Dir.chdir(bin_dir) do
-    files = FileList[
-      '*.exe',
-      '*.exe.config',
-      '*.dll',
-      '*.pdb',
-      '*.pak',
-      '*.dat',
-      File.join('locales', '*'),
-    ].exclude('*.vshost.*')
-
-    files.each do |file|
-      cp_to_portable(output_dir, file)
+      puts 'Rewriting app.config'
+      config_path = File.join(arch_config.portable_output_dir, 'SyncTrayzor.exe.config')
+      doc = File.open(config_path, 'r') do |f|
+        doc = REXML::Document.new(f)
+        REXML::XPath.first(doc, '/configuration/applicationSettings//setting[@name="PortableMode"]/value').text = 'True'
+        doc
+      end
+      File.open(config_path, 'w') do |f|
+        doc.write(f)
+      end
     end
   end
+end
 
-  cp File.join(SRC_DIR, 'Icons', 'default.ico'), output_dir
+desc 'Create both 64-bit and 32-bit portable packages'
+task :portable => ARCH_CONFIG.map{ |x| :"portable:#{x.arch}" }
 
-  FileList['*.md', '*.txt'].each do |file|
-    cp_to_portable(output_dir, file)
-  end
-  
-  Dir.chdir(installer_platform_dir) do
-    FileList['syncthing.exe', '*.dll'].each do |file|
-      cp_to_portable(output_dir, file)
+namespace :clean do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Clean everything (#{arch_config.arch})"
+    task arch_config.arch do
+      rm_rf arch_config.portable_output_dir if File.exist?(arch_config.portable_output_dir)
+      rm arch_config.installer_output if File.exist?(arch_config.installer_output)
     end
   end
+end
 
-  puts 'Rewriting app.config'
-  config_path = File.join(output_dir, 'SyncTrayzor.exe.config')
-  doc = File.open(config_path, 'r') do |f|
-    doc = REXML::Document.new(f)
-    REXML::XPath.first(doc, '/configuration/applicationSettings//setting[@name="PortableMode"]/value').text = 'True'
-    doc
+desc 'Clean portable and installer, all architectures'
+task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
+
+namespace :package do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Build installer and portable (#{arch_config.arch})"
+    task arch_config.arch => [:"clean:#{arch_config.arch}", :"build:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
   end
-  File.open(config_path, 'w') do |f|
-    doc.write(f)
-  end
 end
 
-desc 'Create the portable (x64) release directory'
-task :portablex64 do
-  create_portable(BIN_DIR_64, PORTABLE_OUTPUT_DIR_64, INSTALLER_64)
-end
-
-desc 'Create the portable (x86) release directory'
-task :portablex86 do
-  create_portable(BIN_DIR_86, PORTABLE_OUTPUT_DIR_86, INSTALLER_86)
-end
-
-desc 'Create portable release directories for x64 and x86'
-task :portable => [:portablex64, :portablex86]
-
-desc 'Build and package everything'
-task :package => [:build, :installer, :portable]
-
-desc 'Remove portable and installer'
-task :clean do
-  rm_rf PORTABLE_OUTPUT_DIR_64 if File.exist?(PORTABLE_OUTPUT_DIR_64)
-  rm_rf PORTABLE_OUTPUT_DIR_86 if File.exist?(PORTABLE_OUTPUT_DIR_86)
-  rm INSTALLER_64 if File.exist?(INSTALLER_64)
-  rm INSTALLER_86 if File.exist?(INSTALLER_86)
-end
+desc 'Build installer and portable for all architectures'
+task :package => ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }
