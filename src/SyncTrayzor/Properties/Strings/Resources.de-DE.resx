@@ -120,8 +120,11 @@
   <data name="AboutView_CreatedByAuthor" xml:space="preserve">
     <value>Erstellt von Antony Male.</value>
   </data>
+  <data name="AboutView_DownloadNewVersion" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
-    <value>Neue Version verfügbar:</value>
+    <value>Neue Version verfügbar: {0}</value>
   </data>
   <data name="AboutView_ReleasedLicense" xml:space="preserve">
     <value>Veröffentlicht unter MIT-Lizenz.</value>
@@ -130,16 +133,13 @@
     <value>Zeige Open-Source-Lizenzen</value>
   </data>
   <data name="AboutView_SyncthingVersion" xml:space="preserve">
-    <value>SyncThing Version:</value>
+    <value>SyncThing Version: {0}</value>
   </data>
   <data name="AboutView_Version" xml:space="preserve">
-    <value>Version:</value>
+    <value>Version: {0}</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
-  </data>
-  <data name="Download" xml:space="preserve">
-    <value>Herunterladen</value>
   </data>
   <data name="Menu_File" xml:space="preserve">
     <value>Datei</value>
