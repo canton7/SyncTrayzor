@@ -13,6 +13,7 @@ using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -81,6 +82,13 @@ namespace SyncTrayzor
             // Horrible workaround for a CefSharp crash on logout/shutdown
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
+        }
+
+        protected override void OnStart()
+        {
+            var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
+            if (languageArg != null)
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
         }
 
         protected override void Launch()
