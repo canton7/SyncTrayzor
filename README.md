@@ -41,10 +41,18 @@ Grab the latest standalone .zip from the [releases](https://github.com/canton7/S
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
 
+Contributing
+------------
+
+Got a bug? [Raise an issue](https://github.com/canton7/SyncTrayzor/issues), providing as much detail as you can.
+
+Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
+
+
 Known Issues
 ------------
 
-There are a couple of knows issues with SyncTrayzor. Fixes are on the way, but until then here's a head-up:
+There are a couple of knows issues with SyncTrayzor. Fixes are on the way, but until then here's a heads-up:
 
  - SyncTrayzor can't currently handle the HTTP Basic Authentication which Syncthing uses to password-protect the GUI.
    The symptoms are the UI not loading, or showing 'Not Authorized' (if it's not loading, go to Syncthing -> Refresh Browser and 'Not Authorized' should appear).
