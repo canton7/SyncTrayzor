@@ -118,63 +118,63 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutView_CreatedByAuthor" xml:space="preserve">
-    <value>Erstellt von Antony Male.</value>
+    <value>Created by Antony Male.</value>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
-    <value>Neue Version verfügbar:</value>
+    <value>New version available:</value>
   </data>
   <data name="AboutView_ReleasedLicense" xml:space="preserve">
-    <value>Veröffentlicht unter MIT-Lizenz.</value>
+    <value>Released under the MIT license.</value>
   </data>
   <data name="AboutView_ShowOtherLicenses" xml:space="preserve">
-    <value>Zeige Open-Source-Lizenzen</value>
+    <value>Show Open Source Licenses</value>
   </data>
   <data name="AboutView_SyncthingVersion" xml:space="preserve">
-    <value>SyncThing Version:</value>
+    <value>Syncthing Version:</value>
   </data>
   <data name="AboutView_Version" xml:space="preserve">
     <value>Version:</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Schließen</value>
+    <value>Close</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Herunterladen</value>
+    <value>Download</value>
   </data>
   <data name="Menu_File" xml:space="preserve">
-    <value>Datei</value>
+    <value>File</value>
   </data>
   <data name="Menu_File_Exit" xml:space="preserve">
-    <value>Beenden</value>
+    <value>Exit</value>
   </data>
   <data name="Menu_File_Settings" xml:space="preserve">
-    <value>Einstellungen</value>
+    <value>Settings</value>
   </data>
   <data name="Menu_Help" xml:space="preserve">
-    <value>Hilfe</value>
+    <value>Help</value>
   </data>
   <data name="Menu_Help_About" xml:space="preserve">
-    <value>Über SyncTrayzor</value>
+    <value>About</value>
   </data>
   <data name="Menu_Syncthing" xml:space="preserve">
     <value>Syncthing</value>
   </data>
   <data name="Menu_Syncthing_Kill" xml:space="preserve">
-    <value>Prozess beenden</value>
+    <value>Kill</value>
   </data>
   <data name="Menu_Syncthing_KillAll" xml:space="preserve">
-    <value>Alle Prozesse beenden</value>
+    <value>Kill all Syncthing processes</value>
   </data>
   <data name="Menu_Syncthing_OpenExternal" xml:space="preserve">
-    <value>In externem Browser öffnen</value>
+    <value>Open in external browser</value>
   </data>
   <data name="Menu_Syncthing_Refresh" xml:space="preserve">
-    <value>Seite aktualisieren</value>
+    <value>Refresh browser</value>
   </data>
   <data name="Menu_Syncthing_Start" xml:space="preserve">
-    <value>Starten</value>
+    <value>Start</value>
   </data>
   <data name="Menu_Syncthing_Stop" xml:space="preserve">
-    <value>Anhalten</value>
+    <value>Stop</value>
   </data>
 </root>
