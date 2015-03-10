@@ -29,6 +29,7 @@ using System.Windows;
 //the line below to match the UICulture setting in the project file.
 
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
 
 
 [assembly: ThemeInfo(
