@@ -1,7 +1,9 @@
-﻿<Window x:Class="SyncTrayzor.Pages.AboutView"
+<Window x:Class="SyncTrayzor.Pages.AboutView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:resx="clr-namespace:SyncTrayzor.Properties"
+        xmlns:strings="clr-namespace:SyncTrayzor.Properties.Strings"
         Height="300" Width="250"
         WindowStyle="None" SizeToContent="WidthAndHeight"
         ShowInTaskbar="False">
@@ -11,34 +13,34 @@
     <DockPanel LastChildFill="False" Margin="10">
         <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
-            <TextBlock>Version:</TextBlock>
+            <TextBlock Text="{x:Static strings:Resources.AboutView_Version}" />
             <TextBlock Text="{Binding Version}" Margin="5,0,0,0"/>
             <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" Margin="5,0,0,0">(portable)</TextBlock>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
-            <TextBlock>Syncthing Version:</TextBlock>
+            <TextBlock Text="{x:Static strings:Resources.AboutView_SyncthingVersion}"/>
             <TextBlock Text="{Binding SyncthingVersion}" Margin="5,0,0,0"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5"
                     Visibility="{Binding NewerVersion, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-            <TextBlock Foreground="Red">New version available:</TextBlock>
+            <TextBlock Foreground="Red" Text="{x:Static strings:Resources.AboutView_NewAppVersionAvailable}" />
             <TextBlock Text="{Binding NewerVersion}" Margin="5,0,0,0"/>
             <TextBlock Margin="5,0,0,0">
                 <Hyperlink Command="{s:Action DownloadNewerVersion}">
-                    <TextBlock>Download</TextBlock>
+                    <TextBlock Text="{x:Static strings:Resources.Download}" />
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0">Created by Antony Male.</TextBlock>
-        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5">Released under the MIT license.</TextBlock>
+        <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{x:Static strings:Resources.AboutView_CreatedByAuthor}" />
+        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5" Text="{x:Static strings:Resources.AboutView_ReleasedLicense}" />
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>
             </Hyperlink>
         </TextBlock>
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
-            <Hyperlink Command="{s:Action ShowLicenses}">Show Open Source Licenses</Hyperlink>
+            <Hyperlink Command="{s:Action ShowLicenses}"><TextBlock Text="{x:Static strings:Resources.AboutView_ShowOtherLicenses}" /></Hyperlink>
         </TextBlock>
-        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,5,0,0">Close</Button>
+        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,5,0,0"><TextBlock Text="{x:Static strings:Resources.Close}"></TextBlock></Button>
     </DockPanel>
 </Window>
