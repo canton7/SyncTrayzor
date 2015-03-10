@@ -113,19 +113,29 @@ namespace SyncTrayzor
             if (this.exiting)
                 return;
 
-            var windowManager = this.Container.Get<IWindowManager>();
+            try
+            {
+                var windowManager = this.Container.Get<IWindowManager>();
 
-            var configurationException = e.Exception as ConfigurationException;
-            if (configurationException != null)
-            {
-                windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                e.Handled = true;
+                var configurationException = e.Exception as ConfigurationException;
+                if (configurationException != null)
+                {
+                    windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    e.Handled = true;
+                }
+                else
+                {
+                    var vm = this.Container.Get<UnhandledExceptionViewModel>();
+                    vm.Exception = e.Exception;
+                    windowManager.ShowDialog(vm);
+                }
             }
-            else
+            catch (Exception exception)
             {
-                var vm = this.Container.Get<UnhandledExceptionViewModel>();
-                vm.Exception = e.Exception;
-                windowManager.ShowDialog(vm);
+                // Don't re-throw. Nasty stuff happens if we throw an exception while trying to handle an unhandled exception
+                // For starters, the event log shows the wrong exception - this one, instead of the root cause
+                logger.Error("Unhandled exception while trying to display unhandled exception window", exception);
+                LogManager.Flush();
             }
         }
 
