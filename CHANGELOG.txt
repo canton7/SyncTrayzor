@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v1.0.7
+------
+
+ - Support GUI Authentication
+ - Ignore 'synced' events after device connection/disconnection, reducing noise
+ - Add option to obfuscate device IDs (thanks Adrian Rudnik)
+ - Allow Syncthing to localize by sending correct language headers (thanks Adrian Rudnik)
+ - Add validation to the Settings page
+ - Better handle exceptions encountered during shutdown
+ - Catch case where syncthing.exe can't be started because of group policy settings
+
 v1.0.6
 ------
 

@@ -1,4 +1,5 @@
-﻿using Stylet;
+using FluentValidation;
+using Stylet;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using System;
@@ -15,6 +16,24 @@ namespace SyncTrayzor.Pages
         public bool IsSelected { get; set; }
     }
 
+    public class SettingsViewModelValidator : AbstractValidator<SettingsViewModel>
+    {
+        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
+
+        public SettingsViewModelValidator()
+        {
+            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage("Should not be empty");
+            RuleFor(x => x.SyncThingAddress).Must(str =>
+            {
+                Uri uri;
+                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString() &&
+                    (uri.Scheme == "http" || uri.Scheme == "https");
+            }).WithMessage("Must be a valid URL");
+
+            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage("Should not be empty");
+        }
+    }
+
     public class SettingsViewModel : Screen
     {
         private readonly IConfigurationProvider configurationProvider;
@@ -25,6 +44,7 @@ namespace SyncTrayzor.Pages
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
         public bool NotifyOfNewVersions { get; set; }
+        public bool ObfuscateDeviceIDs { get; set; }
 
         public bool StartSyncThingAutomatically { get; set; }
         public string SyncThingAddress { get; set; }
@@ -52,7 +72,11 @@ namespace SyncTrayzor.Pages
         public bool SyncthingUseCustomHome { get; set; }
         public string TraceVariables { get; set; }
 
-        public SettingsViewModel(IConfigurationProvider configurationProvider, IAutostartProvider autostartProvider)
+        public SettingsViewModel(
+            IConfigurationProvider configurationProvider,
+            IAutostartProvider autostartProvider,
+            IModelValidator<SettingsViewModel> validator)
+            : base(validator)
         {
             this.configurationProvider = configurationProvider;
             this.autostartProvider = autostartProvider;
@@ -64,6 +88,8 @@ namespace SyncTrayzor.Pages
             this.CloseToTray = configuration.CloseToTray;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
             this.NotifyOfNewVersions = configuration.NotifyOfNewVersions;
+            this.ObfuscateDeviceIDs = configuration.ObfuscateDeviceIDs;
+
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
             this.SyncThingAddress = configuration.SyncthingAddress;
             this.SyncThingApiKey = configuration.SyncthingApiKey;
@@ -86,6 +112,16 @@ namespace SyncTrayzor.Pages
             this.TraceVariables = configuration.SyncthingTraceFacilities;
         }
 
+        protected override void OnValidationStateChanged(IEnumerable<string> changedProperties)
+        {
+            base.OnValidationStateChanged(changedProperties);
+            this.NotifyOfPropertyChange(() => this.CanSave);
+        }
+
+        public bool CanSave
+        {
+            get { return !this.HasErrors; }
+        }
         public void Save()
         {
             var configuration = this.configurationProvider.Load();
@@ -95,6 +131,8 @@ namespace SyncTrayzor.Pages
             configuration.CloseToTray = this.CloseToTray;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
             configuration.NotifyOfNewVersions = this.NotifyOfNewVersions;
+            configuration.ObfuscateDeviceIDs = this.ObfuscateDeviceIDs;
+
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;
             configuration.SyncthingAddress = this.SyncThingAddress;
             configuration.SyncthingApiKey = this.SyncThingApiKey;

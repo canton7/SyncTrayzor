@@ -78,6 +78,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
@@ -150,6 +153,8 @@
     <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\Api\Config.cs" />
     <Compile Include="SyncThing\Api\Connections.cs" />
+    <Compile Include="SyncThing\Api\DeviceConnectedEvent.cs" />
+    <Compile Include="SyncThing\Api\DeviceDisconnectedEvent.cs" />
     <Compile Include="SyncThing\Api\Event.cs" />
     <Compile Include="SyncThing\Api\EventConverter.cs" />
     <Compile Include="SyncThing\Api\EventType.cs" />
@@ -180,7 +185,9 @@
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Utils\CefSharpHelper.cs" />
+    <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
+    <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
@@ -326,6 +333,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Licenses\Fody.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\FluentValidation.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

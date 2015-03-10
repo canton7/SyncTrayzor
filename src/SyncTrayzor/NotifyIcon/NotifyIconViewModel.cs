@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +83,7 @@ namespace SyncTrayzor.NotifyIcon
         }
         public void Start()
         {
-            this.syncThingManager.Start();
+            this.syncThingManager.StartWithErrorDialog(this.windowManager);
         }
 
         public bool CanStop

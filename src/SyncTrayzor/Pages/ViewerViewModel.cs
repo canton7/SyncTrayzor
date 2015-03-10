@@ -1,10 +1,11 @@
-﻿using Stylet;
+using Stylet;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Xaml;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,6 +96,14 @@ namespace SyncTrayzor.Pages
                 Process.Start(request.Url);
                 return true;
             }
+
+            // See https://github.com/canton7/SyncTrayzor/issues/13
+            // and https://github.com/cefsharp/CefSharp/issues/534#issuecomment-60694502
+            var headers = request.Headers;
+            headers["X-API-Key"] += this.syncThingManager.ApiKey;
+            headers["Accept-Language"] = CultureInfo.CurrentCulture.Name + @";q=0.8," + CultureInfo.CurrentUICulture.Name + @";q=0.6,en;q=0.4";
+            request.Headers = headers;
+
             return false;
         }
 

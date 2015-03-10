@@ -22,7 +22,6 @@ namespace SyncTrayzor.Pages
         private readonly Func<AboutViewModel> aboutViewModelFactory;
 
         public bool WindowActivated { get; set; }
-        public string ExecutablePath { get; private set; }
         public ConsoleViewModel Console { get; private set; }
         public ViewerViewModel Viewer { get; private set; }
 
@@ -58,7 +57,7 @@ namespace SyncTrayzor.Pages
         }
         public void Start()
         {
-            this.syncThingManager.Start();
+            this.syncThingManager.StartWithErrorDialog(this.windowManager);
         }
 
         public bool CanStop
@@ -119,7 +118,7 @@ namespace SyncTrayzor.Pages
         {
             var msg = "Failed to start Syncthing.\n\n" +
                 "Please read the log to determine the cause.\n\n" +
-                "If \"FATAL: Cannot open database appears\", please close any other open " +
+                "If \"FATAL: Cannot open database\" appears, please close any other open " +
                 "instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing " +
                 "processes alive. Please use the menu option \"Syncthing -> Kill all Syncthing processes\" to stop them, then use \"Syncthing -> Start\" to start Syncthing again.";
             this.windowManager.ShowMessageBox(msg, "Syncthing failed to start", icon: MessageBoxImage.Error);

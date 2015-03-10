@@ -1,4 +1,5 @@
 ﻿using CefSharp;
+using FluentValidation;
 using NLog;
 using Stylet;
 using StyletIoC;
@@ -8,6 +9,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,6 +24,8 @@ namespace SyncTrayzor
 {
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
+        private bool exiting;
+
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
@@ -37,6 +41,9 @@ namespace SyncTrayzor
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
             builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
+
+            builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
+            builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
         }
 
         protected override void Configure()
@@ -97,26 +104,43 @@ namespace SyncTrayzor
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
-            var windowManager = this.Container.Get<IWindowManager>();
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("An unhandled exception occurred", e.Exception);
 
-            var configurationException = e.Exception as ConfigurationException;
-            if (configurationException != null)
+            // If we're shutting down, we're not going to be able to display an error dialog....
+            // We've logged it. Nothing else we can do.
+            if (this.exiting)
+                return;
+
+            try
             {
-                windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                e.Handled = true;
+                var windowManager = this.Container.Get<IWindowManager>();
+
+                var configurationException = e.Exception as ConfigurationException;
+                if (configurationException != null)
+                {
+                    windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    e.Handled = true;
+                }
+                else
+                {
+                    var vm = this.Container.Get<UnhandledExceptionViewModel>();
+                    vm.Exception = e.Exception;
+                    windowManager.ShowDialog(vm);
+                }
             }
-            else
+            catch (Exception exception)
             {
-                var vm = this.Container.Get<UnhandledExceptionViewModel>();
-                vm.Exception = e.Exception;
-                windowManager.ShowDialog(vm);
+                // Don't re-throw. Nasty stuff happens if we throw an exception while trying to handle an unhandled exception
+                // For starters, the event log shows the wrong exception - this one, instead of the root cause
+                logger.Error("Unhandled exception while trying to display unhandled exception window", exception);
             }
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
+            this.exiting = true;
+
             // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
             this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
         }

@@ -81,6 +81,15 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "Fluent Validation",
+                    Description = "A small validation library for .NET that uses a fluent interface and lambda expressions for building validation rules for your business objects",
+                    Homepage = "https://fluentvalidation.codeplex.com",
+                    License = "Apache License 2.0",
+                    Notes = "Provides validation for user inputs",
+                    LicenseText = this.LoadLicense("FluentValidation.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "PropertyChanged.Fody",
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",
