@@ -3,30 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
-        l:Loc.Prefix="UnhandledExceptionView"
         Height="400" Width="600"
-        Title="{l:Loc Title}">
+        Title="{l:Loc UnhandledExceptionView_Title}">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"
                    Stretch="None" Margin="0,0,10,0"/>
-            <TextBlock TextWrapping="Wrap" Text="{l:Loc IntroMessage}"/>
+            <TextBlock TextWrapping="Wrap" Text="{l:Loc UnhandledExceptionView_IntroMessage}"/>
         </StackPanel>
-        
+
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" TextWrapping="Wrap">
-            <TextBlock Text="{l:Loc PleaseOpenIssue_Pre}"/>
+            <TextBlock Text="{l:Loc UnhandledExceptionView_PleaseOpenIssue_Pre}"/>
             <Hyperlink Command="{s:Action ShowIssues}">
                 <TextBlock Text="{Binding IssuesUrl}"/>
             </Hyperlink>
-            <TextBlock Text="{l:Loc PleaseOpenIssue_Post}"/>
+            <TextBlock Text="{l:Loc UnhandledExceptionView_PleaseOpenIssue_Post}"/>
         </TextBlock>
 
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" l:Loc.Prefix="" Content="{l:Loc Generic_Dialog_Close}"/>
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" Content="{l:Loc Generic_Dialog_Close}"/>
         <TextBlock DockPanel.Dock="Bottom" Margin="0,10" TextWrapping="Wrap">
-            <TextBlock Text="{l:Loc LogFileLocation_Pre}"/>
+            <TextBlock Text="{l:Loc UnhandledExceptionView_LogFileLocation_Pre}"/>
             <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0"
                      Text="{Binding LogFilePath, Mode=OneWay}"/>
-            <TextBlock Text="{l:Loc LogFileLocation_Post}"/>
+            <TextBlock Text="{l:Loc UnhandledExceptionView_LogFileLocation_Post}"/>
         </TextBlock>
 
         <TextBox IsReadOnly="True" Text="{Binding ErrorMessage, Mode=OneWay}"/>

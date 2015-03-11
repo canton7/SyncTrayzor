@@ -371,4 +371,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Please open an issue at</value>
     <comment>Appears before a hyperlink to the Github issues page</comment>
   </data>
+  <data name="UnhandledExceptionView_Title" xml:space="preserve">
+    <value>Error!</value>
+  </data>
 </root>

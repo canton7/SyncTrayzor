@@ -129,7 +129,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Localization\Loc.cs" />
     <Compile Include="Localization\LocalizeConverter.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocExtension.cs" />

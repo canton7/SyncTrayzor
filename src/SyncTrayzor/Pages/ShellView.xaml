@@ -12,31 +12,31 @@
         <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
     </i:Interaction.Behaviors>
     <DockPanel>
-        <Menu DockPanel.Dock="Top" l:Loc.Prefix="ShellView_Menu">
-            <MenuItem Header="{l:Loc File}">
-                <MenuItem Header="{l:Loc File_Settings}" Command="{s:Action ShowSettings}"/>
-                <MenuItem Header="{l:Loc File_Exit}" Command="{s:Action Shutdown}"/>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{l:Loc ShellView_Menu_File}">
+                <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
             </MenuItem>
-            <MenuItem Header="{l:Loc Syncthing}">
-                <MenuItem Header="{l:Loc Syncthing_Start}" Command="{s:Action Start}"/>
-                <MenuItem Header="{l:Loc Syncthing_Stop}" Command="{s:Action Stop}"/>
-                <MenuItem Header="{l:Loc Syncthing_Kill}" Command="{s:Action Kill}"/>
-                <MenuItem Header="{l:Loc Syncthing_Refresh}" Command="{s:Action RefreshBrowser}"/>
-                <MenuItem Header="{l:Loc Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
-                <MenuItem Header="{l:Loc Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
+            <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Kill}" Command="{s:Action Kill}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" Command="{s:Action RefreshBrowser}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
             </MenuItem>
-            <MenuItem Header="{l:Loc Help}">
-                <MenuItem Header="{l:Loc Help_About}" Command="{s:Action ShowAbout}"/>
+            <MenuItem Header="{l:Loc ShellView_Menu_Help}">
+                <MenuItem Header="{l:Loc ShellView_Menu_Help_About}" Command="{s:Action ShowAbout}"/>
             </MenuItem>
         </Menu>
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="*" MinHeight="100"/>
             </Grid.RowDefinitions>
-            
+
             <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
 
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>

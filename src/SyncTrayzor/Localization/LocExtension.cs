@@ -40,11 +40,6 @@ namespace SyncTrayzor.Localization
             if (this.ValueBinding != null && this.ValueBindings != null)
                 throw new ArgumentException("ValueBinding and ValueBindings may not be set at the same time");
 
-            var service = (IProvideValueTarget)serviceProvider.GetService(typeof(IProvideValueTarget));
-            var targetObject = service.TargetObject as DependencyObject;
-            var prefix = Loc.GetPrefix(targetObject);
-            prefix = String.IsNullOrWhiteSpace(prefix) ? targetObject.ToString() : prefix + "_";
-
             // If we've got no bindings, return a string. If we've got 1 binding, return it. If we've got 2 bindings,
             // return a new MultiBinding.
             // Unfortunately there's no nice way to generalise this...
@@ -52,7 +47,7 @@ namespace SyncTrayzor.Localization
             if (this.KeyBinding == null && this.ValueBinding == null && this.ValueBindings == null)
             {
                 // Just returning a string!
-                return String.Format(this.StringFormat ?? "{0}", Localizer.Translate(prefix + this.Key));
+                return String.Format(this.StringFormat ?? "{0}", Localizer.Translate(this.Key));
             }
 
             var converter = new LocalizeConverter();
@@ -69,14 +64,14 @@ namespace SyncTrayzor.Localization
             if (this.KeyBinding == null && this.ValueBinding != null && this.ValueBindings == null)
             {
                 // Set the key, it'll interpret the binding as the value
-                converter.Key = prefix + this.Key;
+                converter.Key = this.Key;
                 converter.Converter = this.ValueBinding.Converter;
                 this.ValueBinding.Converter = converter;
                 return this.ValueBinding.ProvideValue(serviceProvider);
             }
             if (this.KeyBinding == null && this.ValueBinding == null && this.ValueBindings != null)
             {
-                converter.Key = prefix + this.Key;
+                converter.Key = this.Key;
                 // No converter allowed here
                 this.ValueBindings.Converter = converter;
                 return this.ValueBindings.ProvideValue(serviceProvider);
@@ -100,7 +95,7 @@ namespace SyncTrayzor.Localization
 
             multiBinding.Converter = converter;
             if (this.Key != null) // Can't hit this case if ValueBinding != null
-                converter.Key = prefix + this.Key;
+                converter.Key = this.Key;
             else
                 multiBinding.Bindings.Insert(0, this.KeyBinding);
 

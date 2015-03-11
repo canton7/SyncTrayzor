@@ -4,14 +4,13 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Width="600" MaxHeight="600"
-        l:Loc.Prefix="NewVersionAlertView"
-        Title="{l:Loc Title}"
+        Title="{l:Loc NewVersionAlertView_Title}"
         SizeToContent="Height">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
-            <ContentControl Content="{l:Loc NewVersionAvailable, ValueBinding={Binding Version}}"/>
+            <ContentControl Content="{l:Loc NewVersionAlertView_NewVersionAvailable, ValueBinding={Binding Version}}"/>
         </TextBlock>
-        <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" Text="{l:Loc Changelog}"/>
+        <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" Text="{l:Loc NewVersionAlertView_Changelog}"/>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
             <StackPanel.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -19,11 +18,11 @@
                     <!-- Slightly smaller -->
                 </Style>
             </StackPanel.Resources>
-            <Button IsDefault="True" Command="{s:Action Download}" Content="{l:Loc Button_Download}"/>
-            <Button IsCancel="True" Command="{s:Action RemindLater}" Content="{l:Loc Button_RemindLater}"/>
-            <Button IsCancel="True" Command="{s:Action DontRemind}" Content="{l:Loc Button_DontRemind}"/>
+            <Button IsDefault="True" Command="{s:Action Download}" Content="{l:Loc NewVersionAlertView_Button_Download}"/>
+            <Button IsCancel="True" Command="{s:Action RemindLater}" Content="{l:Loc NewVersionAlertView_Button_RemindLater}"/>
+            <Button IsCancel="True" Command="{s:Action DontRemind}" Content="{l:Loc NewVersionAlertView_Button_DontRemind}"/>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" Margin="0,10,0,0" Text="{l:Loc DontRemindMeExplanation}"/>
+        <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" Margin="0,10,0,0" Text="{l:Loc NewVersionAlertView_DontRemindMeExplanation}"/>
 
         <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{Binding Changelog}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"/>

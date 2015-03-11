@@ -6,11 +6,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
-        l:Loc.Prefix="SettingsView"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
         Width="400"
-        Title="{l:Loc Title}"
+        Title="{l:Loc SettingsView_Title}"
         ResizeMode="NoResize" SizeToContent="Height">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="InverseVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
@@ -25,55 +24,55 @@
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource ControlValidationError}"/>
         </DockPanel.Resources>
 
-        <GroupBox DockPanel.Dock="Top" Header="{l:Loc Section_SyncTrayzor}">
+        <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_SyncTrayzor}">
             <DockPanel>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray}" Content="{l:Loc MinimizeToTray}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}" Content="{l:Loc CloseToTray}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}" Content="{l:Loc OnlyShowTrayIconOnClose}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}" Content="{l:Loc ShowBalloonWhenSynchronized}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}" Content="{l:Loc AlertOnNewVersion}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ObfuscateDeviceIDs}" Content="{l:Loc ObfuscateDeviceIds}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray}" Content="{l:Loc SettingsView_MinimizeToTray}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}" Content="{l:Loc SettingsView_CloseToTray}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}" Content="{l:Loc SettingsView_ShowBalloonWhenSynchronized}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}" Content="{l:Loc SettingsView_AlertOnNewVersion}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ObfuscateDeviceIDs}" Content="{l:Loc SettingsView_ObfuscateDeviceIds}"/>
             </DockPanel>
         </GroupBox>
 
-        <GroupBox DockPanel.Dock="Top" Header="{l:Loc Section_Syncthing}">
+        <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Syncthing}">
             <DockPanel>
                 <DockPanel.Resources>
-                    <ToolTip x:Key="AddressOverride" Content="{l:Loc SyncthingAddress_ToolTip}"/>
-                    <ToolTip x:Key="APIKeyOverride" Content="{l:Loc ApiKey_ToolTip}"/>
+                    <ToolTip x:Key="AddressOverride" Content="{l:Loc SettingsView_SyncthingAddress_ToolTip}"/>
+                    <ToolTip x:Key="APIKeyOverride" Content="{l:Loc SettingsView_ApiKey_ToolTip}"/>
                 </DockPanel.Resources>
 
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}" Content="{l:Loc StartSyncthingAutomatically}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}" Content="{l:Loc SettingsView_StartSyncthingAutomatically}"/>
 
-                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" Content="{l:Loc SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
+                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
                 <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}" Content="{l:Loc ApiKey}" ToolTip="{StaticResource APIKeyOverride}"/>
+                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}" Content="{l:Loc SettingsView_ApiKey}" ToolTip="{StaticResource APIKeyOverride}"/>
                 <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey, UpdateSourceTrigger=PropertyChanged}"  ToolTip="{StaticResource APIKeyOverride}"/>
 
-                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,5,0,0" Text="{l:Loc MustRestartSyncthingWarning}"/>
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,5,0,0" Text="{l:Loc SettingsView_MustRestartSyncthingWarning}"/>
             </DockPanel>
         </GroupBox>
 
-        <GroupBox DockPanel.Dock="Top" Header="{l:Loc Section_StartOnLogin}">
+        <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_StartOnLogin}">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Visibility="{Binding CanReadAndWriteAutostart, Converter={StaticResource InverseVisibilityConverter}}"
                            TextWrapping="WrapWithOverflow" Margin="0,0,0,5" Text="{l:Loc SettingsView_StartOnLogin_PermissionDenied}"/>
 
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartOnLogon}" Content="{l:Loc StartOnLogin}"
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartOnLogon}" Content="{l:Loc SettingsView_StartOnLogin}"
                           IsEnabled="{Binding CanWriteAutostart}" Visibility="{Binding CanReadOrWriteAutostart, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartMinimized}" Content="{l:Loc StartMinimized}"
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartMinimized}" Content="{l:Loc SettingsView_StartMinimized}"
                           IsEnabled="{Binding StartMinimizedEnabled}" Visibility="{Binding CanReadOrWriteAutostart, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
             </DockPanel>
         </GroupBox>
 
-        <GroupBox DockPanel.Dock="Top" Header="{l:Loc Section_WatchedFolders}">
+        <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_WatchedFolders}">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Text="{l:Loc WatchedFolders_Unavailable}"
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Text="{l:Loc SettingsView_WatchedFolders_Unavailable}"
                            Visibility="{Binding WatchedFolders, Converter={StaticResource InverseVisibilityConverter}}"/>
 
-                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,10" Text="{l:Loc WatchedFolders_Explanation}"
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,10" Text="{l:Loc SettingsView_WatchedFolders_Explanation}"
                            Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
                 <ItemsControl ItemsSource="{Binding WatchedFolders}">
@@ -86,23 +85,23 @@
             </DockPanel>
         </GroupBox>
 
-        <Expander DockPanel.Dock="Top" Header="{l:Loc Section_Advanced}">
+        <Expander DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Advanced}">
             <GroupBox>
                 <DockPanel>
                     <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}">
-                        <TextBlock TextWrapping="Wrap" Text="{l:Loc SyncthingUseCustomHome}">
+                        <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_SyncthingUseCustomHome}">
                             <TextBlock.ToolTip>
-                                <ToolTip Content="{l:Loc SyncthingUseCustomHome_ToolTip}"/>
+                                <ToolTip Content="{l:Loc SettingsView_SyncthingUseCustomHome_ToolTip}"/>
                             </TextBlock.ToolTip>
                         </TextBlock>
                     </CheckBox>
-                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}" Content="{l:Loc TraceVariables}"/>
+                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}" Content="{l:Loc SettingsView_TraceVariables}"/>
                     <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
             </GroupBox>
         </Expander>
 
-        <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right" l:Loc.Prefix="">
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button IsCancel="True" Command="{s:Action Cancel}" Content="{l:Loc Generic_Dialog_Cancel}"/>
             <Button IsDefault="True" Command="{s:Action Save}" Content="{l:Loc Generic_Dialog_Save}"/>
         </StackPanel>
