@@ -138,11 +138,6 @@
     <Compile Include="Pages\SettingsViewModel.cs" />
     <Compile Include="Pages\ThirdPartyComponentsViewModel.cs" />
     <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
-    <Compile Include="Properties\Strings\Resources.de-DE.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.de-DE.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Strings\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -221,10 +216,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Strings\Resources.de-DE.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.de-DE.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
