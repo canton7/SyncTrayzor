@@ -138,8 +138,14 @@
   <data name="AboutView_Version" xml:space="preserve">
     <value>Version: {0}</value>
   </data>
+  <data name="Generic_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="Generic_Dialog_Close" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="Generic_Dialog_Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Menu_File" xml:space="preserve">
     <value>_File</value>
@@ -176,5 +182,108 @@
   </data>
   <data name="Menu_Syncthing_Stop" xml:space="preserve">
     <value>S_top</value>
+  </data>
+  <data name="NewVersionAlertView_Button_DontRemind" xml:space="preserve">
+    <value>Don't Remind Me Again</value>
+  </data>
+  <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
+    <value>Download Now</value>
+  </data>
+  <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
+    <value>Remind Me Later</value>
+  </data>
+  <data name="NewVersionAlertView_Changelog" xml:space="preserve">
+    <value>Changelog:</value>
+  </data>
+  <data name="NewVersionAlertView_DontRemindMeExplanation" xml:space="preserve">
+    <value>'Don't Remind Me Again' will silence reminders for this version. You can permanently disable new version alerts from the Settings page. Visit Help -&gt; About to manually check for a new version.</value>
+  </data>
+  <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
+    <value>A new version of SyncTrayzor is available!
+
+Version: {0}
+
+Do you want to download it now?</value>
+  </data>
+  <data name="NewVersionAlertView_Title" xml:space="preserve">
+    <value>SyncTrayzor Update Available</value>
+  </data>
+  <data name="SettingsView_AlertOnNewVersion" xml:space="preserve">
+    <value>Alert if a new version of SyncTrayzor is available</value>
+  </data>
+  <data name="SettingsView_ApiKey" xml:space="preserve">
+    <value>API Key:</value>
+  </data>
+  <data name="SettingsView_ApiKey_ToolTip" xml:space="preserve">
+    <value>SyncTrayzor overrides the API key specified in Syncthing's configuration. However, you can set it to whatever value you like here.</value>
+  </data>
+  <data name="SettingsView_CloseToTray" xml:space="preserve">
+    <value>Close to tray</value>
+  </data>
+  <data name="SettingsView_MinimizeToTray" xml:space="preserve">
+    <value>Minimize to tray</value>
+  </data>
+  <data name="SettingsView_MustRestartSyncthingWarning" xml:space="preserve">
+    <value>You must restart Syncthing for changes in these settings to take effect</value>
+  </data>
+  <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
+    <value>Obfuscate device IDs in the log view</value>
+  </data>
+  <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
+    <value>Show Tray Icon only on close</value>
+  </data>
+  <data name="SettingsView_Section_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
+    <value>Start on Login</value>
+  </data>
+  <data name="SettingsView_Section_Syncthing" xml:space="preserve">
+    <value>Syncthing</value>
+  </data>
+  <data name="SettingsView_Section_SyncTrayzor" xml:space="preserve">
+    <value>SyncTrayzor</value>
+  </data>
+  <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
+    <value>Watched Folders</value>
+  </data>
+  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
+    <value>Show 'Synchronized' balloon messages</value>
+  </data>
+  <data name="SettingsView_StartMinimized" xml:space="preserve">
+    <value>Start Minimized</value>
+  </data>
+  <data name="SettingsView_StartOnLogin" xml:space="preserve">
+    <value>Automatically start on login</value>
+  </data>
+  <data name="SettingsView_StartOnLogin_PermissionDenied" xml:space="preserve">
+    <value>Permission denied. Please start SyncTrayzor as an Administrator to change these settings.</value>
+  </data>
+  <data name="SettingsView_StartSyncthingAutomatically" xml:space="preserve">
+    <value>Start Syncthing when SyncTrayzor starts</value>
+  </data>
+  <data name="SettingsView_SyncthingAddress" xml:space="preserve">
+    <value>GUI Listen Address:</value>
+  </data>
+  <data name="SettingsView_SyncthingAddress_ToolTip" xml:space="preserve">
+    <value>SyncTrayzor overrides the "GUI Listen Address" specified in Syncthing's configuration. However, you can set it to whatever value you like here.</value>
+  </data>
+  <data name="SettingsView_SyncthingUseCustomHome" xml:space="preserve">
+    <value>Use custom home directory for Syncthing.</value>
+  </data>
+  <data name="SettingsView_SyncthingUseCustomHome_ToolTip" xml:space="preserve">
+    <value>This will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
+  </data>
+  <data name="SettingsView_Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsView_TraceVariables" xml:space="preserve">
+    <value>Syncthing Trace Variables:</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
+    <value>The following folders will be watched for changes, which avoids polling.</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
+    <value>Folders unavailable. Please start Syncthing</value>
   </data>
 </root>

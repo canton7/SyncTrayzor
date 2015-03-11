@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        l:Loc.Prefix="AboutView"
         Height="300" Width="250"
         WindowStyle="None" SizeToContent="WidthAndHeight"
         ShowInTaskbar="False">
@@ -12,23 +13,23 @@
     <DockPanel LastChildFill="False" Margin="10">
         <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
-            <TextBlock Text="{l:Loc AboutView_Version, ValueBinding={Binding Version}}"/>
+            <TextBlock Text="{l:Loc Version, ValueBinding={Binding Version}}"/>
             <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" Margin="5,0,0,0">(portable)</TextBlock>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
-            <TextBlock Text="{l:Loc AboutView_SyncthingVersion, ValueBinding={Binding SyncthingVersion}}"/>
+            <TextBlock Text="{l:Loc SyncthingVersion, ValueBinding={Binding SyncthingVersion}}"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5"
                     Visibility="{Binding NewerVersion, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-            <TextBlock Foreground="Red" Text="{l:Loc AboutView_NewAppVersionAvailable, ValueBinding={Binding NewerVersion}}"/>
+            <TextBlock Foreground="Red" Text="{l:Loc NewAppVersionAvailable, ValueBinding={Binding NewerVersion}}"/>
             <TextBlock Margin="5,0,0,0">
                 <Hyperlink Command="{s:Action DownloadNewerVersion}">
-                    <TextBlock Text="{l:Loc AboutView_DownloadNewVersion}"/>
+                    <TextBlock Text="{l:Loc DownloadNewVersion}"/>
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{l:Loc AboutView_CreatedByAuthor}"/>
-        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5" Text="{l:Loc AboutView_ReleasedLicense}"/>
+        <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{l:Loc CreatedByAuthor}"/>
+        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5" Text="{l:Loc ReleasedLicense}"/>
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>
@@ -36,7 +37,7 @@
         </TextBlock>
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowLicenses}">
-                <TextBlock Text="{l:Loc AboutView_ShowOtherLicenses}"/>
+                <TextBlock Text="{l:Loc ShowOtherLicenses}"/>
             </Hyperlink>
         </TextBlock>
         <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True"
