@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Localization;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,10 @@ namespace SyncTrayzor.Utils
 
                 // Possibly "This program is blocked by group policy. For more information, contact your system administrator" caused
                 // by e.g. CryptoLocker?
-                var msg = String.Format("Unable to start Syncthing: {0}\n\nThis could be because Windows if set up to forbid executing files " +
-                    "in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.\n\n" +
-                    "Please adjust your settings / whitelists to allow '{1}' to execute", e.Message, syncThingManager.ExecutablePath);
-                windowManager.ShowMessageBox(msg, "Error starting Syncthing", MessageBoxButton.OK, icon: MessageBoxImage.Error);
+                windowManager.ShowMessageBox
+                    (Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Message", e.Message, syncThingManager.ExecutablePath),
+                    Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Title"),
+                    MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
         }
     }

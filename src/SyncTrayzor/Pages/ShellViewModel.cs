@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
@@ -98,7 +99,10 @@ namespace SyncTrayzor.Pages
 
         public void KillAllSyncthingProcesses()
         {
-            if (this.windowManager.ShowMessageBox("Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?", "Really?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (this.windowManager.ShowMessageBox(
+                    Localizer.Translate("Dialog_ConfirmKillAllProcesses_Message"),
+                    Localizer.Translate("Dialog_ConfirmKillAllProcesses_Title"),
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 this.syncThingManager.KillAllSyncthingProcesses();
         }
 
@@ -116,12 +120,10 @@ namespace SyncTrayzor.Pages
 
         public void ShowExitedWithError()
         {
-            var msg = "Failed to start Syncthing.\n\n" +
-                "Please read the log to determine the cause.\n\n" +
-                "If \"FATAL: Cannot open database\" appears, please close any other open " +
-                "instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing " +
-                "processes alive. Please use the menu option \"Syncthing -> Kill all Syncthing processes\" to stop them, then use \"Syncthing -> Start\" to start Syncthing again.";
-            this.windowManager.ShowMessageBox(msg, "Syncthing failed to start", icon: MessageBoxImage.Error);
+            this.windowManager.ShowMessageBox(
+                Localizer.Translate("Dialog_FailedToStartSyncthing_Message"),
+                Localizer.Translate("Dialog_FailedToStartSyncthing_Title"),
+                icon: MessageBoxImage.Error);
         }
 
         public void CloseToTray()

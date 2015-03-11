@@ -20,6 +20,6 @@ namespace SyncTrayzor.Localization
         }
 
         public static readonly DependencyProperty PrefixProperty =
-            DependencyProperty.RegisterAttached("Prefix", typeof(string), typeof(Loc), new PropertyMetadata(String.Empty));
+            DependencyProperty.RegisterAttached("Prefix", typeof(string), typeof(Loc), new UIPropertyMetadata(String.Empty));
     }
 }

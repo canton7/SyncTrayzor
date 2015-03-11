@@ -43,7 +43,7 @@ namespace SyncTrayzor.Localization
             var service = (IProvideValueTarget)serviceProvider.GetService(typeof(IProvideValueTarget));
             var targetObject = service.TargetObject as DependencyObject;
             var prefix = Loc.GetPrefix(targetObject);
-            prefix = String.IsNullOrWhiteSpace(prefix) ? String.Empty : prefix + "_";
+            prefix = String.IsNullOrWhiteSpace(prefix) ? targetObject.ToString() : prefix + "_";
 
             // If we've got no bindings, return a string. If we've got 1 binding, return it. If we've got 2 bindings,
             // return a new MultiBinding.

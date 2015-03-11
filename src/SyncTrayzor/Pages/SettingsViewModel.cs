@@ -1,5 +1,6 @@
 using FluentValidation;
 using Stylet;
+using SyncTrayzor.Localization;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using System;
@@ -22,15 +23,15 @@ namespace SyncTrayzor.Pages
 
         public SettingsViewModelValidator()
         {
-            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage("Should not be empty");
+            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
             RuleFor(x => x.SyncThingAddress).Must(str =>
             {
                 Uri uri;
                 return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString() &&
                     (uri.Scheme == "http" || uri.Scheme == "https");
-            }).WithMessage("Must be a valid URL");
+            }).WithMessage(Localizer.Translate("String1SettingsView_Validation_InvalidUrl"));
 
-            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage("Should not be empty");
+            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
         }
     }
 

@@ -147,40 +147,40 @@
   <data name="Generic_Dialog_Save" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="Menu_File" xml:space="preserve">
+  <data name="ShellView_Menu_File" xml:space="preserve">
     <value>_File</value>
   </data>
-  <data name="Menu_File_Exit" xml:space="preserve">
+  <data name="ShellView_Menu_File_Exit" xml:space="preserve">
     <value>_Exit</value>
   </data>
-  <data name="Menu_File_Settings" xml:space="preserve">
+  <data name="ShellView_Menu_File_Settings" xml:space="preserve">
     <value>_Settings</value>
   </data>
-  <data name="Menu_Help" xml:space="preserve">
+  <data name="ShellView_Menu_Help" xml:space="preserve">
     <value>_Help</value>
   </data>
-  <data name="Menu_Help_About" xml:space="preserve">
+  <data name="ShellView_Menu_Help_About" xml:space="preserve">
     <value>_About</value>
   </data>
-  <data name="Menu_Syncthing" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing" xml:space="preserve">
     <value>_Syncthing</value>
   </data>
-  <data name="Menu_Syncthing_Kill" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing_Kill" xml:space="preserve">
     <value>_Kill</value>
   </data>
-  <data name="Menu_Syncthing_KillAll" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
     <value>Kill _all Syncthing processes</value>
   </data>
-  <data name="Menu_Syncthing_OpenExternal" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing_OpenExternal" xml:space="preserve">
     <value>_Open in external browser</value>
   </data>
-  <data name="Menu_Syncthing_Refresh" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing_Refresh" xml:space="preserve">
     <value>_Refresh browser</value>
   </data>
-  <data name="Menu_Syncthing_Start" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing_Start" xml:space="preserve">
     <value>_Start</value>
   </data>
-  <data name="Menu_Syncthing_Stop" xml:space="preserve">
+  <data name="ShellView_Menu_Syncthing_Stop" xml:space="preserve">
     <value>S_top</value>
   </data>
   <data name="NewVersionAlertView_Button_DontRemind" xml:space="preserve">
@@ -285,5 +285,90 @@ Do you want to download it now?</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Folders unavailable. Please start Syncthing</value>
+  </data>
+  <data name="AboutView_UnknownVersion" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
+    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?</value>
+  </data>
+  <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
+    <value>Really?</value>
+  </data>
+  <data name="Dialog_FailedToStartSyncthing_Message" xml:space="preserve">
+    <value>Failed to start Syncthing.
+
+
+Please read the log to determine the cause.
+
+
+If "FATAL: Cannot open database" appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option "Syncthing -&gt; Kill all Syncthing processes" to stop them, then use "Syncthing -&gt; Start" to start Syncthing again.</value>
+    <comment>"FATAL: Cannot Open Database" should remain in English</comment>
+  </data>
+  <data name="Dialog_FailedToStartSyncthing_Title" xml:space="preserve">
+    <value>Syncthing failed to start</value>
+  </data>
+  <data name="Dialog_SyncthingBlockedByGroupPolicy_Message" xml:space="preserve">
+    <value>Unable to start Syncthing: {0}
+
+This could be because Windows if set up to forbid executing files in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.
+
+
+Please adjust your settings / whitelists to allow '{1}' to execute</value>
+    <comment>{0}: Exception message
+{1}: Path to Syncthing</comment>
+  </data>
+  <data name="Dialog_SyncthingBlockedByGroupPolicy_Title" xml:space="preserve">
+    <value>Error starting Syncthing</value>
+  </data>
+  <data name="SettingsView_Validation_InvalidUrl" xml:space="preserve">
+    <value>Must be a valid URL</value>
+  </data>
+  <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">
+    <value>Should not be empty</value>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_Message" xml:space="preserve">
+    <value>{0}: Finished Syncing</value>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_Title" xml:space="preserve">
+    <value>Finished Syncing</value>
+  </data>
+  <data name="TrayIcon_Menu_CloseToTray" xml:space="preserve">
+    <value>Close to Tray</value>
+  </data>
+  <data name="TrayIcon_Menu_Exit" xml:space="preserve">
+    <value>_Exit</value>
+  </data>
+  <data name="TrayIcon_Menu_Restore" xml:space="preserve">
+    <value>_Restore</value>
+  </data>
+  <data name="TrayIcon_Menu_Settings" xml:space="preserve">
+    <value>Sett_ings</value>
+  </data>
+  <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
+    <value>_Start</value>
+  </data>
+  <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
+    <value>S_top</value>
+  </data>
+  <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
+    <value>Oops! Something went badly wrong.
+SyncTrayzor is going to have to close. Sorry about that</value>
+  </data>
+  <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
+    <value />
+    <comment>Appears after the log path</comment>
+  </data>
+  <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
+    <value>You may be asked to provide a log file. You can find this in:</value>
+    <comment>Appears before the log path</comment>
+  </data>
+  <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
+    <value>and include the following information:</value>
+    <comment>Appers after the hyperlink to the Github issues page</comment>
+  </data>
+  <data name="UnhandledExceptionView_PleaseOpenIssue_Pre" xml:space="preserve">
+    <value>Please open an issue at</value>
+    <comment>Appears before a hyperlink to the Github issues page</comment>
   </data>
 </root>

@@ -115,11 +115,85 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string AboutView_UnknownVersion {
+            get {
+                return ResourceManager.GetString("AboutView_UnknownVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>
         public static string AboutView_Version {
             get {
                 return ResourceManager.GetString("AboutView_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?.
+        /// </summary>
+        public static string Dialog_ConfirmKillAllProcesses_Message {
+            get {
+                return ResourceManager.GetString("Dialog_ConfirmKillAllProcesses_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Really?.
+        /// </summary>
+        public static string Dialog_ConfirmKillAllProcesses_Title {
+            get {
+                return ResourceManager.GetString("Dialog_ConfirmKillAllProcesses_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to start Syncthing.
+        ///
+        ///
+        ///Please read the log to determine the cause.
+        ///
+        ///
+        ///If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again..
+        /// </summary>
+        public static string Dialog_FailedToStartSyncthing_Message {
+            get {
+                return ResourceManager.GetString("Dialog_FailedToStartSyncthing_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing failed to start.
+        /// </summary>
+        public static string Dialog_FailedToStartSyncthing_Title {
+            get {
+                return ResourceManager.GetString("Dialog_FailedToStartSyncthing_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to start Syncthing: {0}
+        ///
+        ///This could be because Windows if set up to forbid executing files in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.
+        ///
+        ///
+        ///Please adjust your settings / whitelists to allow &apos;{1}&apos; to execute.
+        /// </summary>
+        public static string Dialog_SyncthingBlockedByGroupPolicy_Message {
+            get {
+                return ResourceManager.GetString("Dialog_SyncthingBlockedByGroupPolicy_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error starting Syncthing.
+        /// </summary>
+        public static string Dialog_SyncthingBlockedByGroupPolicy_Title {
+            get {
+                return ResourceManager.GetString("Dialog_SyncthingBlockedByGroupPolicy_Title", resourceCulture);
             }
         }
         
@@ -147,114 +221,6 @@ namespace SyncTrayzor.Properties.Strings {
         public static string Generic_Dialog_Save {
             get {
                 return ResourceManager.GetString("Generic_Dialog_Save", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _File.
-        /// </summary>
-        public static string Menu_File {
-            get {
-                return ResourceManager.GetString("Menu_File", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Exit.
-        /// </summary>
-        public static string Menu_File_Exit {
-            get {
-                return ResourceManager.GetString("Menu_File_Exit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Settings.
-        /// </summary>
-        public static string Menu_File_Settings {
-            get {
-                return ResourceManager.GetString("Menu_File_Settings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Help.
-        /// </summary>
-        public static string Menu_Help {
-            get {
-                return ResourceManager.GetString("Menu_Help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _About.
-        /// </summary>
-        public static string Menu_Help_About {
-            get {
-                return ResourceManager.GetString("Menu_Help_About", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Syncthing.
-        /// </summary>
-        public static string Menu_Syncthing {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Kill.
-        /// </summary>
-        public static string Menu_Syncthing_Kill {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing_Kill", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kill _all Syncthing processes.
-        /// </summary>
-        public static string Menu_Syncthing_KillAll {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing_KillAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Open in external browser.
-        /// </summary>
-        public static string Menu_Syncthing_OpenExternal {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing_OpenExternal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Refresh browser.
-        /// </summary>
-        public static string Menu_Syncthing_Refresh {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing_Refresh", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Start.
-        /// </summary>
-        public static string Menu_Syncthing_Start {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing_Start", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to S_top.
-        /// </summary>
-        public static string Menu_Syncthing_Stop {
-            get {
-                return ResourceManager.GetString("Menu_Syncthing_Stop", resourceCulture);
             }
         }
         
@@ -542,6 +508,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Must be a valid URL.
+        /// </summary>
+        public static string SettingsView_Validation_InvalidUrl {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_InvalidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Should not be empty.
+        /// </summary>
+        public static string SettingsView_Validation_NotShouldBeEmpty {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_NotShouldBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following folders will be watched for changes, which avoids polling..
         /// </summary>
         public static string SettingsView_WatchedFolders_Explanation {
@@ -556,6 +540,241 @@ namespace SyncTrayzor.Properties.Strings {
         public static string SettingsView_WatchedFolders_Unavailable {
             get {
                 return ResourceManager.GetString("SettingsView_WatchedFolders_Unavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _File.
+        /// </summary>
+        public static string ShellView_Menu_File {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Exit.
+        /// </summary>
+        public static string ShellView_Menu_File_Exit {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_File_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Settings.
+        /// </summary>
+        public static string ShellView_Menu_File_Settings {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_File_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Help.
+        /// </summary>
+        public static string ShellView_Menu_Help {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _About.
+        /// </summary>
+        public static string ShellView_Menu_Help_About {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Help_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Syncthing.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Kill.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing_Kill {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing_Kill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill _all Syncthing processes.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing_KillAll {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing_KillAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Open in external browser.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing_OpenExternal {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing_OpenExternal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Refresh browser.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing_Refresh {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Start.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing_Start {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to S_top.
+        /// </summary>
+        public static string ShellView_Menu_Syncthing_Stop {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_Syncthing_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: Finished Syncing.
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_Message {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished Syncing.
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_Title {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close to Tray.
+        /// </summary>
+        public static string TrayIcon_Menu_CloseToTray {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_CloseToTray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Exit.
+        /// </summary>
+        public static string TrayIcon_Menu_Exit {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Restore.
+        /// </summary>
+        public static string TrayIcon_Menu_Restore {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_Restore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sett_ings.
+        /// </summary>
+        public static string TrayIcon_Menu_Settings {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Start.
+        /// </summary>
+        public static string TrayIcon_Menu_StartSyncthing {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_StartSyncthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to S_top.
+        /// </summary>
+        public static string TrayIcon_Menu_StopSyncthing {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_StopSyncthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oops! Something went badly wrong.
+        ///SyncTrayzor is going to have to close. Sorry about that.
+        /// </summary>
+        public static string UnhandledExceptionView_IntroMessage {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionView_IntroMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string UnhandledExceptionView_LogFileLocation_Post {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Post", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You may be asked to provide a log file. You can find this in:.
+        /// </summary>
+        public static string UnhandledExceptionView_LogFileLocation_Pre {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Pre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to and include the following information:.
+        /// </summary>
+        public static string UnhandledExceptionView_PleaseOpenIssue_Post {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionView_PleaseOpenIssue_Post", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please open an issue at.
+        /// </summary>
+        public static string UnhandledExceptionView_PleaseOpenIssue_Pre {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionView_PleaseOpenIssue_Pre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error!.
+        /// </summary>
+        public static string UnhandledExceptionView_Title {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionView_Title", resourceCulture);
             }
         }
     }

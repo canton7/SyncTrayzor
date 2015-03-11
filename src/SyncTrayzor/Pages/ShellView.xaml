@@ -12,7 +12,7 @@
         <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
     </i:Interaction.Behaviors>
     <DockPanel>
-        <Menu DockPanel.Dock="Top" l:Loc.Prefix="Menu">
+        <Menu DockPanel.Dock="Top" l:Loc.Prefix="ShellView_Menu">
             <MenuItem Header="{l:Loc File}">
                 <MenuItem Header="{l:Loc File_Settings}" Command="{s:Action ShowSettings}"/>
                 <MenuItem Header="{l:Loc File_Exit}" Command="{s:Action Shutdown}"/>

@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="https://github.com/canton7/Stylet"
+                    xmlns:l="clr-namespace:SyncTrayzor.Localization"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
 
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
@@ -63,21 +64,21 @@
         
         <tb:TaskbarIcon.ContextMenu>
             <!-- Attached properties aren't inherited to ContextMenus -->
-            <ContextMenu s:View.ActionTarget="{Binding}">
+            <ContextMenu s:View.ActionTarget="{Binding}" l:Loc.Prefix="TrayIcon_Menu">
                 <ContextMenu.Resources>
                     <s:BoolToVisibilityConverter x:Key="RestoreVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
                 </ContextMenu.Resources>
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
-                <MenuItem Header="Restore" Command="{s:Action Restore, ActionNotFound=Disable}"
+                <MenuItem Header="{l:Loc Restore}" Command="{s:Action Restore, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
-                <MenuItem Header="Close to Tray" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                <MenuItem Header="{l:Loc Close to Tray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+
+                <MenuItem Header="{l:Loc StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
+                <MenuItem Header="{l:Loc StopSyncthing}" Command="{s:Action Stop, ActionNotFound=Disable}"/>
                 
-                <MenuItem Header="Start" Command="{s:Action Start, ActionNotFound=Disable}"/>
-                <MenuItem Header="Stop" Command="{s:Action Stop, ActionNotFound=Disable}"/>
-                
-                <MenuItem Header="Settings" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
-                <MenuItem Header="Exit" Command="{s:Action Exit, ActionNotFound=Disable}"/>
+                <MenuItem Header="{l:Loc Setting}" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
+                <MenuItem Header="{l:Loc Exit}" Command="{s:Action Exit, ActionNotFound=Disable}"/>
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
         

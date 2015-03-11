@@ -2,31 +2,31 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        l:Loc.Prefix="UnhandledExceptionView"
         Height="400" Width="600"
-        Title="Error!">
+        Title="{l:Loc Title}">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"
                    Stretch="None" Margin="0,0,10,0"/>
-            <TextBlock TextWrapping="Wrap">
-                Oops! Something went badly wrong.<LineBreak/>
-                SyncTrayzor is going to have to close. Sorry about that
-            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="{l:Loc IntroMessage}"/>
         </StackPanel>
         
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" TextWrapping="Wrap">
-            Please open an issue at
+            <TextBlock Text="{l:Loc PleaseOpenIssue_Pre}"/>
             <Hyperlink Command="{s:Action ShowIssues}">
                 <TextBlock Text="{Binding IssuesUrl}"/>
             </Hyperlink>
-            and include the following information:
+            <TextBlock Text="{l:Loc PleaseOpenIssue_Post}"/>
         </TextBlock>
 
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}">Close</Button>
-        <TextBlock DockPanel.Dock="Bottom" Margin="0,10">
-            You may be asked to provide a log file. You can find this in:<LineBreak/>
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" l:Loc.Prefix="" Content="{l:Loc Generic_Dialog_Close}"/>
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,10" TextWrapping="Wrap">
+            <TextBlock Text="{l:Loc LogFileLocation_Pre}"/>
             <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0"
                      Text="{Binding LogFilePath, Mode=OneWay}"/>
+            <TextBlock Text="{l:Loc LogFileLocation_Post}"/>
         </TextBlock>
 
         <TextBox IsReadOnly="True" Text="{Binding ErrorMessage, Mode=OneWay}"/>
