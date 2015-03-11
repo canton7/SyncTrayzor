@@ -86,8 +86,8 @@
         </GroupBox>
 
         <Expander DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Advanced}">
-            <GroupBox>
-                <DockPanel>
+            <GroupBox Header="{l:Loc SettingsView_Section_Advanced}">
+                <DockPanel LastChildFill="False">
                     <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}">
                         <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_SyncthingUseCustomHome}">
                             <TextBlock.ToolTip>

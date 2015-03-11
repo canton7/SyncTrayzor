@@ -652,6 +652,79 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description:.
+        /// </summary>
+        public static string ThirdPartyComponentsView_ComponentDescriptionLabel {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_ComponentDescriptionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homepage:.
+        /// </summary>
+        public static string ThirdPartyComponentsView_ComponentHomepageLabel {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_ComponentHomepageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License:.
+        /// </summary>
+        public static string ThirdPartyComponentsView_ComponentLicenseLabel {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_ComponentLicenseLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License Text:.
+        /// </summary>
+        public static string ThirdPartyComponentsView_ComponentLicenseTextLabel {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_ComponentLicenseTextLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name:.
+        /// </summary>
+        public static string ThirdPartyComponentsView_ComponentNameLabel {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_ComponentNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes:.
+        /// </summary>
+        public static string ThirdPartyComponentsView_ComponentNotesLabel {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_ComponentNotesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SyncTrayzor is built using many open-source components, and would not exist without them.
+        ///Details on each component, and its license text, are shown below..
+        /// </summary>
+        public static string ThirdPartyComponentsView_Intro {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_Intro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Third Party Components.
+        /// </summary>
+        public static string ThirdPartyComponentsView_Title {
+            get {
+                return ResourceManager.GetString("ThirdPartyComponentsView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}: Finished Syncing.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_Message {
@@ -775,6 +848,24 @@ namespace SyncTrayzor.Properties.Strings {
         public static string UnhandledExceptionView_Title {
             get {
                 return ResourceManager.GetString("UnhandledExceptionView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Starting....
+        /// </summary>
+        public static string ViewerView_SyncthingStarting {
+            get {
+                return ResourceManager.GetString("ViewerView_SyncthingStarting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Stopped.
+        /// </summary>
+        public static string ViewerView_SyncthingStopped {
+            get {
+                return ResourceManager.GetString("ViewerView_SyncthingStopped", resourceCulture);
             }
         }
     }

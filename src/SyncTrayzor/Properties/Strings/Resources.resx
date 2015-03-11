@@ -327,6 +327,31 @@ Please adjust your settings / whitelists to allow '{1}' to execute</value>
   <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">
     <value>Should not be empty</value>
   </data>
+  <data name="ThirdPartyComponentsView_ComponentDescriptionLabel" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentHomepageLabel" xml:space="preserve">
+    <value>Homepage:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentLicenseLabel" xml:space="preserve">
+    <value>License:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentLicenseTextLabel" xml:space="preserve">
+    <value>License Text:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentNameLabel" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentNotesLabel" xml:space="preserve">
+    <value>Notes:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_Intro" xml:space="preserve">
+    <value>SyncTrayzor is built using many open-source components, and would not exist without them.
+Details on each component, and its license text, are shown below.</value>
+  </data>
+  <data name="ThirdPartyComponentsView_Title" xml:space="preserve">
+    <value>Third Party Components</value>
+  </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Message" xml:space="preserve">
     <value>{0}: Finished Syncing</value>
   </data>
@@ -373,5 +398,11 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Error!</value>
+  </data>
+  <data name="ViewerView_SyncthingStarting" xml:space="preserve">
+    <value>Syncthing Starting...</value>
+  </data>
+  <data name="ViewerView_SyncthingStopped" xml:space="preserve">
+    <value>Syncthing Stopped</value>
   </data>
 </root>
