@@ -47,13 +47,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\*.exe"; Excludes: "*.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\{#AppExeName}.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\*.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\*.pak"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\*.dat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppBin}\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll"; Flags: ignoreversion recursesubdirs
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion

@@ -65,10 +65,14 @@ end
 desc 'Build both 64-bit and 32-bit installers'
 task :installer => ARCH_CONFIG.map{ |x| :"installer:#{x.arch}" }
 
-def cp_to_portable(ouput_dir, src)
-  dest = File.join(ouput_dir, src)
-  mkdir_p File.dirname(dest) unless File.exist?(File.dirname(dest))
-  cp src, dest
+def cp_to_portable(output_dir, src)
+  dest = File.join(output_dir, src)
+  # It could be an empty directory - so ignore it
+  # We'll create it as and when if there are any files in it
+  if File.file?(src)
+    mkdir_p File.dirname(dest) unless File.exist?(File.dirname(dest))
+    cp src, dest
+  end
 end
 
 namespace :portable do
@@ -79,15 +83,7 @@ namespace :portable do
       mkdir_p arch_config.portable_output_dir
 
       Dir.chdir(arch_config.bin_dir) do
-        files = FileList[
-          '*.exe',
-          '*.exe.config',
-          '*.dll',
-          '*.pdb',
-          '*.pak',
-          '*.dat',
-          File.join('locales', '*'),
-        ].exclude('*.vshost.*')
+        files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
 
         files.each do |file|
           cp_to_portable(arch_config.portable_output_dir, file)
