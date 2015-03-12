@@ -71,13 +71,13 @@
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
                 <MenuItem Header="{l:Loc TrayIcon_Menu_Restore}" Command="{s:Action Restore, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
-                <MenuItem Header="{l:Loc TrayIcon_Menu_Close to Tray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                <MenuItem Header="{l:Loc TrayIcon_Menu_ClosetoTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StopSyncthing}" Command="{s:Action Stop, ActionNotFound=Disable}"/>
 
-                <MenuItem Header="{l:Loc TrayIcon_Menu_Setting}" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
+                <MenuItem Header="{l:Loc TrayIcon_Menu_Settings}" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_Exit}" Command="{s:Action Exit, ActionNotFound=Disable}"/>
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
