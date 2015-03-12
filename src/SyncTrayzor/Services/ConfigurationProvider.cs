@@ -13,11 +13,16 @@ namespace SyncTrayzor.Services
 {
     public class ConfigurationChangedEventArgs : EventArgs
     {
-        public Configuration NewConfiguration { get; private set; }
+        private readonly Configuration baseConfiguration;
+        public Configuration NewConfiguration
+        {
+            // Ensure we always clone it, so people can modify
+            get { return new Configuration(this.baseConfiguration); }
+        }
 
         public ConfigurationChangedEventArgs(Configuration newConfiguration)
         {
-            this.NewConfiguration = newConfiguration;
+            this.baseConfiguration = newConfiguration;
         }
     }
 

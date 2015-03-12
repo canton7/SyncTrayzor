@@ -114,13 +114,15 @@ namespace SyncTrayzor.SyncThing
                 throw new InvalidOperationException("SetConnectionDetails not called");
         }
 
-        private class AuthenticatedHttpClientHandler : HttpClientHandler
+        private class AuthenticatedHttpClientHandler : WebRequestHandler
         {
             private readonly string apiKey;
 
             public AuthenticatedHttpClientHandler(string apiKey)
             {
                 this.apiKey = apiKey;
+                // We expect Syncthing to return invalid certs
+                this.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
             }
 
             protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)

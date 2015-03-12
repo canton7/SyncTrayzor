@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace SyncTrayzor.SyncThing
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly string[] defaultArguments = new[] { "-no-browser", "-no-restart" };
 
+        private readonly object processLock = new object();
         private Process process;
 
         public string ExecutablePath { get; set; }
@@ -90,29 +92,45 @@ namespace SyncTrayzor.SyncThing
                 processStartInfo.EnvironmentVariables["STTRACE"] = this.Traces;
             }
 
-            this.process = Process.Start(processStartInfo);
+            lock (this.processLock)
+            {
+                this.KillInternal();
 
-            this.process.EnableRaisingEvents = true;
-            this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
-            this.process.ErrorDataReceived += (o, e) => this.DataReceived(e.Data);
+                this.process = Process.Start(processStartInfo);
 
-            this.process.BeginOutputReadLine();
-            this.process.BeginErrorReadLine();
+                this.process.EnableRaisingEvents = true;
+                this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
+                this.process.ErrorDataReceived += (o, e) => this.DataReceived(e.Data);
 
-            this.process.Exited += (o, e) => this.OnProcessStopped();
+                this.process.BeginOutputReadLine();
+                this.process.BeginErrorReadLine();
+
+                this.process.Exited += (o, e) => this.OnProcessStopped();
+            }
         }
 
         public void Kill()
         {
             logger.Info("Killing Syncthing process");
-            this.KillInternal();
+            lock (this.processLock)
+            {
+                this.KillInternal();
+            }
         }
 
+        // MUST BE CALLED FROM WITHIN A LOCK!
         private void KillInternal()
         {
             if (this.process != null)
             {
-                this.process.Kill();
+                try
+                {
+                    this.process.Kill();
+                    this.process = null;
+                }
+                // These can happen in rare cases, and we don't care. See the docs for Process.Kill
+                catch (Win32Exception e) { logger.Warn("KillInternal failed with an error", e); }
+                catch (InvalidOperationException e) { logger.Warn("KillInternal failed with an error", e); }
             }
         }
 
@@ -138,13 +156,20 @@ namespace SyncTrayzor.SyncThing
 
         public void Dispose()
         {
-            this.KillInternal();
+            lock (this.processLock)
+            {
+                this.KillInternal();
+            }
         }
 
         private void OnProcessStopped()
         {
-            SyncThingExitStatus exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode;
-            this.process = null;
+            SyncThingExitStatus exitStatus;
+            lock (this.processLock)
+            {
+                exitStatus = this.process == null ? SyncThingExitStatus.Success : (SyncThingExitStatus)this.process.ExitCode;
+                this.process = null;
+            }
 
             logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
             if (exitStatus == SyncThingExitStatus.Restarting || exitStatus == SyncThingExitStatus.Upgrading)

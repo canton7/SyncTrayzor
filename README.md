@@ -46,6 +46,8 @@ Contributing
 
 Got a bug? [Raise an issue](https://github.com/canton7/SyncTrayzor/issues), providing as much detail as you can.
 
+Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.com/canton7/SyncTrayzor/wiki/Localization).
+
 Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
 
 

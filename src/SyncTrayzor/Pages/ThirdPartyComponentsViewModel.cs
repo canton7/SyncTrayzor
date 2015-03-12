@@ -16,6 +16,7 @@ namespace SyncTrayzor.Pages
         {
             this.Items.AddRange(new[]
             {
+                // I'm in two minds as to whether to localize these or not...
                 new ThirdPartyComponent()
                 {
                     Name = "Syncthing",

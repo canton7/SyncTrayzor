@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="https://github.com/canton7/Stylet"
+                    xmlns:l="clr-namespace:SyncTrayzor.Localization"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
 
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
@@ -8,7 +9,7 @@
     <BitmapImage x:Key="TaskbarSyncing2Icon" UriSource="pack://application:,,,/Icons/syncing_2.ico"/>
     <BitmapImage x:Key="TaskbarSyncing3Icon" UriSource="pack://application:,,,/Icons/syncing_3.ico"/>
     <BitmapImage x:Key="TaskbarSyncing4Icon" UriSource="pack://application:,,,/Icons/syncing_4.ico"/>
-    
+
     <tb:TaskbarIcon x:Key="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                     DoubleClickCommand="{s:Action DoubleClick}"
@@ -60,7 +61,7 @@
                 </Style.Triggers>
             </Style>
         </tb:TaskbarIcon.Style>
-        
+
         <tb:TaskbarIcon.ContextMenu>
             <!-- Attached properties aren't inherited to ContextMenus -->
             <ContextMenu s:View.ActionTarget="{Binding}">
@@ -68,18 +69,18 @@
                     <s:BoolToVisibilityConverter x:Key="RestoreVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
                 </ContextMenu.Resources>
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
-                <MenuItem Header="Restore" Command="{s:Action Restore, ActionNotFound=Disable}"
+                <MenuItem Header="{l:Loc TrayIcon_Menu_Restore}" Command="{s:Action Restore, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
-                <MenuItem Header="Close to Tray" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                <MenuItem Header="{l:Loc TrayIcon_Menu_CloseToTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-                
-                <MenuItem Header="Start" Command="{s:Action Start, ActionNotFound=Disable}"/>
-                <MenuItem Header="Stop" Command="{s:Action Stop, ActionNotFound=Disable}"/>
-                
-                <MenuItem Header="Settings" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
-                <MenuItem Header="Exit" Command="{s:Action Exit, ActionNotFound=Disable}"/>
+
+                <MenuItem Header="{l:Loc TrayIcon_Menu_StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
+                <MenuItem Header="{l:Loc TrayIcon_Menu_StopSyncthing}" Command="{s:Action Stop, ActionNotFound=Disable}"/>
+
+                <MenuItem Header="{l:Loc TrayIcon_Menu_Settings}" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
+                <MenuItem Header="{l:Loc TrayIcon_Menu_Exit}" Command="{s:Action Exit, ActionNotFound=Disable}"/>
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
-        
+
     </tb:TaskbarIcon>
 </ResourceDictionary>

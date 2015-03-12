@@ -1,5 +1,6 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
+using SyncTrayzor.Localization;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using System;
@@ -83,7 +84,7 @@ namespace SyncTrayzor.NotifyIcon
                     e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
                 {
                     Application.Current.Dispatcher.CheckAccess(); // Double-check
-                    this.taskbarIcon.ShowBalloonTip("Finished Syncing", String.Format("{0}: Finished Syncing", e.Folder.FolderId), BalloonIcon.Info);
+                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Title"), Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Message", e.Folder.FolderId), BalloonIcon.Info);
                 }
             };
         }

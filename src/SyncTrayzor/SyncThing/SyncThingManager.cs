@@ -63,7 +63,12 @@ namespace SyncTrayzor.SyncThing
         }
 
         private readonly object stateLock = new object();
-        public SyncThingState State { get; private set; }
+        private SyncThingState _state;
+        public SyncThingState State
+        {
+            get { lock (this.stateLock) { return this._state; } }
+            set { lock (this.stateLock) { this._state = value; } }
+        }
 
         public bool IsDataLoaded { get; private set; }
         public event EventHandler DataLoaded;
@@ -153,6 +158,9 @@ namespace SyncTrayzor.SyncThing
 
         public Task StopAsync()
         {
+            if (this.State != SyncThingState.Running)
+                return Task.FromResult(false);
+
             this.SetState(SyncThingState.Stopping);
             return this.apiClient.ShutdownAsync();
         }
@@ -195,21 +203,23 @@ namespace SyncTrayzor.SyncThing
 
         private void SetState(SyncThingState state)
         {
-            var oldState = this.State;
+            SyncThingState oldState;
             lock (this.stateLock)
             {
-                if (state == this.State)
+                if (state == this._state)
                     return;
+
+                oldState = this._state;
 
                 // We really need a proper state machine here....
                 // There's a race if Syncthing can't start because the database is locked by another process on the same port
                 // In this case, we see the process as having failed, but the event watcher chimes in a split-second later with the 'Started' event.
                 // This runs the risk of transitioning us from Stopped -> Starting -> Stopepd -> Running, which is bad news for everyone
                 // So, get around this by enforcing strict state transitions.
-                if (this.State == SyncThingState.Stopped && state == SyncThingState.Running)
+                if (this._state == SyncThingState.Stopped && state == SyncThingState.Running)
                     return;
 
-                this.State = state;
+                this._state = state;
             }
 
             this.UpdateWatchersState(state);
