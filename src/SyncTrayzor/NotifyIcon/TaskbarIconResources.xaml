@@ -71,7 +71,7 @@
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
                 <MenuItem Header="{l:Loc TrayIcon_Menu_Restore}" Command="{s:Action Restore, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
-                <MenuItem Header="{l:Loc TrayIcon_Menu_ClosetoTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
+                <MenuItem Header="{l:Loc TrayIcon_Menu_CloseToTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
