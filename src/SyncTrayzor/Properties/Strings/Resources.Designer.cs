@@ -153,9 +153,7 @@ namespace SyncTrayzor.Properties.Strings {
         /// <summary>
         ///   Looks up a localized string similar to Failed to start Syncthing.
         ///
-        ///
         ///Please read the log to determine the cause.
-        ///
         ///
         ///If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again..
         /// </summary>
@@ -178,7 +176,6 @@ namespace SyncTrayzor.Properties.Strings {
         ///   Looks up a localized string similar to Unable to start Syncthing: {0}
         ///
         ///This could be because Windows if set up to forbid executing files in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.
-        ///
         ///
         ///Please adjust your settings / whitelists to allow &apos;{1}&apos; to execute.
         /// </summary>

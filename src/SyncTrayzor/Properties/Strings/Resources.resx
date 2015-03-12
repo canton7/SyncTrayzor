@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -184,7 +184,7 @@
     <value>S_top</value>
   </data>
   <data name="NewVersionAlertView_Button_DontRemind" xml:space="preserve">
-    <value>Don't Remind Me Again</value>
+    <value>Don&apos;t Remind Me Again</value>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
     <value>Download Now</value>
@@ -196,7 +196,7 @@
     <value>Changelog:</value>
   </data>
   <data name="NewVersionAlertView_DontRemindMeExplanation" xml:space="preserve">
-    <value>'Don't Remind Me Again' will silence reminders for this version. You can permanently disable new version alerts from the Settings page. Visit Help -&gt; About to manually check for a new version.</value>
+    <value>&apos;Don&apos;t Remind Me Again&apos; will silence reminders for this version. You can permanently disable new version alerts from the Settings page. Visit Help -&gt; About to manually check for a new version.</value>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
     <value>A new version of SyncTrayzor is available!
@@ -215,7 +215,7 @@ Do you want to download it now?</value>
     <value>API Key:</value>
   </data>
   <data name="SettingsView_ApiKey_ToolTip" xml:space="preserve">
-    <value>SyncTrayzor overrides the API key specified in Syncthing's configuration. However, you can set it to whatever value you like here.</value>
+    <value>SyncTrayzor overrides the API key specified in Syncthing&apos;s configuration. However, you can set it to whatever value you like here.</value>
   </data>
   <data name="SettingsView_CloseToTray" xml:space="preserve">
     <value>Close to tray</value>
@@ -248,7 +248,7 @@ Do you want to download it now?</value>
     <value>Watched Folders</value>
   </data>
   <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>Show 'Synchronized' balloon messages</value>
+    <value>Show &apos;Synchronized&apos; balloon messages</value>
   </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
     <value>Start Minimized</value>
@@ -266,7 +266,7 @@ Do you want to download it now?</value>
     <value>GUI Listen Address:</value>
   </data>
   <data name="SettingsView_SyncthingAddress_ToolTip" xml:space="preserve">
-    <value>SyncTrayzor overrides the "GUI Listen Address" specified in Syncthing's configuration. However, you can set it to whatever value you like here.</value>
+    <value>SyncTrayzor overrides the &quot;GUI Listen Address&quot; specified in Syncthing&apos;s configuration. However, you can set it to whatever value you like here.</value>
   </data>
   <data name="SettingsView_SyncthingUseCustomHome" xml:space="preserve">
     <value>Use custom home directory for Syncthing.</value>
@@ -298,11 +298,9 @@ Do you want to download it now?</value>
   <data name="Dialog_FailedToStartSyncthing_Message" xml:space="preserve">
     <value>Failed to start Syncthing.
 
-
 Please read the log to determine the cause.
 
-
-If "FATAL: Cannot open database" appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option "Syncthing -&gt; Kill all Syncthing processes" to stop them, then use "Syncthing -&gt; Start" to start Syncthing again.</value>
+If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again.</value>
     <comment>"FATAL: Cannot Open Database" should remain in English</comment>
   </data>
   <data name="Dialog_FailedToStartSyncthing_Title" xml:space="preserve">
@@ -313,8 +311,7 @@ If "FATAL: Cannot open database" appears, please close any other open instances 
 
 This could be because Windows if set up to forbid executing files in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.
 
-
-Please adjust your settings / whitelists to allow '{1}' to execute</value>
+Please adjust your settings / whitelists to allow &apos;{1}&apos; to execute</value>
     <comment>{0}: Exception message
 {1}: Path to Syncthing</comment>
   </data>
@@ -381,7 +378,7 @@ Details on each component, and its license text, are shown below.</value>
 SyncTrayzor is going to have to close. Sorry about that</value>
   </data>
   <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
-    <value />
+    <value/>
     <comment>Appears after the log path</comment>
   </data>
   <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
