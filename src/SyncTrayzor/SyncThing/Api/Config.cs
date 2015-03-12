@@ -58,8 +58,10 @@ namespace SyncTrayzor.SyncThing.Api
         [JsonProperty("Addresses")]
         public List<string> Addresses { get; set; }
 
-        [JsonProperty("Compression")]
-        public bool Compression { get; set; }
+        // Apparently this can be 'never'
+        // We don't use it, so commenting until it decided what data type it wants to be
+        //[JsonProperty("Compression")]
+        //public bool Compression { get; set; }
 
         [JsonProperty("CertName")]
         public string CertName { get; set; }
@@ -69,7 +71,7 @@ namespace SyncTrayzor.SyncThing.Api
 
         public override string ToString()
         {
-            return String.Format("<Device id={0} name={1} addresses=[{2}] compression={3} certname={4} isintroducer={5}>", this.DeviceID, this.Name, String.Join(", ", this.Addresses), this.Compression, this.CertName, this.IsIntroducer);
+            return String.Format("<Device id={0} name={1} addresses=[{2}] compression=N/A certname={3} isintroducer={4}>", this.DeviceID, this.Name, String.Join(", ", this.Addresses), this.CertName, this.IsIntroducer);
         }
     }
 
