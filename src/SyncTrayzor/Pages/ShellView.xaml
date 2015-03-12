@@ -4,6 +4,7 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+        xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="700" Width="1100"
         Title="SyncTrayzor"
         Icon="..\Icons\default_tray.ico">
@@ -12,30 +13,30 @@
     </i:Interaction.Behaviors>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Settings" Command="{s:Action ShowSettings}"/>
-                <MenuItem Header="_Exit" Command="{s:Action Shutdown}"/>
+            <MenuItem Header="{l:Loc ShellView_Menu_File}">
+                <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
             </MenuItem>
-            <MenuItem Header="Syncthing">
-                <MenuItem Header="_Start" Command="{s:Action Start}"/>
-                <MenuItem Header="S_top" Command="{s:Action Stop}"/>
-                <MenuItem Header="_Kill" Command="{s:Action Kill}"/>
-                <MenuItem Header="_Refresh Browser" Command="{s:Action RefreshBrowser}"/>
-                <MenuItem Header="_Open External Browser" Command="{s:Action OpenBrowser}"/>
-                <MenuItem Header="Kill _all Syncthing processes" Command="{s:Action KillAllSyncthingProcesses}"/>
+            <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Kill}" Command="{s:Action Kill}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" Command="{s:Action RefreshBrowser}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
             </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="_About" Command="{s:Action ShowAbout}"/>
+            <MenuItem Header="{l:Loc ShellView_Menu_Help}">
+                <MenuItem Header="{l:Loc ShellView_Menu_Help_About}" Command="{s:Action ShowAbout}"/>
             </MenuItem>
         </Menu>
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="*" MinHeight="100"/>
             </Grid.RowDefinitions>
-            
+
             <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
 
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>

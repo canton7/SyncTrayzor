@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
@@ -44,10 +45,10 @@ namespace SyncTrayzor.Pages
             this.IsPortable = configurationProvider.IsPortableMode;
             this.HomepageUrl = Settings.Default.HomepageUrl;
 
-            this.SyncthingVersion = this.syncThingManager.Version == null ? "Unknown" : this.syncThingManager.Version.Version;
+            this.SyncthingVersion = this.syncThingManager.Version == null ? Localizer.Translate("AboutView_UnknownVersion") : this.syncThingManager.Version.Version;
             this.syncThingManager.DataLoaded += (o, e) =>
             {
-                this.SyncthingVersion = this.syncThingManager.Version == null ? "Unknown" : this.syncThingManager.Version.Version;
+                this.SyncthingVersion = this.syncThingManager.Version == null ? Localizer.Translate("AboutView_UnknownVersion") : this.syncThingManager.Version.Version;
             };
 
             this.CheckForNewerVersionAsync();

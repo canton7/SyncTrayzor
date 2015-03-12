@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
              xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"/>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Starting...</TextBlock>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">SyncThing Stopped</TextBlock>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStarting}"
+                   Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStopped}"
+                   Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
     </Grid>
 </UserControl>
