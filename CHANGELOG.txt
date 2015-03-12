@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.8
+------
+
+ - Support HTTPS
+ - Add German translation (thanks Adrian Rudnik)
+ - Ensure SyncTrayzor is terminated properly when updating/uninstalling using the installer
+
 v1.0.7
 ------
 
