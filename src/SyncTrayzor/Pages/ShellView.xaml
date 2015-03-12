@@ -6,8 +6,7 @@
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="700" Width="1100"
-        Title="SyncTrayzor"
-        Icon="..\Icons\default_tray.ico">
+        Title="SyncTrayzor">
     <i:Interaction.Behaviors>
         <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
     </i:Interaction.Behaviors>
