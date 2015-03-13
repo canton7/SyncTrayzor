@@ -1,5 +1,6 @@
 ﻿using NLog;
 using SyncTrayzor.SyncThing.Api;
+using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Concurrent;
@@ -9,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EventWatcher = SyncTrayzor.SyncThing.EventWatcher;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -23,6 +26,8 @@ namespace SyncTrayzor.SyncThing
         SyncThingConnectionStats TotalConnectionStats { get; }
         event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
         event EventHandler ProcessExitedWithError;
+        event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
+        event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
@@ -39,6 +44,9 @@ namespace SyncTrayzor.SyncThing
 
         bool TryFetchFolderById(string folderId, out Folder folder);
         IReadOnlyCollection<Folder> FetchAllFolders();
+
+        bool TryFetchDeviceById(string deviceId, out Device device);
+        IReadOnlyCollection<Device> FetchAllDevices();
 
         Task ScanAsync(string folderId, string subPath);
         Task ReloadIgnoresAsync(string folderId);
@@ -75,6 +83,8 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
+        public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
+        public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
         private readonly object totalConnectionStatsLock = new object();
         private SyncThingConnectionStats _totalConnectionStats;
@@ -98,11 +108,19 @@ namespace SyncTrayzor.SyncThing
         // to create a memory barrier. The lock is only used when setting/fetching the field, not when accessing the
         // Folders dictionary itself.
         private readonly object foldersLock = new object();
-        private ConcurrentDictionary<string, Folder> _folders;
+        private ConcurrentDictionary<string, Folder> _folders = new ConcurrentDictionary<string, Folder>();
         private ConcurrentDictionary<string, Folder> folders
         {
             get { lock (this.foldersLock) { return this._folders; } }
             set { lock (this.foldersLock) { this._folders = value; } }
+        }
+
+        private readonly object devicesLock = new object();
+        private ConcurrentDictionary<string, Device> _devices = new ConcurrentDictionary<string, Device>();
+        public ConcurrentDictionary<string, Device> devices
+        {
+            get { lock (this.devicesLock) { return this._devices; } }
+            set { lock (this.devicesLock) this._devices = value; }
         }
 
         public SyncthingVersion Version { get; private set; }
@@ -113,7 +131,6 @@ namespace SyncTrayzor.SyncThing
             ISyncThingEventWatcher eventWatcher,
             ISyncThingConnectionsWatcher connectionsWatcher)
         {
-            this.folders = new ConcurrentDictionary<string, Folder>();
             this.LastConnectivityEventTime = DateTime.UtcNow;
 
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
@@ -126,11 +143,11 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
 
             this.eventWatcher.StartupComplete += (o, e) => { var t = this.StartupCompleteAsync(); };
-            this.eventWatcher.SyncStateChanged += (o, e) => this.OnSyncStateChanged(e);
+            this.eventWatcher.SyncStateChanged += (o, e) => this.OnFolderSyncStateChanged(e);
             this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
             this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
-            this.eventWatcher.DeviceConnected += (o, e) => this.DeviceConnectedOrDisconnected();
-            this.eventWatcher.DeviceDisconnected += (o, e) => this.DeviceConnectedOrDisconnected();
+            this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
+            this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
 
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
         }
@@ -184,6 +201,16 @@ namespace SyncTrayzor.SyncThing
         public IReadOnlyCollection<Folder> FetchAllFolders()
         {
             return new List<Folder>(this.folders.Values).AsReadOnly();
+        }
+
+        public bool TryFetchDeviceById(string deviceId, out Device device)
+        {
+            return this.devices.TryGetValue(deviceId, out device);
+        }
+
+        public IReadOnlyCollection<Device> FetchAllDevices()
+        {
+            return new List<Device>(this.devices.Values).AsReadOnly();
         }
 
         public Task ScanAsync(string folderId, string subPath)
@@ -248,7 +275,17 @@ namespace SyncTrayzor.SyncThing
             var configTask = this.apiClient.FetchConfigAsync();
             var systemTask = this.apiClient.FetchSystemInfoAsync();
             var versionTask = this.apiClient.FetchVersionAsync();
-            await Task.WhenAll(configTask, systemTask, versionTask);
+            var connectionsTask = this.apiClient.FetchConnectionsAsync();
+            await Task.WhenAll(configTask, systemTask, versionTask, connectionsTask);
+
+            this.devices = new ConcurrentDictionary<string, Device>(configTask.Result.Devices.Select(device =>
+            {
+                var deviceObj = new Device(device.DeviceID, device.Name);
+                ItemConnectionData connectionData;
+                if (connectionsTask.Result.DeviceConnections.TryGetValue(device.DeviceID, out connectionData))
+                    deviceObj.SetConnected(connectionData.Address);
+                return new KeyValuePair<string, Device>(device.DeviceID, deviceObj);
+            }));
 
             var tilde = systemTask.Result.Tilde;
 
@@ -288,9 +325,34 @@ namespace SyncTrayzor.SyncThing
             folder.RemoveSyncingPath(item);
         }
 
-        private void DeviceConnectedOrDisconnected()
+        private void OnDeviceConnected(EventWatcher.DeviceConnectedEventArgs e)
         {
+            Device device;
+            if (!this.devices.TryGetValue(e.DeviceId, out device))
+            {
+                logger.Warn("Unexpected device connected: {0}, address {1}. It wasn't fetched when we fetched our config", e.DeviceId, e.Address);
+                return; // Not expecting this device! It wasn't in the config...
+            }
+
+            device.SetConnected(e.Address);
             this.LastConnectivityEventTime = DateTime.UtcNow;
+
+            this.eventDispatcher.Raise(this.DeviceConnected, new DeviceConnectedEventArgs(device));
+        }
+
+        private void OnDeviceDisconnected(EventWatcher.DeviceDisconnectedEventArgs e)
+        {
+            Device device;
+            if (!this.devices.TryGetValue(e.DeviceId, out device))
+            {
+                logger.Warn("Unexpected device connected: {0}, error {1}. It wasn't fetched when we fetched our config", e.DeviceId, e.Error);
+                return; // Not expecting this device! It wasn't in the config...
+            }
+
+            device.SetDisconnected();
+            this.LastConnectivityEventTime = DateTime.UtcNow;
+
+            this.eventDispatcher.Raise(this.DeviceDisconnected, new DeviceDisconnectedEventArgs(device));
         }
 
         private void OnMessageLogged(string logMessage)
@@ -298,7 +360,7 @@ namespace SyncTrayzor.SyncThing
             this.eventDispatcher.Raise(this.MessageLogged, new MessageLoggedEventArgs(logMessage));
         }
 
-        private void OnSyncStateChanged(SyncStateChangedEventArgs e)
+        private void OnFolderSyncStateChanged(SyncStateChangedEventArgs e)
         {
             Folder folder;
             if (!this.folders.TryGetValue(e.FolderId, out folder))

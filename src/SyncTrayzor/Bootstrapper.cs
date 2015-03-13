@@ -10,6 +10,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
