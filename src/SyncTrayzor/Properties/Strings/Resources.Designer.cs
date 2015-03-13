@@ -213,11 +213,38 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        public static string Generic_Dialog_No {
+            get {
+                return ResourceManager.GetString("Generic_Dialog_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string Generic_Dialog_OK {
+            get {
+                return ResourceManager.GetString("Generic_Dialog_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Generic_Dialog_Save {
             get {
                 return ResourceManager.GetString("Generic_Dialog_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string Generic_Dialog_Yes {
+            get {
+                return ResourceManager.GetString("Generic_Dialog_Yes", resourceCulture);
             }
         }
         
