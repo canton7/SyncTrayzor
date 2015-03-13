@@ -722,6 +722,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dummy text ignored by the UI.
+        /// </summary>
+        public static string TranslatorAttributation {
+            get {
+                return ResourceManager.GetString("TranslatorAttributation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}: Finished Syncing.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_Message {

@@ -1,6 +1,7 @@
 ﻿using SyncTrayzor.Properties.Strings;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace SyncTrayzor.Localization
                 return "!" + key + (parameters.Length > 0 ? ":" + String.Join(",", parameters) : "") + "!";
 
             return String.Format(format, parameters);
+        }
+
+        public static string OriginalTranslation(string key)
+        {
+            return Resources.ResourceManager.GetString(key, new CultureInfo("en-US", false));
         }
     }
 }
