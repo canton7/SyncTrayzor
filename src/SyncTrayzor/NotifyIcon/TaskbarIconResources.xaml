@@ -55,7 +55,7 @@
                             <BeginStoryboard Storyboard="{StaticResource IconAnimation}" Name="IconAnimation"/>
                         </DataTrigger.EnterActions>
                         <DataTrigger.ExitActions>
-                            <StopStoryboard BeginStoryboardName="IconAnimation"/>
+                            <RemoveStoryboard BeginStoryboardName="IconAnimation"/>
                         </DataTrigger.ExitActions>
                     </DataTrigger>
                 </Style.Triggers>
