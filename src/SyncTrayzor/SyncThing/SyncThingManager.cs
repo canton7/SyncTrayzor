@@ -257,7 +257,7 @@ namespace SyncTrayzor.SyncThing
                 var ignores = await this.apiClient.FetchIgnoresAsync(folder.ID);
                 var path = folder.Path;
                 if (path.StartsWith("~"))
-                    path = Path.Combine(tilde, path.Substring(1));
+                    path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
                 return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
             });
 
