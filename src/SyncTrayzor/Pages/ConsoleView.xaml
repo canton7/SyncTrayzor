@@ -8,31 +8,20 @@
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <xaml:LogMessageListToStringConverter x:Key="LogMessagesConverter"/>
+    </UserControl.Resources>
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <i:Interaction.Behaviors>
-                <xaml:ScrollToEndBehaviour Source="{Binding LogMessages}"/>
-            </i:Interaction.Behaviors>
-            <ItemsControl ItemsSource="{Binding LogMessages}" VirtualizingPanel.IsVirtualizing="True">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBox Text="{Binding Mode=OneWay}" 
-                                 FontFamily="Consolas"
-                                 FontSize="11"
-                                 IsReadOnly="True"
-                                 BorderThickness="0"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-
-        <!--<TextBox xaml:TextBoxUtilities.AlwaysScrollToEnd="True"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <TextBox ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  FontFamily="Consolas"
                  FontSize="11"
                  IsReadOnly="True"
                  UndoLimit="0"
-                 Text="{Binding LogMessages}"/>-->
+                 Text="{Binding LogMessages, Converter={StaticResource LogMessagesConverter}}">
+            <i:Interaction.Behaviors>
+                <xaml:ScrollToEndBehaviour/>
+            </i:Interaction.Behaviors>
+        </TextBox>
     </Grid>
 </UserControl>

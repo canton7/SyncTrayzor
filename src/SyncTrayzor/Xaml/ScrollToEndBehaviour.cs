@@ -9,33 +9,23 @@ using System.Windows.Controls;
 
 namespace SyncTrayzor.Xaml
 {
-    public class ScrollToEndBehaviour : DetachingBehaviour<ScrollViewer>
+    public class ScrollToEndBehaviour : DetachingBehaviour<TextBox>
     {
-        public INotifyCollectionChanged Source
+        protected override void AttachHandlers()
         {
-            get { return (INotifyCollectionChanged)GetValue(SourceProperty); }
-            set { SetValue(SourceProperty, value); }
+            this.AssociatedObject.TextChanged += TextChanged;
+
+            this.AssociatedObject.ScrollToEnd();
         }
 
-        public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(INotifyCollectionChanged), typeof(ScrollToEndBehaviour), new PropertyMetadata(null, (d, e) =>
-            {
-                ((ScrollToEndBehaviour)d).InccSubject(e.NewValue as INotifyCollectionChanged, e.OldValue as INotifyCollectionChanged);
-            }));
-
-        private void InccSubject(INotifyCollectionChanged newValue, INotifyCollectionChanged oldValue)
+        protected override void DetachHandlers()
         {
-            if (oldValue != null)
-                oldValue.CollectionChanged -= this.OnCollectionChanged;
-
-            if (newValue != null)
-                newValue.CollectionChanged += this.OnCollectionChanged;
+            this.AssociatedObject.TextChanged -= TextChanged;
         }
 
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Reset)
-                this.AssociatedObject.ScrollToEnd();
+            this.AssociatedObject.ScrollToEnd();
         }
     }
 }

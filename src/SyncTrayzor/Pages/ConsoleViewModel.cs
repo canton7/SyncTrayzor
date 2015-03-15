@@ -21,7 +21,7 @@ namespace SyncTrayzor.Pages
         private readonly ISyncThingManager syncThingManager;
         private readonly IConfigurationProvider configurationProvider;
 
-        public ObservableQueue<string> LogMessages { get; private set; }
+        public Queue<string> LogMessages { get; private set; }
 
         public ConsoleViewModel(
             ISyncThingManager syncThingManager,
@@ -29,7 +29,7 @@ namespace SyncTrayzor.Pages
         {
             this.syncThingManager = syncThingManager;
             this.configurationProvider = configurationProvider;
-            this.LogMessages = new ObservableQueue<string>();
+            this.LogMessages = new Queue<string>();
 
             var configuration = this.configurationProvider.Load();
             this.configurationProvider.ConfigurationChanged += (o, e) => configuration = e.NewConfiguration;
@@ -45,6 +45,7 @@ namespace SyncTrayzor.Pages
                 this.LogMessages.Enqueue(message);
                 if (this.LogMessages.Count > maxLogMessages)
                     this.LogMessages.Dequeue();
+                this.NotifyOfPropertyChange(() => this.LogMessages);
             };
         }
     }
