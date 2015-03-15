@@ -159,6 +159,7 @@
     <Compile Include="RefitStubs.cs" />
     <Compile Include="Services\ApplicationState.cs" />
     <Compile Include="Services\DirectoryWatcher.cs" />
+    <Compile Include="Services\MemoryUsageLogger.cs" />
     <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
     <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
     <Compile Include="Services\UpdateChecker\IGithubApi.cs" />
