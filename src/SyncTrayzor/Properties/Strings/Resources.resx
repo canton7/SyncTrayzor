@@ -474,4 +474,28 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Dummy text ignored by the UI</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
+  <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
+    <value>Tray Icon</value>
+  </data>
+  <data name="SettingsView_ShowDeviceConnectivityBalloons" xml:space="preserve">
+    <value>Show device Connected/Disconnected balloon messages</value>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
+    <value>{0} connected</value>
+    <comment>Message of tray icon balloon show when another device connects
+{0}: device name</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceConnected_Title" xml:space="preserve">
+    <value>Device Connected</value>
+    <comment>Title of tray icon balloon when another device connected</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceDisconnected_Message" xml:space="preserve">
+    <value>{0} disconnected</value>
+    <comment>Message of tray icon balloon show when another device disconnects
+{0}: device name</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceDisconnected_Title" xml:space="preserve">
+    <value>Device Disconnected</value>
+    <comment>Title of tray icon balloon when another device disconnected</comment>
+  </data>
 </root>

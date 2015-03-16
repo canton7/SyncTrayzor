@@ -39,8 +39,13 @@ namespace SyncTrayzor.SyncThing.Api
         {
             get
             {
-                return this._deviceConnections ?? 
-                    (this._deviceConnections = this.DeviceConnectionsRaw.ToDictionary(x => x.Key, x => x.Value.ToObject<ItemConnectionData>()));
+                if (this._deviceConnections == null)
+                {
+                    this._deviceConnections = this.DeviceConnectionsRaw == null ?
+                        new Dictionary<string, ItemConnectionData>() :
+                        this.DeviceConnectionsRaw.ToDictionary(x => x.Key, x => x.Value.ToObject<ItemConnectionData>());
+                }
+                return this._deviceConnections;
             }
         }
     }

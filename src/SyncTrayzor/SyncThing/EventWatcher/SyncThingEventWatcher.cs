@@ -8,28 +8,16 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.SyncThing
+namespace SyncTrayzor.SyncThing.EventWatcher
 {
-    public class ItemStateChangedEventArgs : EventArgs
-    {
-        public string Folder { get; private set; }
-        public string Item { get; private set; }
-
-        public ItemStateChangedEventArgs(string folder, string item)
-        {
-            this.Folder = folder;
-            this.Item = item;
-        }
-    }
-
     public interface ISyncThingEventWatcher : ISyncThingPoller
     {
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         event EventHandler StartupComplete;
         event EventHandler<ItemStateChangedEventArgs> ItemStarted;
         event EventHandler<ItemStateChangedEventArgs> ItemFinished;
-        event EventHandler DeviceConnected;
-        event EventHandler DeviceDisconnected;
+        event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
+        event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
     }
 
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
@@ -43,8 +31,8 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler StartupComplete;
         public event EventHandler<ItemStateChangedEventArgs> ItemStarted;
         public event EventHandler<ItemStateChangedEventArgs> ItemFinished;
-        public event EventHandler DeviceConnected;
-        public event EventHandler DeviceDisconnected;
+        public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
+        public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
             : base(TimeSpan.Zero)
@@ -113,18 +101,18 @@ namespace SyncTrayzor.SyncThing
                 handler(this, new ItemStateChangedEventArgs(folder, item));
         }
 
-        private void OnDeviceConnected()
+        private void OnDeviceConnected(string deviceId, string address)
         {
             var handler = this.DeviceConnected;
             if (handler != null)
-                handler(this, EventArgs.Empty);
+                handler(this, new DeviceConnectedEventArgs(deviceId, address));
         }
 
-        private void OnDeviceDisconnected()
+        private void OnDeviceDisconnected(string deviceId, string error)
         {
             var handler = this.DeviceDisconnected;
             if (handler != null)
-                handler(this, EventArgs.Empty);
+                handler(this, new DeviceDisconnectedEventArgs(deviceId, error));
         }
 
         #region IEventVisitor
@@ -165,12 +153,12 @@ namespace SyncTrayzor.SyncThing
 
         public void Accept(DeviceConnectedEvent evt)
         {
-            this.OnDeviceConnected();
+            this.OnDeviceConnected(evt.Data.Id, evt.Data.Address);
         }
 
         public void Accept(DeviceDisconnectedEvent evt)
         {
-            this.OnDeviceDisconnected();
+            this.OnDeviceDisconnected(evt.Data.Id, evt.Data.Error);
         }
 
         #endregion

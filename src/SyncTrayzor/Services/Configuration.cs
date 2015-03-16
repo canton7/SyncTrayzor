@@ -42,6 +42,7 @@ namespace SyncTrayzor.Services
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool ShowDeviceConnectivityBalloons { get; set; }
         public string SyncthingAddress { get; set; }
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
@@ -71,6 +72,7 @@ namespace SyncTrayzor.Services
             this.MinimizeToTray = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
+            this.ShowDeviceConnectivityBalloons = true;
             this.SyncthingAddress = "http://localhost:8384";
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = syncThingApiKey;
@@ -88,6 +90,7 @@ namespace SyncTrayzor.Services
             this.MinimizeToTray = other.MinimizeToTray;
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
+            this.ShowDeviceConnectivityBalloons = other.ShowDeviceConnectivityBalloons;
             this.SyncthingAddress = other.SyncthingAddress;
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
@@ -102,11 +105,12 @@ namespace SyncTrayzor.Services
         public override string ToString()
         {
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
-                "SyncthingAddress={4} StartSyncthingAutomatically={5} SyncthingApiKey={6} SyncthingTraceFacilities={7} " +
-                "SyncthingUseCustomHome={8} Folders=[{9}] NotifyOfNewVersions={10} LastNotifiedVersion={11} ObfuscateDeviceIDs={12}>",
-                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.SyncthingAddress,
-                this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities, this.SyncthingUseCustomHome,
-                String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs);
+                "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingTraceFacilities={8} " +
+                "SyncthingUseCustomHome={9} Folders=[{10}] NotifyOfNewVersions={11} LastNotifiedVersion={12} ObfuscateDeviceIDs={13}>",
+                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
+                this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities,
+                this.SyncthingUseCustomHome, String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion,
+                this.ObfuscateDeviceIDs);
         }
     }
 }
