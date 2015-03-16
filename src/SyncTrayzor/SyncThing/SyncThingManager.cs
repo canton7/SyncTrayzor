@@ -40,6 +40,7 @@ namespace SyncTrayzor.SyncThing
 
         void Start();
         Task StopAsync();
+        Task RestartAsync();
         void Kill();
         void KillAllSyncthingProcesses();
 
@@ -190,6 +191,14 @@ namespace SyncTrayzor.SyncThing
 
             this.SetState(SyncThingState.Stopping);
             return this.apiClient.ShutdownAsync();
+        }
+
+        public Task RestartAsync()
+        {
+            if (this.State != SyncThingState.Running)
+                return Task.FromResult(false);
+
+            return this.apiClient.RestartAsync();
         }
 
         public void Kill()

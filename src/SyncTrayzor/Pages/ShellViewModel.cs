@@ -70,6 +70,15 @@ namespace SyncTrayzor.Pages
             this.syncThingManager.StopAsync();
         }
 
+        public bool CanRestart
+        {
+            get { return this.SyncThingState == SyncThing.SyncThingState.Running; }
+        }
+        public void Restart()
+        {
+            this.syncThingManager.RestartAsync();
+        }
+
         public bool CanKill
         {
             get { return this.SyncThingState != SyncThingState.Stopped; }

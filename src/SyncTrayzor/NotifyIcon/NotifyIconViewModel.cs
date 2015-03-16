@@ -95,6 +95,15 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.StopAsync();
         }
 
+        public bool CanRestart
+        {
+            get { return this.SyncThingState == SyncThingState.Running; }
+        }
+        public void Restart()
+        {
+            this.syncThingManager.RestartAsync();
+        }
+
         public void Exit()
         {
             this.OnExitRequested();

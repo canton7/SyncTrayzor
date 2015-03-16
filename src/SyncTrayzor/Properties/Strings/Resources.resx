@@ -498,4 +498,11 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Device Disconnected</value>
     <comment>Title of tray icon balloon when another device disconnected</comment>
   </data>
+  <data name="ShellView_Menu_Syncthing_Restart" xml:space="preserve">
+    <value>R_estart</value>
+  </data>
+  <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
+    <value>R_estart</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
+  </data>
 </root>
