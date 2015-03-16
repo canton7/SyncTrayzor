@@ -90,10 +90,7 @@
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyChanged">
-      <HintPath>..\packages\PropertyChanged.Fody.1.49.0\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="Refit">
       <HintPath>..\packages\refit.2.2.0\lib\Net45\Refit.dll</HintPath>
     </Reference>
@@ -104,21 +101,14 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -199,7 +189,6 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
-    <Compile Include="Utils\CefSharpHelper.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
@@ -282,17 +271,6 @@
     <Resource Include="Icons\syncing_2.ico" />
     <Resource Include="Icons\syncing_3.ico" />
     <Resource Include="Icons\syncing_4.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="SHDocVw">
-      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
