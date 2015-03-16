@@ -34,6 +34,7 @@ namespace SyncTrayzor.SyncThing
         Uri Address { get; set; }
         string SyncthingTraceFacilities { get; set; }
         string SyncthingCustomHomeDir { get; set; }
+        DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
 
@@ -61,6 +62,14 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingApiClient apiClient;
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly ISyncThingConnectionsWatcher connectionsWatcher;
+
+        private DateTime _startedTime;
+        private readonly object startedTimeLock = new object();
+        public DateTime StartedTime
+        {
+            get { lock (this.startedTimeLock) { return this._startedTime; } }
+            set { lock (this.startedTimeLock) { this._startedTime = value; } }
+        }
 
         private DateTime _lastConnectivityEventTime;
         private readonly object lastConnectivityEventTimeLock = new object();
@@ -131,7 +140,8 @@ namespace SyncTrayzor.SyncThing
             ISyncThingEventWatcher eventWatcher,
             ISyncThingConnectionsWatcher connectionsWatcher)
         {
-            this.LastConnectivityEventTime = DateTime.UtcNow;
+            this.StartedTime = DateTime.MinValue;
+            this.LastConnectivityEventTime = DateTime.MinValue;
 
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
@@ -269,7 +279,6 @@ namespace SyncTrayzor.SyncThing
 
         private async Task StartupCompleteAsync()
         {
-            this.LastConnectivityEventTime = DateTime.UtcNow;
             this.SetState(SyncThingState.Running);
 
             var configTask = this.apiClient.FetchConfigAsync();
@@ -304,6 +313,7 @@ namespace SyncTrayzor.SyncThing
             this.Version = versionTask.Result;
 
             this.OnDataLoaded();
+            this.StartedTime = DateTime.UtcNow;
             this.IsDataLoaded = true;
         }
 

@@ -424,6 +424,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tray Icon.
+        /// </summary>
+        public static string SettingsView_Section_TrayIcon {
+            get {
+                return ResourceManager.GetString("SettingsView_Section_TrayIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Watched Folders.
         /// </summary>
         public static string SettingsView_Section_WatchedFolders {
@@ -438,6 +447,15 @@ namespace SyncTrayzor.Properties.Strings {
         public static string SettingsView_ShowBalloonWhenSynchronized {
             get {
                 return ResourceManager.GetString("SettingsView_ShowBalloonWhenSynchronized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show device Connected/Disconnected balloon messages.
+        /// </summary>
+        public static string SettingsView_ShowDeviceConnectivityBalloons {
+            get {
+                return ResourceManager.GetString("SettingsView_ShowDeviceConnectivityBalloons", resourceCulture);
             }
         }
         
@@ -754,6 +772,42 @@ namespace SyncTrayzor.Properties.Strings {
         public static string TranslatorAttributation {
             get {
                 return ResourceManager.GetString("TranslatorAttributation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} connected.
+        /// </summary>
+        public static string TrayIcon_Balloon_DeviceConnected_Message {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_DeviceConnected_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device Connected.
+        /// </summary>
+        public static string TrayIcon_Balloon_DeviceConnected_Title {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_DeviceConnected_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} disconnected.
+        /// </summary>
+        public static string TrayIcon_Balloon_DeviceDisconnected_Message {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_DeviceDisconnected_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device Disconnected.
+        /// </summary>
+        public static string TrayIcon_Balloon_DeviceDisconnected_Title {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_DeviceDisconnected_Title", resourceCulture);
             }
         }
         

@@ -305,8 +305,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Licenses\Syncthing.txt" />
   </ItemGroup>
