@@ -65,6 +65,7 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.CloseToTray = configuration.CloseToTray;
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
+            this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
             this.syncThingManager.Address = new Uri(configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;

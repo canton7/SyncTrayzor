@@ -29,10 +29,16 @@
             <DockPanel>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray}" Content="{l:Loc SettingsView_MinimizeToTray}"/>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}" Content="{l:Loc SettingsView_CloseToTray}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
-                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}" Content="{l:Loc SettingsView_ShowBalloonWhenSynchronized}"/>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}" Content="{l:Loc SettingsView_AlertOnNewVersion}"/>
                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ObfuscateDeviceIDs}" Content="{l:Loc SettingsView_ObfuscateDeviceIds}"/>
+            </DockPanel>
+        </GroupBox>
+
+        <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_TrayIcon}">
+            <DockPanel>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}" Content="{l:Loc SettingsView_ShowBalloonWhenSynchronized}"/>
+                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
             </DockPanel>
         </GroupBox>
 

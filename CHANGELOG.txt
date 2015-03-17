@@ -1,12 +1,22 @@
 Changelog
 =========
 
+v1.0.9
+------
+
+ - Fix bug with directory watcher and paths containing a tilde (~)
+ - Fix resolution issue with taskbar icon
+ - Add 'device connected/disconnected' tray icon balloon messages
+ - Add Dutch transation (thanks Heimen Stoffels!)
+ - Small redution in memory usage
+ - Add menu item to restart Syncthing
+
 v1.0.8
 ------
 
- - Support HTTPS
- - Add German translation (thanks Adrian Rudnik)
- - Ensure SyncTrayzor is terminated properly when updating/uninstalling using the installer
+- Support HTTPS
+- Add German translation (thanks Adrian Rudnik)
+- Ensure SyncTrayzor is terminated properly when updating/uninstalling using the installer
 
 v1.0.7
 ------

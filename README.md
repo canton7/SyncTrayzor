@@ -41,10 +41,19 @@ Grab the latest standalone .zip from the [releases](https://github.com/canton7/S
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
 
+Something went wrong!
+---------------------
+
+First, what went wrong? Remember that SyncTrayzor is a wrapper around [Syncthing](http://github.com/syncthing/syncthing).
+Syncthing is the file synchronization program, which has a web interface.
+SyncTrayzor is the tray utilty, looks like a normal Windows program, and has menus and suchlike, and a big area where Syncthing's web interface is displayed.
+
+ - If you're having problems connection to other devices, your files aren't synchronizing, or you're getting error messages in the console area, [raise an issue with Syncthing](http://github.com/syncthing/syncthing) or [post on the Syncthing forums](http://discourse.syncthing.net).
+ - If SyncTrayzor isn't talking to Syncthing, you're getting error dialogs, it's not auto-starting, etc, [raise an issue with SyncTrayzor](http://github.com/canton7/SyncTrayzor).
+ - If you're not sure, raise an issue here and I'll redirect you if appropriate.
+
 Contributing
 ------------
-
-Got a bug? [Raise an issue](https://github.com/canton7/SyncTrayzor/issues), providing as much detail as you can.
 
 Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.com/canton7/SyncTrayzor/wiki/Localization).
 

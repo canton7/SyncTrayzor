@@ -27,6 +27,10 @@ namespace SyncTrayzor.Pages
         public string HomepageUrl { get; set; }
 
         public string NewerVersion { get; set; }
+        public bool ShowTranslatorAttributation
+        {
+            get { return Localizer.Translate("TranslatorAttributation") == Localizer.OriginalTranslation("TranslatorAttributation"); }
+        }
         private string newerVersionDownloadUrl;
 
         public AboutViewModel(

@@ -6,8 +6,7 @@
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="700" Width="1100"
-        Title="SyncTrayzor"
-        Icon="..\Icons\default_tray.ico">
+        Title="SyncTrayzor">
     <i:Interaction.Behaviors>
         <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
     </i:Interaction.Behaviors>
@@ -20,6 +19,7 @@
             <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Restart}" Command="{s:Action Restart}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Kill}" Command="{s:Action Kill}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" Command="{s:Action RefreshBrowser}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>

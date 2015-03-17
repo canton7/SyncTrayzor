@@ -35,5 +35,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         [Get("/rest/ignores")]
         Task<Ignores> FetchIgnoresAsync(string folder);
+
+        [Post("/rest/restart")]
+        Task RestartAsync();
     }
 }

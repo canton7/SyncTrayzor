@@ -3,32 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <xaml:LogMessageListToStringConverter x:Key="LogMessagesConverter"/>
+    </UserControl.Resources>
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" xaml:ScrollViewerUtilities.ScrollToEndSource="{Binding LogMessages}">
-            <ItemsControl ItemsSource="{Binding LogMessages}" VirtualizingPanel.IsVirtualizing="True">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBox Text="{Binding Mode=OneWay}" 
-                                 FontFamily="Consolas"
-                                 FontSize="11"
-                                 IsReadOnly="True"
-                                 BorderThickness="0"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-
-        <!--<TextBox xaml:TextBoxUtilities.AlwaysScrollToEnd="True"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <TextBox ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  FontFamily="Consolas"
                  FontSize="11"
                  IsReadOnly="True"
                  UndoLimit="0"
-                 Text="{Binding LogMessages}"/>-->
+                 Text="{Binding LogMessages, Converter={StaticResource LogMessagesConverter}}">
+            <i:Interaction.Behaviors>
+                <xaml:ScrollToEndBehaviour/>
+            </i:Interaction.Behaviors>
+        </TextBox>
     </Grid>
 </UserControl>

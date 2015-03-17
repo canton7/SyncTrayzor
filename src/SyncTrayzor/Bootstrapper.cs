@@ -3,12 +3,14 @@ using FluentValidation;
 using NLog;
 using Stylet;
 using StyletIoC;
+using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -79,9 +81,19 @@ namespace SyncTrayzor
             notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
+            this.Container.Get<MemoryUsageLogger>().Enabled = true;
+
             // Horrible workaround for a CefSharp crash on logout/shutdown
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
+
+            MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
+            {
+                { MessageBoxResult.Cancel, Localizer.Translate("Generic_Dialog_Cancel") },
+                { MessageBoxResult.No, Localizer.Translate("Generic_Dialog_No") },
+                { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
+                { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
+            };
         }
 
         protected override void OnStart()

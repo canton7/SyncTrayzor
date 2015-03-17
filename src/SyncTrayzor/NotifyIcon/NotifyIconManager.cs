@@ -18,6 +18,7 @@ namespace SyncTrayzor.NotifyIcon
         bool MinimizeToTray { get; set; }
         bool CloseToTray { get; set; }
         bool ShowSynchronizedBalloon { get; set; }
+        bool ShowDeviceConnectivityBalloons { get; set; }
 
         void Setup(INotifyIconDelegate rootViewModel);
 
@@ -58,6 +59,7 @@ namespace SyncTrayzor.NotifyIcon
         }
 
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public NotifyIconManager(
             IViewManager viewManager,
@@ -81,10 +83,29 @@ namespace SyncTrayzor.NotifyIcon
             {
                 if (this.ShowSynchronizedBalloon &&
                     DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
+                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime &&
                     e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
                 {
                     Application.Current.Dispatcher.CheckAccess(); // Double-check
                     this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Title"), Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Message", e.Folder.FolderId), BalloonIcon.Info);
+                }
+            };
+
+            this.syncThingManager.DeviceConnected += (o, e) =>
+            {
+                if (this.ShowDeviceConnectivityBalloons &&
+                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                {
+                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_DeviceConnected_Title"), Localizer.Translate("TrayIcon_Balloon_DeviceConnected_Message", e.Device.Name), BalloonIcon.Info);
+                }
+            };
+
+            this.syncThingManager.DeviceDisconnected += (o, e) =>
+            {
+                if (this.ShowDeviceConnectivityBalloons &&
+                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                {
+                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_DeviceDisconnected_Title"), Localizer.Translate("TrayIcon_Balloon_DeviceDisconnected_Message", e.Device.Name), BalloonIcon.Info);
                 }
             };
         }
