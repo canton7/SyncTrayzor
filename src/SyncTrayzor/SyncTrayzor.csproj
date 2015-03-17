@@ -138,6 +138,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Strings\Resources.nl-NL.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.nl-NL.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Configuration.cs" />
     <Compile Include="Services\ConfigurationApplicator.cs" />
@@ -302,6 +307,10 @@
     <EmbeddedResource Include="Properties\Strings\Resources.de.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.nl-NL.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.nl-NL.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
