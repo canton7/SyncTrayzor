@@ -39,28 +39,12 @@ namespace SyncTrayzor.Pages
                 this.RefreshBrowser();
             };
 
-            this.callback = new JavascriptCallbackObject(f => System.Windows.MessageBox.Show(f));
+            this.callback = new JavascriptCallbackObject(this.OpenFolder);
 
             this.Bind(x => x.WebBrowser, (o, e) =>
             {
-                if (e.NewValue == null)
-                    return;
-
-                var webBrowser = e.NewValue;
-                webBrowser.RequestHandler = this;
-                webBrowser.LifeSpanHandler = this;
-                webBrowser.RegisterJsObject("callbackObject", this.callback);
-                webBrowser.FrameLoadEnd += (o2, e2) =>
-                {
-                    if (e2.IsMainFrame && e2.Url != "about:blank")
-                    {
-                        var script = @"$('#folders .panel-footer .pull-right').prepend(" +
-                        @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
-                        @"<span class=""glyphicon glyphicon-folder-open""></span>" +
-                        @"<span style=""margin-left: 12px"">Open Folder</span></button>')";
-                        webBrowser.ExecuteScriptAsync(script);
-                    }
-                };
+                if (e.NewValue != null)
+                    this.InitializeBrowser(e.NewValue);
             });
         }
 
@@ -69,11 +53,37 @@ namespace SyncTrayzor.Pages
             Cef.Initialize();
         }
 
+        private void InitializeBrowser(IWpfWebBrowser webBrowser)
+        {
+            webBrowser.RequestHandler = this;
+            webBrowser.LifeSpanHandler = this;
+            webBrowser.RegisterJsObject("callbackObject", this.callback);
+            webBrowser.FrameLoadEnd += (o, e) =>
+            {
+                if (e.IsMainFrame && e.Url != "about:blank")
+                {
+                    var script = @"$('#folders .panel-footer .pull-right').prepend(" +
+                    @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
+                    @"<span class=""glyphicon glyphicon-folder-open""></span>" +
+                    @"<span style=""margin-left: 12px"">Open Folder</span></button>')";
+                    webBrowser.ExecuteScriptAsync(script);
+                }
+            };
+        }
+
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
             if (this.syncThingManager.State == SyncThingState.Running)
                 this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
+        }
+
+        private void OpenFolder(string folderId)
+        {
+            Folder folder;
+            if (!this.syncThingManager.TryFetchFolderById(folderId, out folder))
+                return;
+            Process.Start("explorer.exe", folder.Path);
         }
 
         protected override void OnClose()
