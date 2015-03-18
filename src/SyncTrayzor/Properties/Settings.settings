@@ -30,8 +30,9 @@
   &lt;ShowDeviceConnectivityBalloons&gt;true&lt;/ShowDeviceConnectivityBalloons&gt;
   &lt;SyncthingAddress&gt;http://localhost:8384&lt;/SyncthingAddress&gt;
   &lt;StartSyncthingAutomatically&gt;true&lt;/StartSyncthingAutomatically&gt;
-  &lt;SyncthingUseCustomHome&gt;false&lt;/SyncthingUseCustomHome&gt;
+  &lt;SyncthingUseCustomHome xsi:nil="true" /&gt;
   &lt;SyncthingDenyUpgrade&gt;false&lt;/SyncthingDenyUpgrade&gt;
+  &lt;SyncthingRunLowPriority&gt;false&lt;/SyncthingRunLowPriority&gt;
   &lt;Folders /&gt;
   &lt;NotifyOfNewVersions&gt;true&lt;/NotifyOfNewVersions&gt;
   &lt;ObfuscateDeviceIDs&gt;true&lt;/ObfuscateDeviceIDs&gt;

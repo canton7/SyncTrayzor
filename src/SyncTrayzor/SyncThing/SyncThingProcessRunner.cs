@@ -40,6 +40,7 @@ namespace SyncTrayzor.SyncThing
         string CustomHomeDir { get; set; }
         string Traces { get; set; }
         bool DenyUpgrade { get; set; }
+        bool RunLowPriority { get; set; }
 
         event EventHandler Starting;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
@@ -64,6 +65,7 @@ namespace SyncTrayzor.SyncThing
         public string CustomHomeDir { get; set; }
         public string Traces { get; set; }
         public bool DenyUpgrade { get; set; }
+        public bool RunLowPriority { get; set; }
 
         public event EventHandler Starting;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
@@ -104,6 +106,9 @@ namespace SyncTrayzor.SyncThing
                 this.KillInternal();
 
                 this.process = Process.Start(processStartInfo);
+
+                if (this.RunLowPriority)
+                    this.process.PriorityClass = ProcessPriorityClass.BelowNormal;
 
                 this.process.EnableRaisingEvents = true;
                 this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);

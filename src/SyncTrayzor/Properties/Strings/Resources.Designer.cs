@@ -532,6 +532,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Syncthing as a low-priority process.
+        /// </summary>
+        public static string SettingsView_SyncthingRunLowPriority {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingRunLowPriority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use custom home directory for Syncthing..
         /// </summary>
         public static string SettingsView_SyncthingUseCustomHome {

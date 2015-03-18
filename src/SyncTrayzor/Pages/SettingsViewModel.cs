@@ -50,6 +50,7 @@ namespace SyncTrayzor.Pages
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public bool StartSyncThingAutomatically { get; set; }
+        public bool SyncthingRunLowPriority { get; set; }
         public string SyncThingAddress { get; set; }
         public string SyncThingApiKey { get; set; }
 
@@ -97,6 +98,7 @@ namespace SyncTrayzor.Pages
             this.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
+            this.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
             this.SyncThingAddress = configuration.SyncthingAddress;
             this.SyncThingApiKey = configuration.SyncthingApiKey;
 
@@ -143,6 +145,7 @@ namespace SyncTrayzor.Pages
             configuration.ShowDeviceConnectivityBalloons = this.ShowDeviceConnectivityBalloons;
 
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;
+            configuration.SyncthingRunLowPriority = this.SyncthingRunLowPriority;
             configuration.SyncthingAddress = this.SyncThingAddress;
             configuration.SyncthingApiKey = this.SyncThingApiKey;
 

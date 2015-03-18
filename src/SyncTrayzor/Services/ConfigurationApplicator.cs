@@ -72,6 +72,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
             this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingCustomHomePath : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
+            this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

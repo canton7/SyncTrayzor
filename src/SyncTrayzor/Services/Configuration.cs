@@ -58,6 +58,7 @@ namespace SyncTrayzor.Services
         public bool? SyncthingUseCustomHomeRaw { get; set; }
         
         public bool SyncthingDenyUpgrade { get; set; }
+        public bool SyncthingRunLowPriority { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
         public bool NotifyOfNewVersions { get; set; }
@@ -85,6 +86,7 @@ namespace SyncTrayzor.Services
             this.SyncthingTraceFacilities = null;
             this.SyncthingUseCustomHomeRaw = null;
             this.SyncthingDenyUpgrade = false;
+            this.SyncthingRunLowPriority = false;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.ObfuscateDeviceIDs = true;
@@ -104,6 +106,7 @@ namespace SyncTrayzor.Services
             this.SyncthingTraceFacilities = other.SyncthingTraceFacilities;
             this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.SyncthingDenyUpgrade = other.SyncthingDenyUpgrade;
+            this.SyncthingRunLowPriority = other.SyncthingRunLowPriority;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.NotifyOfNewVersions = other.NotifyOfNewVersions;
             this.ObfuscateDeviceIDs = other.ObfuscateDeviceIDs;
@@ -114,12 +117,12 @@ namespace SyncTrayzor.Services
         {
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
                 "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingTraceFacilities={8} " +
-                "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} Folders=[{11}] NotifyOfNewVersions={12} LastNotifiedVersion={13} " +
-                "ObfuscateDeviceIDs={14}>",
+                "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
+                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
                 this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities,
-                this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, String.Join(", ", this.Folders), this.NotifyOfNewVersions,
-                this.LatestNotifiedVersion, this.ObfuscateDeviceIDs);
+                this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders),
+                this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs);
         }
     }
 }

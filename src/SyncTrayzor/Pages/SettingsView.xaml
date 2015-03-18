@@ -82,6 +82,7 @@
                             </DockPanel.Resources>
 
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}" Content="{l:Loc SettingsView_StartSyncthingAutomatically}"/>
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingRunLowPriority}" Content="{l:Loc SettingsView_SyncthingRunLowPriority}"/>
 
                             <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
                             <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,0"/>
