@@ -154,6 +154,19 @@ namespace SyncTrayzor.SyncThing
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
+            this.processRunner.Starting += (o, e) =>
+            {
+                // This is fired on restarts, too, so we can update config
+                this.apiClient.SetConnectionDetails(this.Address, this.ApiKey);
+                this.processRunner.ApiKey = this.ApiKey;
+                this.processRunner.HostAddress = this.Address.ToString();
+                this.processRunner.ExecutablePath = this.ExecutablePath;
+                this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
+                this.processRunner.Traces = this.SyncthingTraceFacilities;
+                this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
+
+                this.SetState(SyncThingState.Starting);
+            };
 
             this.eventWatcher.StartupComplete += (o, e) => { var t = this.StartupCompleteAsync(); };
             this.eventWatcher.SyncStateChanged += (o, e) => this.OnFolderSyncStateChanged(e);
@@ -169,16 +182,7 @@ namespace SyncTrayzor.SyncThing
         {
             try
             {
-                this.apiClient.SetConnectionDetails(this.Address, this.ApiKey);
-                this.processRunner.ApiKey = this.ApiKey;
-                this.processRunner.HostAddress = this.Address.ToString();
-                this.processRunner.ExecutablePath = this.ExecutablePath;
-                this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
-                this.processRunner.Traces = this.SyncthingTraceFacilities;
-                this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
-
                 this.processRunner.Start();
-                this.SetState(SyncThingState.Starting);
             }
             catch (Exception e)
             {

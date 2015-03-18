@@ -41,6 +41,7 @@ namespace SyncTrayzor.SyncThing
         string Traces { get; set; }
         bool DenyUpgrade { get; set; }
 
+        event EventHandler Starting;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
@@ -64,6 +65,7 @@ namespace SyncTrayzor.SyncThing
         public string Traces { get; set; }
         public bool DenyUpgrade { get; set; }
 
+        public event EventHandler Starting;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
@@ -74,6 +76,9 @@ namespace SyncTrayzor.SyncThing
         public void Start()
         {
             logger.Info("Starting syncthing: {0}", this.ExecutablePath);
+
+            // This might cause our config to be set...
+            this.OnStarting();
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
@@ -185,6 +190,13 @@ namespace SyncTrayzor.SyncThing
                 if (handler != null)
                     handler(this, new ProcessStoppedEventArgs(exitStatus));
             }
+        }
+
+        private void OnStarting()
+        {
+            var handler = this.Starting;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
         private void OnMessageLogged(string logMessage)
