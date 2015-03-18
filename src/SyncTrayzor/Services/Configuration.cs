@@ -83,7 +83,7 @@ namespace SyncTrayzor.Services
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = null;
             this.SyncthingTraceFacilities = null;
-            this.SyncthingUseCustomHome = null;
+            this.SyncthingUseCustomHomeRaw = null;
             this.SyncthingDenyUpgrade = false;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
