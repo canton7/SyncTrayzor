@@ -74,7 +74,7 @@
                 <MenuItem Header="{l:Loc TrayIcon_Menu_CloseToTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
-                <MenuItem Header="Open Folder" ItemsSource="{Binding Folders}"
+                <MenuItem Header="{l:Loc TrayIcon_Menu_OpenFolder}" ItemsSource="{Binding Folders}"
                           Visibility="{Binding Folders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">

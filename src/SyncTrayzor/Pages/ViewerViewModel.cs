@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Navigation;
 using CefSharp;
 using CefSharp.Wpf;
+using SyncTrayzor.Localization;
 
 namespace SyncTrayzor.Pages
 {
@@ -65,7 +66,9 @@ namespace SyncTrayzor.Pages
                     var script = @"$('#folders .panel-footer .pull-right').prepend(" +
                     @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
                     @"<span class=""glyphicon glyphicon-folder-open""></span>" +
-                    @"<span style=""margin-left: 12px"">Open Folder</span></button>')";
+                    @"<span style=""margin-left: 12px"">" +
+                    Localizer.Translate("ViewerView_OpenFolder") +
+                    "</span></button>')";
                     webBrowser.ExecuteScriptAsync(script);
                 }
             };

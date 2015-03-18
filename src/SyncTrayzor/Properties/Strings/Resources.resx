@@ -519,4 +519,12 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
     <value>Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor's config folder</value>
   </data>
+  <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
+    <value>_Open Folder</value>
+    <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
+  </data>
+  <data name="ViewerView_OpenFolder" xml:space="preserve">
+    <value>Open Folder</value>
+    <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
+  </data>
 </root>
