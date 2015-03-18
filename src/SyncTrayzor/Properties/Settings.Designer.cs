@@ -76,5 +76,28 @@ namespace SyncTrayzor.Properties {
                 return ((bool)(this["PortableMode"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <ShowTrayIconOnlyOnClose>false</ShowTrayIconOnlyOnClose>
+  <MinimizeToTray>false</MinimizeToTray>
+  <CloseToTray>true</CloseToTray>
+  <ShowSynchronizedBalloon>true</ShowSynchronizedBalloon>
+  <ShowDeviceConnectivityBalloons>true</ShowDeviceConnectivityBalloons>
+  <SyncthingAddress>http://localhost:8384</SyncthingAddress>
+  <StartSyncthingAutomatically>true</StartSyncthingAutomatically>
+  <SyncthingUseCustomHome>false</SyncthingUseCustomHome>
+  <SyncthingDenyUpgrade>false</SyncthingDenyUpgrade>
+  <Folders />
+  <NotifyOfNewVersions>true</NotifyOfNewVersions>
+  <ObfuscateDeviceIDs>true</ObfuscateDeviceIDs>
+</Configuration>")]
+        public global::SyncTrayzor.Services.Configuration DefaultUserConfiguration {
+            get {
+                return ((global::SyncTrayzor.Services.Configuration)(this["DefaultUserConfiguration"]));
+            }
+        }
     }
 }

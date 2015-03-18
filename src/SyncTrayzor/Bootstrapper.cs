@@ -59,6 +59,7 @@ namespace SyncTrayzor
             configurationProvider.IsPortableMode = Settings.Default.PortableMode;
 #endif
             configurationProvider.EnsureEnvironmentConsistency();
+            configurationProvider.DefaultConfiguration = Settings.Default.DefaultUserConfiguration;
 
             GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.LogFilePath);
 

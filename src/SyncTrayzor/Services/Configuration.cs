@@ -47,7 +47,16 @@ namespace SyncTrayzor.Services
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
         public string SyncthingTraceFacilities { get; set; }
-        public bool SyncthingUseCustomHome { get; set; }
+
+        [XmlIgnore]
+        public bool SyncthingUseCustomHome
+        {
+            get { return this.SyncthingUseCustomHomeRaw.Value; }
+            set { this.SyncthingUseCustomHomeRaw = value; }
+        }
+        [XmlElement("SyncthingUseCustomHome")]
+        public bool? SyncthingUseCustomHomeRaw { get; set; }
+        
         public bool SyncthingDenyUpgrade { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
@@ -64,10 +73,6 @@ namespace SyncTrayzor.Services
         }
 
         public Configuration()
-            : this(null, false)
-        { }
-
-        public Configuration(string syncThingApiKey, bool isPortableMode)
         {
             this.ShowTrayIconOnlyOnClose = false;
             this.MinimizeToTray = false;
@@ -76,9 +81,9 @@ namespace SyncTrayzor.Services
             this.ShowDeviceConnectivityBalloons = true;
             this.SyncthingAddress = "http://localhost:8384";
             this.StartSyncthingAutomatically = true;
-            this.SyncthingApiKey = syncThingApiKey;
+            this.SyncthingApiKey = null;
             this.SyncthingTraceFacilities = null;
-            this.SyncthingUseCustomHome = isPortableMode;
+            this.SyncthingUseCustomHome = null;
             this.SyncthingDenyUpgrade = false;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;

@@ -30,6 +30,7 @@ namespace SyncTrayzor.Services
     {
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        Configuration DefaultConfiguration { get; set; }
         bool HadToCreateConfiguration { get; }
         bool IsPortableMode { get; set; }
         string LogFilePath { get; }
@@ -55,6 +56,7 @@ namespace SyncTrayzor.Services
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
+        public Configuration DefaultConfiguration { get; set; }
         public bool HadToCreateConfiguration { get; private set; }
         public bool IsPortableMode { get; set; }
 
@@ -138,7 +140,15 @@ namespace SyncTrayzor.Services
             {
                 logger.Info("Configuration file {0} doesn't exist, so creating", this.ConfigurationFilePath);
                 this.HadToCreateConfiguration = true;
-                var configuration = new Configuration(this.GenerateApiKey(), this.IsPortableMode);
+                
+                var configuration = new Configuration(this.DefaultConfiguration) ?? new Configuration();
+                if (configuration.SyncthingUseCustomHomeRaw == null)
+                    configuration.SyncthingUseCustomHome = this.IsPortableMode;
+                if (configuration.SyncthingApiKey == null)
+                    configuration.SyncthingApiKey = this.GenerateApiKey();
+
+                logger.Debug("Created configuration file: {0}", configuration);
+
                 this.Save(configuration);
             }
         }
