@@ -28,6 +28,8 @@ namespace SyncTrayzor.Pages
 
         public IWpfWebBrowser WebBrowser { get; set; }
 
+        private JavascriptCallbackObject callback;
+
         public ViewerViewModel(ISyncThingManager syncThingManager)
         {
             this.syncThingManager = syncThingManager;
@@ -37,6 +39,8 @@ namespace SyncTrayzor.Pages
                 this.RefreshBrowser();
             };
 
+            this.callback = new JavascriptCallbackObject(f => System.Windows.MessageBox.Show(f));
+
             this.Bind(x => x.WebBrowser, (o, e) =>
             {
                 if (e.NewValue == null)
@@ -45,6 +49,18 @@ namespace SyncTrayzor.Pages
                 var webBrowser = e.NewValue;
                 webBrowser.RequestHandler = this;
                 webBrowser.LifeSpanHandler = this;
+                webBrowser.RegisterJsObject("callbackObject", this.callback);
+                webBrowser.FrameLoadEnd += (o2, e2) =>
+                {
+                    if (e2.IsMainFrame && e2.Url != "about:blank")
+                    {
+                        var script = @"$('#folders .panel-footer .pull-right').prepend(" +
+                        @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
+                        @"<span class=""glyphicon glyphicon-folder-open""></span>" +
+                        @"<span style=""margin-left: 12px"">Open Folder</span></button>')";
+                        webBrowser.ExecuteScriptAsync(script);
+                    }
+                };
             });
         }
 
@@ -129,6 +145,21 @@ namespace SyncTrayzor.Pages
         {
             Process.Start(url);
             return true;
+        }
+
+        private class JavascriptCallbackObject
+        {
+            private readonly Action<string> openFolderAction;
+
+            public JavascriptCallbackObject(Action<string> openFolderAction)
+	        {
+                this.openFolderAction = openFolderAction;
+	        }
+
+            public void OpenFolder(string folderId)
+            {
+                this.openFolderAction(folderId);
+            }
         }
     }
 }
