@@ -530,4 +530,8 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Open Folder</value>
     <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
   </data>
+  <data name="ViewerView_StartSyncthing" xml:space="preserve">
+    <value>Start Syncthing</value>
+    <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
+  </data>
 </root>

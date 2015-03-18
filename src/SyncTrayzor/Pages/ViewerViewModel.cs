@@ -102,6 +102,11 @@ namespace SyncTrayzor.Pages
             //CefSharpHelper.TerminateCefSharpProcess();
         }
 
+        public void Start()
+        {
+            this.syncThingManager.Start();
+        }
+
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)
         {
             return false;
