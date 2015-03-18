@@ -74,6 +74,7 @@ namespace SyncTrayzor.Pages
 
         public bool SyncthingUseCustomHome { get; set; }
         public string TraceVariables { get; set; }
+        public bool SyncthingDenyUpgrade { get; set; }
 
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
@@ -115,6 +116,7 @@ namespace SyncTrayzor.Pages
             }));
             this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
             this.TraceVariables = configuration.SyncthingTraceFacilities;
+            this.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
         }
 
         protected override void OnValidationStateChanged(IEnumerable<string> changedProperties)
@@ -153,6 +155,7 @@ namespace SyncTrayzor.Pages
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
             configuration.SyncthingUseCustomHome = this.SyncthingUseCustomHome;
             configuration.SyncthingTraceFacilities = String.IsNullOrWhiteSpace(this.TraceVariables) ? null : this.TraceVariables;
+            configuration.SyncthingDenyUpgrade = this.SyncthingDenyUpgrade;
 
             this.configurationProvider.Save(configuration);
             this.RequestClose(true);

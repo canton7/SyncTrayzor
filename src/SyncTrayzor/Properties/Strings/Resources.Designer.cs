@@ -514,6 +514,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop Syncthing auto-upgrading.
+        /// </summary>
+        public static string SettingsView_SyncthingDenyUpgrade {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingDenyUpgrade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor&apos;s config folder.
+        /// </summary>
+        public static string SettingsView_SyncthingDenyUpgrade_ToolTip {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingDenyUpgrade_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use custom home directory for Syncthing..
         /// </summary>
         public static string SettingsView_SyncthingUseCustomHome {

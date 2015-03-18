@@ -34,6 +34,7 @@ namespace SyncTrayzor.SyncThing
         Uri Address { get; set; }
         string SyncthingTraceFacilities { get; set; }
         string SyncthingCustomHomeDir { get; set; }
+        bool SyncthingDenyUpgrade { get; set; }
         DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
@@ -112,6 +113,7 @@ namespace SyncTrayzor.SyncThing
         public Uri Address { get; set; }
         public string SyncthingCustomHomeDir { get; set; }
         public string SyncthingTraceFacilities { get; set; }
+        public bool SyncthingDenyUpgrade { get; set; }
 
         // Folders is a ConcurrentDictionary, which suffices for most access
         // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
@@ -173,6 +175,7 @@ namespace SyncTrayzor.SyncThing
                 this.processRunner.ExecutablePath = this.ExecutablePath;
                 this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
                 this.processRunner.Traces = this.SyncthingTraceFacilities;
+                this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
 
                 this.processRunner.Start();
                 this.SetState(SyncThingState.Starting);

@@ -121,13 +121,12 @@
                     <Expander DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Advanced}">
                         <GroupBox Header="{l:Loc SettingsView_Section_Advanced}">
                             <DockPanel LastChildFill="False">
-                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}">
-                                    <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_SyncthingUseCustomHome}">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip Content="{l:Loc SettingsView_SyncthingUseCustomHome_ToolTip}"/>
-                                        </TextBlock.ToolTip>
-                                    </TextBlock>
-                                </CheckBox>
+                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}"
+                                          Content="{l:Loc SettingsView_SyncthingUseCustomHome}"
+                                          ToolTip="{l:Loc SettingsView_SyncthingUseCustomHome_ToolTip}"/>
+                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingDenyUpgrade}"
+                                          Content="{l:Loc SettingsView_SyncthingDenyUpgrade}"
+                                          ToolTip="{l:Loc SettingsView_SyncthingDenyUpgrade_ToolTip}"/>
                                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}" Content="{l:Loc SettingsView_TraceVariables}"/>
                                 <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables, UpdateSourceTrigger=PropertyChanged}"/>
                             </DockPanel>

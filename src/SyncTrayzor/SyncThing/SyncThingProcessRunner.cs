@@ -39,6 +39,7 @@ namespace SyncTrayzor.SyncThing
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
         string Traces { get; set; }
+        bool DenyUpgrade { get; set; }
 
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
@@ -61,6 +62,7 @@ namespace SyncTrayzor.SyncThing
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
         public string Traces { get; set; }
+        public bool DenyUpgrade { get; set; }
 
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
@@ -88,9 +90,9 @@ namespace SyncTrayzor.SyncThing
             };
 
             if (!String.IsNullOrWhiteSpace(this.Traces))
-            {
                 processStartInfo.EnvironmentVariables["STTRACE"] = this.Traces;
-            }
+            if (this.DenyUpgrade)
+                processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
 
             lock (this.processLock)
             {

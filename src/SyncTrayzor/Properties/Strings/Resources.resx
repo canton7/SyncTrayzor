@@ -513,4 +513,10 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>SyncTrayzor</value>
     <comment>'SyncTrayzor' settings tab</comment>
   </data>
+  <data name="SettingsView_SyncthingDenyUpgrade" xml:space="preserve">
+    <value>Stop Syncthing auto-upgrading</value>
+  </data>
+  <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
+    <value>Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor's config folder</value>
+  </data>
 </root>
