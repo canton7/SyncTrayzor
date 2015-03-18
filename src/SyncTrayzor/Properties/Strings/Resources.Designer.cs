@@ -532,6 +532,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing.
+        /// </summary>
+        public static string SettingsView_Tab_Syncthing {
+            get {
+                return ResourceManager.GetString("SettingsView_Tab_Syncthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SyncTrayzor.
+        /// </summary>
+        public static string SettingsView_Tab_SyncTrayzor {
+            get {
+                return ResourceManager.GetString("SettingsView_Tab_SyncTrayzor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string SettingsView_Title {

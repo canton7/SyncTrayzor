@@ -505,4 +505,12 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>R_estart</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
+  <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
+    <value>Syncthing</value>
+    <comment>'Syncthing' settings tab</comment>
+  </data>
+  <data name="SettingsView_Tab_SyncTrayzor" xml:space="preserve">
+    <value>SyncTrayzor</value>
+    <comment>'SyncTrayzor' settings tab</comment>
+  </data>
 </root>
