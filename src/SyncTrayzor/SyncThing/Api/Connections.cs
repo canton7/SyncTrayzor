@@ -10,19 +10,19 @@ namespace SyncTrayzor.SyncThing.Api
 {
     public class ItemConnectionData
     {
-        [JsonProperty("At")]
+        [JsonProperty("at")]
         public DateTime At { get; set; }
 
-        [JsonProperty("InBytesTotal")]
+        [JsonProperty("inBytesTotal")]
         public long InBytesTotal { get; set; }
 
-        [JsonProperty("OutBytesTotal")]
+        [JsonProperty("outBytesTotal")]
         public long OutBytesTotal { get; set; }
 
-        [JsonProperty("Address")]
+        [JsonProperty("address")]
         public string Address { get; set; }
 
-        [JsonProperty("ClientVersion")]
+        [JsonProperty("clientVersion")]
         public string ClientVersion { get; set; }
     }
 
