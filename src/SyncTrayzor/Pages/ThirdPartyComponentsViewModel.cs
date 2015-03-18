@@ -22,7 +22,7 @@ namespace SyncTrayzor.Pages
                     Name = "Syncthing",
                     Description = "Open Source Continuous File Synchronization",
                     Homepage = "http://syncthing.net",
-                    License = "GPLv3",
+                    License = "MPLv2",
                     Notes = "SyncTrayzor hosts Syncthing",
                     LicenseText = this.LoadLicense("Syncthing.txt"),
                 },
