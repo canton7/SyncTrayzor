@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="PresentationCore" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <Compile Include="Services\ApplicationState.cs" />
     <Compile Include="Services\DirectoryWatcher.cs" />
     <Compile Include="Services\MemoryUsageLogger.cs" />
+    <Compile Include="Services\PathConfiguration.cs" />
     <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
     <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
     <Compile Include="Services\UpdateChecker\IGithubApi.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
@@ -231,7 +234,13 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App.Installer.config.xslt">
+      <DependentUpon>App.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
@@ -364,11 +373,14 @@
   <Import Project="..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" />
   <Import Project="..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" />
   <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" />
+  <Target Name="Configs">
+    <XslTransformation XmlInputPaths="App.config" XslInputPath="App.Installer.config.xslt" OutputPaths="$(OutputPath)$(RootNamespace).Installer.config" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target> -->
   <Target Name="AfterBuild">
+    <CallTarget Targets="Configs" />
   </Target>
-  -->
 </Project>

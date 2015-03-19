@@ -13,7 +13,6 @@
         <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
             <TextBlock Text="{l:Loc AboutView_Version, ValueBinding={Binding Version}}"/>
-            <TextBlock Visibility="{Binding IsPortable, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" Margin="5,0,0,0">(portable)</TextBlock>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
             <TextBlock Text="{l:Loc AboutView_SyncthingVersion, ValueBinding={Binding SyncthingVersion}}"/>

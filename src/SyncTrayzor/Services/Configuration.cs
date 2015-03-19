@@ -47,16 +47,7 @@ namespace SyncTrayzor.Services
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
         public string SyncthingTraceFacilities { get; set; }
-
-        [XmlIgnore]
-        public bool SyncthingUseCustomHome
-        {
-            get { return this.SyncthingUseCustomHomeRaw.Value; }
-            set { this.SyncthingUseCustomHomeRaw = value; }
-        }
-        [XmlElement("SyncthingUseCustomHome")]
-        public bool? SyncthingUseCustomHomeRaw { get; set; }
-        
+        public bool SyncthingUseCustomHome { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
         public bool SyncthingRunLowPriority { get; set; }
         [XmlArrayItem("Folder")]
@@ -75,6 +66,8 @@ namespace SyncTrayzor.Services
 
         public Configuration()
         {
+            // Default configuration is for a portable setup.
+
             this.ShowTrayIconOnlyOnClose = false;
             this.MinimizeToTray = false;
             this.CloseToTray = true;
@@ -84,7 +77,7 @@ namespace SyncTrayzor.Services
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = null;
             this.SyncthingTraceFacilities = null;
-            this.SyncthingUseCustomHomeRaw = null;
+            this.SyncthingUseCustomHome = true;
             this.SyncthingDenyUpgrade = false;
             this.SyncthingRunLowPriority = false;
             this.Folders = new List<FolderConfiguration>();

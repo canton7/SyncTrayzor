@@ -55,7 +55,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncThingPath;
+            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncthingPath;
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
