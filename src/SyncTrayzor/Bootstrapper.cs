@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using FluentValidation;
+using Microsoft.Win32;
 using NLog;
 using Stylet;
 using StyletIoC;
@@ -82,6 +83,15 @@ namespace SyncTrayzor
             // Horrible workaround for a CefSharp crash on logout/shutdown
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
+
+            if (configurationProvider.Load().NotifyOfNewVersions)
+            {
+                SystemEvents.PowerModeChanged += (o, e) =>
+                {
+                    if (e.Mode == PowerModes.Resume)
+                        this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
+                };
+            }
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
