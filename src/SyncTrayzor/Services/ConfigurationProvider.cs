@@ -168,13 +168,36 @@ namespace SyncTrayzor.Services
                 logger.Info("Loaded configuration: {0}", configuration);
             }
 
+            this.MigrateConfiguration(configuration);
+
+            return configuration;
+        }
+
+        private void MigrateConfiguration(Configuration configuration)
+        {
+            bool altered = false;
+
             if (configuration.SyncthingApiKey == null)
             {
                 configuration.SyncthingApiKey = this.GenerateApiKey();
-                this.SaveToFile(configuration);
+                altered = true;
             }
 
-            return configuration;
+            // We used to store http/https in the config, but we no longer do. A migration is necessary
+            if (configuration.SyncthingAddress.StartsWith("http://"))
+            {
+                configuration.SyncthingAddress = configuration.SyncthingAddress.Substring("http://".Length);
+                altered = true;
+            }
+
+            if (configuration.SyncthingAddress.StartsWith("https://"))
+            {
+                configuration.SyncthingAddress = configuration.SyncthingAddress.Substring("https://".Length);
+                altered = true;
+            }
+
+            if (altered)
+                this.SaveToFile(configuration);
         }
 
         public Configuration Load()

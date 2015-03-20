@@ -73,7 +73,7 @@ namespace SyncTrayzor.Services
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.ShowDeviceConnectivityBalloons = true;
-            this.SyncthingAddress = "http://localhost:8384";
+            this.SyncthingAddress = "localhost:8384";
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = null;
             this.SyncthingTraceFacilities = null;

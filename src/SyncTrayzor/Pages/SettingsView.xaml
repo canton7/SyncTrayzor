@@ -85,7 +85,7 @@
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingRunLowPriority}" Content="{l:Loc SettingsView_SyncthingRunLowPriority}"/>
 
                             <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
-                            <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,0"/>
+                            <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
 
                             <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingApiKey}" Content="{l:Loc SettingsView_ApiKey}" ToolTip="{StaticResource APIKeyOverride}"/>
                             <TextBox DockPanel.Dock="Top" x:Name="SyncThingApiKey" Text="{Binding SyncThingApiKey, UpdateSourceTrigger=PropertyChanged}"  ToolTip="{StaticResource APIKeyOverride}" Margin="0,0,40,0"/>

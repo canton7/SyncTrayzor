@@ -26,10 +26,14 @@ namespace SyncTrayzor.Pages
             RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
             RuleFor(x => x.SyncThingAddress).Must(str =>
             {
+                // URI seems to think https://http://something is valid...
+                if (str.StartsWith("http:") || str.StartsWith("https:"))
+                    return false;
+
+                str = "https://" + str;
                 Uri uri;
-                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString() &&
-                    (uri.Scheme == "http" || uri.Scheme == "https");
-            }).WithMessage(Localizer.Translate("String1SettingsView_Validation_InvalidUrl"));
+                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString();
+            }).WithMessage(Localizer.Translate("SettingsView_Validation_InvalidUrl"));
 
             RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
         }
