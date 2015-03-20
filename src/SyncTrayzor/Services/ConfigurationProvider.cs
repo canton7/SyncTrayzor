@@ -97,6 +97,11 @@ namespace SyncTrayzor.Services
 
         public void Initialize(PathConfiguration pathConfiguration, Configuration defaultConfiguration)
         {
+            if (pathConfiguration == null)
+                throw new ArgumentNullException("pathConfiguration");
+            if (defaultConfiguration == null)
+                throw new ArgumentNullException("defaultConfiguration");
+
             this.pathConfiguration = pathConfiguration;
 
             logger.Debug("ExePath: {0}", this.ExePath);
@@ -134,7 +139,6 @@ namespace SyncTrayzor.Services
         {
             // Merge any updates from app.config / Configuration into the configuration file on disk
             // (creating if necessary)
-            defaultConfiguration = defaultConfiguration ?? new Configuration();
             logger.Debug("Loaded default configuration: {0}", defaultConfiguration);
             XDocument defaultConfig;
             using (var ms = new MemoryStream())

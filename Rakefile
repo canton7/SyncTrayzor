@@ -1,4 +1,3 @@
-require 'rexml/document'
 begin
   require 'albacore'
 rescue LoadError
@@ -83,7 +82,7 @@ namespace :portable do
       mkdir_p arch_config.portable_output_dir
 
       Dir.chdir(arch_config.bin_dir) do
-        files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
+        files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
 
         files.each do |file|
           cp_to_portable(arch_config.portable_output_dir, file)
@@ -100,17 +99,6 @@ namespace :portable do
         FileList['syncthing.exe', '*.dll'].each do |file|
           cp_to_portable(arch_config.portable_output_dir, file)
         end
-      end
-
-      puts 'Rewriting app.config'
-      config_path = File.join(arch_config.portable_output_dir, 'SyncTrayzor.exe.config')
-      doc = File.open(config_path, 'r') do |f|
-        doc = REXML::Document.new(f)
-        REXML::XPath.first(doc, '/configuration/applicationSettings//setting[@name="PortableMode"]/value').text = 'True'
-        doc
-      end
-      File.open(config_path, 'w') do |f|
-        doc.write(f)
       end
     end
   end
