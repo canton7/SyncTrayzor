@@ -1,3 +1,5 @@
+require 'tmpdir'
+
 begin
   require 'albacore'
 rescue LoadError
@@ -11,10 +13,17 @@ unless File.exist?(ISCC)
   exit 1
 end
 
+SZIP = 'C:\Program Files\7-Zip\7z.exe'
+unless File.exist?(SZIP)
+  warn "Please installe 7-Zip"
+  exit 1
+end
+
 CONFIG = ENV['CONFIG'] || 'Release'
 
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
+PORTABLE_DIR = 'portable'
 
 class ArchDirConfig
   attr_reader :arch
@@ -23,6 +32,7 @@ class ArchDirConfig
   attr_reader :installer_output
   attr_reader :installer_iss
   attr_reader :portable_output_dir
+  attr_reader :portable_output_file
 
   def initialize(arch)
     @arch = arch
@@ -30,7 +40,8 @@ class ArchDirConfig
     @installer_dir = File.join(INSTALLER_DIR, @arch)
     @installer_output = File.join(@installer_dir, "SyncTrayzorSetup-#{@arch}.exe")
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
-    @portable_output_dir = File.absolute_path("SyncTrayzorPortable-#{@arch}")
+    @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
+    @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
   end
 end
 
@@ -78,27 +89,32 @@ namespace :portable do
   ARCH_CONFIG.each do |arch_config|
     desc "Create the portable package (#{arch_config.arch})"
     task arch_config.arch do
-      rm_rf arch_config.portable_output_dir
-      mkdir_p arch_config.portable_output_dir
+      mkdir_p File.dirname(arch_config.portable_output_file)
+      rm arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
 
-      Dir.chdir(arch_config.bin_dir) do
-        files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
+      Dir.mktmpdir do |tmp|
+        portable_dir = File.join(tmp, arch_config.portable_output_dir)
+        Dir.chdir(arch_config.bin_dir) do
+          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
 
-        files.each do |file|
-          cp_to_portable(arch_config.portable_output_dir, file)
+          files.each do |file|
+            cp_to_portable(portable_dir, file)
+          end
         end
-      end
 
-      cp File.join(SRC_DIR, 'Icons', 'default.ico'), arch_config.portable_output_dir
+        cp File.join(SRC_DIR, 'Icons', 'default.ico'), arch_config.portable_output_dir
 
-      FileList['*.md', '*.txt'].each do |file|
-        cp_to_portable(arch_config.portable_output_dir, file)
-      end
-      
-      Dir.chdir(arch_config.installer_dir) do
-        FileList['syncthing.exe', '*.dll'].each do |file|
-          cp_to_portable(arch_config.portable_output_dir, file)
+        FileList['*.md', '*.txt'].each do |file|
+          cp_to_portable(portable_dir, file)
         end
+        
+        Dir.chdir(arch_config.installer_dir) do
+          FileList['syncthing.exe', '*.dll'].each do |file|
+            cp_to_portable(portable_dir, file)
+          end
+        end
+
+        sh %Q{"#{SZIP}"}, "a -tzip -mx=7 #{arch_config.portable_output_file} #{portable_dir}"
       end
     end
   end
