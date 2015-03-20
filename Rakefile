@@ -127,7 +127,7 @@ namespace :clean do
   ARCH_CONFIG.each do |arch_config|
     desc "Clean everything (#{arch_config.arch})"
     task arch_config.arch do
-      rm_rf arch_config.portable_output_dir if File.exist?(arch_config.portable_output_dir)
+      rm_rf arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
       rm arch_config.installer_output if File.exist?(arch_config.installer_output)
     end
   end
