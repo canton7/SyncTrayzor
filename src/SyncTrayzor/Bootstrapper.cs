@@ -51,17 +51,12 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
-            var configurationProvider = this.Container.Get<IConfigurationProvider>();
-            // Debug builds are always 'portable'
-#if DEBUG
-            configurationProvider.IsPortableMode = true;
-#else
-            configurationProvider.IsPortableMode = Settings.Default.PortableMode;
-#endif
-            configurationProvider.EnsureEnvironmentConsistency();
-            configurationProvider.DefaultConfiguration = Settings.Default.DefaultUserConfiguration;
+            GlobalDiagnosticsContext.Set("LogFilePath", Settings.Default.PathConfiguration.LogFilePath);
+            var pathConfiguration = Settings.Default.PathConfiguration;
+            pathConfiguration.Transform(EnvVarTransformer.Transform);
 
-            GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.LogFilePath);
+            var configurationProvider = this.Container.Get<IConfigurationProvider>();
+            configurationProvider.Initialize(pathConfiguration, Settings.Default.DefaultUserConfiguration);
 
             var autostartProvider = this.Container.Get<IAutostartProvider>();
 #if DEBUG
@@ -72,7 +67,7 @@ namespace SyncTrayzor
             {
                 // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
                 // Else, keep the config as it was, but update the path to us (if we're not in debug)
-                if (!configurationProvider.IsPortableMode && configurationProvider.HadToCreateConfiguration)
+                if (Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
                     autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
                 else
                     autostartProvider.UpdatePathToSelf();
