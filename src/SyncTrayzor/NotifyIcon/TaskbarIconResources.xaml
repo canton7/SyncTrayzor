@@ -4,7 +4,7 @@
                     xmlns:l="clr-namespace:SyncTrayzor.Localization"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
 
-    <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
+    <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/stopped.ico"/>
     <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
     <BitmapImage x:Key="TaskbarSyncing2Icon" UriSource="pack://application:,,,/Icons/syncing_2.ico"/>
     <BitmapImage x:Key="TaskbarSyncing3Icon" UriSource="pack://application:,,,/Icons/syncing_3.ico"/>
@@ -74,6 +74,16 @@
                 <MenuItem Header="{l:Loc TrayIcon_Menu_CloseToTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
+                <MenuItem Header="{l:Loc TrayIcon_Menu_OpenFolder}" ItemsSource="{Binding Folders}"
+                          Visibility="{Binding Folders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding FolderId}"/>
+                            <Setter Property="Command" Value="{Binding}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StopSyncthing}" Command="{s:Action Stop, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_RestartSyncthing}" Command="{s:Action Restart, ActionNotFound=Disable}"/>

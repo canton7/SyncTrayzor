@@ -11,8 +11,18 @@
     <Grid>
         <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"/>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStarting}"
-                   Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStopped}"
-                   Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                   Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                   FontSize="16"/>
+
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+            <TextBlock FontSize="16" HorizontalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStopped}"/>
+            <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" >
+                <Hyperlink Command="{s:Action Start}">
+                   <TextBlock FontSize="16" Text="{l:Loc ViewerView_StartSyncthing}" />
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Config
 {
     public class FolderConfiguration
     {
@@ -48,6 +48,8 @@ namespace SyncTrayzor.Services
         public string SyncthingApiKey { get; set; }
         public string SyncthingTraceFacilities { get; set; }
         public bool SyncthingUseCustomHome { get; set; }
+        public bool SyncthingDenyUpgrade { get; set; }
+        public bool SyncthingRunLowPriority { get; set; }
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
         public bool NotifyOfNewVersions { get; set; }
@@ -62,26 +64,29 @@ namespace SyncTrayzor.Services
             set { this.LatestNotifiedVersion = value == null ? null : new Version(value); }
         }
 
-        public Configuration()
-            : this(null, false)
-        { }
+        public bool UseComputerCulture { get; set; }
 
-        public Configuration(string syncThingApiKey, bool isPortableMode)
+        public Configuration()
         {
+            // Default configuration is for a portable setup.
+
             this.ShowTrayIconOnlyOnClose = false;
             this.MinimizeToTray = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloon = true;
             this.ShowDeviceConnectivityBalloons = true;
-            this.SyncthingAddress = "http://localhost:8384";
+            this.SyncthingAddress = "localhost:8384";
             this.StartSyncthingAutomatically = true;
-            this.SyncthingApiKey = syncThingApiKey;
+            this.SyncthingApiKey = null;
             this.SyncthingTraceFacilities = null;
-            this.SyncthingUseCustomHome = isPortableMode;
+            this.SyncthingUseCustomHome = true;
+            this.SyncthingDenyUpgrade = false;
+            this.SyncthingRunLowPriority = false;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.ObfuscateDeviceIDs = true;
             this.LatestNotifiedVersion = null;
+            this.UseComputerCulture = true;
         }
 
         public Configuration(Configuration other)
@@ -96,21 +101,25 @@ namespace SyncTrayzor.Services
             this.SyncthingApiKey = other.SyncthingApiKey;
             this.SyncthingTraceFacilities = other.SyncthingTraceFacilities;
             this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
+            this.SyncthingDenyUpgrade = other.SyncthingDenyUpgrade;
+            this.SyncthingRunLowPriority = other.SyncthingRunLowPriority;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.NotifyOfNewVersions = other.NotifyOfNewVersions;
             this.ObfuscateDeviceIDs = other.ObfuscateDeviceIDs;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
+            this.UseComputerCulture = other.UseComputerCulture;
         }
 
         public override string ToString()
         {
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
                 "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingTraceFacilities={8} " +
-                "SyncthingUseCustomHome={9} Folders=[{10}] NotifyOfNewVersions={11} LastNotifiedVersion={12} ObfuscateDeviceIDs={13}>",
+                "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
+                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
                 this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities,
-                this.SyncthingUseCustomHome, String.Join(", ", this.Folders), this.NotifyOfNewVersions, this.LatestNotifiedVersion,
-                this.ObfuscateDeviceIDs);
+                this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders),
+                this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture);
         }
     }
 }

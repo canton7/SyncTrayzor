@@ -4,9 +4,11 @@ using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SyncTrayzor.NotifyIcon
 {
@@ -18,6 +20,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
+        public BindableCollection<FolderViewModel> Folders { get; private set; }
 
         public event EventHandler WindowOpenRequested;
         public event EventHandler WindowCloseRequested;
@@ -53,6 +56,12 @@ namespace SyncTrayzor.NotifyIcon
             {
                 var stats = e.TotalConnectionStats;
                 this.SyncThingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
+            };
+
+            this.syncThingManager.DataLoaded += (o, e) =>
+            {
+                this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.FetchAllFolders()
+                    .Select(x => new FolderViewModel(x)));
             };
         }
 
@@ -128,6 +137,26 @@ namespace SyncTrayzor.NotifyIcon
             var handler = this.ExitRequested;
             if (handler != null)
                 handler(this, EventArgs.Empty);
+        }
+    }
+
+    // Slightly hacky, as we can't use s:Action in a style setter...
+    public class FolderViewModel : ICommand
+    {
+        private readonly Folder folder;
+        public string FolderId { get { return this.folder.FolderId; } }
+
+        public FolderViewModel(Folder folder)
+        {
+            this.folder = folder;
+        }
+
+        public event EventHandler CanExecuteChanged { add { } remove { } }
+        public bool CanExecute(object parameter) { return true; }
+
+        public void Execute(object parameter)
+        {
+            Process.Start("explorer.exe", this.folder.Path);
         }
     }
 }

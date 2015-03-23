@@ -2,6 +2,7 @@
 using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
@@ -22,7 +23,6 @@ namespace SyncTrayzor.Pages
         private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
 
         public string Version { get; set; }
-        public bool IsPortable { get; set; }
         public string SyncthingVersion { get; set; }
         public string HomepageUrl { get; set; }
 
@@ -46,7 +46,6 @@ namespace SyncTrayzor.Pages
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-            this.IsPortable = configurationProvider.IsPortableMode;
             this.HomepageUrl = Settings.Default.HomepageUrl;
 
             this.SyncthingVersion = this.syncThingManager.Version == null ? Localizer.Translate("AboutView_UnknownVersion") : this.syncThingManager.Version.Version;

@@ -1,6 +1,24 @@
 Changelog
 =========
 
+v1.0.10
+-------
+
+ - Add "Open Folder" buttons (#32):
+   - In the GUI, next to 'Edit' and 'Rescan'
+   - In the tray icon's right-click menu
+ - Add settings to:
+   - Stop Syncthing auto-upgrading
+   - Run Syncthing as a low-priority process (#24)
+   - Disable localization (#35)
+ - Check for updates when resuming from sleep (#34)
+ - Add Spanish translation (thanks Diego Sierra!)
+ - Break Settings dialog into multiple tabs, for those with small screens (#29)
+ - Always use HTTPS (#33)
+ - Store path configuration and default user configuration in SyncTrayzor.exe.config (#30)
+ - Reload Syncthing's address / home dir / API key / etc when it's restarted (#31)
+ - Fix tray icon
+
 v1.0.9
 ------
 

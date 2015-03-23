@@ -39,7 +39,10 @@ namespace SyncTrayzor.SyncThing
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
         string Traces { get; set; }
+        bool DenyUpgrade { get; set; }
+        bool RunLowPriority { get; set; }
 
+        event EventHandler Starting;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
@@ -61,7 +64,10 @@ namespace SyncTrayzor.SyncThing
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
         public string Traces { get; set; }
+        public bool DenyUpgrade { get; set; }
+        public bool RunLowPriority { get; set; }
 
+        public event EventHandler Starting;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
@@ -72,6 +78,9 @@ namespace SyncTrayzor.SyncThing
         public void Start()
         {
             logger.Info("Starting syncthing: {0}", this.ExecutablePath);
+
+            // This might cause our config to be set...
+            this.OnStarting();
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
@@ -88,15 +97,18 @@ namespace SyncTrayzor.SyncThing
             };
 
             if (!String.IsNullOrWhiteSpace(this.Traces))
-            {
                 processStartInfo.EnvironmentVariables["STTRACE"] = this.Traces;
-            }
+            if (this.DenyUpgrade)
+                processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
 
             lock (this.processLock)
             {
                 this.KillInternal();
 
                 this.process = Process.Start(processStartInfo);
+
+                if (this.RunLowPriority)
+                    this.process.PriorityClass = ProcessPriorityClass.BelowNormal;
 
                 this.process.EnableRaisingEvents = true;
                 this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
@@ -183,6 +195,13 @@ namespace SyncTrayzor.SyncThing
                 if (handler != null)
                     handler(this, new ProcessStoppedEventArgs(exitStatus));
             }
+        }
+
+        private void OnStarting()
+        {
+            var handler = this.Starting;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
         private void OnMessageLogged(string logMessage)

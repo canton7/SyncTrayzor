@@ -1,4 +1,5 @@
-require 'rexml/document'
+require 'tmpdir'
+
 begin
   require 'albacore'
 rescue LoadError
@@ -7,15 +8,13 @@ rescue LoadError
 end
 
 ISCC = 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
-unless File.exist?(ISCC)
-  warn "Please install Inno Setup" 
-  exit 1
-end
+SZIP = 'C:\Program Files\7-Zip\7z.exe'
 
 CONFIG = ENV['CONFIG'] || 'Release'
 
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
+PORTABLE_DIR = 'portable'
 
 class ArchDirConfig
   attr_reader :arch
@@ -24,6 +23,7 @@ class ArchDirConfig
   attr_reader :installer_output
   attr_reader :installer_iss
   attr_reader :portable_output_dir
+  attr_reader :portable_output_file
 
   def initialize(arch)
     @arch = arch
@@ -31,7 +31,8 @@ class ArchDirConfig
     @installer_dir = File.join(INSTALLER_DIR, @arch)
     @installer_output = File.join(@installer_dir, "SyncTrayzorSetup-#{@arch}.exe")
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
-    @portable_output_dir = File.absolute_path("SyncTrayzorPortable-#{@arch}")
+    @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
+    @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
   end
 end
 
@@ -55,7 +56,12 @@ task :build => ARCH_CONFIG.map{ |x| :"build:#{x.arch}" }
 namespace :installer do
   ARCH_CONFIG.each do |arch_config|
     desc "Create the installer (#{arch_config.arch})"
-    task arch_config.arch do
+    task arch_config.arch => [:"build:#{arch_config.arch}"] do
+      unless File.exist?(ISCC)
+        warn "Please install Inno Setup" 
+        exit 1
+      end
+
       rm arch_config.installer_output if File.exist?(arch_config.installer_output)
       sh %Q{"#{ISCC}"}, arch_config.installer_iss
     end
@@ -78,39 +84,38 @@ end
 namespace :portable do
   ARCH_CONFIG.each do |arch_config|
     desc "Create the portable package (#{arch_config.arch})"
-    task arch_config.arch do
-      rm_rf arch_config.portable_output_dir
-      mkdir_p arch_config.portable_output_dir
+    task arch_config.arch => [:"build:#{arch_config.arch}"] do
+      unless File.exist?(SZIP)
+        warn "Please installe 7-Zip"
+        exit 1
+      end
 
-      Dir.chdir(arch_config.bin_dir) do
-        files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
+      mkdir_p File.dirname(arch_config.portable_output_file)
+      rm arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
 
-        files.each do |file|
-          cp_to_portable(arch_config.portable_output_dir, file)
+      Dir.mktmpdir do |tmp|
+        portable_dir = File.join(tmp, arch_config.portable_output_dir)
+        Dir.chdir(arch_config.bin_dir) do
+          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
+
+          files.each do |file|
+            cp_to_portable(portable_dir, file)
+          end
         end
-      end
 
-      cp File.join(SRC_DIR, 'Icons', 'default.ico'), arch_config.portable_output_dir
+        cp File.join(SRC_DIR, 'Icons', 'default.ico'), arch_config.portable_output_dir
 
-      FileList['*.md', '*.txt'].each do |file|
-        cp_to_portable(arch_config.portable_output_dir, file)
-      end
-      
-      Dir.chdir(arch_config.installer_dir) do
-        FileList['syncthing.exe', '*.dll'].each do |file|
-          cp_to_portable(arch_config.portable_output_dir, file)
+        FileList['*.md', '*.txt'].each do |file|
+          cp_to_portable(portable_dir, file)
         end
-      end
+        
+        Dir.chdir(arch_config.installer_dir) do
+          FileList['syncthing.exe', '*.dll'].each do |file|
+            cp_to_portable(portable_dir, file)
+          end
+        end
 
-      puts 'Rewriting app.config'
-      config_path = File.join(arch_config.portable_output_dir, 'SyncTrayzor.exe.config')
-      doc = File.open(config_path, 'r') do |f|
-        doc = REXML::Document.new(f)
-        REXML::XPath.first(doc, '/configuration/applicationSettings//setting[@name="PortableMode"]/value').text = 'True'
-        doc
-      end
-      File.open(config_path, 'w') do |f|
-        doc.write(f)
+        sh %Q{"#{SZIP}"}, "a -tzip -mx=7 #{arch_config.portable_output_file} #{portable_dir}"
       end
     end
   end
@@ -123,7 +128,7 @@ namespace :clean do
   ARCH_CONFIG.each do |arch_config|
     desc "Clean everything (#{arch_config.arch})"
     task arch_config.arch do
-      rm_rf arch_config.portable_output_dir if File.exist?(arch_config.portable_output_dir)
+      rm_rf arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
       rm arch_config.installer_output if File.exist?(arch_config.installer_output)
     end
   end
@@ -135,7 +140,7 @@ task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
 namespace :package do
   ARCH_CONFIG.each do |arch_config|
     desc "Build installer and portable (#{arch_config.arch})"
-    task arch_config.arch => [:"clean:#{arch_config.arch}", :"build:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
+    task arch_config.arch => [:"clean:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
   end
 end
 

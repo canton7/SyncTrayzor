@@ -2,6 +2,7 @@ using FluentValidation;
 using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,14 @@ namespace SyncTrayzor.Pages
             RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
             RuleFor(x => x.SyncThingAddress).Must(str =>
             {
+                // URI seems to think https://http://something is valid...
+                if (str.StartsWith("http:") || str.StartsWith("https:"))
+                    return false;
+
+                str = "https://" + str;
                 Uri uri;
-                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString() &&
-                    (uri.Scheme == "http" || uri.Scheme == "https");
-            }).WithMessage(Localizer.Translate("String1SettingsView_Validation_InvalidUrl"));
+                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString();
+            }).WithMessage(Localizer.Translate("SettingsView_Validation_InvalidUrl"));
 
             RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
         }
@@ -44,12 +49,14 @@ namespace SyncTrayzor.Pages
         public bool CloseToTray { get; set; }
         public bool NotifyOfNewVersions { get; set; }
         public bool ObfuscateDeviceIDs { get; set; }
+        public bool UseComputerCulture { get; set; }
 
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public bool StartSyncThingAutomatically { get; set; }
+        public bool SyncthingRunLowPriority { get; set; }
         public string SyncThingAddress { get; set; }
         public string SyncThingApiKey { get; set; }
 
@@ -74,6 +81,7 @@ namespace SyncTrayzor.Pages
 
         public bool SyncthingUseCustomHome { get; set; }
         public string TraceVariables { get; set; }
+        public bool SyncthingDenyUpgrade { get; set; }
 
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
@@ -90,12 +98,14 @@ namespace SyncTrayzor.Pages
             this.CloseToTray = configuration.CloseToTray;
             this.NotifyOfNewVersions = configuration.NotifyOfNewVersions;
             this.ObfuscateDeviceIDs = configuration.ObfuscateDeviceIDs;
+            this.UseComputerCulture = configuration.UseComputerCulture;
 
             this.ShowTrayIconOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
             this.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
+            this.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
             this.SyncThingAddress = configuration.SyncthingAddress;
             this.SyncThingApiKey = configuration.SyncthingApiKey;
 
@@ -115,6 +125,7 @@ namespace SyncTrayzor.Pages
             }));
             this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
             this.TraceVariables = configuration.SyncthingTraceFacilities;
+            this.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
         }
 
         protected override void OnValidationStateChanged(IEnumerable<string> changedProperties)
@@ -135,12 +146,14 @@ namespace SyncTrayzor.Pages
             configuration.CloseToTray = this.CloseToTray;
             configuration.NotifyOfNewVersions = this.NotifyOfNewVersions;
             configuration.ObfuscateDeviceIDs = this.ObfuscateDeviceIDs;
+            configuration.UseComputerCulture = this.UseComputerCulture;
 
             configuration.ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
             configuration.ShowDeviceConnectivityBalloons = this.ShowDeviceConnectivityBalloons;
 
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;
+            configuration.SyncthingRunLowPriority = this.SyncthingRunLowPriority;
             configuration.SyncthingAddress = this.SyncThingAddress;
             configuration.SyncthingApiKey = this.SyncThingApiKey;
 
@@ -153,6 +166,7 @@ namespace SyncTrayzor.Pages
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
             configuration.SyncthingUseCustomHome = this.SyncthingUseCustomHome;
             configuration.SyncthingTraceFacilities = String.IsNullOrWhiteSpace(this.TraceVariables) ? null : this.TraceVariables;
+            configuration.SyncthingDenyUpgrade = this.SyncthingDenyUpgrade;
 
             this.configurationProvider.Save(configuration);
             this.RequestClose(true);

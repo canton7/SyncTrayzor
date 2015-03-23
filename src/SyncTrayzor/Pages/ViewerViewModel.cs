@@ -12,24 +12,33 @@ using System.Threading.Tasks;
 using System.Windows.Navigation;
 using CefSharp;
 using CefSharp.Wpf;
+using SyncTrayzor.Localization;
+using SyncTrayzor.Services.Config;
+using System.Threading;
 
 namespace SyncTrayzor.Pages
 {
     public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler
     {
+        private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
+
+        private readonly object cultureLock = new object(); // This can be read from many threads
+        private CultureInfo culture;
 
         public string Location { get; private set; }
         
         private SyncThingState syncThingState { get; set; }
-
         public bool ShowSyncThingStarting { get { return this.syncThingState == SyncThingState.Starting; } }
         public bool ShowSyncThingStopped { get { return this.syncThingState == SyncThingState.Stopped; ; } }
 
         public IWpfWebBrowser WebBrowser { get; set; }
 
-        public ViewerViewModel(ISyncThingManager syncThingManager)
+        private JavascriptCallbackObject callback;
+
+        public ViewerViewModel(IWindowManager windowManager, ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider)
         {
+            this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -37,15 +46,24 @@ namespace SyncTrayzor.Pages
                 this.RefreshBrowser();
             };
 
+            this.callback = new JavascriptCallbackObject(this.OpenFolder);
+
             this.Bind(x => x.WebBrowser, (o, e) =>
             {
-                if (e.NewValue == null)
-                    return;
-
-                var webBrowser = e.NewValue;
-                webBrowser.RequestHandler = this;
-                webBrowser.LifeSpanHandler = this;
+                if (e.NewValue != null)
+                    this.InitializeBrowser(e.NewValue);
             });
+
+            this.SetCulture(configurationProvider.Load());
+            configurationProvider.ConfigurationChanged += (o, e) => this.SetCulture(e.NewConfiguration);
+        }
+
+        private void SetCulture(Configuration configuration)
+        {
+            lock (this.cultureLock)
+            {
+                this.culture = configuration.UseComputerCulture ? Thread.CurrentThread.CurrentUICulture : null;
+            }
         }
 
         protected override void OnInitialActivate()
@@ -53,11 +71,39 @@ namespace SyncTrayzor.Pages
             Cef.Initialize();
         }
 
+        private void InitializeBrowser(IWpfWebBrowser webBrowser)
+        {
+            webBrowser.RequestHandler = this;
+            webBrowser.LifeSpanHandler = this;
+            webBrowser.RegisterJsObject("callbackObject", this.callback);
+            webBrowser.FrameLoadEnd += (o, e) =>
+            {
+                if (e.IsMainFrame && e.Url != "about:blank")
+                {
+                    var script = @"$('#folders .panel-footer .pull-right').prepend(" +
+                    @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
+                    @"<span class=""glyphicon glyphicon-folder-open""></span>" +
+                    @"<span style=""margin-left: 12px"">" +
+                    Localizer.Translate("ViewerView_OpenFolder") +
+                    "</span></button>')";
+                    webBrowser.ExecuteScriptAsync(script);
+                }
+            };
+        }
+
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
             if (this.syncThingManager.State == SyncThingState.Running)
                 this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
+        }
+
+        private void OpenFolder(string folderId)
+        {
+            Folder folder;
+            if (!this.syncThingManager.TryFetchFolderById(folderId, out folder))
+                return;
+            Process.Start("explorer.exe", folder.Path);
         }
 
         protected override void OnClose()
@@ -71,6 +117,11 @@ namespace SyncTrayzor.Pages
             // However, I'm not comfortable enough with this to enable it permanently yet
             //await Task.Delay(5000);
             //CefSharpHelper.TerminateCefSharpProcess();
+        }
+
+        public void Start()
+        {
+            this.syncThingManager.StartWithErrorDialog(this.windowManager);
         }
 
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)
@@ -100,8 +151,12 @@ namespace SyncTrayzor.Pages
             // See https://github.com/canton7/SyncTrayzor/issues/13
             // and https://github.com/cefsharp/CefSharp/issues/534#issuecomment-60694502
             var headers = request.Headers;
-            headers["X-API-Key"] += this.syncThingManager.ApiKey;
-            headers["Accept-Language"] = CultureInfo.CurrentCulture.Name + @";q=0.8," + CultureInfo.CurrentUICulture.Name + @";q=0.6,en;q=0.4";
+            headers["X-API-Key"] = this.syncThingManager.ApiKey;
+            lock (this.cultureLock)
+            {
+                if (this.culture != null)
+                    headers["Accept-Language"] = String.Format("{0};q=0.8,en;q=0.6", this.culture.Name);
+            }
             request.Headers = headers;
 
             return false;
@@ -129,6 +184,21 @@ namespace SyncTrayzor.Pages
         {
             Process.Start(url);
             return true;
+        }
+
+        private class JavascriptCallbackObject
+        {
+            private readonly Action<string> openFolderAction;
+
+            public JavascriptCallbackObject(Action<string> openFolderAction)
+	        {
+                this.openFolderAction = openFolderAction;
+	        }
+
+            public void OpenFolder(string folderId)
+            {
+                this.openFolderAction(folderId);
+            }
         }
     }
 }

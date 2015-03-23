@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using FluentValidation;
+using Microsoft.Win32;
 using NLog;
 using Stylet;
 using StyletIoC;
@@ -8,6 +9,7 @@ using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.EventWatcher;
@@ -51,16 +53,20 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
-            var configurationProvider = this.Container.Get<IConfigurationProvider>();
-            // Debug builds are always 'portable'
-#if DEBUG
-            configurationProvider.IsPortableMode = true;
-#else
-            configurationProvider.IsPortableMode = Settings.Default.PortableMode;
-#endif
-            configurationProvider.EnsureEnvironmentConsistency();
+            var pathConfiguration = Settings.Default.PathConfiguration;
+            pathConfiguration.Transform(EnvVarTransformer.Transform);
+            GlobalDiagnosticsContext.Set("LogFilePath", pathConfiguration.LogFilePath);
 
-            GlobalDiagnosticsContext.Set("LogFilePath", configurationProvider.LogFilePath);
+            var configurationProvider = this.Container.Get<IConfigurationProvider>();
+            configurationProvider.Initialize(pathConfiguration, Settings.Default.DefaultUserConfiguration);
+            var configuration = this.Container.Get<IConfigurationProvider>().Load();
+
+            // Has to be done before the VMs are fetched from the container
+            var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
+            if (languageArg != null)
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
+            else if (!configuration.UseComputerCulture)
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             var autostartProvider = this.Container.Get<IAutostartProvider>();
 #if DEBUG
@@ -71,7 +77,7 @@ namespace SyncTrayzor
             {
                 // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
                 // Else, keep the config as it was, but update the path to us (if we're not in debug)
-                if (!configurationProvider.IsPortableMode && configurationProvider.HadToCreateConfiguration)
+                if (Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
                     autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
                 else
                     autostartProvider.UpdatePathToSelf();
@@ -87,6 +93,15 @@ namespace SyncTrayzor
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
 
+            if (configurationProvider.Load().NotifyOfNewVersions)
+            {
+                SystemEvents.PowerModeChanged += (o, e) =>
+                {
+                    if (e.Mode == PowerModes.Resume)
+                        this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
+                };
+            }
+
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
                 { MessageBoxResult.Cancel, Localizer.Translate("Generic_Dialog_Cancel") },
@@ -94,13 +109,6 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
-        }
-
-        protected override void OnStart()
-        {
-            var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
-            if (languageArg != null)
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
         }
 
         protected override void Launch()

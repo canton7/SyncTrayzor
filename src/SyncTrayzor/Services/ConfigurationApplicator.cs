@@ -1,5 +1,6 @@
 ﻿using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;
@@ -55,7 +56,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncThingPath;
+            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncthingPath;
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
@@ -67,10 +68,12 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
             this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
-            this.syncThingManager.Address = new Uri(configuration.SyncthingAddress);
+            this.syncThingManager.Address = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
             this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingCustomHomePath : null;
+            this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
+            this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

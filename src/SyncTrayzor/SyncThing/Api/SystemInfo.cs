@@ -23,6 +23,9 @@ namespace SyncTrayzor.SyncThing.Api
         [JsonProperty("myID")]
         public string MyID { get; set; }
 
+        [JsonProperty("pathSeparator")]
+        public string PathSeparator { get; set; }
+
         [JsonProperty("sys")]
         public long AllocatedMemoryTotal { get; set; }
 
@@ -31,8 +34,8 @@ namespace SyncTrayzor.SyncThing.Api
 
         public override string ToString()
         {
-            return String.Format("<SystemInfo alloc={0} cpuPercent={1} goroutines={2} myId={3} sys={4} tilde={5}>",
-                this.AllocatedMemoryInUse, this.CpuPercent, this.GoRoutines, this.MyID, this.AllocatedMemoryTotal, this.Tilde);
+            return String.Format("<SystemInfo alloc={0} cpuPercent={1} goroutines={2} myId={3} pathSeparator={4} sys={5} tilde={6}>",
+                this.AllocatedMemoryInUse, this.CpuPercent, this.GoRoutines, this.MyID, this.PathSeparator, this.AllocatedMemoryTotal, this.Tilde);
         }
     }
 }

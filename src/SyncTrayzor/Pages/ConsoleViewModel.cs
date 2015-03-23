@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 
 namespace SyncTrayzor.Pages
 {

@@ -71,9 +71,49 @@ namespace SyncTrayzor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PortableMode {
+        public bool EnableAutostartOnFirstStart {
             get {
-                return ((bool)(this["PortableMode"]));
+                return ((bool)(this["EnableAutostartOnFirstStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<PathConfiguration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <LogFilePath>%EXEPATH%\logs</LogFilePath>
+  <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
+  <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
+  <ConfigurationFilePath>%EXEPATH%\data\config.xml</ConfigurationFilePath>
+</PathConfiguration>")]
+        public global::SyncTrayzor.Services.Config.PathConfiguration PathConfiguration {
+            get {
+                return ((global::SyncTrayzor.Services.Config.PathConfiguration)(this["PathConfiguration"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <ShowTrayIconOnlyOnClose>false</ShowTrayIconOnlyOnClose>
+  <MinimizeToTray>false</MinimizeToTray>
+  <CloseToTray>true</CloseToTray>
+  <ShowSynchronizedBalloon>true</ShowSynchronizedBalloon>
+  <ShowDeviceConnectivityBalloons>true</ShowDeviceConnectivityBalloons>
+  <SyncthingAddress>localhost:8384</SyncthingAddress>
+  <StartSyncthingAutomatically>true</StartSyncthingAutomatically>
+  <SyncthingUseCustomHome>true</SyncthingUseCustomHome>
+  <SyncthingDenyUpgrade>false</SyncthingDenyUpgrade>
+  <SyncthingRunLowPriority>false</SyncthingRunLowPriority>
+  <Folders />
+  <NotifyOfNewVersions>true</NotifyOfNewVersions>
+  <ObfuscateDeviceIDs>true</ObfuscateDeviceIDs>
+  <UseComputerCulture>true</UseComputerCulture>
+</Configuration>")]
+        public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
+            get {
+                return ((global::SyncTrayzor.Services.Config.Configuration)(this["DefaultUserConfiguration"]));
             }
         }
     }

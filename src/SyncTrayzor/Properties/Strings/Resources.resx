@@ -471,7 +471,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>Dummy text ignored by the UI</value>
+    <value>&lt;LANGUAGE&gt; translation by &lt;YOUR NAME&gt;</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
@@ -504,5 +504,37 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
     <value>R_estart</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
+  </data>
+  <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
+    <value>Syncthing</value>
+    <comment>'Syncthing' settings tab</comment>
+  </data>
+  <data name="SettingsView_Tab_SyncTrayzor" xml:space="preserve">
+    <value>SyncTrayzor</value>
+    <comment>'SyncTrayzor' settings tab</comment>
+  </data>
+  <data name="SettingsView_SyncthingDenyUpgrade" xml:space="preserve">
+    <value>Stop Syncthing auto-upgrading</value>
+  </data>
+  <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
+    <value>Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor's config folder</value>
+  </data>
+  <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
+    <value>Run Syncthing as a low-priority process</value>
+  </data>
+  <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
+    <value>_Open Folder</value>
+    <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
+  </data>
+  <data name="ViewerView_OpenFolder" xml:space="preserve">
+    <value>Open Folder</value>
+    <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
+  </data>
+  <data name="ViewerView_StartSyncthing" xml:space="preserve">
+    <value>Start Syncthing</value>
+    <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
+  </data>
+  <data name="SettingsView_UseComputerCulture" xml:space="preserve">
+    <value>Use my computer's language, where available. You will need to restart SyncTrayzor for this to take effect</value>
   </data>
 </root>
