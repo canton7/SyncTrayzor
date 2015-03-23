@@ -21,6 +21,7 @@ namespace SyncTrayzor.Pages
 
         private readonly ISyncThingManager syncThingManager;
         private readonly IConfigurationProvider configurationProvider;
+        private readonly Buffer<string> logMessagesBuffer;
 
         public Queue<string> LogMessages { get; private set; }
 
@@ -35,18 +36,28 @@ namespace SyncTrayzor.Pages
             var configuration = this.configurationProvider.Load();
             this.configurationProvider.ConfigurationChanged += (o, e) => configuration = e.NewConfiguration;
 
+            // Display log messages 100ms after the previous message, or every 500ms if they're arriving thick and fast
+            this.logMessagesBuffer = new Buffer<string>(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(500));
+            this.logMessagesBuffer.Delivered += (o, e) =>
+            {
+                foreach (var message in e.Items)
+                {
+                    var processedMessage = message;
+                    // Check if device IDs need to be obfuscated
+                    if (configuration.ObfuscateDeviceIDs)
+                        processedMessage = deviceIdObfuscationRegex.Replace(message, "");
+
+                    this.LogMessages.Enqueue(processedMessage);
+                    if (this.LogMessages.Count > maxLogMessages)
+                        this.LogMessages.Dequeue();
+                }
+
+                this.NotifyOfPropertyChange(() => this.LogMessages);
+            };
+
             this.syncThingManager.MessageLogged += (o, e) =>
             {
-                var message = e.LogMessage;
-
-                // Check if device IDs need to be obfuscated
-                if (configuration.ObfuscateDeviceIDs)
-                    message = deviceIdObfuscationRegex.Replace(message, "");
-
-                this.LogMessages.Enqueue(message);
-                if (this.LogMessages.Count > maxLogMessages)
-                    this.LogMessages.Dequeue();
-                this.NotifyOfPropertyChange(() => this.LogMessages);
+                this.logMessagesBuffer.Add(e.LogMessage);
             };
         }
     }
