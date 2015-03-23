@@ -12,7 +12,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Config
 {
     public class ConfigurationChangedEventArgs : EventArgs
     {

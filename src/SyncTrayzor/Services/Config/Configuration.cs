@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Config
 {
     public class FolderConfiguration
     {

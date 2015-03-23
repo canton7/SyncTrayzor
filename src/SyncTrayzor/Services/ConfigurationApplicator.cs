@@ -1,5 +1,6 @@
 ﻿using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
 using System;

@@ -2,6 +2,7 @@ using FluentValidation;
 using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;

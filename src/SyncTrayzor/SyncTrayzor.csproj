@@ -145,9 +145,9 @@
       <DependentUpon>Resources.nl-NL.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\AutostartProvider.cs" />
-    <Compile Include="Services\Configuration.cs" />
+    <Compile Include="Services\Config\Configuration.cs" />
     <Compile Include="Services\ConfigurationApplicator.cs" />
-    <Compile Include="Services\ConfigurationProvider.cs" />
+    <Compile Include="Services\Config\ConfigurationProvider.cs" />
     <Compile Include="NotifyIcon\NotifyIconManager.cs" />
     <Compile Include="NotifyIcon\NotifyIconViewModel.cs" />
     <Compile Include="Pages\ConsoleViewModel.cs" />
@@ -156,7 +156,7 @@
     <Compile Include="Services\ApplicationState.cs" />
     <Compile Include="Services\DirectoryWatcher.cs" />
     <Compile Include="Services\MemoryUsageLogger.cs" />
-    <Compile Include="Services\PathConfiguration.cs" />
+    <Compile Include="Services\Config\PathConfiguration.cs" />
     <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
     <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
     <Compile Include="Services\UpdateChecker\IGithubApi.cs" />

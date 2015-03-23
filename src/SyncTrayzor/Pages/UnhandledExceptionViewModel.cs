@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
