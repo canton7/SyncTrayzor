@@ -595,6 +595,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect.
+        /// </summary>
+        public static string SettingsView_UseComputerCulture {
+            get {
+                return ResourceManager.GetString("SettingsView_UseComputerCulture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be a valid URL.
         /// </summary>
         public static string SettingsView_Validation_InvalidUrl {

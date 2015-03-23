@@ -39,6 +39,13 @@
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray}" Content="{l:Loc SettingsView_CloseToTray}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}" Content="{l:Loc SettingsView_AlertOnNewVersion}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ObfuscateDeviceIDs}" Content="{l:Loc SettingsView_ObfuscateDeviceIds}"/>
+                            <Grid DockPanel.Dock="Top">
+                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding UseComputerCulture}"
+                                          Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
+                                    <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_UseComputerCulture}"/>
+                                </CheckBox>
+                            </Grid>
+                            
                         </DockPanel>
                     </GroupBox>
                           

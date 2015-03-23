@@ -534,4 +534,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Start Syncthing</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
+  <data name="SettingsView_UseComputerCulture" xml:space="preserve">
+    <value>Use my computer's language, where available. You will need to restart SyncTrayzor for this to take effect</value>
+  </data>
 </root>

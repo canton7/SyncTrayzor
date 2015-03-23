@@ -59,6 +59,14 @@ namespace SyncTrayzor
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
             configurationProvider.Initialize(pathConfiguration, Settings.Default.DefaultUserConfiguration);
+            var configuration = this.Container.Get<IConfigurationProvider>().Load();
+
+            // Has to be done before the VMs are fetched from the container
+            var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
+            if (languageArg != null)
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
+            else if (!configuration.UseComputerCulture)
+                Thread.CurrentThread.CurrentUICulture = null;
 
             var autostartProvider = this.Container.Get<IAutostartProvider>();
 #if DEBUG
@@ -101,13 +109,6 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
-        }
-
-        protected override void OnStart()
-        {
-            var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
-            if (languageArg != null)
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
         }
 
         protected override void Launch()

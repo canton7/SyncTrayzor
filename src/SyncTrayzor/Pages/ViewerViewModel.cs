@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using CefSharp;
 using CefSharp.Wpf;
 using SyncTrayzor.Localization;
+using SyncTrayzor.Services.Config;
+using System.Threading;
 
 namespace SyncTrayzor.Pages
 {
@@ -20,10 +22,12 @@ namespace SyncTrayzor.Pages
     {
         private readonly ISyncThingManager syncThingManager;
 
+        private readonly object cultureLock = new object(); // This can be read from many threads
+        private CultureInfo culture;
+
         public string Location { get; private set; }
         
         private SyncThingState syncThingState { get; set; }
-
         public bool ShowSyncThingStarting { get { return this.syncThingState == SyncThingState.Starting; } }
         public bool ShowSyncThingStopped { get { return this.syncThingState == SyncThingState.Stopped; ; } }
 
@@ -31,7 +35,7 @@ namespace SyncTrayzor.Pages
 
         private JavascriptCallbackObject callback;
 
-        public ViewerViewModel(ISyncThingManager syncThingManager)
+        public ViewerViewModel(ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider)
         {
             this.syncThingManager = syncThingManager;
             this.syncThingManager.StateChanged += (o, e) =>
@@ -47,6 +51,17 @@ namespace SyncTrayzor.Pages
                 if (e.NewValue != null)
                     this.InitializeBrowser(e.NewValue);
             });
+
+            this.SetCulture(configurationProvider.Load());
+            configurationProvider.ConfigurationChanged += (o, e) => this.SetCulture(e.NewConfiguration);
+        }
+
+        private void SetCulture(Configuration configuration)
+        {
+            lock (this.cultureLock)
+            {
+                this.culture = configuration.UseComputerCulture ? Thread.CurrentThread.CurrentUICulture : null;
+            }
         }
 
         protected override void OnInitialActivate()
@@ -134,8 +149,12 @@ namespace SyncTrayzor.Pages
             // See https://github.com/canton7/SyncTrayzor/issues/13
             // and https://github.com/cefsharp/CefSharp/issues/534#issuecomment-60694502
             var headers = request.Headers;
-            headers["X-API-Key"] += this.syncThingManager.ApiKey;
-            headers["Accept-Language"] = CultureInfo.CurrentCulture.Name + @";q=0.8," + CultureInfo.CurrentUICulture.Name + @";q=0.6,en;q=0.4";
+            headers["X-API-Key"] = this.syncThingManager.ApiKey;
+            lock (this.cultureLock)
+            {
+                if (this.culture != null)
+                    headers["Accept-Language"] = String.Format("{0};q=0.8,en;q=0.6", this.culture.Name);
+            }
             request.Headers = headers;
 
             return false;
