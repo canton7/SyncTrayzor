@@ -66,7 +66,7 @@ namespace SyncTrayzor
             if (languageArg != null)
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
             else if (!configuration.UseComputerCulture)
-                Thread.CurrentThread.CurrentUICulture = null;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             var autostartProvider = this.Container.Get<IAutostartProvider>();
 #if DEBUG
