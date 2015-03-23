@@ -20,6 +20,7 @@ namespace SyncTrayzor.Pages
 {
     public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler
     {
+        private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
 
         private readonly object cultureLock = new object(); // This can be read from many threads
@@ -35,8 +36,9 @@ namespace SyncTrayzor.Pages
 
         private JavascriptCallbackObject callback;
 
-        public ViewerViewModel(ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider)
+        public ViewerViewModel(IWindowManager windowManager, ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider)
         {
+            this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -119,7 +121,7 @@ namespace SyncTrayzor.Pages
 
         public void Start()
         {
-            this.syncThingManager.Start();
+            this.syncThingManager.StartWithErrorDialog(this.windowManager);
         }
 
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)
