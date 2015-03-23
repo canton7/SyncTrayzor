@@ -830,7 +830,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Translator attributation field. Please see the description..
+        ///   Looks up a localized string similar to &lt;LANGUAGE&gt; translation by &lt;YOUR NAME&gt;.
         /// </summary>
         public static string TranslatorAttributation {
             get {

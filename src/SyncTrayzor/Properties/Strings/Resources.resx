@@ -471,7 +471,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>Translator attributation field. Please see the description.</value>
+    <value>&lt;LANGUAGE&gt; translation by &lt;YOUR NAME&gt;</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
