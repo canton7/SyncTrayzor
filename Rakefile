@@ -8,16 +8,7 @@ rescue LoadError
 end
 
 ISCC = 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
-unless File.exist?(ISCC)
-  warn "Please install Inno Setup" 
-  exit 1
-end
-
 SZIP = 'C:\Program Files\7-Zip\7z.exe'
-unless File.exist?(SZIP)
-  warn "Please installe 7-Zip"
-  exit 1
-end
 
 CONFIG = ENV['CONFIG'] || 'Release'
 
@@ -65,7 +56,12 @@ task :build => ARCH_CONFIG.map{ |x| :"build:#{x.arch}" }
 namespace :installer do
   ARCH_CONFIG.each do |arch_config|
     desc "Create the installer (#{arch_config.arch})"
-    task arch_config.arch do
+    task arch_config.arch => [:"build:#{arch_config.arch}"] do
+      unless File.exist?(ISCC)
+        warn "Please install Inno Setup" 
+        exit 1
+      end
+
       rm arch_config.installer_output if File.exist?(arch_config.installer_output)
       sh %Q{"#{ISCC}"}, arch_config.installer_iss
     end
@@ -88,7 +84,12 @@ end
 namespace :portable do
   ARCH_CONFIG.each do |arch_config|
     desc "Create the portable package (#{arch_config.arch})"
-    task arch_config.arch do
+    task arch_config.arch => [:"build:#{arch_config.arch}"] do
+      unless File.exist?(SZIP)
+        warn "Please installe 7-Zip"
+        exit 1
+      end
+
       mkdir_p File.dirname(arch_config.portable_output_file)
       rm arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
 
@@ -139,7 +140,7 @@ task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
 namespace :package do
   ARCH_CONFIG.each do |arch_config|
     desc "Build installer and portable (#{arch_config.arch})"
-    task arch_config.arch => [:"clean:#{arch_config.arch}", :"build:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
+    task arch_config.arch => [:"clean:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
   end
 end
 
