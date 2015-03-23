@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.0.11
+-------
+
+ - Fix bug where GUI would freeze if Syncthing logged to console too frequently (#36)
+
 v1.0.10
 -------
 
