@@ -13,7 +13,7 @@ namespace SyncTrayzor.Services
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly string[] sizes = { "B", "KB", "MB", "GB" };
-        private static readonly TimeSpan pollInterval = TimeSpan.FromMinutes(30);
+        private static readonly TimeSpan pollInterval = TimeSpan.FromMinutes(5);
 
         private readonly Timer timer;
         private readonly Process process;
