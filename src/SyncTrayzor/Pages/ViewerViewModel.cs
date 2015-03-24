@@ -15,6 +15,7 @@ using CefSharp.Wpf;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Services.Config;
 using System.Threading;
+using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages
 {
@@ -68,7 +69,10 @@ namespace SyncTrayzor.Pages
 
         protected override void OnInitialActivate()
         {
-            Cef.Initialize();
+            Cef.Initialize(new CefSettings()
+            {
+                RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
+            });
         }
 
         private void InitializeBrowser(IWpfWebBrowser webBrowser)
