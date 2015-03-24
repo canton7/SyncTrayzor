@@ -106,7 +106,7 @@ namespace SyncTrayzor.Services.Config
 
             logger.Debug("ExePath: {0}", this.ExePath);
             logger.Debug("LogFilePath: {0}", this.LogFilePath);
-            logger.Debug("SyncthingCustomHomePath: {0}", this.LogFilePath);
+            logger.Debug("SyncthingCustomHomePath: {0}", this.SyncthingCustomHomePath);
             logger.Debug("SyncThingPath: {0}", this.SyncthingPath);
             logger.Debug("SyncThingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
