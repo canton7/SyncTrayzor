@@ -267,11 +267,13 @@
     <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcher.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcher.cs" />
+    <Compile Include="SyncThing\SyncThingFolderManager.cs" />
     <Compile Include="SyncThing\SyncThingManager.cs" />
     <Compile Include="SyncThing\SyncThingPoller.cs" />
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="SyncThing\TransientWrapper.cs" />
     <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\ChromiumWebBrowserExtensions.cs" />

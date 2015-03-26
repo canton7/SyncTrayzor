@@ -163,7 +163,7 @@ namespace SyncTrayzor.Pages
         private void OpenFolder(string folderId)
         {
             Folder folder;
-            if (!this.syncThingManager.TryFetchFolderById(folderId, out folder))
+            if (!this.syncThingManager.Folders.TryFetchById(folderId, out folder))
                 return;
 
             this.processStartProvider.StartDetached("explorer.exe", folder.Path);

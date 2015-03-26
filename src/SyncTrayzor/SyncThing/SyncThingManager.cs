@@ -23,7 +23,6 @@ namespace SyncTrayzor.SyncThing
         event EventHandler DataLoaded;
         event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
         SyncThingConnectionStats TotalConnectionStats { get; }
         event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
         event EventHandler ProcessExitedWithError;
@@ -42,15 +41,13 @@ namespace SyncTrayzor.SyncThing
         DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
+        ISyncThingFolderManager Folders { get; }
 
         Task StartAsync();
         Task StopAsync();
         Task RestartAsync();
         void Kill();
         void KillAllSyncthingProcesses();
-
-        bool TryFetchFolderById(string folderId, out Folder folder);
-        IReadOnlyCollection<Folder> FetchAllFolders();
 
         bool TryFetchDeviceById(string deviceId, out Device device);
         IReadOnlyCollection<Device> FetchAllDevices();
@@ -71,9 +68,9 @@ namespace SyncTrayzor.SyncThing
 
         // This lock covers the eventWatcher, connectionsWatcher, apiClients, and the CTS
         private readonly object apiClientsLock = new object();
-        private ISyncThingEventWatcher eventWatcher;
-        private ISyncThingConnectionsWatcher connectionsWatcher;
-        private ISyncThingApiClient apiClient;
+        private readonly SynchronizedTransientWrapper<ISyncThingEventWatcher> eventWatcher;
+        private readonly SynchronizedTransientWrapper<ISyncThingConnectionsWatcher> connectionsWatcher;
+        private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
         private CancellationTokenSource apiAbortCts;
 
         private DateTime _startedTime;
@@ -104,7 +101,6 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler DataLoaded;
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        public event EventHandler<FolderSyncStateChangeEventArgs> FolderSyncStateChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
@@ -129,18 +125,6 @@ namespace SyncTrayzor.SyncThing
         public bool SyncthingHideDeviceIds { get; set; }
         public TimeSpan SyncthingConnectTimeout { get; set; }
 
-        // Folders is a ConcurrentDictionary, which suffices for most access
-        // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
-        // to create a memory barrier. The lock is only used when setting/fetching the field, not when accessing the
-        // Folders dictionary itself.
-        private readonly object foldersLock = new object();
-        private ConcurrentDictionary<string, Folder> _folders = new ConcurrentDictionary<string, Folder>();
-        private ConcurrentDictionary<string, Folder> folders
-        {
-            get { lock (this.foldersLock) { return this._folders; } }
-            set { lock (this.foldersLock) { this._folders = value; } }
-        }
-
         private readonly object devicesLock = new object();
         private ConcurrentDictionary<string, Device> _devices = new ConcurrentDictionary<string, Device>();
         public ConcurrentDictionary<string, Device> devices
@@ -150,6 +134,12 @@ namespace SyncTrayzor.SyncThing
         }
 
         public SyncthingVersion Version { get; private set; }
+
+        private readonly SyncThingFolderManager _folders;
+        public ISyncThingFolderManager Folders
+        {
+            get { return this._folders; }
+        }
 
         public SyncThingManager(
             ISyncThingProcessRunner processRunner,
@@ -165,6 +155,24 @@ namespace SyncTrayzor.SyncThing
             this.apiClientFactory = apiClientFactory;
             this.eventWatcherFactory = eventWatcherFactory;
             this.connectionsWatcherFactory = connectionsWatcherFactory;
+
+            this.apiClient = new SynchronizedTransientWrapper<ISyncThingApiClient>(this.apiClientsLock);
+
+            this.eventWatcher = new SynchronizedTransientWrapper<ISyncThingEventWatcher>(this.apiClientsLock);
+            this.eventWatcher.ValueCreated += (o, e) =>
+            {
+                e.Value.DeviceConnected += (o2, e2) => this.OnDeviceConnected(e2);
+                e.Value.DeviceDisconnected += (o2, e2) => this.OnDeviceDisconnected(e2);
+            };
+
+            this.connectionsWatcher = new SynchronizedTransientWrapper<ISyncThingConnectionsWatcher>(this.apiClientsLock);
+            this.connectionsWatcher.ValueCreated += (o, e) =>
+            {
+                e.Value.TotalConnectionStatsChanged += (o2, e2) => this.OnTotalConnectionStatsChanged(e2.TotalConnectionStats);
+            };
+
+            // It's slightly evil to re-use SyncthingConnectTimeout here, but...
+            this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, this.SyncthingConnectTimeout);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
@@ -183,7 +191,7 @@ namespace SyncTrayzor.SyncThing
             if (this.State != SyncThingState.Running)
                 return;
 
-            await this.apiClient.ShutdownAsync();
+            await this.apiClient.Value.ShutdownAsync();
             this.SetState(SyncThingState.Stopping);
         }
 
@@ -192,7 +200,7 @@ namespace SyncTrayzor.SyncThing
             if (this.State != SyncThingState.Running)
                 return Task.FromResult(false);
 
-            return this.apiClient.RestartAsync();
+            return this.apiClient.Value.RestartAsync();
         }
 
         public void Kill()
@@ -204,17 +212,7 @@ namespace SyncTrayzor.SyncThing
         public void KillAllSyncthingProcesses()
         {
             this.processRunner.KillAllSyncthingProcesses();
-        }
-
-        public bool TryFetchFolderById(string folderId, out Folder folder)
-        {
-            return this.folders.TryGetValue(folderId, out folder);
-        }
-
-        public IReadOnlyCollection<Folder> FetchAllFolders()
-        {
-            return new List<Folder>(this.folders.Values).AsReadOnly();
-        }
+        }  
 
         public bool TryFetchDeviceById(string deviceId, out Device device)
         {
@@ -228,17 +226,12 @@ namespace SyncTrayzor.SyncThing
 
         public Task ScanAsync(string folderId, string subPath)
         {
-            return this.apiClient.ScanAsync(folderId, subPath);
+            return this.apiClient.Value.ScanAsync(folderId, subPath);
         }
 
-        public async Task ReloadIgnoresAsync(string folderId)
+        public Task ReloadIgnoresAsync(string folderId)
         {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
-                return;
-
-            var ignores = await this.apiClient.FetchIgnoresAsync(folderId);
-            folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
+            return this._folders.ReloadIgnoresAsync(folderId);
         }
 
         private void SetState(SyncThingState state)
@@ -287,10 +280,7 @@ namespace SyncTrayzor.SyncThing
             var apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.SyncthingConnectTimeout, cancellationToken);
             logger.Debug("Have the API client! It's {0}", apiClient.GetType().Name);
 
-            lock (this.apiClientsLock)
-            {
-                this.apiClient = apiClient;
-            }
+            this.apiClient.Value = apiClient;
 
             this.SetState(SyncThingState.Running);
         }
@@ -331,21 +321,15 @@ namespace SyncTrayzor.SyncThing
                 if (apiClient == null)
                     throw new InvalidOperationException("ApiClient must not be null");
 
-                if (this.connectionsWatcher != null)
-                    this.connectionsWatcher.Dispose();
-                this.connectionsWatcher = this.connectionsWatcherFactory.CreateConnectionsWatcher(apiClient);
-                this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
-                this.connectionsWatcher.Start();
+                if (this.connectionsWatcher.UnsynchronizedValue != null)
+                    this.connectionsWatcher.UnsynchronizedValue.Dispose();
+                this.connectionsWatcher.UnsynchronizedValue = this.connectionsWatcherFactory.CreateConnectionsWatcher(apiClient.Value);
+                this.connectionsWatcher.UnsynchronizedValue.Start();
 
-                if (this.eventWatcher != null)
-                    this.eventWatcher.Dispose();
-                this.eventWatcher = this.eventWatcherFactory.CreateEventWatcher(apiClient);
-                this.eventWatcher.SyncStateChanged += (o, e) => this.OnFolderSyncStateChanged(e);
-                this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
-                this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
-                this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
-                this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
-                this.eventWatcher.Start();
+                if (this.eventWatcher.UnsynchronizedValue != null)
+                    this.eventWatcher.UnsynchronizedValue.Dispose();
+                this.eventWatcher.UnsynchronizedValue = this.eventWatcherFactory.CreateEventWatcher(apiClient.Value);
+                this.eventWatcher.UnsynchronizedValue.Start();
             }
         }
 
@@ -356,15 +340,15 @@ namespace SyncTrayzor.SyncThing
                 if (this.apiAbortCts != null)
                     this.apiAbortCts.Cancel();
 
-                this.apiClient = null;
+                this.apiClient.UnsynchronizedValue = null;
 
-                if (this.connectionsWatcher != null)
-                    this.connectionsWatcher.Dispose();
-                this.connectionsWatcher = null;
+                if (this.connectionsWatcher.UnsynchronizedValue != null)
+                    this.connectionsWatcher.UnsynchronizedValue.Dispose();
+                this.connectionsWatcher.UnsynchronizedValue = null;
 
-                if (this.eventWatcher != null)
-                    this.eventWatcher.Dispose();
-                this.eventWatcher = null;
+                if (this.eventWatcher.UnsynchronizedValue != null)
+                    this.eventWatcher.UnsynchronizedValue.Dispose();
+                this.eventWatcher.UnsynchronizedValue = null;
             }
         }
 
@@ -410,7 +394,7 @@ namespace SyncTrayzor.SyncThing
             lock (this.apiClientsLock)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                apiClient = this.apiClient;
+                apiClient = this.apiClient.UnsynchronizedValue;
                 if (apiClient == null)
                     throw new InvalidOperationException("ApiClient must not be null");
             }
@@ -434,27 +418,7 @@ namespace SyncTrayzor.SyncThing
             });
             this.devices = new ConcurrentDictionary<string, Device>(devices.Select(x => new KeyValuePair<string, Device>(x.DeviceId, x)));
 
-            var tilde = systemTask.Result.Tilde;
-
-            // If the folder is invalid for any reason, we'll ignore it.
-            // Again, there's the potential for duplicate folder IDs (if the user's been fiddling their config). 
-            // In this case, there's nothing really sensible we can do. Just pick one of them :)
-            var folderConstructionTasks = configTask.Result.Folders
-                .Where(x => String.IsNullOrWhiteSpace(x.Invalid))
-                .DistinctBy(x => x.ID)
-                .Select(async folder =>
-                {
-                    var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
-                    var path = folder.Path;
-                    if (path.StartsWith("~"))
-                        path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-                    return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
-                });
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var folders = await Task.WhenAll(folderConstructionTasks);
-            this.folders = new ConcurrentDictionary<string, Folder>(folders.Select(x => new KeyValuePair<string, Folder>(x.FolderId, x)));
+            await this._folders.LoadFoldersAsync(configTask.Result, systemTask.Result, cancellationToken);
 
             this.Version = versionTask.Result;
 
@@ -463,67 +427,6 @@ namespace SyncTrayzor.SyncThing
             this.StartedTime = DateTime.UtcNow;
             this.IsDataLoaded = true;
             this.OnDataLoaded();
-        }
-
-        private async Task<Ignores> FetchFolderIgnoresAsync(string folderId, CancellationToken cancellationToken)
-        {
-            // Until startup is complete, these can return a 500.
-            // There's no sensible way to determine when startup *is* complete, so we just have to keep trying...
-            // It's slightly evil to re-use SyncthingConnectTimeout here, but...
-
-            // Again, there's the possibility that we've just abort the API...
-            ISyncThingApiClient apiClient;
-            lock (this.apiClientsLock)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                apiClient = this.apiClient;
-                if (apiClient == null)
-                    throw new InvalidOperationException("ApiClient must not be null");
-            }
-
-            Ignores ignores;
-            var startedTime = DateTime.UtcNow;
-            while (true)
-            {
-                try
-                {
-                    ignores = await apiClient.FetchIgnoresAsync(folderId);
-                    // No need to log: ApiClient did that for us
-                    break;
-                }
-                catch (ApiException e)
-                {
-                    logger.Debug("Attempting to fetch folder {0}, but received status {1}", folderId, e.StatusCode);
-                    if (e.StatusCode != HttpStatusCode.InternalServerError)
-                        throw;
-                }
-
-                if (DateTime.UtcNow - startedTime > this.SyncthingConnectTimeout)
-                    throw new SyncThingDidNotStartCorrectlyException(String.Format("Unable to fetch ignores for folder {0}. Syncthing returned 500 after {1}", folderId, DateTime.UtcNow - startedTime));
-
-                await Task.Delay(1000, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-            }
-
-            return ignores;
-        }
-
-        private void ItemStarted(string folderId, string item)
-        {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
-                return; // Don't know about it
-
-            folder.AddSyncingPath(item);
-        }
-
-        private void ItemFinished(string folderId, string item)
-        {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
-                return; // Don't know about it
-
-            folder.RemoveSyncingPath(item);
         }
 
         private void OnDeviceConnected(EventWatcher.DeviceConnectedEventArgs e)
@@ -559,17 +462,6 @@ namespace SyncTrayzor.SyncThing
         private void OnMessageLogged(string logMessage)
         {
             this.eventDispatcher.Raise(this.MessageLogged, new MessageLoggedEventArgs(logMessage));
-        }
-
-        private void OnFolderSyncStateChanged(SyncStateChangedEventArgs e)
-        {
-            Folder folder;
-            if (!this.folders.TryGetValue(e.FolderId, out folder))
-                return; // We don't know about this folder
-
-            folder.SyncState = e.SyncState;
-
-            this.eventDispatcher.Raise(this.FolderSyncStateChanged, new FolderSyncStateChangeEventArgs(folder, e.PrevSyncState, e.SyncState));
         }
 
         private void OnTotalConnectionStatsChanged(SyncThingConnectionStats stats)
