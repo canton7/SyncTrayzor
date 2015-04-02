@@ -537,4 +537,10 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
     <value>Use my computer's language, where available. You will need to restart SyncTrayzor for this to take effect</value>
   </data>
+  <data name="ShellView_Menu_View" xml:space="preserve">
+    <value>_View</value>
+  </data>
+  <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
+    <value>Syncthing Console</value>
+  </data>
 </root>

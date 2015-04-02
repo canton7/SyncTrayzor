@@ -65,6 +65,7 @@ namespace SyncTrayzor.Services.Config
         }
 
         public bool UseComputerCulture { get; set; }
+        public bool ShowSyncthingConsole { get; set; }
 
         public Configuration()
         {
@@ -87,6 +88,7 @@ namespace SyncTrayzor.Services.Config
             this.ObfuscateDeviceIDs = true;
             this.LatestNotifiedVersion = null;
             this.UseComputerCulture = true;
+            this.ShowSyncthingConsole = true;
         }
 
         public Configuration(Configuration other)
@@ -108,6 +110,7 @@ namespace SyncTrayzor.Services.Config
             this.ObfuscateDeviceIDs = other.ObfuscateDeviceIDs;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
             this.UseComputerCulture = other.UseComputerCulture;
+            this.ShowSyncthingConsole = other.ShowSyncthingConsole;
         }
 
         public override string ToString()
@@ -115,11 +118,11 @@ namespace SyncTrayzor.Services.Config
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
                 "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingTraceFacilities={8} " +
                 "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
-                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16}>",
+                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} ShowSyncthingConsole={17}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
                 this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities,
                 this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders),
-                this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture);
+                this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.ShowSyncthingConsole);
         }
     }
 }

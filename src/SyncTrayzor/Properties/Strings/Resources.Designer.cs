@@ -757,6 +757,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _View.
+        /// </summary>
+        public static string ShellView_Menu_View {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Console.
+        /// </summary>
+        public static string ShellView_Menu_View_SyncthingConsole {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_View_SyncthingConsole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentDescriptionLabel {

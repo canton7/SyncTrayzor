@@ -41,6 +41,7 @@ namespace SyncTrayzor.Services.Config
         void Initialize(PathConfiguration pathConfiguration, Configuration defaultConfiguration);
         Configuration Load();
         void Save(Configuration config);
+        void AtomicLoadAndSave(Action<Configuration> setter);
     }
 
     public class ConfigurationProvider : IConfigurationProvider
@@ -217,6 +218,19 @@ namespace SyncTrayzor.Services.Config
                 this.SaveToFile(config);
             }
             this.OnConfigurationChanged(config);
+        }
+
+        public void AtomicLoadAndSave(Action<Configuration> setter)
+        {
+            // We can just let them modify the current config here - since it's all inside the lock
+            Configuration newConfig;
+            lock (this.currentConfigLock)
+            {
+                setter(this.currentConfig);
+                this.SaveToFile(this.currentConfig);
+                newConfig = this.currentConfig;
+            }
+            this.OnConfigurationChanged(newConfig);
         }
 
         private void SaveToFile(Configuration config)

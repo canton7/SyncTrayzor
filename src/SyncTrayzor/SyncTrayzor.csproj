@@ -215,6 +215,7 @@
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
+    <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />
     <Compile Include="Xaml\DetachingBehaviour.cs" />
     <Compile Include="Xaml\LogMessageListToStringConverter.cs" />
     <Compile Include="Xaml\ScrollToEndBehaviour.cs" />
