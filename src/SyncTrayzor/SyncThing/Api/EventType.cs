@@ -26,5 +26,7 @@ namespace SyncTrayzor.SyncThing.Api
         DeviceRejected,
         ConfigSaved,
         DownloadProgress,
+        FolderSummary,
+        FolderCompletion,
     }
 }
