@@ -8,6 +8,7 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
@@ -41,6 +42,7 @@ namespace SyncTrayzor.SyncThing
         string Traces { get; set; }
         bool DenyUpgrade { get; set; }
         bool RunLowPriority { get; set; }
+        bool HideDeviceIds { get; set; }
 
         event EventHandler Starting;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
@@ -55,6 +57,8 @@ namespace SyncTrayzor.SyncThing
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly string[] defaultArguments = new[] { "-no-browser", "-no-restart" };
+        // Leave just the first set of digits, removing everything after it
+        private static readonly Regex deviceIdHideRegex = new Regex(@"-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}");
 
         private readonly object processLock = new object();
         private Process process;
@@ -66,6 +70,7 @@ namespace SyncTrayzor.SyncThing
         public string Traces { get; set; }
         public bool DenyUpgrade { get; set; }
         public bool RunLowPriority { get; set; }
+        public bool HideDeviceIds { get; set; }
 
         public event EventHandler Starting;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
@@ -163,7 +168,11 @@ namespace SyncTrayzor.SyncThing
         private void DataReceived(string data)
         {
             if (!String.IsNullOrWhiteSpace(data))
+            {
+                if (this.HideDeviceIds)
+                    data = deviceIdHideRegex.Replace(data, "");
                 this.OnMessageLogged(data);
+            }
         }
 
         public void Dispose()

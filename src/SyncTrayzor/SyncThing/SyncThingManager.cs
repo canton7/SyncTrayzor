@@ -36,6 +36,7 @@ namespace SyncTrayzor.SyncThing
         string SyncthingCustomHomeDir { get; set; }
         bool SyncthingDenyUpgrade { get; set; }
         bool SyncthingRunLowPriority { get; set; }
+        bool SyncthingHideDeviceIds { get; set; }
         DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
@@ -116,6 +117,7 @@ namespace SyncTrayzor.SyncThing
         public string SyncthingTraceFacilities { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
         public bool SyncthingRunLowPriority { get; set; }
+        public bool SyncthingHideDeviceIds { get; set; }
 
         // Folders is a ConcurrentDictionary, which suffices for most access
         // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
@@ -167,6 +169,7 @@ namespace SyncTrayzor.SyncThing
                 this.processRunner.Traces = this.SyncthingTraceFacilities;
                 this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
                 this.processRunner.RunLowPriority = this.SyncthingRunLowPriority;
+                this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;
 
                 this.SetState(SyncThingState.Starting);
             };
