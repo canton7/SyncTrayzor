@@ -76,7 +76,12 @@ namespace SyncTrayzor.NotifyIcon
             {
                 this.rootViewModel.EnsureInForeground();
             };
-            this.viewModel.WindowCloseRequested += (o, e) => this.rootViewModel.CloseToTray();
+            this.viewModel.WindowCloseRequested += (o, e) =>
+            {
+                // Always minimize, regardless of settings
+                this.application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                this.rootViewModel.CloseToTray();
+            };
             this.viewModel.ExitRequested += (o, e) => this.rootViewModel.Shutdown();
 
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
