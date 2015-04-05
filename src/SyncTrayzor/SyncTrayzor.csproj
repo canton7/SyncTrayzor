@@ -131,6 +131,10 @@
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocExtension.cs" />
     <Compile Include="NotifyIcon\INotifyIconDelegate.cs" />
+    <Compile Include="NotifyIcon\UpgradeAvailableViewModel.cs" />
+    <Compile Include="NotifyIcon\UpgradeAvailableView.xaml.cs">
+      <DependentUpon>UpgradeAvailableView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
@@ -258,6 +262,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotifyIcon\UpgradeAvailableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

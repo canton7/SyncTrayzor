@@ -34,6 +34,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
         private readonly ISyncThingManager syncThingManager;
+        private readonly Func<UpgradeAvailableViewModel> upgradeAvailableViewModelFactory;
 
         private INotifyIconDelegate rootViewModel;
         private TaskbarIcon taskbarIcon;
@@ -65,12 +66,14 @@ namespace SyncTrayzor.NotifyIcon
             IViewManager viewManager,
             NotifyIconViewModel viewModel,
             IApplicationState application,
-            ISyncThingManager syncThingManager)
+            ISyncThingManager syncThingManager,
+            Func<UpgradeAvailableViewModel> upgradeAvailableViewModelFactory)
         {
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
             this.syncThingManager = syncThingManager;
+            this.upgradeAvailableViewModelFactory = upgradeAvailableViewModelFactory;
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
@@ -130,7 +133,12 @@ namespace SyncTrayzor.NotifyIcon
             this.rootViewModel.Activated += rootViewModelActivated;
             this.rootViewModel.Deactivated += rootViewModelDeactivated;
             this.rootViewModel.Closed += rootViewModelClosed;
-        }
+
+            var vm = this.upgradeAvailableViewModelFactory();
+            var view = this.viewManager.CreateViewForModel(vm);
+            this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Scroll, null);
+            this.viewManager.BindViewToModel(view, vm); // Re-assign DataContext
+        } 
 
         public void EnsureIconVisible()
         {
