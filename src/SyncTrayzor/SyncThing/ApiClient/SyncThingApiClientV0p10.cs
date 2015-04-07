@@ -70,9 +70,14 @@ namespace SyncTrayzor.SyncThing.ApiClient
             return systemInfo;
         }
 
-        public Task<Connections> FetchConnectionsAsync()
+        public async Task<Connections> FetchConnectionsAsync()
         {
-            return this.api.FetchConnectionsAsync();
+            var v0p10Connections = await this.api.FetchConnectionsAsync();
+            return new Connections()
+            {
+                Total = v0p10Connections.Total,
+                DeviceConnections = v0p10Connections.DeviceConnections,
+            };
         }
 
         public async Task<SyncthingVersion> FetchVersionAsync()
