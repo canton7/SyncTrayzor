@@ -13,11 +13,11 @@ namespace SyncTrayzor.Utils
 {
     public static class SafeSyncthingExtensions
     {
-        public static void StartWithErrorDialog(this ISyncThingManager syncThingManager, IWindowManager windowManager)
+        public static async Task StartWithErrorDialogAsync(this ISyncThingManager syncThingManager, IWindowManager windowManager)
         {
             try
             {
-                syncThingManager.Start();
+                await syncThingManager.StartAsync();
             }
             catch (Win32Exception e)
             {

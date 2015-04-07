@@ -1,5 +1,5 @@
 ﻿using NLog;
-using SyncTrayzor.SyncThing.Api;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
@@ -41,7 +41,7 @@ namespace SyncTrayzor.SyncThing
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
 
-        void Start();
+        Task StartAsync();
         Task StopAsync();
         Task RestartAsync();
         void Kill();
@@ -178,12 +178,13 @@ namespace SyncTrayzor.SyncThing
             };
         }
 
-        public void Start()
+        public async Task StartAsync()
         {
             try
             {
                 this.apiAbortCts = new CancellationTokenSource();
                 this.processRunner.Start();
+                await this.StartApiClientsAsync();
             }
             catch (Exception e)
             {
@@ -258,13 +259,13 @@ namespace SyncTrayzor.SyncThing
         private void SetState(SyncThingState state)
         {
             SyncThingState oldState;
+            bool abortApi = false;
             lock (this.stateLock)
             {
                 if (state == this._state)
                     return;
 
                 oldState = this._state;
-
                 // We really need a proper state machine here....
                 // There's a race if Syncthing can't start because the database is locked by another process on the same port
                 // In this case, we see the process as having failed, but the event watcher chimes in a split-second later with the 'Started' event.
@@ -274,20 +275,25 @@ namespace SyncTrayzor.SyncThing
                     return;
 
                 if ((this._state == SyncThingState.Running || this._state == SyncThingState.Starting) && state == SyncThingState.Stopped)
-                    this.apiAbortCts.Cancel();
+                    abortApi = true;
 
                 this._state = state;
             }
 
-            this.UpdateWatchersState(oldState, state);
+            if (abortApi)
+            {
+                this.apiAbortCts.Cancel();
+                this.StopApiClients();
+            }
+
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
-        private void UpdateWatchersState(SyncThingState oldState, SyncThingState newState)
+        private async Task StartApiClientsAsync()
         {
-            if (newState == SyncThingState.Starting || (oldState != SyncThingState.Starting && newState == SyncThingState.Running))
+            try
             {
-                this.apiClient = this.apiClientFactory.CreateApiClient(this.Address, this.ApiKey);
+                this.apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.apiAbortCts.Token);
 
                 if (this.connectionsWatcher != null)
                     this.connectionsWatcher.Dispose();
@@ -306,18 +312,21 @@ namespace SyncTrayzor.SyncThing
                 this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
                 this.eventWatcher.Running = true;
             }
-            else if (newState == SyncThingState.Stopping || newState == SyncThingState.Stopped)
-            {
-                this.apiClient = null;
+            catch (OperationCanceledException)
+            { }
+        }
 
-                if (this.connectionsWatcher != null)
-                    this.connectionsWatcher.Dispose();
-                this.connectionsWatcher = null;
+        private void StopApiClients()
+        {
+            this.apiClient = null;
 
-                if (this.eventWatcher != null)
-                    this.eventWatcher.Dispose();
-                this.eventWatcher = null;
-            }
+            if (this.connectionsWatcher != null)
+                this.connectionsWatcher.Dispose();
+            this.connectionsWatcher = null;
+
+            if (this.eventWatcher != null)
+                this.eventWatcher.Dispose();
+            this.eventWatcher = null;
         }
 
         private void ProcessStopped(SyncThingExitStatus exitStatus)
@@ -465,10 +474,7 @@ namespace SyncTrayzor.SyncThing
         public void Dispose()
         {
             this.processRunner.Dispose();
-            if (this.connectionsWatcher != null)
-                this.connectionsWatcher.Dispose();
-            if (this.eventWatcher != null)
-                this.eventWatcher.Dispose();
+            this.StopApiClients();
         }
     }
 }

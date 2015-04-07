@@ -1,4 +1,4 @@
-﻿using SyncTrayzor.SyncThing.Api;
+﻿using SyncTrayzor.SyncThing.ApiClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;

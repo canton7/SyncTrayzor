@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NLog;
 using Refit;
-using SyncTrayzor.SyncThing.Api;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -11,35 +11,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.SyncThing
+namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public interface ISyncThingApiClient
+    public class SyncThingApiClientV0p11 : ISyncThingApiClient
     {
-        Task ShutdownAsync();
-        Task<List<Event>> FetchEventsAsync(int since, int limit, CancellationToken cancellationToken);
-        Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken);
-        Task<Config> FetchConfigAsync();
-        Task ScanAsync(string folderId, string subPath);
-        Task<SystemInfo> FetchSystemInfoAsync();
-        Task<Connections> FetchConnectionsAsync();
-        Task<SyncthingVersion> FetchVersionAsync();
-        Task<Ignores> FetchIgnoresAsync(string folderId);
-        Task RestartAsync();
-    }
+        private static readonly Logger logger = LogManager.GetLogger("SyncTrayzor.SyncThing.ApiClient.SyncThingApiClient");
+        private ISyncThingApiV0p11 api;
 
-    public class SyncThingApiClient : ISyncThingApiClient
-    {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private ISyncThingApi api;
-
-        public SyncThingApiClient(Uri baseAddress, string apiKey)
+        public SyncThingApiClientV0p11(Uri baseAddress, string apiKey)
         {
             var httpClient = new HttpClient(new AuthenticatedHttpClientHandler(apiKey))
             {
                 BaseAddress = baseAddress.NormalizeZeroHost(),
                 Timeout = TimeSpan.FromSeconds(70),
             };
-            this.api = RestService.For<ISyncThingApi>(httpClient, new RefitSettings()
+            this.api = RestService.For<ISyncThingApiV0p11>(httpClient, new RefitSettings()
             {
                 JsonSerializerSettings = new JsonSerializerSettings()
                 {
@@ -107,24 +93,6 @@ namespace SyncTrayzor.SyncThing
         {
             logger.Debug("Restarting Syncthing");
             return this.api.RestartAsync();
-        }
-
-        private class AuthenticatedHttpClientHandler : WebRequestHandler
-        {
-            private readonly string apiKey;
-
-            public AuthenticatedHttpClientHandler(string apiKey)
-            {
-                this.apiKey = apiKey;
-                // We expect Syncthing to return invalid certs
-                this.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-            }
-
-            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
-            {
-                request.Headers.Add("X-API-Key", this.apiKey);
-                return base.SendAsync(request, cancellationToken);
-            }
         }
     }
 }

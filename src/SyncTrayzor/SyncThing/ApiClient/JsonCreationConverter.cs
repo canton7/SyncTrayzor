@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace SyncTrayzor.SyncThing.Api
+namespace SyncTrayzor.SyncThing.ApiClient
 {
     /// <summary>Base Generic JSON Converter that can help quickly define converters for specific types by automatically
     /// generating the CanConvert, ReadJson, and WriteJson methods, requiring the implementer only to define a strongly typed Create method.</summary>
