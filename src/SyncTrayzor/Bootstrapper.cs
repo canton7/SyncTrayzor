@@ -37,11 +37,11 @@ namespace SyncTrayzor
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
-            builder.Bind<ISyncThingApiClient>().To<SyncThingApiClient>().InSingletonScope();
-            builder.Bind<ISyncThingEventWatcher>().To<SyncThingEventWatcher>().InSingletonScope();
+            builder.Bind<ISyncThingApiClientFactory>().To<SyncThingApiClientFactory>();
+            builder.Bind<ISyncThingEventWatcherFactory>().To<SyncThingEventWatcherFactory>();
             builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
             builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
-            builder.Bind<ISyncThingConnectionsWatcher>().To<SyncThingConnectionsWatcher>().InSingletonScope();
+            builder.Bind<ISyncThingConnectionsWatcherFactory>().To<SyncThingConnectionsWatcherFactory>();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();

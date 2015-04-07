@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
-    public interface ISyncThingPoller
+    public interface ISyncThingPoller : IDisposable
     {
         bool Running { get; set; }
     }
@@ -19,6 +20,7 @@ namespace SyncTrayzor.SyncThing
         private readonly TimeSpan erroredWaitInterval;
 
         private readonly object runningLock = new object();
+        private CancellationTokenSource cancelCts;
         private bool _running;
         public bool Running
         {
@@ -33,7 +35,12 @@ namespace SyncTrayzor.SyncThing
                     this._running = value;
                     if (value)
                     {
+                        this.cancelCts = new CancellationTokenSource();
                         this.Start();
+                    }
+                    else
+                    {
+                        this.cancelCts.Cancel();
                     }
                 }
             }
@@ -59,9 +66,9 @@ namespace SyncTrayzor.SyncThing
 
                     try
                     {
-                        await this.PollAsync();
+                        await this.PollAsync(this.cancelCts.Token);
                         if (this.pollingInterval.Ticks > 0)
-                            await Task.Delay(this.pollingInterval);
+                            await Task.Delay(this.pollingInterval, this.cancelCts.Token);
                     }
                     catch (HttpRequestException)
                     {
@@ -79,7 +86,14 @@ namespace SyncTrayzor.SyncThing
                     }
 
                     if (errored)
-                        await Task.Delay(this.erroredWaitInterval);
+                    {
+                        try
+                        {
+                            await Task.Delay(this.erroredWaitInterval, this.cancelCts.Token);
+                        }
+                        catch (OperationCanceledException)
+                        { }
+                    }
                 }
             }
             finally
@@ -88,6 +102,11 @@ namespace SyncTrayzor.SyncThing
             }
         }
 
-        protected abstract Task PollAsync();
+        protected abstract Task PollAsync(CancellationToken cancellationToken);
+
+        public void Dispose()
+        {
+            this.Running = false;
+        }
     }
 }

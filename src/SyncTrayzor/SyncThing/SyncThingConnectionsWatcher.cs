@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
@@ -38,7 +39,7 @@ namespace SyncTrayzor.SyncThing
             this.apiClient = apiClient;
         }
 
-        protected override async Task PollAsync()
+        protected override async Task PollAsync(CancellationToken cancellationToken)
         {
             var connections = await this.apiClient.FetchConnectionsAsync();
 

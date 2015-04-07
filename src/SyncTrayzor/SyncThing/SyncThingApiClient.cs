@@ -8,16 +8,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
     public interface ISyncThingApiClient
     {
-        void SetConnectionDetails(Uri baseAddress, string apiKey);
-
         Task ShutdownAsync();
-        Task<List<Event>> FetchEventsAsync(int since, int? limit = null);
+        Task<List<Event>> FetchEventsAsync(int since, int limit, CancellationToken cancellationToken);
+        Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken);
         Task<Config> FetchConfigAsync();
         Task ScanAsync(string folderId, string subPath);
         Task<SystemInfo> FetchSystemInfoAsync();
@@ -32,7 +32,7 @@ namespace SyncTrayzor.SyncThing
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private ISyncThingApi api;
 
-        public void SetConnectionDetails(Uri baseAddress, string apiKey)
+        public SyncThingApiClient(Uri baseAddress, string apiKey)
         {
             var httpClient = new HttpClient(new AuthenticatedHttpClientHandler(apiKey))
             {
@@ -51,22 +51,21 @@ namespace SyncTrayzor.SyncThing
         public Task ShutdownAsync()
         {
             logger.Info("Requesting API shutdown");
-            this.EnsureSetup();
             return this.api.ShutdownAsync();
         }
 
-        public Task<List<Event>> FetchEventsAsync(int since, int? limit)
+        public Task<List<Event>> FetchEventsAsync(int since, int limit, CancellationToken cancellationToken)
         {
-            this.EnsureSetup();
-            if (limit == null)
-                return this.api.FetchEventsAsync(since);
-            else
-                return this.api.FetchEventsLimitAsync(since, limit.Value);
+            return this.api.FetchEventsLimitAsync(since, limit, cancellationToken);
+        }
+
+        public Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken)
+        {
+            return this.api.FetchEventsAsync(since, cancellationToken);
         }
 
         public async Task<Config> FetchConfigAsync()
         {
-            this.EnsureSetup();
             var config = await this.api.FetchConfigAsync();
             logger.Debug("Fetched configuration: {0}", config);
             return config;
@@ -75,13 +74,11 @@ namespace SyncTrayzor.SyncThing
         public Task ScanAsync(string folderId, string subPath)
         {
             logger.Debug("Scanning folder: {0} subPath: {1}", folderId, subPath);
-            this.EnsureSetup();
             return this.api.ScanAsync(folderId, subPath);
         }
 
         public async Task<SystemInfo> FetchSystemInfoAsync()
         {
-            this.EnsureSetup();
             var systemInfo = await this.api.FetchSystemInfoAsync();
             logger.Debug("Fetched system info: {0}", systemInfo);
             return systemInfo;
@@ -89,13 +86,11 @@ namespace SyncTrayzor.SyncThing
 
         public Task<Connections> FetchConnectionsAsync()
         {
-            this.EnsureSetup();
             return this.api.FetchConnectionsAsync();
         }
 
         public async Task<SyncthingVersion> FetchVersionAsync()
         {
-            this.EnsureSetup();
             var version = await this.api.FetchVersionAsync();
             logger.Debug("Fetched version: {0}", version);
             return version;
@@ -103,7 +98,6 @@ namespace SyncTrayzor.SyncThing
 
         public async Task<Ignores> FetchIgnoresAsync(string folderId)
         {
-            this.EnsureSetup();
             var ignores = await this.api.FetchIgnoresAsync(folderId);
             logger.Debug("Fetched ignores for folderid {0}: {1}", folderId, ignores);
             return ignores;
@@ -111,15 +105,8 @@ namespace SyncTrayzor.SyncThing
 
         public Task RestartAsync()
         {
-            this.EnsureSetup();
             logger.Debug("Restarting Syncthing");
             return this.api.RestartAsync();
-        }
-
-        private void EnsureSetup()
-        {
-            if (this.api == null)
-                throw new InvalidOperationException("SetConnectionDetails not called");
         }
 
         private class AuthenticatedHttpClientHandler : WebRequestHandler
