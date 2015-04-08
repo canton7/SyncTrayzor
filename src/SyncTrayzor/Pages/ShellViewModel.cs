@@ -64,9 +64,9 @@ namespace SyncTrayzor.Pages
         {
             get { return this.SyncThingState == SyncThingState.Stopped; }
         }
-        public void Start()
+        public async void Start()
         {
-            this.syncThingManager.StartWithErrorDialog(this.windowManager);
+            await this.syncThingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
         public bool CanStop

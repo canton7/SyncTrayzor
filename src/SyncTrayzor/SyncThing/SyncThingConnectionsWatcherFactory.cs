@@ -1,5 +1,6 @@
 ﻿using StyletIoC;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.ApiClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;

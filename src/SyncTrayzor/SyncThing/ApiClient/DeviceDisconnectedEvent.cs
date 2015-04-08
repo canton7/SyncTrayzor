@@ -5,21 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.SyncThing.Api
+namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public class DeviceConnectedEventData
+    public class DeviceDisconnectedEventData
     {
-        [JsonProperty("addr")]
-        public string Address { get; set; }
+        [JsonProperty("error")]
+        public string Error { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
     }
 
-    public class DeviceConnectedEvent : Event
+    public class DeviceDisconnectedEvent : Event
     {
         [JsonProperty("data")]
-        public DeviceConnectedEventData Data { get; set; }
+        public DeviceDisconnectedEventData Data { get; set; }
 
         public override void Visit(IEventVisitor visitor)
         {
@@ -28,7 +28,7 @@ namespace SyncTrayzor.SyncThing.Api
 
         public override string ToString()
         {
-            return String.Format("<DeviceConnected ID={0} Time={1} Addr={2} Id={3}>", this.Id, this.Time, this.Data.Address, this.Data.Id);
+            return String.Format("<Disconnected ID={0} Time={1} Error={2} Id={3}>", this.Id, this.Time, this.Data.Error, this.Data.Id);
         }
     }
 }

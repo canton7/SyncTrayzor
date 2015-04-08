@@ -12,6 +12,7 @@ using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateChecker;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;

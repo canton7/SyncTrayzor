@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.SyncThing.Api
+namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public interface ISyncThingApi
+    public interface ISyncThingApiV0p11
     {
         [Get("/rest/events")]
         Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken);
@@ -16,28 +16,28 @@ namespace SyncTrayzor.SyncThing.Api
         [Get("/rest/events")]
         Task<List<Event>> FetchEventsLimitAsync(int since, int limit, CancellationToken cancellationToken);
 
-        [Get("/rest/config")]
+        [Get("/rest/system/config")]
         Task<Config> FetchConfigAsync();
 
-        [Post("/rest/shutdown")]
+        [Post("/rest/system/shutdown")]
         Task ShutdownAsync();
 
-        [Post("/rest/scan")]
+        [Post("/rest/db/scan")]
         Task ScanAsync(string folder, string sub);
 
-        [Get("/rest/system")]
+        [Get("/rest/system/status")]
         Task<SystemInfo> FetchSystemInfoAsync();
 
-        [Get("/rest/connections")]
+        [Get("/rest/system/connections")]
         Task<Connections> FetchConnectionsAsync();
 
-        [Get("/rest/version")]
+        [Get("/rest/system/version")]
         Task<SyncthingVersion> FetchVersionAsync();
 
-        [Get("/rest/ignores")]
+        [Get("/rest/db/ignores")]
         Task<Ignores> FetchIgnoresAsync(string folder);
 
-        [Post("/rest/restart")]
+        [Post("/rest/system/restart")]
         Task RestartAsync();
     }
 }
