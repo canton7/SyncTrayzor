@@ -10,7 +10,7 @@ using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.Services.UpdateChecker;
+using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
@@ -46,7 +46,9 @@ namespace SyncTrayzor
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
-            builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
+            builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
+            builder.Bind<IUpdateChecker>().To<UpdateChecker>();
+            builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
             builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
@@ -99,7 +101,7 @@ namespace SyncTrayzor
                 SystemEvents.PowerModeChanged += (o, e) =>
                 {
                     if (e.Mode == PowerModes.Resume)
-                        this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
+                        this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdatesAsync();
                 };
             }
 
@@ -128,7 +130,7 @@ namespace SyncTrayzor
 
             // We don't care if this fails
             if (config.NotifyOfNewVersions)
-                this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
+                this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdatesAsync();
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)

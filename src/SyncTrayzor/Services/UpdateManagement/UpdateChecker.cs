@@ -10,18 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace SyncTrayzor.Services.UpdateChecker
+namespace SyncTrayzor.Services.UpdateManagement
 {
-    public class VersionIgnoredEventArgs : EventArgs
-    {
-        public Version IgnoredVersion { get; private set; }
-
-        public VersionIgnoredEventArgs(Version ignoredVersion)
-        {
-            this.IgnoredVersion = ignoredVersion;
-        }
-    }
-
     public class VersionCheckResults
     {
         public Version LatestVersion { get; private set; }
@@ -45,32 +35,19 @@ namespace SyncTrayzor.Services.UpdateChecker
 
     public interface IUpdateChecker
     {
-        event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
-        Version LatestIgnoredVersion { get; set; }
-
         Task<VersionCheckResults> FetchUpdatesAsync();
-        Task CheckForUpdatesAsync();
+        Task<VersionCheckResults> CheckForAcceptableUpdatesAsync(Version latestIgnoredVersion = null);
     }
 
     public class UpdateChecker : IUpdateChecker
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly IWindowManager windowManager;
         private readonly IGithubApiClient apiClient;
-        private readonly Func<NewVersionAlertViewModel> newVersionAlertViewModelFactory;
 
-        public Version LatestIgnoredVersion { get; set; }
-        public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
-
-        public UpdateChecker(
-            IWindowManager windowManager,
-            IGithubApiClient apiClient,
-            Func<NewVersionAlertViewModel> newVersionAlertViewModelFactory)
+        public UpdateChecker(IGithubApiClient apiClient)
         {
-            this.windowManager = windowManager;
             this.apiClient = apiClient;
-            this.newVersionAlertViewModelFactory = newVersionAlertViewModelFactory;
         }
 
         public async Task<VersionCheckResults> FetchUpdatesAsync()
@@ -98,44 +75,20 @@ namespace SyncTrayzor.Services.UpdateChecker
             }
         }
         
-        public async Task CheckForUpdatesAsync()
+        public async Task<VersionCheckResults> CheckForAcceptableUpdatesAsync(Version latestIgnoredVersion)
         {
             var results = await this.FetchUpdatesAsync();
 
             if (results == null)
-                return;
+                return null;
 
-            if (this.LatestIgnoredVersion != null && results.LatestVersion <= this.LatestIgnoredVersion)
-                return;
+            if (latestIgnoredVersion != null && results.LatestVersion <= latestIgnoredVersion)
+                return null;
 
-            if (results.LatestVersionIsNewer)
-            {
-                var vm = this.newVersionAlertViewModelFactory();
-                vm.Changelog = results.LatestVersionChangelog;
-                vm.Version = results.LatestVersion;
-                var result = this.windowManager.ShowDialog(vm);
-                if (result == true)
-                {
-                    logger.Info("Proceeding to download URL {0}", results.LatestVersionDownloadUrl);
-                    Process.Start(results.LatestVersionDownloadUrl);
-                }
-                else if (vm.DontRemindMe)
-                {
-                    logger.Info("Ignoring version {0}", results.LatestVersion);
-                    this.OnVersionIgnored(results.LatestVersion);
-                }
-                else
-                {
-                    logger.Info("Not installing version {0}, but will remind on next start", results.LatestVersion);
-                }
-            }
-        }
+            if (!results.LatestVersionIsNewer)
+                return null;
 
-        private void OnVersionIgnored(Version ignoredVersion)
-        {
-            var handler = this.VersionIgnored;
-            if (handler != null)
-                handler(this, new VersionIgnoredEventArgs(ignoredVersion));
+            return results;
         }
     }
 }

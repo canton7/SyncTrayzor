@@ -1,7 +1,7 @@
 ﻿using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.Services.UpdateChecker;
+using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace SyncTrayzor.Services
         private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
         private readonly IGithubApiClient githubApiClient;
-        private readonly IUpdateChecker updateChecker;
+        private readonly IUpdateManager updateManager;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
@@ -29,7 +29,7 @@ namespace SyncTrayzor.Services
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
             IGithubApiClient githubApiClient,
-            IUpdateChecker updateChecker)
+            IUpdateManager updateManager)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
@@ -39,15 +39,9 @@ namespace SyncTrayzor.Services
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
             this.githubApiClient = githubApiClient;
-            this.updateChecker = updateChecker;
+            this.updateManager = updateManager;
 
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
-            this.updateChecker.VersionIgnored += (o, e) =>
-            {
-                var config = this.configurationProvider.Load();
-                config.LatestNotifiedVersion = e.IgnoredVersion;
-                this.configurationProvider.Save(config);
-            };
         }
 
         public void ApplyConfiguration()
@@ -78,7 +72,7 @@ namespace SyncTrayzor.Services
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
-            this.updateChecker.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
+            this.updateManager.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
         }
 
         private void LoadFolders()

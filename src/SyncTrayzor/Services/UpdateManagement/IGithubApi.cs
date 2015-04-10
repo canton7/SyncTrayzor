@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.Services.UpdateChecker
+namespace SyncTrayzor.Services.UpdateManagement
 {
     [Headers("User-Agent: SyncTrayzor")]
     public interface IGithubApi

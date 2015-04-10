@@ -120,6 +120,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\ProcessStartProvider.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateManager.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
@@ -173,11 +175,11 @@
     <Compile Include="Services\DirectoryWatcher.cs" />
     <Compile Include="Services\MemoryUsageLogger.cs" />
     <Compile Include="Services\Config\PathConfiguration.cs" />
-    <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
-    <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
-    <Compile Include="Services\UpdateChecker\IGithubApi.cs" />
-    <Compile Include="Services\UpdateChecker\Release.cs" />
-    <Compile Include="Services\UpdateChecker\ReleaseResponse.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateChecker.cs" />
+    <Compile Include="Services\UpdateManagement\GithubApiClient.cs" />
+    <Compile Include="Services\UpdateManagement\IGithubApi.cs" />
+    <Compile Include="Services\UpdateManagement\Release.cs" />
+    <Compile Include="Services\UpdateManagement\ReleaseResponse.cs" />
     <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\ApiClient\Config.cs" />
     <Compile Include="SyncThing\ApiClient\Connections.cs" />
