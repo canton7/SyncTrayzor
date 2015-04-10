@@ -23,6 +23,9 @@ namespace SyncTrayzor.NotifyIcon
         void Setup(INotifyIconDelegate rootViewModel);
 
         void EnsureIconVisible();
+
+        void ShowBalloon(object viewModel);
+        void HideBalloon();
     }
 
     public class NotifyIconManager : INotifyIconManager
@@ -34,7 +37,6 @@ namespace SyncTrayzor.NotifyIcon
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
         private readonly ISyncThingManager syncThingManager;
-        private readonly Func<UpgradeAvailableViewModel> upgradeAvailableViewModelFactory;
 
         private INotifyIconDelegate rootViewModel;
         private TaskbarIcon taskbarIcon;
@@ -66,14 +68,12 @@ namespace SyncTrayzor.NotifyIcon
             IViewManager viewManager,
             NotifyIconViewModel viewModel,
             IApplicationState application,
-            ISyncThingManager syncThingManager,
-            Func<UpgradeAvailableViewModel> upgradeAvailableViewModelFactory)
+            ISyncThingManager syncThingManager)
         {
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
             this.syncThingManager = syncThingManager;
-            this.upgradeAvailableViewModelFactory = upgradeAvailableViewModelFactory;
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
@@ -85,7 +85,7 @@ namespace SyncTrayzor.NotifyIcon
                 this.application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 this.rootViewModel.CloseToTray();
             };
-            this.viewModel.ExitRequested += (o, e) => this.rootViewModel.Shutdown();
+            this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
@@ -132,13 +132,20 @@ namespace SyncTrayzor.NotifyIcon
 
             this.rootViewModel.Activated += rootViewModelActivated;
             this.rootViewModel.Deactivated += rootViewModelDeactivated;
-            this.rootViewModel.Closed += rootViewModelClosed;
-
-            var vm = this.upgradeAvailableViewModelFactory();
-            var view = this.viewManager.CreateViewForModel(vm);
-            this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Scroll, null);
-            this.viewManager.BindViewToModel(view, vm); // Re-assign DataContext
+            this.rootViewModel.Closed += rootViewModelClosed; 
         } 
+
+        public void ShowBalloon(object viewModel)
+        {
+            var view = this.viewManager.CreateViewForModel(viewModel);
+            this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Scroll, null);
+            this.viewManager.BindViewToModel(view, viewModel); // Re-assign DataContext, after NotifyIcon overwrote it ><
+        }
+
+        public void HideBalloon()
+        {
+            this.taskbarIcon.CloseBalloon();
+        }
 
         public void EnsureIconVisible()
         {

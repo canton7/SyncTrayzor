@@ -159,10 +159,5 @@ namespace SyncTrayzor.Pages
                 this.windowManager.ShowWindow(this);
             this.WindowActivated = true;
         }
-
-        public void Shutdown()
-        {
-            this.application.Shutdown();
-        }
     }
 }

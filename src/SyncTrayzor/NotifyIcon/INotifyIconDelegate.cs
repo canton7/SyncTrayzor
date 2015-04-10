@@ -11,6 +11,5 @@ namespace SyncTrayzor.NotifyIcon
     {
         void CloseToTray();
         void EnsureInForeground();
-        void Shutdown();
     }
 }

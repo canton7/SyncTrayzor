@@ -42,6 +42,7 @@ namespace SyncTrayzor.Services
             this.updateManager = updateManager;
 
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
+            this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
         }
 
         public void ApplyConfiguration()
@@ -73,6 +74,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
             this.updateManager.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
+            this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
         }
 
         private void LoadFolders()

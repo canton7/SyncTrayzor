@@ -34,7 +34,7 @@ namespace SyncTrayzor
 
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
-            builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
+            builder.Bind<IApplicationState>().ToFactory(c => new ApplicationState(this.Application, (IScreenState)this.RootViewModel)).InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
@@ -48,6 +48,7 @@ namespace SyncTrayzor
             builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
             builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
             builder.Bind<IUpdateChecker>().To<UpdateChecker>();
+            builder.Bind<IUpdatePromptProvider>().To<UpdatePromptProvider>();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
@@ -112,6 +113,8 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
+
+            this.Container.Get<IApplicationState>().ApplicationStarted();
         }
 
         protected override void Launch()
