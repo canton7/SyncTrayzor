@@ -39,10 +39,13 @@ namespace SyncTrayzor.Services.UpdateManagement
         private static readonly TimeSpan timeBetweenChecks = TimeSpan.FromHours(3);
 
         private readonly IApplicationState applicationState;
+        private readonly IApplicationWindowState applicationWindowState;
         private readonly IUpdateCheckerFactory updateCheckerFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
         private readonly System.Timers.Timer promptTimer;
+
+        private readonly SemaphoreSlim versionCheckLock = new SemaphoreSlim(1, 1);
 
         private DateTime lastCheckedTime;
 
@@ -66,11 +69,13 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public UpdateManager(
             IApplicationState applicationState,
+            IApplicationWindowState applicationWindowState,
             IUpdateCheckerFactory updateCheckerFactory,
             IProcessStartProvider processStartProvider,
             IUpdatePromptProvider updatePromptProvider)
         {
             this.applicationState = applicationState;
+            this.applicationWindowState = applicationWindowState;
             this.updateCheckerFactory = updateCheckerFactory;
             this.processStartProvider = processStartProvider;
             this.updatePromptProvider = updatePromptProvider;
@@ -84,7 +89,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             // We'll also check when the application is restored from tray
 
             this.applicationState.Startup += this.ApplicationStartup;
-            this.applicationState.RootWindowActivated += this.RootWindowActivated;
+            this.applicationWindowState.RootWindowActivated += this.RootWindowActivated;
         }
 
         private async void UpdateCheckForUpdates(bool checkForUpdates)
@@ -93,7 +98,11 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 this.RestartTimer();
                 if (this.UpdateCheckDue())
+                {
+                    // Give them a minute to catch their breath
+                    await Task.Delay(TimeSpan.FromSeconds(30));
                     await this.CheckForUpdatesAsync();
+                }
             }
             else
             {
@@ -139,53 +148,66 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private async Task CheckForUpdatesAsync()
         {
-            this.lastCheckedTime = DateTime.UtcNow;
-
-            if (!this.CheckForUpdates)
+            if (!this.versionCheckLock.Wait(0))
                 return;
 
-            this.RestartTimer();
-
-            var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, this.Variant);
-            var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
-
-            VersionPromptResult promptResult;
-            if (this.applicationState.HasMainWindow)
+            try
             {
-                promptResult = this.updatePromptProvider.ShowDialog(checkResult);
-            }
-            else
-            {
-                try
-                {
-                    promptResult = await this.updatePromptProvider.ShowToast(checkResult, CancellationToken.None);
-                }
-                catch (OperationCanceledException)
-                {
-                    logger.Info("Update toast cancelled");
+                this.lastCheckedTime = DateTime.UtcNow;
+
+                if (!this.CheckForUpdates)
                     return;
+
+                this.RestartTimer();
+
+                var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, this.Variant);
+                var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
+
+                if (checkResult == null)
+                    return;
+
+                VersionPromptResult promptResult;
+                if (this.applicationState.HasMainWindow)
+                {
+                    promptResult = this.updatePromptProvider.ShowDialog(checkResult);
+                }
+                else
+                {
+                    try
+                    {
+                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, CancellationToken.None);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        logger.Info("Update toast cancelled");
+                        return;
+                    }
+                }
+
+                switch (promptResult)
+                {
+                    case VersionPromptResult.Download:
+                        logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
+                        this.processStartProvider.Start(checkResult.DownloadUrl);
+                        break;
+
+                    case VersionPromptResult.Ignore:
+                        logger.Info("Ignoring version {0}", checkResult.NewVersion);
+                        this.OnVersionIgnored(checkResult.NewVersion);
+                        break;
+
+                    case VersionPromptResult.RemindLater:
+                        logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
+                        break;
+
+                    default:
+                        Debug.Assert(false);
+                        break;
                 }
             }
-
-            switch (promptResult)
+            finally
             {
-                case VersionPromptResult.Download:
-                    logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
-                    this.processStartProvider.Start(checkResult.DownloadUrl);
-                    break;
-
-                case VersionPromptResult.Ignore:
-                    logger.Info("Ignoring version {0}", checkResult.NewVersion);
-                    this.OnVersionIgnored(checkResult.NewVersion);
-                    break;
-
-                case VersionPromptResult.RemindLater:
-                    logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
-                    break;
-
-                default:
-                    Debug.Assert(false);
-                    break;
+                this.versionCheckLock.Release();
             }
         }
     }

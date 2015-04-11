@@ -34,8 +34,10 @@ namespace SyncTrayzor
 
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
-            builder.Bind<IApplicationState>().ToFactory(c => new ApplicationState(this.Application, (IScreenState)this.RootViewModel)).InSingletonScope();
+            builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
+            builder.Bind<IApplicationWindowState>().ToFactory(c => new ApplicationWindowState((IScreenState)this.RootViewModel)).InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
+            builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
             builder.Bind<ISyncThingApiClientFactory>().To<SyncThingApiClientFactory>();
@@ -46,8 +48,9 @@ namespace SyncTrayzor
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
-            builder.Bind<IUpdateChecker>().To<UpdateChecker>();
+            builder.Bind<IUpdateCheckerFactory>().To<UpdateCheckerFactory>();
             builder.Bind<IUpdatePromptProvider>().To<UpdatePromptProvider>();
+            builder.Bind<IUpdateNotificationClientFactory>().To<UpdateNotificationClientFactory>();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
@@ -96,15 +99,6 @@ namespace SyncTrayzor
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
 
-            if (configurationProvider.Load().NotifyOfNewVersions)
-            {
-                SystemEvents.PowerModeChanged += (o, e) =>
-                {
-                    if (e.Mode == PowerModes.Resume)
-                        this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdateAsync();
-                };
-            }
-
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
                 { MessageBoxResult.Cancel, Localizer.Translate("Generic_Dialog_Cancel") },
@@ -129,10 +123,6 @@ namespace SyncTrayzor
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();
-
-            // We don't care if this fails
-            if (config.NotifyOfNewVersions)
-                this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdateAsync();
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)

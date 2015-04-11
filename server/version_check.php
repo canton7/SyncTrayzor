@@ -63,7 +63,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.11' => [
+   '1.0.12' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x64.exe',
@@ -76,7 +76,7 @@ $versions = [
 ];
 
 $upgrades = [
-   '1.0.10' => ['to' => '1.0.11', 'formatter' => '1'],
+   '1.0.11' => ['to' => '1.0.12', 'formatter' => '1'],
 ];
 
 $response_formatters = [

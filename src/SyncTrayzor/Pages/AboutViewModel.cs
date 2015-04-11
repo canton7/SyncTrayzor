@@ -37,12 +37,12 @@ namespace SyncTrayzor.Pages
             IWindowManager windowManager,
             ISyncThingManager syncThingManager,
             IConfigurationProvider configurationProvider,
-            IUpdateChecker updateChecker,
+            //IUpdateChecker updateChecker,
             Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
-            this.updateChecker = updateChecker;
+            //this.updateChecker = updateChecker;
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);

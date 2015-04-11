@@ -153,6 +153,11 @@ namespace SyncTrayzor.Pages
             this.RequestClose();
         }
 
+        public void Shutdown()
+        {
+            this.application.Shutdown();
+        }
+
         public void EnsureInForeground()
         {
             if (!this.application.HasMainWindow)

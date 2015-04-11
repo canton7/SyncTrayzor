@@ -11,9 +11,6 @@ namespace SyncTrayzor.Services
 {
     public interface IApplicationState
     {
-        event EventHandler<ActivationEventArgs> RootWindowActivated;
-        event EventHandler<DeactivationEventArgs> RootWindowDeactivated;
-        event EventHandler<CloseEventArgs> RootWindowClosed;
         event EventHandler Startup;
         event EventHandler ResumeFromSleep;
 
@@ -27,33 +24,13 @@ namespace SyncTrayzor.Services
     public class ApplicationState : IApplicationState
     {
         private readonly Application application;
-        private readonly IScreenState rootViewModel;
-
-        public event EventHandler<ActivationEventArgs> RootWindowActivated
-        {
-            add { this.rootViewModel.Activated += value; }
-            remove { this.rootViewModel.Activated -= value; }
-        }
-
-        public event EventHandler<DeactivationEventArgs> RootWindowDeactivated
-        {
-            add { this.rootViewModel.Deactivated += value; }
-            remove { this.rootViewModel.Deactivated -= value; }
-        }
-
-        public event EventHandler<CloseEventArgs> RootWindowClosed
-        {
-            add { this.rootViewModel.Closed += value; }
-            remove { this.rootViewModel.Closed -= value; }
-        }
 
         public event EventHandler Startup;
         public event EventHandler ResumeFromSleep;
 
-        public ApplicationState(Application application, IScreenState rootViewModel)
+        public ApplicationState(Application application)
         {
             this.application = application;
-            this.rootViewModel = rootViewModel;
 
             SystemEvents.PowerModeChanged += (o, e) =>
             {

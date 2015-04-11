@@ -7,7 +7,7 @@
         Title="{l:Loc NewVersionAlertView_Title}"
         SizeToContent="Height">
     <DockPanel Margin="10">
-        <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center">>
+        <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
             <ContentControl Content="{l:Loc NewVersionAlertView_NewVersionAvailable, ValueBinding={Binding Version}}"/>
         </TextBlock>
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0" Text="{l:Loc NewVersionAlertView_Changelog}"/>

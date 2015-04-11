@@ -48,6 +48,10 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
             this.syncThingManager.ExecutablePath = this.configurationProvider.SyncthingPath;
+
+            this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
+            this.updateManager.Variant = Settings.Default.Variant;
+
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 

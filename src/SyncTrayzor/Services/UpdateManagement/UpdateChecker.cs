@@ -28,13 +28,13 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.NewVersion = newVersion;
             this.DownloadUrl = downloadUrl;
             this.ReleaseNotes = releaseNotes;
-            this.ReleasePageUrl = ReleasePageUrl;
+            this.ReleasePageUrl = releasePageUrl;
         }
 
         public override string ToString()
         {
             return String.Format("<VersionCheckResults NewVersion={0} DownloadUrl={1} ReleaseNotes={2} ReleasePageUrl={3}>",
-                this.NewVersion, this.DownloadUrl, this.ReleasePageUrl);
+                this.NewVersion, this.DownloadUrl, this.ReleaseNotes, this.ReleasePageUrl);
         }
     }
 
@@ -54,7 +54,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             { ProcessorArchitecture.IA64, "x64" },
             { ProcessorArchitecture.MSIL, "msil" },
             { ProcessorArchitecture.None, "none" },
-            { ProcessorArchitecture.X86, "86" }
+            { ProcessorArchitecture.X86, "x86" }
         };
 
         private readonly Version applicationVersion;
