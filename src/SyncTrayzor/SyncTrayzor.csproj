@@ -122,9 +122,14 @@
     </Compile>
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
+    <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
+    <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
+    <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\UpdateCheckerFactory.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateDownloader.cs" />
     <Compile Include="Services\UpdateManagement\UpdateManager.cs" />
     <Compile Include="Services\UpdateManagement\UpdateNotificationClient.cs" />
     <Compile Include="Services\UpdateManagement\UpdateNotificationClientFactory.cs" />
@@ -225,9 +230,11 @@
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
+    <Compile Include="Utils\FormatUtils.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
+    <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />

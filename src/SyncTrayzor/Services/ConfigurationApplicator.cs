@@ -15,6 +15,7 @@ namespace SyncTrayzor.Services
     {
         private readonly IConfigurationProvider configurationProvider;
 
+        private readonly IApplicationPathsProvider pathsProvider;
         private readonly INotifyIconManager notifyIconManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IAutostartProvider autostartProvider;
@@ -23,6 +24,7 @@ namespace SyncTrayzor.Services
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
+            IApplicationPathsProvider pathsProvider,
             INotifyIconManager notifyIconManager,
             ISyncThingManager syncThingManager,
             IAutostartProvider autostartProvider,
@@ -32,6 +34,7 @@ namespace SyncTrayzor.Services
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
 
+            this.pathsProvider = pathsProvider;
             this.notifyIconManager = notifyIconManager;
             this.syncThingManager = syncThingManager;
             this.autostartProvider = autostartProvider;
@@ -47,7 +50,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncthingPath;
+            this.syncThingManager.ExecutablePath = this.pathsProvider.SyncthingPath;
 
             this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
             this.updateManager.Variant = Settings.Default.Variant;
@@ -66,7 +69,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.Address = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
-            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingCustomHomePath : null;
+            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.pathsProvider.SyncthingCustomHomePath : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;

@@ -27,10 +27,10 @@ namespace SyncTrayzor.Pages
             get { return SystemIcons.Error; }
         }
 
-        public UnhandledExceptionViewModel(IConfigurationProvider configurationProvider)
+        public UnhandledExceptionViewModel(IApplicationPathsProvider applicationPathsProvider)
         {
             this.IssuesUrl = Settings.Default.IssuesUrl;
-            this.LogFilePath = configurationProvider.LogFilePath;
+            this.LogFilePath = applicationPathsProvider.LogFilePath;
         }
 
         public void ShowIssues()

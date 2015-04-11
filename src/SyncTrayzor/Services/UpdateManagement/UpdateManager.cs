@@ -43,6 +43,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly IUpdateCheckerFactory updateCheckerFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
+        private readonly Func<IUpdateVariantHandler> updateVariantHandlerFactory;
         private readonly System.Timers.Timer promptTimer;
 
         private readonly SemaphoreSlim versionCheckLock = new SemaphoreSlim(1, 1);
@@ -72,13 +73,15 @@ namespace SyncTrayzor.Services.UpdateManagement
             IApplicationWindowState applicationWindowState,
             IUpdateCheckerFactory updateCheckerFactory,
             IProcessStartProvider processStartProvider,
-            IUpdatePromptProvider updatePromptProvider)
+            IUpdatePromptProvider updatePromptProvider,
+            Func<IUpdateVariantHandler> updateVariantHandlerFactory)
         {
             this.applicationState = applicationState;
             this.applicationWindowState = applicationWindowState;
             this.updateCheckerFactory = updateCheckerFactory;
             this.processStartProvider = processStartProvider;
             this.updatePromptProvider = updatePromptProvider;
+            this.updateVariantHandlerFactory = updateVariantHandlerFactory;
 
             this.promptTimer = new System.Timers.Timer();
             this.promptTimer.Elapsed += this.PromptTimerElapsed;
@@ -164,6 +167,10 @@ namespace SyncTrayzor.Services.UpdateManagement
                 var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
 
                 if (checkResult == null)
+                    return;
+
+                var variantHandler = this.updateVariantHandlerFactory();
+                if (!await variantHandler.TryHandleUpdateAvailableAsync(checkResult))
                     return;
 
                 VersionPromptResult promptResult;

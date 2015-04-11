@@ -34,11 +34,8 @@ namespace SyncTrayzor.Services.Config
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
         bool HadToCreateConfiguration { get; }
-        string LogFilePath { get; }
-        string SyncthingPath { get; }
-        string SyncthingCustomHomePath { get; }
 
-        void Initialize(PathConfiguration pathConfiguration, Configuration defaultConfiguration);
+        void Initialize(Configuration defaultConfiguration);
         Configuration Load();
         void Save(Configuration config);
         void AtomicLoadAndSave(Action<Configuration> setter);
@@ -52,7 +49,7 @@ namespace SyncTrayzor.Services.Config
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
-        private PathConfiguration pathConfiguration;
+        private readonly IApplicationPathsProvider paths;
 
         private readonly object currentConfigLock = new object();
         private Configuration currentConfig;
@@ -61,76 +58,36 @@ namespace SyncTrayzor.Services.Config
 
         public bool HadToCreateConfiguration { get; private set; }
 
-        public string ExePath
+        public ConfigurationProvider(IApplicationPathsProvider paths)
         {
-            get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
-        }
-
-        public string LogFilePath
-        {
-            get { return this.pathConfiguration.LogFilePath; }
-        }
-
-        public string SyncthingCustomHomePath
-        {
-            get { return this.pathConfiguration.SyncthingCustomHomePath; }
-        }
-        
-        public string SyncthingPath
-        {
-            get { return this.pathConfiguration.SyncthingPath; }
-        }
-
-        public string SyncthingBackupPath
-        {
-            get { return Path.Combine(this.ExePath, "syncthing.exe"); }
-        }
-
-        public string ConfigurationFilePath
-        {
-            get { return this.pathConfiguration.ConfigurationFilePath; }
-        }
-
-        public ConfigurationProvider()
-        {
+            this.paths = paths;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
         }
 
-        public void Initialize(PathConfiguration pathConfiguration, Configuration defaultConfiguration)
+        public void Initialize(Configuration defaultConfiguration)
         {
-            if (pathConfiguration == null)
-                throw new ArgumentNullException("pathConfiguration");
             if (defaultConfiguration == null)
                 throw new ArgumentNullException("defaultConfiguration");
 
-            this.pathConfiguration = pathConfiguration;
+            if (!File.Exists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
-            logger.Debug("ExePath: {0}", this.ExePath);
-            logger.Debug("LogFilePath: {0}", this.LogFilePath);
-            logger.Debug("SyncthingCustomHomePath: {0}", this.SyncthingCustomHomePath);
-            logger.Debug("SyncThingPath: {0}", this.SyncthingPath);
-            logger.Debug("SyncThingBackupPath: {0}", this.SyncthingBackupPath);
-            logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
-
-            if (!File.Exists(Path.GetDirectoryName(this.ConfigurationFilePath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(this.ConfigurationFilePath));
-
-            if (!File.Exists(this.SyncthingPath))
+            if (!File.Exists(this.paths.SyncthingPath))
             {
-                if (File.Exists(this.SyncthingBackupPath))
+                if (File.Exists(this.paths.SyncthingBackupPath))
                 {
-                    logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", this.SyncthingPath, this.SyncthingBackupPath);
-                    File.Copy(this.SyncthingBackupPath, this.SyncthingPath);
+                    logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath);
+                    File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath);
                 }
                 else
-                    throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.SyncthingPath, this.SyncthingBackupPath));
+                    throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath));
             }
-            else if (this.SyncthingPath != this.SyncthingBackupPath && File.Exists(this.SyncthingBackupPath) &&
-                File.GetLastWriteTimeUtc(this.SyncthingPath) < File.GetLastWriteTimeUtc(this.SyncthingBackupPath))
+            else if (this.paths.SyncthingPath != this.paths.SyncthingBackupPath && File.Exists(this.paths.SyncthingBackupPath) &&
+                File.GetLastWriteTimeUtc(this.paths.SyncthingPath) < File.GetLastWriteTimeUtc(this.paths.SyncthingBackupPath))
             {
                 logger.Info("Syncthing at {0} is older ({1}) than at {2} ({3}, so overwriting from backup",
-                    this.SyncthingPath, File.GetLastWriteTimeUtc(this.SyncthingPath), this.SyncthingBackupPath, File.GetLastWriteTimeUtc(this.SyncthingBackupPath));
-                File.Copy(this.SyncthingBackupPath, this.SyncthingPath, true);
+                    this.paths.SyncthingPath, File.GetLastWriteTimeUtc(this.paths.SyncthingPath), this.paths.SyncthingBackupPath, File.GetLastWriteTimeUtc(this.paths.SyncthingBackupPath));
+                File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath, true);
             }
 
             this.currentConfig = this.LoadFromDisk(defaultConfiguration);
@@ -149,21 +106,21 @@ namespace SyncTrayzor.Services.Config
                 defaultConfig = XDocument.Load(ms);
             }
 
-            if (File.Exists(this.ConfigurationFilePath))
+            if (File.Exists(this.paths.ConfigurationFilePath))
             {
-                logger.Debug("Found existing configuration at {0}", this.ConfigurationFilePath);
-                var loadedConfig = XDocument.Load(this.ConfigurationFilePath);
+                logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
+                var loadedConfig = XDocument.Load(this.paths.ConfigurationFilePath);
                 var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
                 loadedConfig.Root.ReplaceNodes(merged);
-                loadedConfig.Save(this.ConfigurationFilePath);
+                loadedConfig.Save(this.paths.ConfigurationFilePath);
             }
             else
             {
-                defaultConfig.Save(this.ConfigurationFilePath);
+                defaultConfig.Save(this.paths.ConfigurationFilePath);
             }
             
             Configuration configuration;
-            using (var stream = File.OpenRead(this.ConfigurationFilePath))
+            using (var stream = File.OpenRead(this.paths.ConfigurationFilePath))
             {
                 configuration = (Configuration)this.serializer.Deserialize(stream);
                 logger.Info("Loaded configuration: {0}", configuration);
@@ -235,7 +192,7 @@ namespace SyncTrayzor.Services.Config
 
         private void SaveToFile(Configuration config)
         {
-            using (var stream = File.Open(this.ConfigurationFilePath, FileMode.Create))
+            using (var stream = File.Open(this.paths.ConfigurationFilePath, FileMode.Create))
             {
                 this.serializer.Serialize(stream, config);
             }

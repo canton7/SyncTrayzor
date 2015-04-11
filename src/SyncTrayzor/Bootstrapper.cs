@@ -37,6 +37,7 @@ namespace SyncTrayzor
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
             builder.Bind<IApplicationWindowState>().ToFactory(c => new ApplicationWindowState((IScreenState)this.RootViewModel)).InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
+            builder.Bind<IApplicationPathsProvider>().To<ApplicationPathsProvider>().InSingletonScope();
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
@@ -48,10 +49,14 @@ namespace SyncTrayzor
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
+            builder.Bind<IUpdateDownloader>().To<UpdateDownloader>().InSingletonScope();
             builder.Bind<IUpdateCheckerFactory>().To<UpdateCheckerFactory>();
             builder.Bind<IUpdatePromptProvider>().To<UpdatePromptProvider>();
             builder.Bind<IUpdateNotificationClientFactory>().To<UpdateNotificationClientFactory>();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
+            builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
+
+            builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
             builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
@@ -63,8 +68,10 @@ namespace SyncTrayzor
             pathConfiguration.Transform(EnvVarTransformer.Transform);
             GlobalDiagnosticsContext.Set("LogFilePath", pathConfiguration.LogFilePath);
 
+            this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
+
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
-            configurationProvider.Initialize(pathConfiguration, Settings.Default.DefaultUserConfiguration);
+            configurationProvider.Initialize(Settings.Default.DefaultUserConfiguration);
             var configuration = this.Container.Get<IConfigurationProvider>().Load();
 
             // Has to be done before the VMs are fetched from the container
