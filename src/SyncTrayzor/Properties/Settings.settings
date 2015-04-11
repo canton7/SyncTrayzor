@@ -23,39 +23,37 @@
     <Setting Name="CefRemoteDebuggingPort" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Variant" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">installed</Value>
+    <Setting Name="Variant" Type="SyncTrayzor.Services.Config.SyncTrayzorVariant" Scope="Application">
+      <Value Profile="(Default)">Installed</Value>
     </Setting>
     <Setting Name="DefaultUserConfiguration" Type="SyncTrayzor.Services.Config.Configuration" Scope="Application">
-      <Value Profile="(Default)">
-                    &lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-                        &lt;ShowTrayIconOnlyOnClose&gt;false&lt;/ShowTrayIconOnlyOnClose&gt;
-                        &lt;MinimizeToTray&gt;false&lt;/MinimizeToTray&gt;
-                        &lt;CloseToTray&gt;true&lt;/CloseToTray&gt;
-                        &lt;ShowSynchronizedBalloon&gt;true&lt;/ShowSynchronizedBalloon&gt;
-                        &lt;ShowDeviceConnectivityBalloons&gt;true&lt;/ShowDeviceConnectivityBalloons&gt;
-                        &lt;SyncthingAddress&gt;localhost:8384&lt;/SyncthingAddress&gt;
-                        &lt;StartSyncthingAutomatically&gt;true&lt;/StartSyncthingAutomatically&gt;
-                        &lt;SyncthingUseCustomHome&gt;true&lt;/SyncthingUseCustomHome&gt;
-                        &lt;SyncthingDenyUpgrade&gt;false&lt;/SyncthingDenyUpgrade&gt;
-                        &lt;SyncthingRunLowPriority&gt;false&lt;/SyncthingRunLowPriority&gt;
-                        &lt;Folders /&gt;
-                        &lt;NotifyOfNewVersions&gt;true&lt;/NotifyOfNewVersions&gt;
-                        &lt;ObfuscateDeviceIDs&gt;true&lt;/ObfuscateDeviceIDs&gt;
-                        &lt;UseComputerCulture&gt;true&lt;/UseComputerCulture&gt;
-                        &lt;ShowSyncthingConsole&gt;true&lt;/ShowSyncthingConsole&gt;
-                    &lt;/Configuration&gt;
-                </Value>
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ShowTrayIconOnlyOnClose&gt;false&lt;/ShowTrayIconOnlyOnClose&gt;
+  &lt;MinimizeToTray&gt;false&lt;/MinimizeToTray&gt;
+  &lt;CloseToTray&gt;true&lt;/CloseToTray&gt;
+  &lt;ShowSynchronizedBalloon&gt;true&lt;/ShowSynchronizedBalloon&gt;
+  &lt;ShowDeviceConnectivityBalloons&gt;true&lt;/ShowDeviceConnectivityBalloons&gt;
+  &lt;SyncthingAddress&gt;localhost:8384&lt;/SyncthingAddress&gt;
+  &lt;StartSyncthingAutomatically&gt;true&lt;/StartSyncthingAutomatically&gt;
+  &lt;SyncthingUseCustomHome&gt;true&lt;/SyncthingUseCustomHome&gt;
+  &lt;SyncthingDenyUpgrade&gt;false&lt;/SyncthingDenyUpgrade&gt;
+  &lt;SyncthingRunLowPriority&gt;false&lt;/SyncthingRunLowPriority&gt;
+  &lt;Folders /&gt;
+  &lt;NotifyOfNewVersions&gt;true&lt;/NotifyOfNewVersions&gt;
+  &lt;ObfuscateDeviceIDs&gt;true&lt;/ObfuscateDeviceIDs&gt;
+  &lt;UseComputerCulture&gt;true&lt;/UseComputerCulture&gt;
+  &lt;ShowSyncthingConsole&gt;true&lt;/ShowSyncthingConsole&gt;
+&lt;/Configuration&gt;</Value>
     </Setting>
     <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">
-      <Value Profile="(Default)">
-                    &lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-                        &lt;LogFilePath&gt;%EXEPATH%\data\logs&lt;/LogFilePath&gt;
-                        &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
-                        &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
-                        &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
-                    &lt;/PathConfiguration&gt;
-                </Value>
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;LogFilePath&gt;%EXEPATH%\data\logs&lt;/LogFilePath&gt;
+  &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
+  &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
+  &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
+&lt;/PathConfiguration&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

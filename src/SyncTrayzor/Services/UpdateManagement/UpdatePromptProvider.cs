@@ -12,6 +12,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public enum VersionPromptResult
     {
+        InstallNow,
         Download,
         RemindLater,
         Ignore
@@ -19,8 +20,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
     public interface IUpdatePromptProvider
     {
-        VersionPromptResult ShowDialog(VersionCheckResults checkResults);
-        Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, CancellationToken cancellationToken);
+        VersionPromptResult ShowDialog(VersionCheckResults checkResults, bool canAutoInstall);
+        Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, CancellationToken cancellationToken);
     }
 
     public class UpdatePromptProvider : IUpdatePromptProvider
@@ -42,7 +43,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.upgradeAvailableToastViewModelFactory = upgradeAvailableToastViewModelFactory;
         }
 
-        public VersionPromptResult ShowDialog(VersionCheckResults checkResults)
+        public VersionPromptResult ShowDialog(VersionCheckResults checkResults, bool canAutoInstall)
         {
             var vm = this.newVersionAlertViewModelFactory();
             vm.Changelog = checkResults.ReleaseNotes;
@@ -50,13 +51,13 @@ namespace SyncTrayzor.Services.UpdateManagement
             var dialogResult = this.windowManager.ShowDialog(vm);
 
             if (dialogResult == true)
-                return VersionPromptResult.Download;
+                return VersionPromptResult.InstallNow;
             if (vm.DontRemindMe)
                 return VersionPromptResult.Ignore;
             return VersionPromptResult.RemindLater;
         }
 
-        public async Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, CancellationToken cancellationToken)
+        public async Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, CancellationToken cancellationToken)
         {
             var vm = this.upgradeAvailableToastViewModelFactory();
             vm.Changelog = checkResults.ReleaseNotes;

@@ -123,6 +123,7 @@
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
+    <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />

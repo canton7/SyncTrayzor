@@ -27,7 +27,6 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         Version LatestIgnoredVersion { get; set; }
-        string Variant { get; set; }
         string UpdateCheckApiUrl { get; set; }
         bool CheckForUpdates { get; set; }
     }
@@ -52,7 +51,6 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
-        public string Variant { get; set; }
         public string UpdateCheckApiUrl { get; set; }
 
         private bool _checkForUpdates;
@@ -163,26 +161,27 @@ namespace SyncTrayzor.Services.UpdateManagement
 
                 this.RestartTimer();
 
-                var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, this.Variant);
+                var variantHandler = this.updateVariantHandlerFactory();
+
+                var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, variantHandler.VariantName);
                 var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
 
                 if (checkResult == null)
                     return;
 
-                var variantHandler = this.updateVariantHandlerFactory();
                 if (!await variantHandler.TryHandleUpdateAvailableAsync(checkResult))
                     return;
 
                 VersionPromptResult promptResult;
                 if (this.applicationState.HasMainWindow)
                 {
-                    promptResult = this.updatePromptProvider.ShowDialog(checkResult);
+                    promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
                 }
                 else
                 {
                     try
                     {
-                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, CancellationToken.None);
+                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, CancellationToken.None);
                     }
                     catch (OperationCanceledException)
                     {
@@ -193,9 +192,15 @@ namespace SyncTrayzor.Services.UpdateManagement
 
                 switch (promptResult)
                 {
+                    case VersionPromptResult.InstallNow:
+                        Debug.Assert(variantHandler.CanAutoInstall);
+                        logger.Info("Auto-installing {0}", checkResult.NewVersion);
+                        variantHandler.AutoInstall();
+                        break;
+
                     case VersionPromptResult.Download:
                         logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
-                        this.processStartProvider.Start(checkResult.DownloadUrl);
+                        this.processStartProvider.StartDetached(checkResult.DownloadUrl);
                         break;
 
                     case VersionPromptResult.Ignore:

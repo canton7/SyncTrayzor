@@ -53,7 +53,6 @@ namespace SyncTrayzor.Services
             this.syncThingManager.ExecutablePath = this.pathsProvider.SyncthingPath;
 
             this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
-            this.updateManager.Variant = Settings.Default.Variant;
 
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
