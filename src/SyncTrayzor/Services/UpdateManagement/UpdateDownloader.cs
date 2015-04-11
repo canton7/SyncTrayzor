@@ -25,11 +25,13 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private readonly string downloadsDir;
         private readonly IFilesystemProvider filesystemProvider;
+        private readonly IInstallerCertificateVerifier installerVerifier;
 
-        public UpdateDownloader(IApplicationPathsProvider pathsProvider, IFilesystemProvider filesystemProvider)
+        public UpdateDownloader(IApplicationPathsProvider pathsProvider, IFilesystemProvider filesystemProvider, IInstallerCertificateVerifier installerVerifier)
         {
             this.downloadsDir = pathsProvider.UpdatesDownloadPath;
             this.filesystemProvider = filesystemProvider;
+            this.installerVerifier = installerVerifier;
         }
 
         public async Task<string> DownloadUpdateAsync(string url, Version version)
@@ -41,9 +43,28 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.filesystemProvider.Exists(finalPath))
             {
                 logger.Info("Skipping download as final file {0} already exists", finalPath);
-                return finalPath;
+            }
+            else
+            {
+                bool downloaded = await this.TryDownloadToFileAsync(tempPath, finalPath, url);
+                if (!downloaded)
+                    return null;
             }
 
+            logger.Info("Verifying...");
+
+            if (!this.installerVerifier.Verify(finalPath))
+            {
+                logger.Warn("Download verification failed");
+                this.filesystemProvider.Delete(finalPath);
+                return null;
+            }
+
+            return finalPath;
+        }
+
+        private async Task<bool> TryDownloadToFileAsync(string tempPath, string finalPath, string url)
+        {
             // Just in case...
             this.filesystemProvider.CreateDirectory(this.downloadsDir);
 
@@ -77,7 +98,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             catch (IOException e)
             {
                 logger.Warn(String.Format("Failed to initiate download to temp file {0}", tempPath), e);
-                return null;
+                return false;
             }
 
             // Possible, I guess, that the finalPath now exists. If it does, that's fine
@@ -89,14 +110,12 @@ namespace SyncTrayzor.Services.UpdateManagement
             catch (IOException e)
             {
                 logger.Warn(String.Format("Failed to move temp file {0} to final file {1}", tempPath, finalPath), e);
-                return null;
+                return false;
             }
 
             this.filesystemProvider.Delete(tempPath);
 
-            logger.Info("Done");
-
-            return finalPath;
+            return true;
         }
     }
 }

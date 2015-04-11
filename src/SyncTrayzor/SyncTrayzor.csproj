@@ -128,6 +128,7 @@
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\InstallerCertificateVerifier.cs" />
     <Compile Include="Services\UpdateManagement\UpdateCheckerFactory.cs" />
     <Compile Include="Services\UpdateManagement\UpdateDownloader.cs" />
     <Compile Include="Services\UpdateManagement\UpdateManager.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
@@ -261,6 +263,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="Resources\SyncTrayzorCA.cer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

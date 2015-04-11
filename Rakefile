@@ -7,14 +7,17 @@ rescue LoadError
   exit 1
 end
 
-ISCC = 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
-SZIP = 'C:\Program Files\7-Zip\7z.exe'
+ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
+SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
+SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
 
 CONFIG = ENV['CONFIG'] || 'Release'
 
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
 PORTABLE_DIR = 'portable'
+
+PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
 class ArchDirConfig
   attr_reader :arch
@@ -70,6 +73,32 @@ end
 
 desc 'Build both 64-bit and 32-bit installers'
 task :installer => ARCH_CONFIG.map{ |x| :"installer:#{x.arch}" }
+
+namespace :"sign-installer" do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Sign the installer (#{arch_config.arch}). Specify PASSWORD if required"
+    task arch_config.arch => [:"installer:#{arch_config.arch}"] do
+      unless File.exist?(SIGNTOOL)
+        warn "You must install the Windows SDK"
+        exit 1
+      end
+
+      unless File.exist?(PFX)
+        warn "#{PFX} must exist"
+        exit 1
+      end
+
+      args = ['sign', "/f #{PFX}", "/t http://timestamp.verisign.com/scripts/timstamp.dll"]
+      args << "/p #{ENV['PASSWORD']}" if ENV['PASSWORD']
+      args << "/v #{arch_config.installer_output}"
+
+      sh %Q{"#{SIGNTOOL}"}, *args
+    end
+  end
+end
+
+desc 'Sign both 64-bit and 32-bit installers. Specify PASSWORD if required'
+task :"sign-installer" => ARCH_CONFIG.map{ |x| :"sign-installer:#{x.arch}" }
 
 def cp_to_portable(output_dir, src)
   dest = File.join(output_dir, src)
@@ -140,7 +169,7 @@ task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
 namespace :package do
   ARCH_CONFIG.each do |arch_config|
     desc "Build installer and portable (#{arch_config.arch})"
-    task arch_config.arch => [:"clean:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
+    task arch_config.arch => [:"clean:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"sign-installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
   end
 end
 

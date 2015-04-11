@@ -53,6 +53,7 @@ namespace SyncTrayzor
             builder.Bind<IUpdateCheckerFactory>().To<UpdateCheckerFactory>();
             builder.Bind<IUpdatePromptProvider>().To<UpdatePromptProvider>();
             builder.Bind<IUpdateNotificationClientFactory>().To<UpdateNotificationClientFactory>();
+            builder.Bind<IInstallerCertificateVerifier>().To<InstallerCertificateVerifier>().InSingletonScope();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
 
