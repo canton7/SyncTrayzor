@@ -45,7 +45,6 @@ namespace SyncTrayzor
             builder.Bind<ISyncThingConnectionsWatcherFactory>().To<SyncThingConnectionsWatcherFactory>();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
-            builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
             builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
             builder.Bind<IUpdateChecker>().To<UpdateChecker>();
             builder.Bind<IUpdatePromptProvider>().To<UpdatePromptProvider>();
@@ -102,7 +101,7 @@ namespace SyncTrayzor
                 SystemEvents.PowerModeChanged += (o, e) =>
                 {
                     if (e.Mode == PowerModes.Resume)
-                        this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdatesAsync();
+                        this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdateAsync();
                 };
             }
 
@@ -133,7 +132,7 @@ namespace SyncTrayzor
 
             // We don't care if this fails
             if (config.NotifyOfNewVersions)
-                this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdatesAsync();
+                this.Container.Get<IUpdateChecker>().CheckForAcceptableUpdateAsync();
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)

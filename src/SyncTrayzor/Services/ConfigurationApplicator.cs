@@ -19,7 +19,6 @@ namespace SyncTrayzor.Services
         private readonly ISyncThingManager syncThingManager;
         private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
-        private readonly IGithubApiClient githubApiClient;
         private readonly IUpdateManager updateManager;
 
         public ConfigurationApplicator(
@@ -28,7 +27,6 @@ namespace SyncTrayzor.Services
             ISyncThingManager syncThingManager,
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
-            IGithubApiClient githubApiClient,
             IUpdateManager updateManager)
         {
             this.configurationProvider = configurationProvider;
@@ -38,7 +36,6 @@ namespace SyncTrayzor.Services
             this.syncThingManager = syncThingManager;
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
-            this.githubApiClient = githubApiClient;
             this.updateManager = updateManager;
 
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
@@ -47,7 +44,6 @@ namespace SyncTrayzor.Services
 
         public void ApplyConfiguration()
         {
-            this.githubApiClient.SetConnectionDetails(Settings.Default.GithubApiUrl);
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 

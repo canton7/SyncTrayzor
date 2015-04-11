@@ -14,57 +14,96 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public class VersionCheckResults
     {
-        public Version LatestVersion { get; private set; }
-        public bool LatestVersionIsNewer { get; private set; }
-        public string LatestVersionDownloadUrl { get; private set; }
-        public string LatestVersionChangelog { get; private set; }
+        public Version NewVersion { get; private set; }
+        public string DownloadUrl { get; private set; }
+        public string ReleaseNotes { get; private set; }
+        public string ReleasePageUrl { get; private set; }
 
-        public VersionCheckResults(Version latestVersion, bool latestVersionIsNewer, string latestVersionDownloadUrl, string latestVersionChangelog)
+        public VersionCheckResults(
+            Version newVersion,
+            string downloadUrl,
+            string releaseNotes,
+            string releasePageUrl)
         {
-            this.LatestVersion = latestVersion;
-            this.LatestVersionIsNewer = latestVersionIsNewer;
-            this.LatestVersionDownloadUrl = latestVersionDownloadUrl;
-            this.LatestVersionChangelog = latestVersionChangelog;
+            this.NewVersion = newVersion;
+            this.DownloadUrl = downloadUrl;
+            this.ReleaseNotes = releaseNotes;
+            this.ReleasePageUrl = ReleasePageUrl;
         }
 
         public override string ToString()
         {
-            return String.Format("<VersionCheckResults LatestVersion={0} IsNewer={1} DownloadUrl={2}>", this.LatestVersion, this.LatestVersionIsNewer, this.LatestVersionDownloadUrl);
+            return String.Format("<VersionCheckResults NewVersion={0} DownloadUrl={1} ReleaseNotes={2} ReleasePageUrl={3}>",
+                this.NewVersion, this.DownloadUrl, this.ReleasePageUrl);
         }
     }
 
     public interface IUpdateChecker
     {
-        Task<VersionCheckResults> FetchUpdatesAsync();
-        Task<VersionCheckResults> CheckForAcceptableUpdatesAsync(Version latestIgnoredVersion = null);
+        Task<VersionCheckResults> FetchUpdateAsync();
+        Task<VersionCheckResults> CheckForAcceptableUpdateAsync(Version latestIgnoredVersion = null);
     }
 
     public class UpdateChecker : IUpdateChecker
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
-        private readonly IGithubApiClient apiClient;
-
-        public UpdateChecker(IGithubApiClient apiClient)
+        private static readonly Dictionary<ProcessorArchitecture, string> processorArchitectureToStringMap = new Dictionary<ProcessorArchitecture, string>()
         {
-            this.apiClient = apiClient;
+            { ProcessorArchitecture.Amd64, "x64" },
+            { ProcessorArchitecture.Arm, "arm" },
+            { ProcessorArchitecture.IA64, "x64" },
+            { ProcessorArchitecture.MSIL, "msil" },
+            { ProcessorArchitecture.None, "none" },
+            { ProcessorArchitecture.X86, "86" }
+        };
+
+        private readonly Version applicationVersion;
+        private readonly ProcessorArchitecture processorArchitecture;
+        private readonly string variant;
+        private readonly IUpdateNotificationClient updateNotificationClient;
+
+        public UpdateChecker(
+            Version applicationVersion,
+            ProcessorArchitecture processorArchitecture,
+            string variant,
+            IUpdateNotificationClient updateNotificationClient)
+        {
+            this.applicationVersion = applicationVersion;
+            this.processorArchitecture = processorArchitecture;
+            this.variant = variant;
+            this.updateNotificationClient = updateNotificationClient;
         }
 
-        public async Task<VersionCheckResults> FetchUpdatesAsync()
+        public async Task<VersionCheckResults> FetchUpdateAsync()
         {
             // We don't care if we fail
             try
             {
-                var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                var latestRelease = await this.apiClient.FetchLatestReleaseAsync();
+                var update = await this.updateNotificationClient.FetchUpdateAsync(
+                    this.applicationVersion.ToString(3),
+                    processorArchitectureToStringMap[this.processorArchitecture],
+                    this.variant);
 
-                if (latestRelease == null)
+                if (update == null)
                 {
-                    logger.Info("No suitable releases found");
+                    logger.Info("No updates found");
                     return null;
                 }
 
-                var results = new VersionCheckResults(latestRelease.Version, latestRelease.Version > applicationVersion, latestRelease.DownloadUrl, latestRelease.Body);
+                if (update.Error != null)
+                {
+                    logger.Warn("Update API returned an error. Code: {0} Message: {1}", update.Error.Code, update.Error.Message);
+                    return null;
+                }
+
+                var updateData = update.Data;
+                if (updateData == null)
+                {
+                    logger.Warn("Update response returned no error, but no data either");
+                    return null;
+                }
+
+                var results = new VersionCheckResults(updateData.Version, updateData.DirectDownloadUrl, updateData.ReleaseNotes, updateData.ReleasePageUrl);
                 logger.Info("Found new version: {0}", results);
                 return results;
             }
@@ -75,17 +114,17 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
         
-        public async Task<VersionCheckResults> CheckForAcceptableUpdatesAsync(Version latestIgnoredVersion)
+        public async Task<VersionCheckResults> CheckForAcceptableUpdateAsync(Version latestIgnoredVersion)
         {
-            var results = await this.FetchUpdatesAsync();
+            var results = await this.FetchUpdateAsync();
 
             if (results == null)
                 return null;
 
-            if (latestIgnoredVersion != null && results.LatestVersion <= latestIgnoredVersion)
+            if (results.NewVersion <= this.applicationVersion)
                 return null;
 
-            if (!results.LatestVersionIsNewer)
+            if (latestIgnoredVersion != null && results.NewVersion <= latestIgnoredVersion)
                 return null;
 
             return results;

@@ -63,32 +63,37 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.2.4' => [
-      '*' => [
-         'url' => ['*' => 'http://www.google.co.uk'],
+   '1.0.11' => [
+      'installed' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x86.exe'
+         ],
       ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.11',
       'release_notes' => "These\nare some release notes",
    ],
 ];
 
 $upgrades = [
-   '1.2.3' => ['to' => '1.2.4', 'formatter' => '1'],
+   '1.0.10' => ['to' => '1.0.11', 'formatter' => '1'],
 ];
 
 $response_formatters = [
    '1' => function($arch, $variant, $to_version, $to_version_info, $overrides)
    {
       $variant_info = get_with_wildcard($to_version_info, $variant);
-      $url = get_with_wildcard($variant_info['url'], $arch);
+      $direct_download_url = get_with_wildcard($variant_info['direct_download_url'], $arch);
 
       $data = [];
-      if ($url != null)
+      if ($direct_download_url != null)
       {
-	 $data = [
-	    'version' => $to_version,
-	    'url' => $url,
-	    'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
-	 ];
+         $data = [
+            'version' => $to_version,
+            'direct_download_url' => $direct_download_url,
+            'release_page_url' => $to_version_info['release_page_url'],
+            'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
+         ];
       }
 
       return $data;

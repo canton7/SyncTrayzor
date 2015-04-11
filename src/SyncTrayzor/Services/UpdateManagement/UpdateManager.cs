@@ -27,6 +27,8 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         Version LatestIgnoredVersion { get; set; }
+        string Variant { get; set; }
+        string UpdateCheckApiUrl { get; set; }
         bool CheckForUpdates { get; set; }
     }
 
@@ -37,7 +39,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private static readonly TimeSpan timeBetweenChecks = TimeSpan.FromHours(3);
 
         private readonly IApplicationState applicationState;
-        private readonly IUpdateChecker updateChecker;
+        private readonly IUpdateCheckerFactory updateCheckerFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
         private readonly System.Timers.Timer promptTimer;
@@ -46,6 +48,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
+        public string Variant { get; set; }
+        public string UpdateCheckApiUrl { get; set; }
 
         private bool _checkForUpdates;
         public bool CheckForUpdates
@@ -62,12 +66,12 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public UpdateManager(
             IApplicationState applicationState,
-            IUpdateChecker updateChecker,
+            IUpdateCheckerFactory updateCheckerFactory,
             IProcessStartProvider processStartProvider,
             IUpdatePromptProvider updatePromptProvider)
         {
             this.applicationState = applicationState;
-            this.updateChecker = updateChecker;
+            this.updateCheckerFactory = updateCheckerFactory;
             this.processStartProvider = processStartProvider;
             this.updatePromptProvider = updatePromptProvider;
 
@@ -142,7 +146,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             this.RestartTimer();
 
-            var checkResult = await this.updateChecker.CheckForAcceptableUpdatesAsync(this.LatestIgnoredVersion);
+            var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, this.Variant);
+            var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
 
             VersionPromptResult promptResult;
             if (this.applicationState.HasMainWindow)
@@ -165,17 +170,17 @@ namespace SyncTrayzor.Services.UpdateManagement
             switch (promptResult)
             {
                 case VersionPromptResult.Download:
-                    logger.Info("Proceeding to download URL {0}", checkResult.LatestVersionDownloadUrl);
-                    this.processStartProvider.Start(checkResult.LatestVersionDownloadUrl);
+                    logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
+                    this.processStartProvider.Start(checkResult.DownloadUrl);
                     break;
 
                 case VersionPromptResult.Ignore:
-                    logger.Info("Ignoring version {0}", checkResult.LatestVersion);
-                    this.OnVersionIgnored(checkResult.LatestVersion);
+                    logger.Info("Ignoring version {0}", checkResult.NewVersion);
+                    this.OnVersionIgnored(checkResult.NewVersion);
                     break;
 
                 case VersionPromptResult.RemindLater:
-                    logger.Info("Not installing version {0}, but will remind later", checkResult.LatestVersion);
+                    logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
                     break;
 
                 default:

@@ -59,21 +59,13 @@ namespace SyncTrayzor.Pages
 
         private async void CheckForNewerVersionAsync()
         {
-            var results = await this.updateChecker.FetchUpdatesAsync();
+            var results = await this.updateChecker.FetchUpdateAsync();
 
             if (results == null)
                 return;
 
-            if (results.LatestVersionIsNewer)
-            {
-                this.NewerVersion = results.LatestVersion.ToString(3);
-                this.newerVersionDownloadUrl = results.LatestVersionDownloadUrl;
-            }
-            else
-            {
-                this.NewerVersion = null;
-                this.newerVersionDownloadUrl = null;
-            }
+            this.NewerVersion = results.NewVersion.ToString(3);
+            this.newerVersionDownloadUrl = results.ReleasePageUrl;
         }
 
         public void ShowHomepage()

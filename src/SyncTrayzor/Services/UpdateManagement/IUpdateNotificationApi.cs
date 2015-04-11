@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
-    [Headers("User-Agent: SyncTrayzor")]
-    public interface IGithubApi
+    public interface IUpdateNotificationApi
     {
         [Get("/releases")]
-        Task<List<ReleaseResponse>> FetchReleasesAsync();
+        Task<UpdateNotificationResponse> FetchUpdateAsync(string version, string arch, string variant);
     }
 }

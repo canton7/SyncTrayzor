@@ -45,8 +45,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         public VersionPromptResult ShowDialog(VersionCheckResults checkResults)
         {
             var vm = this.newVersionAlertViewModelFactory();
-            vm.Changelog = checkResults.LatestVersionChangelog;
-            vm.Version = checkResults.LatestVersion;
+            vm.Changelog = checkResults.ReleaseNotes;
+            vm.Version = checkResults.NewVersion;
             var dialogResult = this.windowManager.ShowDialog(vm);
 
             if (dialogResult == true)
@@ -59,8 +59,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         public async Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, CancellationToken cancellationToken)
         {
             var vm = this.upgradeAvailableToastViewModelFactory();
-            vm.Changelog = checkResults.LatestVersionChangelog;
-            vm.Version = checkResults.LatestVersion;
+            vm.Changelog = checkResults.ReleaseNotes;
+            vm.Version = checkResults.NewVersion;
 
             var tcs = new TaskCompletionSource<VersionPromptResult>();
 
