@@ -59,7 +59,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.downloadPathHandle.Length > 0)
             {
                 logger.Info("Skipping download as file {0} already exists", downloadPath);
-                if (this.installerVerifier.Verify(downloadPath))
+                if (this.installerVerifier.Verify(downloadPath, this.downloadPathHandle))
                 {
                     download = false;
                 }
@@ -80,7 +80,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             logger.Info("Verifying...");
 
-            if (!this.installerVerifier.Verify(downloadPath))
+            if (!this.installerVerifier.Verify(downloadPath, this.downloadPathHandle))
             {
                 logger.Warn("Download verification failed. Deleting {0}", downloadPath);
 

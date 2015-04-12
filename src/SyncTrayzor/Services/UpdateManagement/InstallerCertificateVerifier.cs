@@ -12,7 +12,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IInstallerCertificateVerifier
     {
-        bool Verify(string filePath);
+        bool Verify(string filePath, FileStream openStream);
     }
 
     public class InstallerCertificateVerifier : IInstallerCertificateVerifier
@@ -38,9 +38,9 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
-        public bool Verify(string filePath)
+        public bool Verify(string filePath, FileStream openStream)
         {
-            if (!AuthenticodeTools.VerifyEmbeddedSignature(filePath, true))
+            if (!AuthenticodeTools.VerifyEmbeddedSignature(filePath, openStream, true))
             {
                 logger.Warn("Signature of {0} not valid", filePath);
                 return false;
