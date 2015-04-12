@@ -15,7 +15,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         InstallNow,
         Download,
         RemindLater,
-        Ignore
+        Ignore,
+        ShowMoreDetails,
     }
 
     public interface IUpdatePromptProvider
@@ -29,13 +30,13 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly IWindowManager windowManager;
         private readonly Func<NewVersionAlertViewModel> newVersionAlertViewModelFactory;
         private readonly INotifyIconManager notifyIconManager;
-        private readonly Func<UpgradeAvailableToastViewModel> upgradeAvailableToastViewModelFactory;
+        private readonly Func<NewVersionAlertToastViewModel> upgradeAvailableToastViewModelFactory;
 
         public UpdatePromptProvider(
             IWindowManager windowManager,
             Func<NewVersionAlertViewModel> newVersionAlertViewModelFactory,
             INotifyIconManager notifyIconManager,
-            Func<UpgradeAvailableToastViewModel> upgradeAvailableToastViewModelFactory)
+            Func<NewVersionAlertToastViewModel> upgradeAvailableToastViewModelFactory)
         {
             this.windowManager = windowManager;
             this.newVersionAlertViewModelFactory = newVersionAlertViewModelFactory;
@@ -52,7 +53,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             var dialogResult = this.windowManager.ShowDialog(vm);
 
             if (dialogResult == true)
-                return VersionPromptResult.InstallNow;
+                return canAutoInstall ? VersionPromptResult.InstallNow : VersionPromptResult.Download;
             if (vm.DontRemindMe)
                 return VersionPromptResult.Ignore;
             return VersionPromptResult.RemindLater;
@@ -61,24 +62,18 @@ namespace SyncTrayzor.Services.UpdateManagement
         public async Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, CancellationToken cancellationToken)
         {
             var vm = this.upgradeAvailableToastViewModelFactory();
-            vm.Changelog = checkResults.ReleaseNotes;
             vm.Version = checkResults.NewVersion;
+            vm.CanInstall = canAutoInstall;
 
-            var tcs = new TaskCompletionSource<VersionPromptResult>();
+            var dialogResult = await this.notifyIconManager.ShowBalloonAsync(vm, cancellationToken);
 
-            vm.DownloadNowClicked += (o, e) => tcs.SetResult(VersionPromptResult.Download);
-            vm.IgnoreClicked += (o, e) => tcs.SetResult(VersionPromptResult.Ignore);
-            vm.RemindMeLaterClicked += (o, e) => tcs.SetResult(VersionPromptResult.RemindLater);
-
-            using (cancellationToken.Register(() =>
-            {
-                this.notifyIconManager.HideBalloon();
-                tcs.SetCanceled();
-            }))
-            {
-                this.notifyIconManager.ShowBalloon(vm);
-                return await tcs.Task;
-            }
+            if (dialogResult == true)
+                return canAutoInstall ? VersionPromptResult.InstallNow : VersionPromptResult.Download;
+            if (vm.ShowMoreDetails)
+                return VersionPromptResult.ShowMoreDetails;
+            if (vm.DontRemindMe)
+                return VersionPromptResult.Ignore;
+            return VersionPromptResult.RemindLater;
         }
     }
 }

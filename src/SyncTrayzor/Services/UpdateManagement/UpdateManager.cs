@@ -49,6 +49,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly SemaphoreSlim versionCheckLock = new SemaphoreSlim(1, 1);
 
         private DateTime lastCheckedTime;
+        private CancellationTokenSource toastCts;
 
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
@@ -117,6 +118,9 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private async void RootWindowActivated(object sender, ActivationEventArgs e)
         {
+            if (this.toastCts != null)
+                this.toastCts.Cancel();
+
             if (this.UpdateCheckDue())
                 await this.CheckForUpdatesAsync();
         }
@@ -180,12 +184,22 @@ namespace SyncTrayzor.Services.UpdateManagement
                 {
                     try
                     {
-                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, CancellationToken.None);
+                        this.toastCts = new CancellationTokenSource();
+                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, this.toastCts.Token);
+                        this.toastCts = null;
+
+                        // Special case
+                        if (promptResult == VersionPromptResult.ShowMoreDetails)
+                        {
+                            this.applicationWindowState.EnsureInForeground();
+                            promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                        }
                     }
                     catch (OperationCanceledException)
                     {
-                        logger.Info("Update toast cancelled");
-                        return;
+                        this.toastCts = null;
+                        logger.Info("Update toast cancelled. Moving to a dialog");
+                        promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
                     }
                 }
 
@@ -199,7 +213,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
                     case VersionPromptResult.Download:
                         logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
-                        this.processStartProvider.StartDetached(checkResult.DownloadUrl);
+                        this.processStartProvider.StartDetached(checkResult.ReleasePageUrl);
                         break;
 
                     case VersionPromptResult.Ignore:

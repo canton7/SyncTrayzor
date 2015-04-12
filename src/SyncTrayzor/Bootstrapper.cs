@@ -35,7 +35,7 @@ namespace SyncTrayzor
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
-            builder.Bind<IApplicationWindowState>().ToFactory(c => new ApplicationWindowState((IScreenState)this.RootViewModel)).InSingletonScope();
+            builder.Bind<IApplicationWindowState>().ToFactory(c => new ApplicationWindowState((ShellViewModel)this.RootViewModel)).InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<IApplicationPathsProvider>().To<ApplicationPathsProvider>().InSingletonScope();
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
@@ -102,8 +102,6 @@ namespace SyncTrayzor
                     autostartProvider.UpdatePathToSelf();
             }
 
-            var notifyIconManager = this.Container.Get<INotifyIconManager>();
-            notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
             this.Container.Get<MemoryUsageLogger>().Enabled = true;

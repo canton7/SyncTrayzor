@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,18 @@ namespace SyncTrayzor.Services
         event EventHandler<ActivationEventArgs> RootWindowActivated;
         event EventHandler<DeactivationEventArgs> RootWindowDeactivated;
         event EventHandler<CloseEventArgs> RootWindowClosed;
+
+        ScreenState State { get; }
+
+        void CloseToTray();
+        void EnsureInForeground();
     }
 
     public class ApplicationWindowState : IApplicationWindowState
     {
-        private readonly IScreenState rootViewModel;
+        private readonly ShellViewModel rootViewModel;
 
-        public ApplicationWindowState(IScreenState rootViewModel)
+        public ApplicationWindowState(ShellViewModel rootViewModel)
         {
             this.rootViewModel = rootViewModel;
         }
@@ -39,6 +45,21 @@ namespace SyncTrayzor.Services
         {
             add { this.rootViewModel.Closed += value; }
             remove { this.rootViewModel.Closed -= value; }
+        }
+
+        public ScreenState State
+        {
+            get { return this.rootViewModel.State; }
+        }
+
+        public void CloseToTray()
+        {
+            this.rootViewModel.CloseToTray();
+        }
+
+        public void EnsureInForeground()
+        {
+            this.rootViewModel.EnsureInForeground();
         }
     }
 }

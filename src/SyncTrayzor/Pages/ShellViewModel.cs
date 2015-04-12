@@ -15,7 +15,7 @@ using System.Windows;
 
 namespace SyncTrayzor.Pages
 {
-    public class ShellViewModel : Screen, INotifyIconDelegate
+    public class ShellViewModel : Screen
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;

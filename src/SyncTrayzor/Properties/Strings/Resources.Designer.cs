@@ -303,9 +303,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A new version of SyncTrayzor is available!
-        ///
-        ///Version: {0}.
+        ///   Looks up a localized string similar to SyncTrayzor Version {0} is available!.
         /// </summary>
         public static string NewVersionAlertView_NewVersionAvailable {
             get {
