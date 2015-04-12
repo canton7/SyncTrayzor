@@ -48,6 +48,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             var vm = this.newVersionAlertViewModelFactory();
             vm.Changelog = checkResults.ReleaseNotes;
             vm.Version = checkResults.NewVersion;
+            vm.CanInstall = canAutoInstall;
             var dialogResult = this.windowManager.ShowDialog(vm);
 
             if (dialogResult == true)

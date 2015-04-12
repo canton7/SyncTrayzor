@@ -83,18 +83,13 @@ $response_formatters = [
    '1' => function($arch, $variant, $to_version, $to_version_info, $overrides)
    {
       $variant_info = get_with_wildcard($to_version_info, $variant);
-      $direct_download_url = get_with_wildcard($variant_info['direct_download_url'], $arch);
 
-      $data = [];
-      if ($direct_download_url != null)
-      {
-         $data = [
-            'version' => $to_version,
-            'direct_download_url' => $direct_download_url,
-            'release_page_url' => $to_version_info['release_page_url'],
-            'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
-         ];
-      }
+      $data = [
+         'version' => $to_version,
+         'direct_download_url' => get_with_wildcard($variant_info['direct_download_url'], $arch),
+         'release_page_url' => $to_version_info['release_page_url'],
+         'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
+      ];
 
       return $data;
    },

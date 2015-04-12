@@ -9,12 +9,18 @@ namespace SyncTrayzor.Pages
 {
     public class NewVersionAlertViewModel : Screen
     {
+        public bool CanInstall { get; set; }
         public Version Version { get; set; }
         public string Changelog { get; set; }
 
         public bool DontRemindMe { get; private set; }
 
         public void Download()
+        {
+            this.RequestClose(true);
+        }
+
+        public void Install()
         {
             this.RequestClose(true);
         }

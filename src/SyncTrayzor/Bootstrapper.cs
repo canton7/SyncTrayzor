@@ -57,7 +57,12 @@ namespace SyncTrayzor
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
 
-            builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
+            if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
+                builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
+            else if (Settings.Default.Variant == SyncTrayzorVariant.Portable)
+                builder.Bind<IUpdateVariantHandler>().To<PortableUpdateVariantHandler>();
+            else
+                Trace.Assert(false);
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
             builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);

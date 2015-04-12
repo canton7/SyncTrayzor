@@ -130,6 +130,7 @@
     <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\InstallerCertificateVerifier.cs" />
+    <Compile Include="Services\UpdateManagement\PortableUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\UpdateCheckerFactory.cs" />
     <Compile Include="Services\UpdateManagement\UpdateDownloader.cs" />
     <Compile Include="Services\UpdateManagement\UpdateManager.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
+    <Compile Include="Xaml\UacImageSource.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />
     <Compile Include="Xaml\DetachingBehaviour.cs" />
