@@ -16,7 +16,7 @@
             </TextBlock>
             <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0">
                 <Hyperlink Command="{s:Action DisplayMoreDetails}">
-                    <TextBlock DockPanel.Dock="Top">View Changelog</TextBlock>    
+                    <TextBlock DockPanel.Dock="Top" Text="{l:Loc NewVersionAlertView_ViewChangelog}"/>
                 </Hyperlink>
             </TextBlock>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">

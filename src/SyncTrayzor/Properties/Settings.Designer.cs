@@ -25,7 +25,7 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080/version-check")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://syncthing.antonymale.co.uk/version-check")]
         public string UpdateApiUrl {
             get {
                 return ((string)(this["UpdateApiUrl"]));
@@ -88,7 +88,7 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Installed")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Portable")]
         public global::SyncTrayzor.Services.Config.SyncTrayzorVariant Variant {
             get {
                 return ((global::SyncTrayzor.Services.Config.SyncTrayzorVariant)(this["Variant"]));

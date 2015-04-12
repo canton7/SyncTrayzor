@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="UpdateApiUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:8080/version-check</Value>
+      <Value Profile="(Default)">http://syncthing.antonymale.co.uk/version-check</Value>
     </Setting>
     <Setting Name="HomepageUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor</Value>
@@ -24,7 +24,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Variant" Type="SyncTrayzor.Services.Config.SyncTrayzorVariant" Scope="Application">
-      <Value Profile="(Default)">Installed</Value>
+      <Value Profile="(Default)">Portable</Value>
     </Setting>
     <Setting Name="DefaultUserConfiguration" Type="SyncTrayzor.Services.Config.Configuration" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;

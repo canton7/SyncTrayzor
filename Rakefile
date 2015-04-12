@@ -77,7 +77,7 @@ task :installer => ARCH_CONFIG.map{ |x| :"installer:#{x.arch}" }
 namespace :"sign-installer" do
   ARCH_CONFIG.each do |arch_config|
     desc "Sign the installer (#{arch_config.arch}). Specify PASSWORD if required"
-    task arch_config.arch => [:"installer:#{arch_config.arch}"] do
+    task arch_config.arch do
       unless File.exist?(SIGNTOOL)
         warn "You must install the Windows SDK"
         exit 1

@@ -303,7 +303,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor Version {0} is available!.
+        ///   Looks up a localized string similar to SyncTrayzor version {0} is available!.
         /// </summary>
         public static string NewVersionAlertView_NewVersionAvailable {
             get {
@@ -317,6 +317,15 @@ namespace SyncTrayzor.Properties.Strings {
         public static string NewVersionAlertView_Title {
             get {
                 return ResourceManager.GetString("NewVersionAlertView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Changelog.
+        /// </summary>
+        public static string NewVersionAlertView_ViewChangelog {
+            get {
+                return ResourceManager.GetString("NewVersionAlertView_ViewChangelog", resourceCulture);
             }
         }
         
