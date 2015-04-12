@@ -16,35 +16,48 @@ namespace SyncTrayzor.Services
 
         ScreenState State { get; }
 
+        void Setup(ShellViewModel rootViewModel);
+
         void CloseToTray();
         void EnsureInForeground();
     }
 
     public class ApplicationWindowState : IApplicationWindowState
     {
-        private readonly ShellViewModel rootViewModel;
+        private ShellViewModel rootViewModel;
 
-        public ApplicationWindowState(ShellViewModel rootViewModel)
+        public void Setup(ShellViewModel rootViewModel)
         {
             this.rootViewModel = rootViewModel;
+
+            this.rootViewModel.Activated += (o, e) => this.OnRootWindowActivated(e);
+            this.rootViewModel.Deactivated += (o, e) => this.OnRootWindowDeactivated(e);
+            this.rootViewModel.Closed += (o, e) => this.OnRootWindowClosed(e);
         }
 
-        public event EventHandler<ActivationEventArgs> RootWindowActivated
+        public event EventHandler<ActivationEventArgs> RootWindowActivated;
+        public event EventHandler<DeactivationEventArgs> RootWindowDeactivated;
+        public event EventHandler<CloseEventArgs> RootWindowClosed;
+
+        private void OnRootWindowActivated(ActivationEventArgs e)
         {
-            add { this.rootViewModel.Activated += value; }
-            remove { this.rootViewModel.Activated -= value; }
+            var handler = this.RootWindowActivated;
+            if (handler != null)
+                handler(this, e);
         }
 
-        public event EventHandler<DeactivationEventArgs> RootWindowDeactivated
+        private void OnRootWindowDeactivated(DeactivationEventArgs e)
         {
-            add { this.rootViewModel.Deactivated += value; }
-            remove { this.rootViewModel.Deactivated -= value; }
+            var handler = this.RootWindowDeactivated;
+            if (handler != null)
+                handler(this, e);
         }
 
-        public event EventHandler<CloseEventArgs> RootWindowClosed
+        private void OnRootWindowClosed(CloseEventArgs e)
         {
-            add { this.rootViewModel.Closed += value; }
-            remove { this.rootViewModel.Closed -= value; }
+            var handler = this.RootWindowClosed;
+            if (handler != null)
+                handler(this, e);
         }
 
         public ScreenState State

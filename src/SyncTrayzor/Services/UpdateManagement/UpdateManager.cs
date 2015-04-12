@@ -30,6 +30,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         Version LatestIgnoredVersion { get; set; }
         string UpdateCheckApiUrl { get; set; }
         bool CheckForUpdates { get; set; }
+
+        Task<VersionCheckResults> CheckForAcceptableUpdateAsync();
     }
 
     public class UpdateManager : IUpdateManager
@@ -234,6 +236,13 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 this.versionCheckLock.Release();
             }
+        }
+
+        public Task<VersionCheckResults> CheckForAcceptableUpdateAsync()
+        {
+            var variantHandler = this.updateVariantHandlerFactory();
+            var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, variantHandler.VariantName);
+            return updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
         }
     }
 }

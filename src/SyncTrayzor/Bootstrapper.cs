@@ -35,7 +35,7 @@ namespace SyncTrayzor
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
-            builder.Bind<IApplicationWindowState>().ToFactory(c => new ApplicationWindowState((ShellViewModel)this.RootViewModel)).InSingletonScope();
+            builder.Bind<IApplicationWindowState>().To<ApplicationWindowState>().InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<IApplicationPathsProvider>().To<ApplicationPathsProvider>().InSingletonScope();
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
@@ -118,6 +118,7 @@ namespace SyncTrayzor
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
 
+            this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
             this.Container.Get<IApplicationState>().ApplicationStarted();
         }
 
