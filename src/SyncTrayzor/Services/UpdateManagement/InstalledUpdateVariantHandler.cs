@@ -30,7 +30,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public void AutoInstall()
         {
-            this.processStartProvider.StartDetached(this.installerPath);
+            this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT");
         }
     }
 }

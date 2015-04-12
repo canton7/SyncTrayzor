@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,18 @@ namespace SyncTrayzor.Services
         void Start(string filename);
         void Start(string filename, string arguments);
         void StartDetached(string filename);
+        void StartElevatedDetached(string filename, string arguments);
     }
 
     public class ProcessStartProvider : IProcessStartProvider
     {
-        private const int ERROR_CANCELLED = 1223;
+        private static readonly string installerRunner = "InstallerRunner.exe";
+        private readonly string exeDir;
+
+        public ProcessStartProvider(IAssemblyProvider assemblyProvider)
+        {
+            this.exeDir = assemblyProvider.Location;
+        }
 
         public void Start(string filename)
         {
@@ -35,6 +43,19 @@ namespace SyncTrayzor.Services
             {
                 FileName = "cmd.exe",
                 Arguments = "/c start " + filename,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+            };
+
+            Process.Start(startInfo);
+        }
+
+        public void StartElevatedDetached(string filename, string arguments)
+        {
+            var startInfo = new ProcessStartInfo()
+            {
+                FileName = Path.Combine(Path.GetDirectoryName(this.exeDir), installerRunner),
+                Arguments = String.Format("\"{0}\" {1}", filename, arguments),
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };

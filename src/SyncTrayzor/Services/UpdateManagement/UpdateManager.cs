@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Threading;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
@@ -43,7 +44,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
         private readonly Func<IUpdateVariantHandler> updateVariantHandlerFactory;
-        private readonly System.Timers.Timer promptTimer;
+        private readonly DispatcherTimer promptTimer;
 
         private readonly SemaphoreSlim versionCheckLock = new SemaphoreSlim(1, 1);
 
@@ -81,8 +82,8 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.updatePromptProvider = updatePromptProvider;
             this.updateVariantHandlerFactory = updateVariantHandlerFactory;
 
-            this.promptTimer = new System.Timers.Timer();
-            this.promptTimer.Elapsed += this.PromptTimerElapsed;
+            this.promptTimer = new DispatcherTimer();
+            this.promptTimer.Tick += this.PromptTimerElapsed;
 
             // Strategy time:
             // We'll prompt the user a fixed period after the computer starts up / resumes from sleep
@@ -98,16 +99,14 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (checkForUpdates)
             {
                 this.RestartTimer();
+                // Give them a minute to catch their breath
+                await Task.Delay(TimeSpan.FromSeconds(30));
                 if (this.UpdateCheckDue())
-                {
-                    // Give them a minute to catch their breath
-                    await Task.Delay(TimeSpan.FromSeconds(30));
                     await this.CheckForUpdatesAsync();
-                }
             }
             else
             {
-                this.promptTimer.Enabled = false;
+                this.promptTimer.IsEnabled = false;
             }
         }
 
@@ -122,7 +121,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 await this.CheckForUpdatesAsync();
         }
 
-        private async void PromptTimerElapsed(object sender, ElapsedEventArgs e)
+        private async void PromptTimerElapsed(object sender, EventArgs e)
         {
             if (this.UpdateCheckDue())
                 await this.CheckForUpdatesAsync();
@@ -142,9 +141,9 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private void RestartTimer()
         {
-            this.promptTimer.Enabled = false;
-            this.promptTimer.Interval = timeBetweenChecks.TotalMilliseconds;
-            this.promptTimer.Enabled = true;
+            this.promptTimer.IsEnabled = false;
+            this.promptTimer.Interval = timeBetweenChecks;
+            this.promptTimer.IsEnabled = true;
         }
 
         private async Task CheckForUpdatesAsync()
