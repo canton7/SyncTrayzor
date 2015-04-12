@@ -36,7 +36,7 @@ packages/
 #Installer
 SyncTrayzorSetup*.exe
 SyncTrayzorPortable*
-syncthing.exe
+syncthing-*.exe
 
 *.gjq
 *.tmp

@@ -29,6 +29,7 @@ OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
 Compression=lzma2/max
+;Compression=None
 SolidCompression=yes
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64
@@ -40,8 +41,13 @@ CloseApplications=no
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[CustomMessages]
+SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%nv0.10.x clients can only talk to other v0.10.x clients, and v0.11.x clients can only talk to other v0.11.x clients.%n
+
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "syncthing0p10"; Description: "Syncthing v0.10.x (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive
+Name: "syncthing0p11"; Description: "Syncthing v0.11.x"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
@@ -53,7 +59,11 @@ Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "syncthing.exe"; DestDir: "{app}"
+
+; It's important to touch, otherwise SyncTrayzor won't pick up on the modification, and won't copy it into %APPDATA%
+Source: "syncthing-0.10.x.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Tasks: "syncthing0p10"; Flags: ignoreversion touch
+Source: "syncthing-0.11.x.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Tasks: "syncthing0p11"; Flags: ignoreversion touch
+
 Source: "..\dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 
 [Icons]
