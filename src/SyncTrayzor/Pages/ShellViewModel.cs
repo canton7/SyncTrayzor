@@ -15,7 +15,7 @@ using System.Windows;
 
 namespace SyncTrayzor.Pages
 {
-    public class ShellViewModel : Screen, INotifyIconDelegate
+    public class ShellViewModel : Screen
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
@@ -153,16 +153,16 @@ namespace SyncTrayzor.Pages
             this.RequestClose();
         }
 
+        public void Shutdown()
+        {
+            this.application.Shutdown();
+        }
+
         public void EnsureInForeground()
         {
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
             this.WindowActivated = true;
-        }
-
-        public void Shutdown()
-        {
-            this.application.Shutdown();
         }
     }
 }

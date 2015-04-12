@@ -120,6 +120,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NotifyIcon\BalloonConductor.cs" />
+    <Compile Include="Services\ApplicationWindowState.cs" />
+    <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
+    <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
+    <Compile Include="Services\FilesystemProvider.cs" />
+    <Compile Include="Services\ProcessStartProvider.cs" />
+    <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
+    <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\InstallerCertificateVerifier.cs" />
+    <Compile Include="Services\UpdateManagement\PortableUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateCheckerFactory.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateDownloader.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateManager.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateNotificationClient.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateNotificationClientFactory.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateNotificationResponse.cs" />
+    <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
@@ -130,7 +149,7 @@
     <Compile Include="Localization\LocalizeConverter.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocExtension.cs" />
-    <Compile Include="NotifyIcon\INotifyIconDelegate.cs" />
+    <Compile Include="Pages\NewVersionAlertToastViewModel.cs" />
     <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
@@ -169,11 +188,8 @@
     <Compile Include="Services\DirectoryWatcher.cs" />
     <Compile Include="Services\MemoryUsageLogger.cs" />
     <Compile Include="Services\Config\PathConfiguration.cs" />
-    <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
-    <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
-    <Compile Include="Services\UpdateChecker\IGithubApi.cs" />
-    <Compile Include="Services\UpdateChecker\Release.cs" />
-    <Compile Include="Services\UpdateChecker\ReleaseResponse.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateChecker.cs" />
+    <Compile Include="Services\UpdateManagement\Release.cs" />
     <Compile Include="Services\WatchedFolderMonitor.cs" />
     <Compile Include="SyncThing\ApiClient\Config.cs" />
     <Compile Include="SyncThing\ApiClient\Connections.cs" />
@@ -214,13 +230,17 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
+    <Compile Include="Utils\FormatUtils.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
+    <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
+    <Compile Include="Xaml\UacImageSource.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />
     <Compile Include="Xaml\DetachingBehaviour.cs" />
@@ -246,6 +266,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="Resources\SyncTrayzorCA.cer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -258,6 +279,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\NewVersionAlertToastView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -375,6 +400,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InstallerRunner\InstallerRunner.csproj">
+      <Project>{e33fe8e5-18a5-4d1b-a5d9-21851dc0b1d5}</Project>
+      <Name>InstallerRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

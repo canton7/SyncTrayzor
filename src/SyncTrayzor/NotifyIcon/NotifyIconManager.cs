@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,9 +21,9 @@ namespace SyncTrayzor.NotifyIcon
         bool ShowSynchronizedBalloon { get; set; }
         bool ShowDeviceConnectivityBalloons { get; set; }
 
-        void Setup(INotifyIconDelegate rootViewModel);
-
         void EnsureIconVisible();
+
+        Task<bool?> ShowBalloonAsync(object viewModel, CancellationToken cancellationToken);
     }
 
     public class NotifyIconManager : INotifyIconManager
@@ -33,10 +34,12 @@ namespace SyncTrayzor.NotifyIcon
         private readonly IViewManager viewManager;
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
+        private readonly IApplicationWindowState applicationWindowState;
         private readonly ISyncThingManager syncThingManager;
 
-        private INotifyIconDelegate rootViewModel;
         private TaskbarIcon taskbarIcon;
+
+        private TaskCompletionSource<bool?> balloonTcs;
 
         private bool _showOnlyOnClose;
         public bool ShowOnlyOnClose
@@ -45,7 +48,7 @@ namespace SyncTrayzor.NotifyIcon
             set
             {
                 this._showOnlyOnClose = value;
-                this.viewModel.Visible = !this._showOnlyOnClose || this.rootViewModel.State == ScreenState.Closed;
+                this.viewModel.Visible = !this._showOnlyOnClose || this.applicationWindowState.State == ScreenState.Closed;
             }
         }
 
@@ -65,24 +68,33 @@ namespace SyncTrayzor.NotifyIcon
             IViewManager viewManager,
             NotifyIconViewModel viewModel,
             IApplicationState application,
+            IApplicationWindowState applicationWindowState,
             ISyncThingManager syncThingManager)
         {
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
+            this.applicationWindowState = applicationWindowState;
             this.syncThingManager = syncThingManager;
+
+            this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
+            this.viewManager.BindViewToModel(this.taskbarIcon, this.viewModel);
+
+            this.applicationWindowState.RootWindowActivated += this.RootViewModelActivated;
+            this.applicationWindowState.RootWindowDeactivated += this.RootViewModelDeactivated;
+            this.applicationWindowState.RootWindowClosed += this.RootViewModelClosed; 
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
-                this.rootViewModel.EnsureInForeground();
+                this.applicationWindowState.EnsureInForeground();
             };
             this.viewModel.WindowCloseRequested += (o, e) =>
             {
                 // Always minimize, regardless of settings
                 this.application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-                this.rootViewModel.CloseToTray();
+                this.applicationWindowState.CloseToTray();
             };
-            this.viewModel.ExitRequested += (o, e) => this.rootViewModel.Shutdown();
+            this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
             this.syncThingManager.FolderSyncStateChanged += (o, e) =>
             {
@@ -120,16 +132,29 @@ namespace SyncTrayzor.NotifyIcon
             this.application.ShutdownMode = this._closeToTray ? ShutdownMode.OnExplicitShutdown : ShutdownMode.OnMainWindowClose;
         }
 
-        public void Setup(INotifyIconDelegate rootViewModel)
+        public async Task<bool?> ShowBalloonAsync(object viewModel, CancellationToken cancellationToken)
         {
-            this.rootViewModel = rootViewModel;
+            if (this.balloonTcs != null)
+                this.balloonTcs.SetResult(null);
 
-            this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
-            this.viewManager.BindViewToModel(this.taskbarIcon, this.viewModel);
+            var view = this.viewManager.CreateViewForModel(viewModel);
+            this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+            this.viewManager.BindViewToModel(view, viewModel); // Re-assign DataContext, after NotifyIcon overwrote it ><
 
-            this.rootViewModel.Activated += rootViewModelActivated;
-            this.rootViewModel.Deactivated += rootViewModelDeactivated;
-            this.rootViewModel.Closed += rootViewModelClosed;
+            this.balloonTcs = new TaskCompletionSource<bool?>();
+            new BalloonConductor(this.taskbarIcon, viewModel, view, this.balloonTcs);
+
+            using (cancellationToken.Register(() =>
+            {
+                if (this.taskbarIcon.CustomBalloon.Child == view)
+                {
+                    this.balloonTcs.SetCanceled();
+                    this.taskbarIcon.CloseBalloon();
+                }
+            }))
+            {
+                return await this.balloonTcs.Task;
+            }
         }
 
         public void EnsureIconVisible()
@@ -137,7 +162,7 @@ namespace SyncTrayzor.NotifyIcon
             this.viewModel.Visible = true;
         }
 
-        private void rootViewModelActivated(object sender, ActivationEventArgs e)
+        private void RootViewModelActivated(object sender, ActivationEventArgs e)
         {
             // If it's minimize to tray, not close to tray, then we'll have set the shutdown mode to OnExplicitShutdown just before closing
             // In this case, re-set Shutdownmode
@@ -148,7 +173,7 @@ namespace SyncTrayzor.NotifyIcon
                 this.viewModel.Visible = false;
         }
 
-        private void rootViewModelDeactivated(object sender, DeactivationEventArgs e)
+        private void RootViewModelDeactivated(object sender, DeactivationEventArgs e)
         {
             if (this.MinimizeToTray)
             {
@@ -156,7 +181,7 @@ namespace SyncTrayzor.NotifyIcon
                 if (this.application.HasMainWindow)
                     this.application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-                this.rootViewModel.CloseToTray();
+                this.applicationWindowState.CloseToTray();
 
                 this.viewModel.MainWindowVisible = false;
                 if (this.ShowOnlyOnClose)
@@ -164,7 +189,7 @@ namespace SyncTrayzor.NotifyIcon
             }
         }
 
-        private void rootViewModelClosed(object sender, CloseEventArgs e)
+        private void RootViewModelClosed(object sender, CloseEventArgs e)
         {
             this.viewModel.MainWindowVisible = false;
             if (this.ShowOnlyOnClose)

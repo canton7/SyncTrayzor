@@ -1,4 +1,5 @@
 ﻿using NLog;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +13,6 @@ namespace SyncTrayzor.Services
     public class MemoryUsageLogger
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly string[] sizes = { "B", "KB", "MB", "GB" };
         private static readonly TimeSpan pollInterval = TimeSpan.FromMinutes(5);
 
         private readonly Timer timer;
@@ -36,21 +36,9 @@ namespace SyncTrayzor.Services
             this.timer.Elapsed += (o, e) =>
             {
                 logger.Debug("Working Set: {0}. Private Memory Size: {1}. GC Total Memory: {2}",
-                    this.BytesToHuman(this.process.WorkingSet64), this.BytesToHuman(this.process.PrivateMemorySize64),
-                    this.BytesToHuman(GC.GetTotalMemory(false)));
+                    FormatUtils.BytesToHuman(this.process.WorkingSet64), FormatUtils.BytesToHuman(this.process.PrivateMemorySize64),
+                    FormatUtils.BytesToHuman(GC.GetTotalMemory(false)));
             };
-        }
-
-        private string BytesToHuman(long bytes)
-        {
-            // http://stackoverflow.com/a/281679/1086121
-            int order = 0;
-            while (bytes >= 1024 && order + 1 < sizes.Length)
-            {
-                order++;
-                bytes = bytes / 1024;
-            }
-            return String.Format("{0:0.#}{1}", bytes, sizes[order]);
         }
     }
 }

@@ -10,7 +10,7 @@ using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.Services.UpdateChecker;
+using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
@@ -35,7 +35,10 @@ namespace SyncTrayzor
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
+            builder.Bind<IApplicationWindowState>().To<ApplicationWindowState>().InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
+            builder.Bind<IApplicationPathsProvider>().To<ApplicationPathsProvider>().InSingletonScope();
+            builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
             builder.Bind<ISyncThingApiClientFactory>().To<SyncThingApiClientFactory>();
@@ -45,8 +48,21 @@ namespace SyncTrayzor
             builder.Bind<ISyncThingConnectionsWatcherFactory>().To<SyncThingConnectionsWatcherFactory>();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
-            builder.Bind<IGithubApiClient>().To<GithubApiClient>().InSingletonScope();
-            builder.Bind<IUpdateChecker>().To<UpdateChecker>().InSingletonScope();
+            builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
+            builder.Bind<IUpdateDownloader>().To<UpdateDownloader>().InSingletonScope();
+            builder.Bind<IUpdateCheckerFactory>().To<UpdateCheckerFactory>();
+            builder.Bind<IUpdatePromptProvider>().To<UpdatePromptProvider>();
+            builder.Bind<IUpdateNotificationClientFactory>().To<UpdateNotificationClientFactory>();
+            builder.Bind<IInstallerCertificateVerifier>().To<InstallerCertificateVerifier>().InSingletonScope();
+            builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
+            builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
+
+            if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
+                builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
+            else if (Settings.Default.Variant == SyncTrayzorVariant.Portable)
+                builder.Bind<IUpdateVariantHandler>().To<PortableUpdateVariantHandler>();
+            else
+                Trace.Assert(false);
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
             builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
@@ -58,8 +74,10 @@ namespace SyncTrayzor
             pathConfiguration.Transform(EnvVarTransformer.Transform);
             GlobalDiagnosticsContext.Set("LogFilePath", pathConfiguration.LogFilePath);
 
+            this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
+
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
-            configurationProvider.Initialize(pathConfiguration, Settings.Default.DefaultUserConfiguration);
+            configurationProvider.Initialize(Settings.Default.DefaultUserConfiguration);
             var configuration = this.Container.Get<IConfigurationProvider>().Load();
 
             // Has to be done before the VMs are fetched from the container
@@ -84,8 +102,6 @@ namespace SyncTrayzor
                     autostartProvider.UpdatePathToSelf();
             }
 
-            var notifyIconManager = this.Container.Get<INotifyIconManager>();
-            notifyIconManager.Setup((INotifyIconDelegate)this.RootViewModel);
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
             this.Container.Get<MemoryUsageLogger>().Enabled = true;
@@ -94,15 +110,6 @@ namespace SyncTrayzor
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
             this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
 
-            if (configurationProvider.Load().NotifyOfNewVersions)
-            {
-                SystemEvents.PowerModeChanged += (o, e) =>
-                {
-                    if (e.Mode == PowerModes.Resume)
-                        this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
-                };
-            }
-
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
                 { MessageBoxResult.Cancel, Localizer.Translate("Generic_Dialog_Cancel") },
@@ -110,6 +117,9 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
+
+            this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
+            this.Container.Get<IApplicationState>().ApplicationStarted();
         }
 
         protected override void Launch()
@@ -125,10 +135,6 @@ namespace SyncTrayzor
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();
-
-            // We don't care if this fails
-            if (config.NotifyOfNewVersions)
-                this.Container.Get<IUpdateChecker>().CheckForUpdatesAsync();
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
