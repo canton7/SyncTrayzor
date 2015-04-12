@@ -10,7 +10,7 @@ namespace SyncTrayzor.Services
     public interface IFilesystemProvider
     {
         bool Exists(string path);
-        Stream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
+        FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
         void Move(string from, string to);
         void CreateDirectory(string path);
         void Delete(string path);
@@ -23,7 +23,7 @@ namespace SyncTrayzor.Services
             return File.Exists(path);
         }
 
-        public Stream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
+        public FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
             return new FileStream(path, fileMode, fileAccess, fileShare);
         }

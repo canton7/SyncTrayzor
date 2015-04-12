@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
-    public interface IUpdateDownloader
+    public interface IUpdateDownloader : IDisposable
     {
         Task<string> DownloadUpdateAsync(string url, Version version);
     }
@@ -20,12 +20,13 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private const string downloadFileTempName = "SyncTrayzorUpdate-{0}.exe.temp";
         private const string downloadFileName = "SyncTrayzorUpdate-{0}.exe";
 
         private readonly string downloadsDir;
         private readonly IFilesystemProvider filesystemProvider;
         private readonly IInstallerCertificateVerifier installerVerifier;
+
+        private FileStream downloadPathHandle;
 
         public UpdateDownloader(IApplicationPathsProvider pathsProvider, IFilesystemProvider filesystemProvider, IInstallerCertificateVerifier installerVerifier)
         {
@@ -36,37 +37,66 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<string> DownloadUpdateAsync(string url, Version version)
         {
-            var tempPath = Path.Combine(this.downloadsDir, String.Format(downloadFileTempName, version.ToString(3)));
-            var finalPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
+            // The order is:
+            // 1. Acquire lock
+            // 2. Optionally, write
+            // 3. Verify
+            // 4. Run installer
+            // 5. Release lock
+            // This way we can be sure that no-one has the chance to change the file between us verifying it and us running the installer
+            // If the already exists, but is corrupt, then we'll try again
+            
+            var downloadPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
 
-            // Someone downloaded it already? Oh good.
-            if (this.filesystemProvider.Exists(finalPath))
+            // Just in case...
+            this.filesystemProvider.CreateDirectory(this.downloadsDir);
+
+            this.downloadPathHandle = this.filesystemProvider.Open(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+
+            bool download = true;
+
+            // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
+            if (this.downloadPathHandle.Length > 0)
             {
-                logger.Info("Skipping download as final file {0} already exists", finalPath);
+                logger.Info("Skipping download as file {0} already exists", downloadPath);
+                if (this.installerVerifier.Verify(downloadPath))
+                {
+                    download = false;
+                }
+                else
+                {
+                    logger.Info("Actually, it's corrupt. Re-downloading");
+                    this.downloadPathHandle.Position = 0;
+                    this.downloadPathHandle.SetLength(0);
+                }
             }
-            else
+            
+            if (download)
             {
-                bool downloaded = await this.TryDownloadToFileAsync(tempPath, finalPath, url);
+                bool downloaded = await this.TryDownloadToFileAsync(this.downloadPathHandle, url);
                 if (!downloaded)
                     return null;
             }
 
             logger.Info("Verifying...");
 
-            if (!this.installerVerifier.Verify(finalPath))
+            if (!this.installerVerifier.Verify(downloadPath))
             {
-                logger.Warn("Download verification failed");
-                this.filesystemProvider.Delete(finalPath);
+                logger.Warn("Download verification failed. Deleting {0}", downloadPath);
+
+                this.downloadPathHandle.Close();
+                this.downloadPathHandle = null;
+
+                this.filesystemProvider.Delete(downloadPath);
                 return null;
             }
 
-            return finalPath;
+            return downloadPath;
         }
 
-        private async Task<bool> TryDownloadToFileAsync(string tempPath, string finalPath, string url)
+        private async Task<bool> TryDownloadToFileAsync(FileStream downloadFileHandle, string url)
         {
-            // Just in case...
-            this.filesystemProvider.CreateDirectory(this.downloadsDir);
+            logger.Info("Downloading to {0}", downloadFileHandle.Name);
 
             // Temp file exists? Either a previous download was aborted, or there's another copy of us running somewhere
             // The difference depends on whether or not it's locked...
@@ -74,8 +104,6 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 var webClient = new WebClient();
 
-                logger.Info("Downloading to {0}", tempPath);
-                using (var fileStream = this.filesystemProvider.Open(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 using (var downloadStream = await webClient.OpenReadTaskAsync(url))
                 {
                     var responseLength = Int64.Parse(webClient.ResponseHeaders["Content-Length"]);
@@ -92,30 +120,25 @@ namespace SyncTrayzor.Services.UpdateManagement
                         }
                     });
 
-                    await downloadStream.CopyToAsync(fileStream, progress);
+                    await downloadStream.CopyToAsync(downloadFileHandle, progress);
                 }
             }
             catch (IOException e)
             {
-                logger.Warn(String.Format("Failed to initiate download to temp file {0}", tempPath), e);
+                logger.Warn(String.Format("Failed to initiate download to temp file {0}", downloadFileHandle.Name), e);
                 return false;
             }
-
-            // Possible, I guess, that the finalPath now exists. If it does, that's fine
-            try
-            {
-                logger.Info("Copying temp file {0} to {1}", tempPath, finalPath);
-                this.filesystemProvider.Move(tempPath, finalPath);
-            }
-            catch (IOException e)
-            {
-                logger.Warn(String.Format("Failed to move temp file {0} to final file {1}", tempPath, finalPath), e);
-                return false;
-            }
-
-            this.filesystemProvider.Delete(tempPath);
 
             return true;
+        }
+
+        public void Dispose()
+        {
+            if (this.downloadPathHandle != null)
+            {
+                this.downloadPathHandle.Close();
+                this.downloadPathHandle = null;
+            }
         }
     }
 }

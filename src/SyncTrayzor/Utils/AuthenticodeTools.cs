@@ -162,7 +162,8 @@ namespace SyncTrayzor.Utils
             SignatureOrFileCorrupt = 0x80096010,    // TRUST_E_BAD_DIGEST - file was probably corrupt
             SubjectCertExpired = 0x800B0101,        // CERT_E_EXPIRED - Signer's certificate was expired
             SubjectCertificateRevoked = 0x800B010C,     // CERT_E_REVOKED Subject's certificate was revoked
-            UntrustedRoot = 0x800B0109          // CERT_E_UNTRUSTEDROOT - A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
+            UntrustedRoot = 0x800B0109,          // CERT_E_UNTRUSTEDROOT - A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
+            CryptEFileError = 0x80092003
         }
     }
 }

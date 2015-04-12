@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
-    public interface IUpdateVariantHandler
+    public interface IUpdateVariantHandler : IDisposable
     {
         string VariantName { get; }
         bool CanAutoInstall { get; }
