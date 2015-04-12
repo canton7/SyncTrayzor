@@ -42,12 +42,12 @@ CloseApplications=no
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
-SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%nv0.10.x clients can only talk to other v0.10.x clients, and v0.11.x clients can only talk to other v0.11.x clients.%n
+SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta)!
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "syncthing0p10"; Description: "Syncthing v0.10.x (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive
-Name: "syncthing0p11"; Description: "Syncthing v0.11.x"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked
+Name: "syncthing0p10"; Description: "Syncthing v0.10 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive
+Name: "syncthing0p11"; Description: "Syncthing v0.11 (beta)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
