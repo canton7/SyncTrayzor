@@ -9,7 +9,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IUpdateNotificationApi
     {
-        [Get("/releases")]
+        [Get("")]
         Task<UpdateNotificationResponse> FetchUpdateAsync(string version, string arch, string variant);
     }
 }

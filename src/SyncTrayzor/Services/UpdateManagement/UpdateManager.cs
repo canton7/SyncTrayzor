@@ -30,6 +30,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         Version LatestIgnoredVersion { get; set; }
         string UpdateCheckApiUrl { get; set; }
         bool CheckForUpdates { get; set; }
+        TimeSpan UpdateCheckInterval { get; set; }
 
         Task<VersionCheckResults> CheckForAcceptableUpdateAsync();
     }
@@ -37,8 +38,6 @@ namespace SyncTrayzor.Services.UpdateManagement
     public class UpdateManager : IUpdateManager
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
-        private static readonly TimeSpan timeBetweenChecks = TimeSpan.FromHours(3);
 
         private readonly IApplicationState applicationState;
         private readonly IApplicationWindowState applicationWindowState;
@@ -56,6 +55,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
         public string UpdateCheckApiUrl { get; set; }
+        public TimeSpan UpdateCheckInterval { get; set; }
 
         private bool _checkForUpdates;
         public bool CheckForUpdates
@@ -142,13 +142,13 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private bool UpdateCheckDue()
         {
-            return DateTime.UtcNow - this.lastCheckedTime > timeBetweenChecks;
+            return DateTime.UtcNow - this.lastCheckedTime > this.UpdateCheckInterval;
         }
 
         private void RestartTimer()
         {
             this.promptTimer.IsEnabled = false;
-            this.promptTimer.Interval = timeBetweenChecks;
+            this.promptTimer.Interval = this.UpdateCheckInterval;
             this.promptTimer.IsEnabled = true;
         }
 

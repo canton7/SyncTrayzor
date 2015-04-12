@@ -121,6 +121,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
@@ -254,11 +259,6 @@
     <Compile Include="Pages\ShellViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
