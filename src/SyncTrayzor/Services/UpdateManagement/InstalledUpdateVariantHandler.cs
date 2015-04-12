@@ -32,10 +32,5 @@ namespace SyncTrayzor.Services.UpdateManagement
         {
             this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT");
         }
-
-        public void Dispose()
-        {
-            this.updateDownloader.Dispose();
-        }
     }
 }

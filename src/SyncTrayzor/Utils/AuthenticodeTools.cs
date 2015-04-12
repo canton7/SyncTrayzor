@@ -26,9 +26,9 @@ namespace SyncTrayzor.Utils
         );
 
         // call WinTrust.WinVerifyTrust() to check embedded file signature
-        public static bool VerifyEmbeddedSignature(string fileName, FileStream openStream, bool allowInvalidRoot)
+        public static bool VerifyEmbeddedSignature(string fileName, bool allowInvalidRoot)
         {
-            WinTrustData wtd = new WinTrustData(fileName, openStream);
+            WinTrustData wtd = new WinTrustData(fileName);
             Guid guidAction = new Guid(WINTRUST_ACTION_GENERIC_VERIFY_V2);
             WinVerifyTrustResult result = WinVerifyTrust(INVALID_HANDLE_VALUE, guidAction, wtd);
             logger.Info("Result: {0}", result);
@@ -100,10 +100,9 @@ namespace SyncTrayzor.Utils
             IntPtr hFile = IntPtr.Zero;             // optional, open handle to FilePath
             IntPtr pgKnownSubject = IntPtr.Zero;    // optional, subject type if it is known
 
-            public WinTrustFileInfo(String _filePath, FileStream openStream)
+            public WinTrustFileInfo(String _filePath)
             {
                 pszFilePath = Marshal.StringToCoTaskMemAuto(_filePath);
-                hFile = openStream == null ? IntPtr.Zero : openStream.SafeFileHandle.DangerousGetHandle();
             }
             ~WinTrustFileInfo()
             {
@@ -132,7 +131,7 @@ namespace SyncTrayzor.Utils
             WinTrustDataUIContext UIContext = WinTrustDataUIContext.Execute;
 
             // constructor for silent WinTrustDataChoice.File check
-            public WinTrustData(String _fileName, FileStream openStream)
+            public WinTrustData(String _fileName)
             {
                 // On Win7SP1+, don't allow MD2 or MD4 signatures
                 if ((Environment.OSVersion.Version.Major > 6) ||
@@ -142,7 +141,7 @@ namespace SyncTrayzor.Utils
                     ProvFlags |= WinTrustDataProvFlags.DisableMD2andMD4;
                 }
 
-                WinTrustFileInfo wtfiData = new WinTrustFileInfo(_fileName, openStream);
+                WinTrustFileInfo wtfiData = new WinTrustFileInfo(_fileName);
                 FileInfoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(WinTrustFileInfo)));
                 Marshal.StructureToPtr(wtfiData, FileInfoPtr, false);
             }

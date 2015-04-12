@@ -14,6 +14,9 @@ namespace SyncTrayzor.Services
         void Move(string from, string to);
         void CreateDirectory(string path);
         void Delete(string path);
+        void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
+        DateTime GetLastAccessTimeUtc(string path);
+        string[] GetFiles(string path);
     }
 
     public class FilesystemProvider : IFilesystemProvider
@@ -41,6 +44,21 @@ namespace SyncTrayzor.Services
         public void Delete(string path)
         {
             File.Delete(path);
+        }
+
+        public void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
+        {
+            File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
+        }
+
+        public DateTime GetLastAccessTimeUtc(string path)
+        {
+            return File.GetLastAccessTimeUtc(path);
+        }
+
+        public string[] GetFiles(string path)
+        {
+            return Directory.GetFiles(path);
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
-    public interface IUpdateDownloader : IDisposable
+    public interface IUpdateDownloader
     {
         Task<string> DownloadUpdateAsync(string url, Version version);
     }
@@ -20,13 +20,12 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private static readonly TimeSpan fileMaxAge = TimeSpan.FromDays(3); // Arbitary, but long
         private const string downloadFileName = "SyncTrayzorUpdate-{0}.exe";
 
         private readonly string downloadsDir;
         private readonly IFilesystemProvider filesystemProvider;
         private readonly IInstallerCertificateVerifier installerVerifier;
-
-        private FileStream downloadPathHandle;
 
         public UpdateDownloader(IApplicationPathsProvider pathsProvider, IFilesystemProvider filesystemProvider, IInstallerCertificateVerifier installerVerifier)
         {
@@ -37,66 +36,55 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<string> DownloadUpdateAsync(string url, Version version)
         {
-            // The order is:
-            // 1. Acquire lock
-            // 2. Optionally, write
-            // 3. Verify
-            // 4. Run installer
-            // 5. Release lock
-            // This way we can be sure that no-one has the chance to change the file between us verifying it and us running the installer
-            // If the already exists, but is corrupt, then we'll try again
-            
+            // House-keeping
+            this.CleanUpUnusedFiles();
+
             var downloadPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
 
             // Just in case...
             this.filesystemProvider.CreateDirectory(this.downloadsDir);
 
-            this.downloadPathHandle = this.filesystemProvider.Open(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
-
             bool download = true;
 
             // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
-            if (this.downloadPathHandle.Length > 0)
+            if (this.filesystemProvider.Exists(downloadPath))
             {
                 logger.Info("Skipping download as file {0} already exists", downloadPath);
-                if (this.installerVerifier.Verify(downloadPath, this.downloadPathHandle))
+                if (this.installerVerifier.Verify(downloadPath))
                 {
                     download = false;
+                    // Touch the file, so we (or someone else!) doesn't delete when cleaning up
+                    this.filesystemProvider.SetLastAccessTimeUtc(downloadPath, DateTime.UtcNow);
                 }
                 else
                 {
                     logger.Info("Actually, it's corrupt. Re-downloading");
-                    this.downloadPathHandle.Position = 0;
-                    this.downloadPathHandle.SetLength(0);
+                    this.filesystemProvider.Delete(downloadPath);
                 }
             }
             
             if (download)
             {
-                bool downloaded = await this.TryDownloadToFileAsync(this.downloadPathHandle, url);
+                bool downloaded = await this.TryDownloadToFileAsync(downloadPath, url);
                 if (!downloaded)
                     return null;
-            }
 
-            logger.Info("Verifying...");
+                logger.Info("Verifying...");
 
-            if (!this.installerVerifier.Verify(downloadPath, this.downloadPathHandle))
-            {
-                logger.Warn("Download verification failed. Deleting {0}", downloadPath);
-
-                this.downloadPathHandle.Close();
-                this.downloadPathHandle = null;
-
-                this.filesystemProvider.Delete(downloadPath);
-                return null;
+                if (!this.installerVerifier.Verify(downloadPath))
+                {
+                    logger.Warn("Download verification failed. Deleting {0}", downloadPath);
+                    this.filesystemProvider.Delete(downloadPath);
+                    return null;
+                }
             }
 
             return downloadPath;
         }
 
-        private async Task<bool> TryDownloadToFileAsync(FileStream downloadFileHandle, string url)
+        private async Task<bool> TryDownloadToFileAsync(string downloadPath, string url)
         {
-            logger.Info("Downloading to {0}", downloadFileHandle.Name);
+            logger.Info("Downloading to {0}", downloadPath);
 
             // Temp file exists? Either a previous download was aborted, or there's another copy of us running somewhere
             // The difference depends on whether or not it's locked...
@@ -104,6 +92,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 var webClient = new WebClient();
 
+                using (var downloadFileHandle = this.filesystemProvider.Open(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 using (var downloadStream = await webClient.OpenReadTaskAsync(url))
                 {
                     var responseLength = Int64.Parse(webClient.ResponseHeaders["Content-Length"]);
@@ -125,19 +114,31 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
             catch (IOException e)
             {
-                logger.Warn(String.Format("Failed to initiate download to temp file {0}", downloadFileHandle.Name), e);
+                logger.Warn(String.Format("Failed to initiate download to temp file {0}", downloadPath), e);
                 return false;
             }
 
             return true;
         }
 
-        public void Dispose()
+        private void CleanUpUnusedFiles()
         {
-            if (this.downloadPathHandle != null)
+            var threshold = DateTime.UtcNow - fileMaxAge;
+
+            foreach (var file in this.filesystemProvider.GetFiles(this.downloadsDir))
             {
-                this.downloadPathHandle.Close();
-                this.downloadPathHandle = null;
+                if (this.filesystemProvider.GetLastAccessTimeUtc(Path.Combine(this.downloadsDir, file)) < threshold)
+                {
+                    try
+                    {
+                        this.filesystemProvider.Delete(Path.Combine(this.downloadsDir, file));
+                        logger.Info("Deleted old file {0}", file);
+                    }
+                    catch (IOException e)
+                    {
+                        logger.Warn(String.Format("Failed to delete old file {0}", file), e);
+                    }
+                }
             }
         }
     }

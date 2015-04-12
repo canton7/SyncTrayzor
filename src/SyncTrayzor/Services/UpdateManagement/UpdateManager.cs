@@ -160,62 +160,60 @@ namespace SyncTrayzor.Services.UpdateManagement
 
                 this.RestartTimer();
 
-                using (var variantHandler = this.updateVariantHandlerFactory())
+                var variantHandler = this.updateVariantHandlerFactory();
+
+                var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, variantHandler.VariantName);
+                var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
+
+                if (checkResult == null)
+                    return;
+
+                if (!await variantHandler.TryHandleUpdateAvailableAsync(checkResult))
+                    return;
+
+                VersionPromptResult promptResult;
+                if (this.applicationState.HasMainWindow)
                 {
-
-                    var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, variantHandler.VariantName);
-                    var checkResult = await updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
-
-                    if (checkResult == null)
+                    promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                }
+                else
+                {
+                    try
+                    {
+                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, CancellationToken.None);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        logger.Info("Update toast cancelled");
                         return;
-
-                    if (!await variantHandler.TryHandleUpdateAvailableAsync(checkResult))
-                        return;
-
-                    VersionPromptResult promptResult;
-                    if (this.applicationState.HasMainWindow)
-                    {
-                        promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
                     }
-                    else
-                    {
-                        try
-                        {
-                            promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, CancellationToken.None);
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            logger.Info("Update toast cancelled");
-                            return;
-                        }
-                    }
+                }
 
-                    switch (promptResult)
-                    {
-                        case VersionPromptResult.InstallNow:
-                            Debug.Assert(variantHandler.CanAutoInstall);
-                            logger.Info("Auto-installing {0}", checkResult.NewVersion);
-                            variantHandler.AutoInstall();
-                            break;
+                switch (promptResult)
+                {
+                    case VersionPromptResult.InstallNow:
+                        Debug.Assert(variantHandler.CanAutoInstall);
+                        logger.Info("Auto-installing {0}", checkResult.NewVersion);
+                        variantHandler.AutoInstall();
+                        break;
 
-                        case VersionPromptResult.Download:
-                            logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
-                            this.processStartProvider.StartDetached(checkResult.DownloadUrl);
-                            break;
+                    case VersionPromptResult.Download:
+                        logger.Info("Proceeding to download URL {0}", checkResult.DownloadUrl);
+                        this.processStartProvider.StartDetached(checkResult.DownloadUrl);
+                        break;
 
-                        case VersionPromptResult.Ignore:
-                            logger.Info("Ignoring version {0}", checkResult.NewVersion);
-                            this.OnVersionIgnored(checkResult.NewVersion);
-                            break;
+                    case VersionPromptResult.Ignore:
+                        logger.Info("Ignoring version {0}", checkResult.NewVersion);
+                        this.OnVersionIgnored(checkResult.NewVersion);
+                        break;
 
-                        case VersionPromptResult.RemindLater:
-                            logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
-                            break;
+                    case VersionPromptResult.RemindLater:
+                        logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
+                        break;
 
-                        default:
-                            Debug.Assert(false);
-                            break;
-                    }
+                    default:
+                        Debug.Assert(false);
+                        break;
                 }
             }
             finally
