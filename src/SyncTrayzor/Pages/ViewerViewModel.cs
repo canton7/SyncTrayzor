@@ -15,6 +15,7 @@ using CefSharp.Wpf;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Services.Config;
 using System.Threading;
+using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages
 {
@@ -68,7 +69,10 @@ namespace SyncTrayzor.Pages
 
         protected override void OnInitialActivate()
         {
-            Cef.Initialize();
+            Cef.Initialize(new CefSettings()
+            {
+                RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
+            });
         }
 
         private void InitializeBrowser(IWpfWebBrowser webBrowser)
@@ -119,9 +123,9 @@ namespace SyncTrayzor.Pages
             //CefSharpHelper.TerminateCefSharpProcess();
         }
 
-        public void Start()
+        public async void Start()
         {
-            this.syncThingManager.StartWithErrorDialog(this.windowManager);
+            await this.syncThingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)

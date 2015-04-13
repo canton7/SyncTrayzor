@@ -3,7 +3,7 @@ using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.Services.UpdateChecker;
+using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace SyncTrayzor.Pages
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
-        private readonly IUpdateChecker updateChecker;
+        private readonly IUpdateManager updateManager;
         private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
 
         public string Version { get; set; }
@@ -37,12 +37,12 @@ namespace SyncTrayzor.Pages
             IWindowManager windowManager,
             ISyncThingManager syncThingManager,
             IConfigurationProvider configurationProvider,
-            IUpdateChecker updateChecker,
+            IUpdateManager updateManager,
             Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
-            this.updateChecker = updateChecker;
+            this.updateManager = updateManager;
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
@@ -59,21 +59,13 @@ namespace SyncTrayzor.Pages
 
         private async void CheckForNewerVersionAsync()
         {
-            var results = await this.updateChecker.FetchUpdatesAsync();
+            var results = await this.updateManager.CheckForAcceptableUpdateAsync();
 
             if (results == null)
                 return;
 
-            if (results.LatestVersionIsNewer)
-            {
-                this.NewerVersion = results.LatestVersion.ToString(3);
-                this.newerVersionDownloadUrl = results.LatestVersionDownloadUrl;
-            }
-            else
-            {
-                this.NewerVersion = null;
-                this.newerVersionDownloadUrl = null;
-            }
+            this.NewerVersion = results.NewVersion.ToString(3);
+            this.newerVersionDownloadUrl = results.ReleasePageUrl;
         }
 
         public void ShowHomepage()

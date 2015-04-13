@@ -25,6 +25,9 @@
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
             </MenuItem>
+            <MenuItem Header="{l:Loc ShellView_Menu_View}">
+                <MenuItem Header="{l:Loc ShellView_Menu_View_SyncthingConsole}" IsCheckable="True" IsChecked="{Binding ShowConsole}"/>
+            </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_Help}">
                 <MenuItem Header="{l:Loc ShellView_Menu_Help_About}" Command="{s:Action ShowAbout}"/>
             </MenuItem>
@@ -33,15 +36,23 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="*" MinHeight="100"/>
+                <RowDefinition>
+                    <i:Interaction.Behaviors>
+                        <xaml:CollapsingRowDefinitionBehaviour Height="5" RowVisibility="{Binding ShowConsole, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                    </i:Interaction.Behaviors>
+                </RowDefinition>
+                <RowDefinition>
+                    <i:Interaction.Behaviors>
+                        <xaml:CollapsingRowDefinitionBehaviour Height="*" MinHeight="100" RowVisibility="{Binding ShowConsole, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                    </i:Interaction.Behaviors>
+                </RowDefinition>
             </Grid.RowDefinitions>
 
             <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
 
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" ShowsPreview="True"/>
 
-            <ContentControl Grid.Row="2" s:View.Model="{Binding Console}" MinHeight="100"/>
+            <ContentControl Grid.Row="2" s:View.Model="{Binding Console}"/>
         </Grid>
     </DockPanel>
 </Window>

@@ -1,7 +1,7 @@
 ﻿using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.Services.UpdateChecker;
+using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using System;
 using System.Collections.Generic;
@@ -15,48 +15,46 @@ namespace SyncTrayzor.Services
     {
         private readonly IConfigurationProvider configurationProvider;
 
+        private readonly IApplicationPathsProvider pathsProvider;
         private readonly INotifyIconManager notifyIconManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
-        private readonly IGithubApiClient githubApiClient;
-        private readonly IUpdateChecker updateChecker;
+        private readonly IUpdateManager updateManager;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
+            IApplicationPathsProvider pathsProvider,
             INotifyIconManager notifyIconManager,
             ISyncThingManager syncThingManager,
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
-            IGithubApiClient githubApiClient,
-            IUpdateChecker updateChecker)
+            IUpdateManager updateManager)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
 
+            this.pathsProvider = pathsProvider;
             this.notifyIconManager = notifyIconManager;
             this.syncThingManager = syncThingManager;
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
-            this.githubApiClient = githubApiClient;
-            this.updateChecker = updateChecker;
+            this.updateManager = updateManager;
 
             this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
-            this.updateChecker.VersionIgnored += (o, e) =>
-            {
-                var config = this.configurationProvider.Load();
-                config.LatestNotifiedVersion = e.IgnoredVersion;
-                this.configurationProvider.Save(config);
-            };
+            this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
         }
 
         public void ApplyConfiguration()
         {
-            this.githubApiClient.SetConnectionDetails(Settings.Default.GithubApiUrl);
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncThingManager.ExecutablePath = this.configurationProvider.SyncthingPath;
+            this.syncThingManager.ExecutablePath = this.pathsProvider.SyncthingPath;
+
+            this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
+            this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(Settings.Default.UpdateCheckIntervalSeconds);
+
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
@@ -71,13 +69,15 @@ namespace SyncTrayzor.Services
             this.syncThingManager.Address = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
-            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.configurationProvider.SyncthingCustomHomePath : null;
+            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.pathsProvider.SyncthingCustomHomePath : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
+            this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
-            this.updateChecker.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
+            this.updateManager.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
+            this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
         }
 
         private void LoadFolders()

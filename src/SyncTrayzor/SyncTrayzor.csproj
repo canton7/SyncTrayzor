@@ -120,10 +120,66 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NotifyIcon\BalloonConductor.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings\Resources.cs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.cs.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings\Resources.el.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.el.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings\Resources.fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings\Resources.ru.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings\Resources.sk.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.sk.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ApplicationWindowState.cs" />
+    <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
+    <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
+    <Compile Include="Services\FilesystemProvider.cs" />
+    <Compile Include="Services\ProcessStartProvider.cs" />
+    <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
+    <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\InstallerCertificateVerifier.cs" />
+    <Compile Include="Services\UpdateManagement\PortableUpdateVariantHandler.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateCheckerFactory.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateDownloader.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateManager.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateNotificationClient.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateNotificationClientFactory.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateNotificationResponse.cs" />
+    <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
+    <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
+    <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
+    <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
+    <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
+    <Compile Include="SyncThing\AuthenticatedHttpClientHandler.cs" />
+    <Compile Include="SyncThing\SyncThingConnectionsWatcherFactory.cs" />
+    <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcherFactory.cs" />
     <Compile Include="Localization\LocalizeConverter.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocExtension.cs" />
-    <Compile Include="NotifyIcon\INotifyIconDelegate.cs" />
+    <Compile Include="Pages\NewVersionAlertToastViewModel.cs" />
     <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
     <Compile Include="Pages\SettingsViewModel.cs" />
@@ -162,31 +218,28 @@
     <Compile Include="Services\DirectoryWatcher.cs" />
     <Compile Include="Services\MemoryUsageLogger.cs" />
     <Compile Include="Services\Config\PathConfiguration.cs" />
-    <Compile Include="Services\UpdateChecker\UpdateChecker.cs" />
-    <Compile Include="Services\UpdateChecker\GithubApiClient.cs" />
-    <Compile Include="Services\UpdateChecker\IGithubApi.cs" />
-    <Compile Include="Services\UpdateChecker\Release.cs" />
-    <Compile Include="Services\UpdateChecker\ReleaseResponse.cs" />
+    <Compile Include="Services\UpdateManagement\UpdateChecker.cs" />
+    <Compile Include="Services\UpdateManagement\Release.cs" />
     <Compile Include="Services\WatchedFolderMonitor.cs" />
-    <Compile Include="SyncThing\Api\Config.cs" />
-    <Compile Include="SyncThing\Api\Connections.cs" />
-    <Compile Include="SyncThing\Api\DeviceConnectedEvent.cs" />
-    <Compile Include="SyncThing\Api\DeviceDisconnectedEvent.cs" />
-    <Compile Include="SyncThing\Api\Event.cs" />
-    <Compile Include="SyncThing\Api\EventConverter.cs" />
-    <Compile Include="SyncThing\Api\EventType.cs" />
-    <Compile Include="SyncThing\Api\GenericEvent.cs" />
-    <Compile Include="SyncThing\Api\IEventVisitor.cs" />
-    <Compile Include="SyncThing\Api\Ignores.cs" />
-    <Compile Include="SyncThing\Api\ItemFinishedEvent.cs" />
-    <Compile Include="SyncThing\Api\ItemStartedEvent.cs" />
-    <Compile Include="SyncThing\Api\JsonCreationConverter.cs" />
-    <Compile Include="SyncThing\Api\LocalIndexUpdatedEvent.cs" />
-    <Compile Include="SyncThing\Api\RemoteIndexUpdatedEvent.cs" />
-    <Compile Include="SyncThing\Api\StartupCompleteEvent.cs" />
-    <Compile Include="SyncThing\Api\StateChangedEvent.cs" />
-    <Compile Include="SyncThing\Api\SyncthingVersion.cs" />
-    <Compile Include="SyncThing\Api\SystemInfo.cs" />
+    <Compile Include="SyncThing\ApiClient\Config.cs" />
+    <Compile Include="SyncThing\ApiClient\Connections.cs" />
+    <Compile Include="SyncThing\ApiClient\DeviceConnectedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\DeviceDisconnectedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\Event.cs" />
+    <Compile Include="SyncThing\ApiClient\EventConverter.cs" />
+    <Compile Include="SyncThing\ApiClient\EventType.cs" />
+    <Compile Include="SyncThing\ApiClient\GenericEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\IEventVisitor.cs" />
+    <Compile Include="SyncThing\ApiClient\Ignores.cs" />
+    <Compile Include="SyncThing\ApiClient\ItemFinishedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\ItemStartedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\JsonCreationConverter.cs" />
+    <Compile Include="SyncThing\ApiClient\LocalIndexUpdatedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\RemoteIndexUpdatedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\StartupCompleteEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\StateChangedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\SyncthingVersion.cs" />
+    <Compile Include="SyncThing\ApiClient\SystemInfo.cs" />
     <Compile Include="SyncThing\Device.cs" />
     <Compile Include="SyncThing\DeviceConnectedEventArgs.cs" />
     <Compile Include="SyncThing\DeviceDisconnectedEventArgs.cs" />
@@ -196,9 +249,9 @@
     <Compile Include="SyncThing\Folder.cs" />
     <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
-    <Compile Include="SyncThing\Api\ISyncThingApi.cs" />
+    <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p10.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncThingApiClient.cs" />
+    <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p10.cs" />
     <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcher.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcher.cs" />
@@ -207,14 +260,19 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
+    <Compile Include="Utils\FormatUtils.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
+    <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
+    <Compile Include="Xaml\UacImageSource.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
+    <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />
     <Compile Include="Xaml\DetachingBehaviour.cs" />
     <Compile Include="Xaml\LogMessageListToStringConverter.cs" />
     <Compile Include="Xaml\ScrollToEndBehaviour.cs" />
@@ -227,17 +285,33 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="Properties\Strings\Resources.cs.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.cs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.el.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.el.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.fr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.ru.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.sk.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.sk.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SyncTrayzorCA.cer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -250,6 +324,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\NewVersionAlertToastView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -364,6 +442,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Licenses\FluentValidation.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

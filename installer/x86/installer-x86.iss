@@ -29,29 +29,40 @@ OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
 Compression=lzma2/max
+;Compression=None
 SolidCompression=yes
 PrivilegesRequired=admin
 ; Unintuitive - but we forcefully close SyncTrayzor ourselves (because the CEF subprocess doesn't exit when asked to)
 ; If we allow this, then the user gets a 'stopped programs?' prompt. If they hit 'no', then SyncTrayzor is still stopped, by us.
 CloseApplications=no
+TouchDate=current
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[CustomMessages]
+SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%n%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta).
+
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "syncthing0p10"; Description: "Syncthing v0.10 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive
+Name: "syncthing0p11"; Description: "Syncthing v0.11 (beta)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll"; Flags: ignoreversion recursesubdirs
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "syncthing.exe"; DestDir: "{app}"
+
+; It's important to touch, otherwise SyncTrayzor won't pick up on the modification, and won't copy it into %APPDATA%
+Source: "syncthing-0.10.x.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Tasks: "syncthing0p10"; Flags: ignoreversion touch
+Source: "syncthing-0.11.x.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Tasks: "syncthing0p11"; Flags: ignoreversion touch
+
 Source: "..\dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 
 [Icons]
@@ -61,7 +72,7 @@ Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desk
 
 [Run]
 Filename: "{tmp}\dotNet451Setup.exe"; Parameters: "/passive /promptrestart"; Check: FrameworkIsNotInstalled; StatusMsg: "Microsoft .NET Framework 4.5.1 is being installed. Please wait..."
-Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall
 
 [Code]
 function FrameworkIsNotInstalled: Boolean;

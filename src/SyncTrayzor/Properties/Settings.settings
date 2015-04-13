@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SyncTrayzor.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="GithubApiUrl" Type="System.Uri" Scope="Application">
-      <Value Profile="(Default)">https://api.github.com/repos/canton7/SyncTrayzor</Value>
+    <Setting Name="UpdateApiUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://syncthing.antonymale.co.uk/version-check</Value>
     </Setting>
     <Setting Name="HomepageUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor</Value>
@@ -20,14 +20,14 @@
     <Setting Name="EnableAutostartOnFirstStart" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;LogFilePath&gt;%EXEPATH%\logs&lt;/LogFilePath&gt;
-  &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
-  &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
-  &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
-&lt;/PathConfiguration&gt;</Value>
+    <Setting Name="CefRemoteDebuggingPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Variant" Type="SyncTrayzor.Services.Config.SyncTrayzorVariant" Scope="Application">
+      <Value Profile="(Default)">Portable</Value>
+    </Setting>
+    <Setting Name="UpdateCheckIntervalSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10800</Value>
     </Setting>
     <Setting Name="DefaultUserConfiguration" Type="SyncTrayzor.Services.Config.Configuration" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -46,7 +46,17 @@
   &lt;NotifyOfNewVersions&gt;true&lt;/NotifyOfNewVersions&gt;
   &lt;ObfuscateDeviceIDs&gt;true&lt;/ObfuscateDeviceIDs&gt;
   &lt;UseComputerCulture&gt;true&lt;/UseComputerCulture&gt;
+  &lt;ShowSyncthingConsole&gt;true&lt;/ShowSyncthingConsole&gt;
 &lt;/Configuration&gt;</Value>
+    </Setting>
+    <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;LogFilePath&gt;%EXEPATH%\data\logs&lt;/LogFilePath&gt;
+  &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
+  &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
+  &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
+&lt;/PathConfiguration&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -25,10 +25,10 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/canton7/SyncTrayzor")]
-        public global::System.Uri GithubApiUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("http://syncthing.antonymale.co.uk/version-check")]
+        public string UpdateApiUrl {
             get {
-                return ((global::System.Uri)(this["GithubApiUrl"]));
+                return ((string)(this["UpdateApiUrl"]));
             }
         }
         
@@ -79,16 +79,28 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<PathConfiguration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <LogFilePath>%EXEPATH%\logs</LogFilePath>
-  <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
-  <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
-  <ConfigurationFilePath>%EXEPATH%\data\config.xml</ConfigurationFilePath>
-</PathConfiguration>")]
-        public global::SyncTrayzor.Services.Config.PathConfiguration PathConfiguration {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CefRemoteDebuggingPort {
             get {
-                return ((global::SyncTrayzor.Services.Config.PathConfiguration)(this["PathConfiguration"]));
+                return ((int)(this["CefRemoteDebuggingPort"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Portable")]
+        public global::SyncTrayzor.Services.Config.SyncTrayzorVariant Variant {
+            get {
+                return ((global::SyncTrayzor.Services.Config.SyncTrayzorVariant)(this["Variant"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10800")]
+        public int UpdateCheckIntervalSeconds {
+            get {
+                return ((int)(this["UpdateCheckIntervalSeconds"]));
             }
         }
         
@@ -110,10 +122,26 @@ namespace SyncTrayzor.Properties {
   <NotifyOfNewVersions>true</NotifyOfNewVersions>
   <ObfuscateDeviceIDs>true</ObfuscateDeviceIDs>
   <UseComputerCulture>true</UseComputerCulture>
+  <ShowSyncthingConsole>true</ShowSyncthingConsole>
 </Configuration>")]
         public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
             get {
                 return ((global::SyncTrayzor.Services.Config.Configuration)(this["DefaultUserConfiguration"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<PathConfiguration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <LogFilePath>%EXEPATH%\data\logs</LogFilePath>
+  <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
+  <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
+  <ConfigurationFilePath>%EXEPATH%\data\config.xml</ConfigurationFilePath>
+</PathConfiguration>")]
+        public global::SyncTrayzor.Services.Config.PathConfiguration PathConfiguration {
+            get {
+                return ((global::SyncTrayzor.Services.Config.PathConfiguration)(this["PathConfiguration"]));
             }
         }
     }

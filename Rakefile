@@ -7,14 +7,19 @@ rescue LoadError
   exit 1
 end
 
-ISCC = 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
-SZIP = 'C:\Program Files\7-Zip\7z.exe'
+ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
+SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
+SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
 
 CONFIG = ENV['CONFIG'] || 'Release'
 
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
 PORTABLE_DIR = 'portable'
+
+PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
+
+PORTABLE_SYNCTHING_VERSION = '0.10'
 
 class ArchDirConfig
   attr_reader :arch
@@ -24,6 +29,7 @@ class ArchDirConfig
   attr_reader :installer_iss
   attr_reader :portable_output_dir
   attr_reader :portable_output_file
+  attr_reader :syncthing_binaries
 
   def initialize(arch)
     @arch = arch
@@ -33,6 +39,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
+    @syncthing_binaries = { '0.10' => 'syncthing-0.10.x.exe', '0.11' => 'syncthing-0.11.x.exe' }
   end
 end
 
@@ -71,8 +78,35 @@ end
 desc 'Build both 64-bit and 32-bit installers'
 task :installer => ARCH_CONFIG.map{ |x| :"installer:#{x.arch}" }
 
-def cp_to_portable(output_dir, src)
-  dest = File.join(output_dir, src)
+namespace :"sign-installer" do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Sign the installer (#{arch_config.arch}). Specify PASSWORD if required"
+    task arch_config.arch do
+      unless File.exist?(SIGNTOOL)
+        warn "You must install the Windows SDK"
+        exit 1
+      end
+
+      unless File.exist?(PFX)
+        warn "#{PFX} must exist"
+        exit 1
+      end
+
+      args = ['sign', "/f #{PFX}", "/t http://timestamp.verisign.com/scripts/timstamp.dll"]
+      args << "/p #{ENV['PASSWORD']}" if ENV['PASSWORD']
+      args << "/v #{arch_config.installer_output}"
+
+      sh %Q{"#{SIGNTOOL}"}, *args
+    end
+  end
+end
+
+desc 'Sign both 64-bit and 32-bit installers. Specify PASSWORD if required'
+task :"sign-installer" => ARCH_CONFIG.map{ |x| :"sign-installer:#{x.arch}" }
+
+def cp_to_portable(output_dir, src, output_filename = nil)
+  dest = File.join(output_dir, output_filename || src)
+  raise "Cannot find #{src}" unless File.exist?(src)
   # It could be an empty directory - so ignore it
   # We'll create it as and when if there are any files in it
   if File.file?(src)
@@ -96,7 +130,7 @@ namespace :portable do
       Dir.mktmpdir do |tmp|
         portable_dir = File.join(tmp, arch_config.portable_output_dir)
         Dir.chdir(arch_config.bin_dir) do
-          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
+          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe')
 
           files.each do |file|
             cp_to_portable(portable_dir, file)
@@ -110,9 +144,10 @@ namespace :portable do
         end
         
         Dir.chdir(arch_config.installer_dir) do
-          FileList['syncthing.exe', '*.dll'].each do |file|
+          FileList['*.dll'].each do |file|
             cp_to_portable(portable_dir, file)
           end
+          cp_to_portable(portable_dir, arch_config.syncthing_binaries[PORTABLE_SYNCTHING_VERSION], 'syncthing.exe')
         end
 
         sh %Q{"#{SZIP}"}, "a -tzip -mx=7 #{arch_config.portable_output_file} #{portable_dir}"
@@ -123,6 +158,25 @@ end
 
 desc 'Create both 64-bit and 32-bit portable packages'
 task :portable => ARCH_CONFIG.map{ |x| :"portable:#{x.arch}" }
+
+namespace :"update-syncthing" do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Update syncthing binaries (#{arch_config.arch}"
+    task arch_config.arch do
+      arch_config.syncthing_binaries.values.each do |bin|
+        path = File.join(arch_config.installer_dir, bin)
+        raise "Could not find #{path}" unless File.exist?(path)
+        sh path, '-upgrade' do; end
+
+        old_bin = "#{path}.old"
+        rm old_bin if File.exist?(old_bin)
+      end
+    end
+  end
+end
+
+desc 'Update syncthing binaries, all architectures'
+task :"update-syncthing" => ARCH_CONFIG.map{ |x| :"update-syncthing:#{x.arch}" }
 
 namespace :clean do
   ARCH_CONFIG.each do |arch_config|
@@ -140,7 +194,7 @@ task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
 namespace :package do
   ARCH_CONFIG.each do |arch_config|
     desc "Build installer and portable (#{arch_config.arch})"
-    task arch_config.arch => [:"clean:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
+    task arch_config.arch => [:"clean:#{arch_config.arch}", :"update-syncthing:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"sign-installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
   end
 end
 

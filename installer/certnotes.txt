@@ -1,0 +1,18 @@
+http://blogs.msdn.com/b/httpcontext/archive/2012/05/24/how-to-digitally-sign-a-strong-named-assembly.aspx
+http://www.jayway.com/2014/09/03/creating-self-signed-certificates-with-makecert-exe-for-development/
+
+admin console:
+
+makecert -r -pe -n "CN=TheCN" -a sha256 -cy authority -sky signature -sv MyCA.pvk MyCA.cer
+pvk2pfx -pvk MyCA.pvk -spc MyCA.cer -pfx MyCA.pfx
+
+Optional: Install MyCA.pfx into cert store by double-clicking it
+
+appears to need cmd: git bash won't work
+signtool sign /f MyCA.pfx /v theFileToSign.exe
+
+http://stackoverflow.com/questions/24060009/checking-digital-signature-on-exe
+
+signtool verify /v theFileToSign.exe
+
+Check that SHA1 hash matches 'Thumbprint' of cert

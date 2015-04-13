@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Stylet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,10 @@ namespace SyncTrayzor.Services
 {
     public interface IApplicationState
     {
+        event EventHandler Startup;
+        event EventHandler ResumeFromSleep;
+
+        void ApplicationStarted();
         ShutdownMode ShutdownMode { get; set; }
         bool HasMainWindow { get; }
         object FindResource(object resourceKey);
@@ -19,9 +25,18 @@ namespace SyncTrayzor.Services
     {
         private readonly Application application;
 
+        public event EventHandler Startup;
+        public event EventHandler ResumeFromSleep;
+
         public ApplicationState(Application application)
         {
             this.application = application;
+
+            SystemEvents.PowerModeChanged += (o, e) =>
+            {
+                if (e.Mode == PowerModes.Resume)
+                    this.OnResumeFromSleep();
+            };
         }
 
         public ShutdownMode ShutdownMode
@@ -43,6 +58,20 @@ namespace SyncTrayzor.Services
         public void Shutdown()
         {
             this.application.Shutdown();
+        }
+
+        public void ApplicationStarted()
+        {
+            var handler = this.Startup;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void OnResumeFromSleep()
+        {
+            var handler = this.ResumeFromSleep;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
     }
 }

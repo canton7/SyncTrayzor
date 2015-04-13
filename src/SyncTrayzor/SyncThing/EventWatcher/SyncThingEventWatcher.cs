@@ -1,11 +1,12 @@
 ﻿using NLog;
-using SyncTrayzor.SyncThing.Api;
+using SyncTrayzor.SyncThing.ApiClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.EventWatcher
@@ -46,11 +47,11 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             base.Start();
         }
 
-        protected override async Task PollAsync()
+        protected override async Task PollAsync(CancellationToken cancellationToken)
         {
             try
             {
-                var events = await this.apiClient.FetchEventsAsync(this.lastEventId);
+                var events = await this.apiClient.FetchEventsAsync(this.lastEventId, cancellationToken);
 
                 // We can be aborted in the time it takes to fetch the events
                 if (!this.Running)

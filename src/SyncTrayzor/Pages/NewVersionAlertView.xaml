@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         Width="600" MaxHeight="600"
         Title="{l:Loc NewVersionAlertView_Title}"
         SizeToContent="Height">
@@ -18,7 +19,15 @@
                     <!-- Slightly smaller -->
                 </Style>
             </StackPanel.Resources>
-            <Button IsDefault="True" Command="{s:Action Download}" Content="{l:Loc NewVersionAlertView_Button_Download}"/>
+            <Button IsDefault="True" Command="{s:Action Install}"
+                    Visibility="{Binding CanInstall, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{x:Static xaml:UacImageSource.Shield}" VerticalAlignment="Center" Height="17" Margin="0,0,5,0"/>
+                    <TextBlock Text="{l:Loc NewVersionAlertView_Button_Install}"/>
+                </StackPanel>
+            </Button>
+            <Button IsDefault="True" Command="{s:Action Download}" Content="{l:Loc NewVersionAlertView_Button_Download}"
+                    Visibility="{Binding CanInstall, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
             <Button IsCancel="True" Command="{s:Action RemindLater}" Content="{l:Loc NewVersionAlertView_Button_RemindLater}"/>
             <Button IsCancel="True" Command="{s:Action DontRemind}" Content="{l:Loc NewVersionAlertView_Button_DontRemind}"/>
         </StackPanel>

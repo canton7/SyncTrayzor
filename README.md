@@ -52,12 +52,33 @@ SyncTrayzor is the tray utilty, looks like a normal Windows program, and has men
  - If SyncTrayzor isn't talking to Syncthing, you're getting error dialogs, it's not auto-starting, etc, [raise an issue with SyncTrayzor](http://github.com/canton7/SyncTrayzor).
  - If you're not sure, raise an issue here and I'll redirect you if appropriate.
 
+
 Contributing
 ------------
 
 Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.com/canton7/SyncTrayzor/wiki/Localization).
 
 Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
+
+
+Will SyncTrayzor phone home / give away my secrets / etc?
+---------------------------------------------------------
+
+SyncTrayzor's auto-update mechanism will periodically call a script (found in `server/version_check.php`, hosted on a server of mine) to find out if there's an upgrade available.
+It will disclose your current SyncTrayzor version, and the package you downloaded (installer/portable and x64/x86).
+It will also reveal your IP address, which is unavoidable.
+
+You can turn off auto-updates in the Settings, but in that case you are responsible for manually checking for updates.
+
+Usage information, details of your computer / network / syncthing setup / etc are not reported.
+
+
+What about Syncthing 0.11 beta?
+-------------------------------
+
+The installer gives you the option of installing Syncthing 0.10 or Syncthing 0.11 beta.
+
+The portable version includes Syncthing 0.10. If you want to change this, replace `syncthing.exe` with a 0.11 build downloaded from the [Syncthing releases page](https://github.com/syncthing/syncthing/releases)
 
 
 What will SyncTrayzor do to Syncthing?
@@ -85,6 +106,8 @@ You can delete this registry key by unchecking "Automatically start on login" in
 
 If you check "Use custom home directory or Syncthing" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing` for its database.
 This is useful if you want to keep the copy of Syncthing managed by SyncTrayzor separate from another copy running on your machine.
+
+The auto-update mechanism may download updates to `%TEMP%\SyncTrayzor`. This location is periodically cleared out (once every few days).
 
 ### Standalone
 

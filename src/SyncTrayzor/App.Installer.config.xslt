@@ -4,6 +4,7 @@
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:template match="/configuration/applicationSettings//setting[@name='EnableAutostartOnFirstStart']/value/text()">True</xsl:template>
+  <xsl:template match="/configuration/applicationSettings//setting[@name='Variant']/value/text()">Installed</xsl:template>
   
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//LogFilePath/text()">%APPDATA%\SyncTrayzor\logs</xsl:template>
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//SyncthingCustomHomePath/text()">%LOCALAPPDATA%\SyncTrayzor\syncthing</xsl:template>

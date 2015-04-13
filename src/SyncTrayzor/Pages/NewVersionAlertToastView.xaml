@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.NewVersionAlertToastView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             mc:Ignorable="d" 
+             Width="500">
+    <Border CornerRadius="2" BorderThickness="1" BorderBrush="Black" Background="White">
+        <DockPanel Margin="10" LastChildFill="False">
+            <TextBlock DockPanel.Dock="Top" TextAlignment="Center" FontWeight="Bold" FontSize="20">SyncTrayzor Update Available</TextBlock>
+            <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,10,0,0">
+                <ContentControl Content="{l:Loc NewVersionAlertView_NewVersionAvailable, ValueBinding={Binding Version}}"/>
+            </TextBlock>
+            <TextBlock DockPanel.Dock="Top" Margin="0,10,0,0">
+                <Hyperlink Command="{s:Action DisplayMoreDetails}">
+                    <TextBlock DockPanel.Dock="Top" Text="{l:Loc NewVersionAlertView_ViewChangelog}"/>
+                </Hyperlink>
+            </TextBlock>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Padding" Value="15,0"/>
+                        <!-- Slightly smaller -->
+                    </Style>
+                </StackPanel.Resources>
+                <Button Command="{s:Action Install}"
+                    Visibility="{Binding CanInstall, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{x:Static xaml:UacImageSource.Shield}" VerticalAlignment="Center" Height="17" Margin="0,0,5,0"/>
+                        <TextBlock Text="{l:Loc NewVersionAlertView_Button_Install}"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{s:Action Download}" Content="{l:Loc NewVersionAlertView_Button_Download}"
+                    Visibility="{Binding CanInstall, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
+                <Button Command="{s:Action RemindLater}" Content="{l:Loc NewVersionAlertView_Button_RemindLater}"/>
+                <Button Command="{s:Action DontRemind}" Content="{l:Loc NewVersionAlertView_Button_DontRemind}"/>
+            </StackPanel>
+            <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" Margin="0,10,0,0" Text="{l:Loc NewVersionAlertView_DontRemindMeExplanation}"/>
+        </DockPanel>
+    </Border>
+</UserControl>

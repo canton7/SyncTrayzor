@@ -36,10 +36,12 @@ packages/
 #Installer
 SyncTrayzorSetup*.exe
 SyncTrayzorPortable*
-syncthing.exe
+syncthing-*.exe
 
 *.gjq
 *.tmp
 Coverage
 RefitStubs.cs
 SyncTrayzorPortable
+*.pfx
+*.pvk
