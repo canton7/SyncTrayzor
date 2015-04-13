@@ -102,6 +102,9 @@ namespace SyncTrayzor
                     autostartProvider.UpdatePathToSelf();
             }
 
+            // Needs to be done before ConfigurationApplicator is run
+            this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
+
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
             this.Container.Get<MemoryUsageLogger>().Enabled = true;
@@ -118,7 +121,6 @@ namespace SyncTrayzor
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
 
-            this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
             this.Container.Get<IApplicationState>().ApplicationStarted();
         }
 
