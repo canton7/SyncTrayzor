@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.0.13
+-------
+
+ - Fix crash if 'Show tray icon only on close' is checked (#45)
+ - Fix undocumented REST API change in Syncthing 0.11 (#46)
+ - Check for updates on resume from sleep 
+ - Ensure SyncTrayzor is started as original user after auto-update
+
 v1.0.12
 -------
 
