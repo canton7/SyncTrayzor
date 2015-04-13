@@ -36,50 +36,58 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<string> DownloadUpdateAsync(string url, Version version)
         {
-            var downloadPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
-
-            // Just in case...
-            this.filesystemProvider.CreateDirectory(this.downloadsDir);
-
-            bool download = true;
-
-            // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
-            if (this.filesystemProvider.Exists(downloadPath))
+            try
             {
-                logger.Info("Skipping download as file {0} already exists", downloadPath);
-                if (this.installerVerifier.Verify(downloadPath))
-                {
-                    download = false;
-                    // Touch the file, so we (or someone else!) doesn't delete when cleaning up
-                    this.filesystemProvider.SetLastAccessTimeUtc(downloadPath, DateTime.UtcNow);
-                }
-                else
-                {
-                    logger.Info("Actually, it's corrupt. Re-downloading");
-                    this.filesystemProvider.Delete(downloadPath);
-                }
-            }
+                var downloadPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
 
-            // House-keeping. Do this now, after SetLastAccessTimeUTc has been called, but before we start hitting the early-exits
-            this.CleanUpUnusedFiles();
-            
-            if (download)
+                // Just in case...
+                this.filesystemProvider.CreateDirectory(this.downloadsDir);
+
+                bool download = true;
+
+                // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
+                if (this.filesystemProvider.Exists(downloadPath))
+                {
+                    logger.Info("Skipping download as file {0} already exists", downloadPath);
+                    if (this.installerVerifier.Verify(downloadPath))
+                    {
+                        download = false;
+                        // Touch the file, so we (or someone else!) doesn't delete when cleaning up
+                        this.filesystemProvider.SetLastAccessTimeUtc(downloadPath, DateTime.UtcNow);
+                    }
+                    else
+                    {
+                        logger.Info("Actually, it's corrupt. Re-downloading");
+                        this.filesystemProvider.Delete(downloadPath);
+                    }
+                }
+
+                // House-keeping. Do this now, after SetLastAccessTimeUTc has been called, but before we start hitting the early-exits
+                this.CleanUpUnusedFiles();
+
+                if (download)
+                {
+                    bool downloaded = await this.TryDownloadToFileAsync(downloadPath, url);
+                    if (!downloaded)
+                        return null;
+
+                    logger.Info("Verifying...");
+
+                    if (!this.installerVerifier.Verify(downloadPath))
+                    {
+                        logger.Warn("Download verification failed. Deleting {0}", downloadPath);
+                        this.filesystemProvider.Delete(downloadPath);
+                        return null;
+                    }
+                }
+
+                return downloadPath;
+            }
+            catch (Exception e)
             {
-                bool downloaded = await this.TryDownloadToFileAsync(downloadPath, url);
-                if (!downloaded)
-                    return null;
-
-                logger.Info("Verifying...");
-
-                if (!this.installerVerifier.Verify(downloadPath))
-                {
-                    logger.Warn("Download verification failed. Deleting {0}", downloadPath);
-                    this.filesystemProvider.Delete(downloadPath);
-                    return null;
-                }
+                logger.Error("Error in DownloadUpdateAsync", e);
+                return null;
             }
-
-            return downloadPath;
         }
 
         private async Task<bool> TryDownloadToFileAsync(string downloadPath, string url)

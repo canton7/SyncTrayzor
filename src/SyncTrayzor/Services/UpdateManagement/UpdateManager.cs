@@ -94,6 +94,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             // We'll also check when the application is restored from tray
 
             this.applicationState.Startup += this.ApplicationStartup;
+            this.applicationState.ResumeFromSleep += this.ResumeFromSleep;
             this.applicationWindowState.RootWindowActivated += this.RootWindowActivated;
         }
 
@@ -116,6 +117,12 @@ namespace SyncTrayzor.Services.UpdateManagement
         private async void ApplicationStartup(object sender, EventArgs e)
         {
             await this.CheckForUpdatesAsync();
+        }
+
+        private async void ResumeFromSleep(object sender, EventArgs e)
+        {
+            if (this.UpdateCheckDue())
+                await this.CheckForUpdatesAsync();
         }
 
         private async void RootWindowActivated(object sender, ActivationEventArgs e)
@@ -231,6 +238,10 @@ namespace SyncTrayzor.Services.UpdateManagement
                         Debug.Assert(false);
                         break;
                 }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error in UpdateManager.CheckForUpdatesAsync", e);
             }
             finally
             {

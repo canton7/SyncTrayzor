@@ -18,11 +18,15 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [JsonProperty("Modified")]
         public long Modified { get; set; } // Is this supposed to be a DateTime?
 
-        [JsonProperty("Version")]
-        public long Version { get; set; }
+        // This changed in 0.11 beta, but it's not yet clear what do
+        // Since we don't use it anyway currently...
+        //[JsonProperty("Version")]
+        //public List<long> Version { get; set; }
 
-        [JsonProperty("LocalVersion")]
-        public long LocalVersion { get; set; }
+        // This changed in 0.11 beta, but it's not yet clear what do
+        // Since we don't use it anyway currently...
+        //[JsonProperty("LocalVersion")]
+        //public List<long> LocalVersion { get; set; }
 
         [JsonProperty("NumBlocks")]
         public long NumBlocks { get; set; }
@@ -52,9 +56,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<ItemStarted ID={0} Time={1} Item={2} Folder={3} Name={4} Flags={5} Modified={6} Version={7} LocalVersion={8} NumBlocks={9}>",
-                this.Id, this.Time, this.Data.Item, this.Data.Folder, this.Data.Details.Name, this.Data.Details.Flags, this.Data.Details.Modified,
-                this.Data.Details.Version, this.Data.Details.LocalVersion, this.Data.Details.NumBlocks);
+            return String.Format("<ItemStarted ID={0} Time={1} Item={2} Folder={3} Name={4} Flags={5} Modified={6} NumBlocks={7}>",
+                this.Id, this.Time, this.Data.Item, this.Data.Folder, this.Data.Details.Name, this.Data.Details.Flags, this.Data.Details.Modified, this.Data.Details.NumBlocks);
         }
     }
 }

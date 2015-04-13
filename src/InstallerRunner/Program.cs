@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +13,38 @@ namespace InstallerRunner
     {
         private const int ERROR_CANCELLED = 1223;
 
-        static int Main(string[] args)
+        static int Main(string[] argsIn)
         {
-            if (args.Length == 0)
+            var args = new List<string>(argsIn);
+
+            string launch = null;
+            var indexOfLaunch = args.IndexOf("-launch");
+            if (indexOfLaunch > -1)
+            {
+                if (indexOfLaunch >= args.Count - 1)
+                {
+                    Console.Error.WriteLine("Must provide an argument to -launch");
+                    return 1;
+                }
+
+                launch = args[indexOfLaunch + 1];
+                args.RemoveAt(indexOfLaunch + 1);
+                args.RemoveAt(indexOfLaunch);
+            }
+
+            if (args.Count == 0)
             {
                 Console.Error.WriteLine("Must provide at least one command-line argument");
                 return 1;
             }
+
+            if (!File.Exists(args[0]))
+            {
+                Console.Error.WriteLine("Could not find {0}", args[0]);
+                return 4;
+            }
+
+            Console.WriteLine(String.Join(", ", args));
 
             var startInfo = new ProcessStartInfo()
             {
@@ -30,7 +56,11 @@ namespace InstallerRunner
 
             try
             {
-                Process.Start(startInfo);
+                var process = Process.Start(startInfo);
+                process.WaitForExit();
+
+                if (!String.IsNullOrWhiteSpace(launch))
+                    Process.Start(launch);
             }
             catch (Win32Exception e)
             {
