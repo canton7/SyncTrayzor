@@ -239,6 +239,10 @@ namespace SyncTrayzor.Services.UpdateManagement
                         break;
                 }
             }
+            catch (Exception e)
+            {
+                logger.Error("Error in UpdateManager.CheckForUpdatesAsync", e);
+            }
             finally
             {
                 this.versionCheckLock.Release();
