@@ -39,7 +39,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
-    @syncthing_binaries = { '0.10' => 'syncthing-0.10.exe', '0.11' => 'syncthing-0.11.exe' }
+    @syncthing_binaries = { '0.10' => 'syncthing-0.10.x.exe', '0.11' => 'syncthing-0.11.x.exe' }
   end
 end
 
@@ -159,6 +159,25 @@ end
 desc 'Create both 64-bit and 32-bit portable packages'
 task :portable => ARCH_CONFIG.map{ |x| :"portable:#{x.arch}" }
 
+namespace :"update-syncthing" do
+  ARCH_CONFIG.each do |arch_config|
+    desc "Update syncthing binaries (#{arch_config.arch}"
+    task arch_config.arch do
+      arch_config.syncthing_binaries.values.each do |bin|
+        path = File.join(arch_config.installer_dir, bin)
+        raise "Could not find #{path}" unless File.exist?(path)
+        sh path, '-upgrade' do; end
+
+        old_bin = "#{path}.old"
+        rm old_bin if File.exist?(old_bin)
+      end
+    end
+  end
+end
+
+desc 'Update syncthing binaries, all architectures'
+task :"update-syncthing" => ARCH_CONFIG.map{ |x| :"update-syncthing:#{x.arch}" }
+
 namespace :clean do
   ARCH_CONFIG.each do |arch_config|
     desc "Clean everything (#{arch_config.arch})"
@@ -175,7 +194,7 @@ task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
 namespace :package do
   ARCH_CONFIG.each do |arch_config|
     desc "Build installer and portable (#{arch_config.arch})"
-    task arch_config.arch => [:"clean:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"sign-installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
+    task arch_config.arch => [:"clean:#{arch_config.arch}", :"update-syncthing:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"sign-installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
   end
 end
 
