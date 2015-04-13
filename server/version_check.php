@@ -64,20 +64,20 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.12' => [
-      'installed' => [
-         'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x86.exe'
-         ],
-      ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.11',
-      'release_notes' => "These\nare some release notes",
-   ],
+   // '1.0.12' => [
+   //    'installed' => [
+   //       'direct_download_url' => [
+   //          'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x64.exe',
+   //          'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x86.exe'
+   //       ],
+   //    ],
+   //    'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.11',
+   //    'release_notes' => "These\nare some release notes",
+   // ],
 ];
 
 $upgrades = [
-   '1.0.11' => ['to' => '1.0.12', 'formatter' => '1'],
+   // '1.0.11' => ['to' => '1.0.12', 'formatter' => '1'],
 ];
 
 $response_formatters = [
