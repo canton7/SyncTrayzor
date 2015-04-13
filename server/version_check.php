@@ -48,6 +48,7 @@
 
 set_error_handler('error_handler');
 date_default_timezone_set('UCT');
+header('Content-Type: application/json');
 
 function error_handler($severity, $message, $filename, $lineno)
 {
@@ -64,20 +65,21 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   // '1.0.12' => [
-   //    'installed' => [
-   //       'direct_download_url' => [
-   //          'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x64.exe',
-   //          'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.11/SyncTrayzorSetup-x86.exe'
-   //       ],
-   //    ],
-   //    'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.11',
-   //    'release_notes' => "These\nare some release notes",
-   // ],
+   '1.0.13' => [
+      // No direct_download_url, as it turns out the 1.0.12 auto-upgrader is a bit broken (will restart SyncTrayzor as admin)
+      // 'installed' => [
+      //    'direct_download_url' => [
+      //       'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.13/SyncTrayzorSetup-x64.exe',
+      //       'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.13/SyncTrayzorSetup-x86.exe'
+      //    ],
+      // ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.13',
+      'release_notes' => "- Fix crash if 'Show tray icon only on close' is checked (#45)\n- Fix undocumented REST API change in Syncthing 0.11 (#46)\n- Check for updates on resume from sleep\n- Ensure SyncTrayzor is started as original user after auto-update",
+   ],
 ];
 
 $upgrades = [
-   // '1.0.11' => ['to' => '1.0.12', 'formatter' => '1'],
+   '1.0.12' => ['to' => '1.0.13', 'formatter' => '1'],
 ];
 
 $response_formatters = [
