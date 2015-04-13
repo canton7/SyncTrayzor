@@ -19,6 +19,8 @@ PORTABLE_DIR = 'portable'
 
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
+PORTABLE_SYNCTHING_VERSION = '0.10'
+
 class ArchDirConfig
   attr_reader :arch
   attr_reader :bin_dir
@@ -27,6 +29,7 @@ class ArchDirConfig
   attr_reader :installer_iss
   attr_reader :portable_output_dir
   attr_reader :portable_output_file
+  attr_reader :syncthing_binaries
 
   def initialize(arch)
     @arch = arch
@@ -36,6 +39,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
+    @syncthing_binaries = { '0.10' => 'syncthing-0.10.exe', '0.11' => 'syncthing-0.11.exe' }
   end
 end
 
@@ -100,8 +104,9 @@ end
 desc 'Sign both 64-bit and 32-bit installers. Specify PASSWORD if required'
 task :"sign-installer" => ARCH_CONFIG.map{ |x| :"sign-installer:#{x.arch}" }
 
-def cp_to_portable(output_dir, src)
-  dest = File.join(output_dir, src)
+def cp_to_portable(output_dir, src, output_filename = nil)
+  dest = File.join(output_dir, output_filename || src)
+  raise "Cannot find #{src}" unless File.exist?(src)
   # It could be an empty directory - so ignore it
   # We'll create it as and when if there are any files in it
   if File.file?(src)
@@ -125,7 +130,7 @@ namespace :portable do
       Dir.mktmpdir do |tmp|
         portable_dir = File.join(tmp, arch_config.portable_output_dir)
         Dir.chdir(arch_config.bin_dir) do
-          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll')
+          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe')
 
           files.each do |file|
             cp_to_portable(portable_dir, file)
@@ -139,9 +144,10 @@ namespace :portable do
         end
         
         Dir.chdir(arch_config.installer_dir) do
-          FileList['syncthing.exe', '*.dll'].each do |file|
+          FileList['*.dll'].each do |file|
             cp_to_portable(portable_dir, file)
           end
+          cp_to_portable(portable_dir, arch_config.syncthing_binaries[PORTABLE_SYNCTHING_VERSION], 'syncthing.exe')
         end
 
         sh %Q{"#{SZIP}"}, "a -tzip -mx=7 #{arch_config.portable_output_file} #{portable_dir}"
