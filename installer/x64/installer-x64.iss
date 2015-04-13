@@ -37,6 +37,7 @@ ArchitecturesAllowed=x64
 ; Unintuitive - but we forcefully close SyncTrayzor ourselves (because the CEF subprocess doesn't exit when asked to)
 ; If we allow this, then the user gets a 'stopped programs?' prompt. If they hit 'no', then SyncTrayzor is still stopped, by us.
 CloseApplications=no
+TouchDate=current
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
