@@ -40,7 +40,7 @@ CloseApplications=no
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
-SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta)!
+SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%n%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta).
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked

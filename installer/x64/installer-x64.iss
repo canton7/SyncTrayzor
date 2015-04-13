@@ -14,7 +14,7 @@
 
 [Setup]
 AppId={{c004dcef-b848-46a5-9c30-4dbf736396fa}
-AppName={#AppName}-{#Arch}
+AppName={#AppName} ({#Arch})
 AppVersion={#AppVersion}
 ;AppVerName={#AppName} {#AppVersion}
 AppPublisher={#AppPublisher}
@@ -42,7 +42,7 @@ CloseApplications=no
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
-SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta)!
+SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%n%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta).
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
