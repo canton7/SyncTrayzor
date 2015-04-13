@@ -36,9 +36,6 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<string> DownloadUpdateAsync(string url, Version version)
         {
-            // House-keeping
-            this.CleanUpUnusedFiles();
-
             var downloadPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
 
             // Just in case...
@@ -62,6 +59,9 @@ namespace SyncTrayzor.Services.UpdateManagement
                     this.filesystemProvider.Delete(downloadPath);
                 }
             }
+
+            // House-keeping. Do this now, after SetLastAccessTimeUTc has been called, but before we start hitting the early-exits
+            this.CleanUpUnusedFiles();
             
             if (download)
             {
