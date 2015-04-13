@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncTrayzor", "SyncTrayzor\SyncTrayzor.csproj", "{D1F89B3D-7967-4DC6-AE45-50A7817FE54F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5} = {E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerRunner", "InstallerRunner\InstallerRunner.csproj", "{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}"
 EndProject

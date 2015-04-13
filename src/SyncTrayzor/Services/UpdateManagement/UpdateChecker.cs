@@ -99,7 +99,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 var updateData = update.Data;
                 if (updateData == null)
                 {
-                    logger.Warn("Update response returned no error, but no data either");
+                    logger.Info("No updates available");
                     return null;
                 }
 

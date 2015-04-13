@@ -47,6 +47,7 @@
  */
 
 set_error_handler('error_handler');
+date_default_timezone_set('UCT');
 
 function error_handler($severity, $message, $filename, $lineno)
 {
@@ -82,7 +83,7 @@ $upgrades = [
 $response_formatters = [
    '1' => function($arch, $variant, $to_version, $to_version_info, $overrides)
    {
-      $variant_info = get_with_wildcard($to_version_info, $variant);
+      $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
 
       $data = [
          'version' => $to_version,
