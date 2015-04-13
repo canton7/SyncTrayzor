@@ -209,15 +209,11 @@
     <value>Änderungshistorie:</value>
   </data>
   <data name="NewVersionAlertView_DontRemindMeExplanation" xml:space="preserve">
-    <value>&quot;Nicht erneut erinnern&quot; wird keine weiteren Erinnerungen für diese Version anzeigen. Die Erinnerung kann auch permanent in den Einstellungen abgeschaltet werden. Im Hilfe-Menü können Sie die Version zudem manuell überprüfen.</value>
+    <value>&quot;Nicht erneut erinnern&quot; wird keine weiteren Erinnerungen mehr für diese Version anzeigen. Erinnerungen können auch permanent in den Einstellungen abgeschaltet werden. Im Hilfe-Menü kann nach einer neueren Version gesucht werden.</value>
     <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
-    <value>Eine neue Version von SyncTrayzor ist verfügbar!
-
-Version: {0}
-
-Wollen Sie diese nun herunterladen?</value>
+    <value>SyncTrayzor version {0} is available!</value>
     <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
   </data>
   <data name="NewVersionAlertView_Title" xml:space="preserve">
@@ -471,7 +467,7 @@ SyncTrayzor wird nun geschlossen.</value>
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>&lt;LANGUAGE&gt; translation by &lt;YOUR NAME&gt;</value>
+    <value>Deutsche Übersetzung von Adrian Rudnik</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
@@ -514,27 +510,39 @@ SyncTrayzor wird nun geschlossen.</value>
     <comment>'SyncTrayzor' settings tab</comment>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade" xml:space="preserve">
-    <value>Stop Syncthing auto-upgrading</value>
+    <value>Syncthing-Version nicht automatisch aktualisieren</value>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
-    <value>Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor&apos;s config folder</value>
+    <value>Verhindert das Syncthing sich automatisch aktualisiert. Dies kann dabei helfen die Kompatibilität von SyncTrayzor zu erhalten. Im Fehlerfall muss sonst die syncthing.exe in SyncTrayzors &quot;config&quot;-Ordner ersetzt werden.</value>
   </data>
   <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
-    <value>Run Syncthing as a low-priority process</value>
+    <value>Syncthing mit niedriger Prozess-Priorität laufen lassen.</value>
   </data>
   <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
-    <value>_Open Folder</value>
+    <value>_Ordner öffnen</value>
     <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
   </data>
   <data name="ViewerView_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>Ordner öffnen</value>
     <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
   </data>
   <data name="ViewerView_StartSyncthing" xml:space="preserve">
-    <value>Start Syncthing</value>
+    <value>Syncthing starten</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect</value>
+    <value>Benutze die Sprache meines Betriebssystems, wo verfügbar. SyncTrayzor muss neu gestartet werden um diese Änderung anzuwenden.</value>
+  </data>
+  <data name="ShellView_Menu_View" xml:space="preserve">
+    <value>_Ansicht</value>
+  </data>
+  <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
+    <value>Syncthing Κonsole</value>
+  </data>
+  <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
+    <value>Install Now</value>
+  </data>
+  <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
+    <value>View Changelog</value>
   </data>
 </root>

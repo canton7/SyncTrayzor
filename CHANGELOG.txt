@@ -1,6 +1,23 @@
 Changelog
 =========
 
+v1.0.12
+-------
+
+ - Compatibility with Syncthing v0.11.x (beta) (#43)
+ - Improved auto-updates (#39)
+ - Add option to hide the console (#41)
+ - Obfuscate Device IDs in log files, as well as in the console
+ - Logging will take less space if Syncthing is spamming messages (#42)
+ - Updated translations (all langauges)
+ - New translations:
+   - Czech (thanks Václav Obrtlík)
+   - Greek (thanks alexxtasi and Wasilis Mandratzis-Walz)
+   - French (thanks princejosuah, lpoujol and Martin Erpicum)
+   - Russian (thanks Ivan Lapenkov)
+   - Slovak (thanks Lukáš Černý)
+ - Fix bug where 'Close to Tray' from tray context menu would not work if settings say not to close to tray
+
 v1.0.11
 -------
 
