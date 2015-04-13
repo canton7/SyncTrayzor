@@ -213,11 +213,7 @@
     <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
-    <value>Er is een nieuwe versie van SyncTrayzor beschikbaar!
-
-Versie: {0}
-
-Wilt u deze nu downloaden?</value>
+    <value>SyncTrayzor version {0} is available!</value>
     <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
   </data>
   <data name="NewVersionAlertView_Title" xml:space="preserve">
@@ -536,5 +532,17 @@ SyncTrayzor gaat nu afsluiten. Onze excuses.</value>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
     <value>Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect</value>
+  </data>
+  <data name="ShellView_Menu_View" xml:space="preserve">
+    <value>_View</value>
+  </data>
+  <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
+    <value>Syncthing Console</value>
+  </data>
+  <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
+    <value>Install Now</value>
+  </data>
+  <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
+    <value>View Changelog</value>
   </data>
 </root>
