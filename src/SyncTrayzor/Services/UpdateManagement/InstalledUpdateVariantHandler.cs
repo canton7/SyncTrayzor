@@ -10,16 +10,18 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         private readonly IUpdateDownloader updateDownloader;
         private readonly IProcessStartProvider processStartProvider;
+        private readonly IAssemblyProvider assemblyProvider;
 
         private string installerPath;
 
         public string VariantName { get { return "installed"; } }
         public bool CanAutoInstall { get; private set; }
 
-        public InstalledUpdateVariantHandler(IUpdateDownloader updateDownloader, IProcessStartProvider processStartProvider)
+        public InstalledUpdateVariantHandler(IUpdateDownloader updateDownloader, IProcessStartProvider processStartProvider, IAssemblyProvider assemblyProvider)
         {
             this.updateDownloader = updateDownloader;
             this.processStartProvider = processStartProvider;
+            this.assemblyProvider = assemblyProvider;
         }
 
         public async Task<bool> TryHandleUpdateAvailableAsync(VersionCheckResults checkResult)
@@ -48,7 +50,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.installerPath == null)
                 throw new InvalidOperationException("TryHandleUpdateAvailableAsync returned false: cannot call AutoInstall");
 
-            this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT");
+            this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT", this.assemblyProvider.Location);
         }
     }
 }

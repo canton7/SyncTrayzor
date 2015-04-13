@@ -14,7 +14,7 @@ namespace SyncTrayzor.Services
         void Start(string filename);
         void Start(string filename, string arguments);
         void StartDetached(string filename);
-        void StartElevatedDetached(string filename, string arguments);
+        void StartElevatedDetached(string filename, string arguments, string launchAfterFinished = null);
     }
 
     public class ProcessStartProvider : IProcessStartProvider
@@ -50,8 +50,14 @@ namespace SyncTrayzor.Services
             Process.Start(startInfo);
         }
 
-        public void StartElevatedDetached(string filename, string arguments)
+        public void StartElevatedDetached(string filename, string arguments, string launchAfterFinished = null)
         {
+            if (arguments == null)
+                arguments = String.Empty;
+
+            if (launchAfterFinished != null)
+                arguments += String.Format(" -launch \"{0}\"", launchAfterFinished);
+
             var startInfo = new ProcessStartInfo()
             {
                 FileName = Path.Combine(Path.GetDirectoryName(this.exeDir), installerRunner),
