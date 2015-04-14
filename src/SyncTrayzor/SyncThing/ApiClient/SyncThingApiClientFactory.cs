@@ -35,12 +35,12 @@ namespace SyncTrayzor.SyncThing.ApiClient
                     await client.FetchVersionAsync();
                     break;
                 }
-                catch (HttpRequestException)
+                catch (HttpRequestException e)
                 {
                     logger.Debug("HttpRequestException {0} of 20", retryCount);
                     // Expected when Syncthing's still starting
                     if (retryCount >= 60)
-                        throw;
+                        throw new SyncThingConnectionRefusedException("Syncthing didn't connect after 60 seconds", e);
                     retryCount++;
                 }
                 catch (ApiException e)

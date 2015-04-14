@@ -26,9 +26,17 @@ namespace SyncTrayzor.Utils
 
                 // Possibly "This program is blocked by group policy. For more information, contact your system administrator" caused
                 // by e.g. CryptoLocker?
-                windowManager.ShowMessageBox
-                    (Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Message", e.Message, syncThingManager.ExecutablePath),
+                windowManager.ShowMessageBox(
+                    Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Message", e.Message, syncThingManager.ExecutablePath),
                     Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Title"),
+                    MessageBoxButton.OK, icon: MessageBoxImage.Error);
+            }
+            catch (SyncThingConnectionRefusedException)
+            {
+                // Haven't translated yet - still debugging
+                windowManager.ShowMessageBox(
+                    "Syncthing didn't start correctly",
+                    "Syncthing started running, but we were enable to connect to it. Please report this as a bug",
                     MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
         }
