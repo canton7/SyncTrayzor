@@ -130,7 +130,7 @@ namespace :portable do
       Dir.mktmpdir do |tmp|
         portable_dir = File.join(tmp, arch_config.portable_output_dir)
         Dir.chdir(arch_config.bin_dir) do
-          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe')
+          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data')
 
           files.each do |file|
             cp_to_portable(portable_dir, file)

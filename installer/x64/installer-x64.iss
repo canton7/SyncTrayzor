@@ -54,7 +54,7 @@ Name: "syncthing0p11"; Description: "Syncthing v0.11 (beta)"; GroupDescription: 
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe"; Flags: ignoreversion recursesubdirs
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
