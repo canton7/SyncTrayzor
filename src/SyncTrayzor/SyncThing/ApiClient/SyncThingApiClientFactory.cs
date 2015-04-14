@@ -25,7 +25,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             // This is a bit fugly - there's no way to determine which one we're talking to without trying a request and have it fail...
             ISyncThingApiClient client = new SyncThingApiClientV0p10(baseAddress, apiKey);
 
-            // Time everything so we break out in about 10 seconds
+            // Time everything so we break out in about 60 seconds
             int retryCount = 0;
             while (true)
             {
@@ -39,7 +39,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
                 {
                     logger.Debug("HttpRequestException {0} of 20", retryCount);
                     // Expected when Syncthing's still starting
-                    if (retryCount >= 20)
+                    if (retryCount >= 60)
                         throw;
                     retryCount++;
                 }
@@ -53,7 +53,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
                     break;
                 }
 
-                await Task.Delay(500, cancellationToken);
+                await Task.Delay(1000, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
