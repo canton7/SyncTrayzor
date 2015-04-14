@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,6 +11,7 @@ namespace SyncTrayzor.SyncThing
 {
     public class AuthenticatedHttpClientHandler : WebRequestHandler
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly string apiKey;
 
         public AuthenticatedHttpClientHandler(string apiKey)
@@ -19,10 +21,19 @@ namespace SyncTrayzor.SyncThing
             this.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             request.Headers.Add("X-API-Key", this.apiKey);
-            return base.SendAsync(request, cancellationToken);
+            if (logger.IsDebugEnabled)
+            {
+                var response = await base.SendAsync(request, cancellationToken);
+                logger.Debug((await response.Content.ReadAsStringAsync()).Trim());
+                return response;
+            }
+            else
+            {
+                return await base.SendAsync(request, cancellationToken);
+            }
         }
     }
 }
