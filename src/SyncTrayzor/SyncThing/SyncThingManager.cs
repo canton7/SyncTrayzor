@@ -262,6 +262,7 @@ namespace SyncTrayzor.SyncThing
             bool abortApi = false;
             lock (this.stateLock)
             {
+                logger.Debug("Request to set state: {0} -> {1}", this._state, state);
                 if (state == this._state)
                     return;
 
@@ -277,11 +278,13 @@ namespace SyncTrayzor.SyncThing
                 if ((this._state == SyncThingState.Running || this._state == SyncThingState.Starting) && state == SyncThingState.Stopped)
                     abortApi = true;
 
+                logger.Debug("Setting state: {0} -> {1}", this._state, state);
                 this._state = state;
             }
 
             if (abortApi)
             {
+                logger.Debug("Aborting API clients");
                 this.apiAbortCts.Cancel();
                 this.StopApiClients();
             }
@@ -293,7 +296,9 @@ namespace SyncTrayzor.SyncThing
         {
             try
             {
+                logger.Debug("Starting API clients");
                 this.apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.apiAbortCts.Token);
+                logger.Debug("Have the API client! It's {0}", this.apiClient.GetType().Name);
 
                 if (this.connectionsWatcher != null)
                     this.connectionsWatcher.Dispose();
@@ -349,6 +354,7 @@ namespace SyncTrayzor.SyncThing
 
         private async Task LoadStartupDataAsync(CancellationToken cancellationToken)
         {
+            logger.Debug("StartupComplete! Loading startup data");
             this.SetState(SyncThingState.Running);
 
             var configTask = this.apiClient.FetchConfigAsync();

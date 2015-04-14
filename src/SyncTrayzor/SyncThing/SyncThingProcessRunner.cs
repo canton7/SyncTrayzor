@@ -223,6 +223,7 @@ namespace SyncTrayzor.SyncThing
 
         public void KillAllSyncthingProcesses()
         {
+            logger.Debug("Kill all Syncthing processes");
             foreach (var process in Process.GetProcessesByName("syncthing"))
             {
                 process.Kill();

@@ -56,6 +56,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                 // We can be aborted in the time it takes to fetch the events
                 cancellationToken.ThrowIfCancellationRequested();
 
+                logger.Debug("Received {0} events", events.Count);
 
                 foreach (var evt in events)
                 {
