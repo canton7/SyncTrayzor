@@ -41,10 +41,10 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             this.apiClient = apiClient;
         }
 
-        protected override void Start()
+        protected override void StartInternal(CancellationToken cancellationToken)
         {
             this.lastEventId = 0;
-            base.Start();
+            base.StartInternal(cancellationToken);
         }
 
         protected override async Task PollAsync(CancellationToken cancellationToken)
@@ -54,8 +54,8 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                 var events = await this.apiClient.FetchEventsAsync(this.lastEventId, cancellationToken);
 
                 // We can be aborted in the time it takes to fetch the events
-                if (!this.Running)
-                    return;
+                cancellationToken.ThrowIfCancellationRequested();
+
 
                 foreach (var evt in events)
                 {

@@ -44,8 +44,7 @@ namespace SyncTrayzor.SyncThing
             var connections = await this.apiClient.FetchConnectionsAsync();
 
             // We can be stopped in the time it takes this to complete
-            if (!this.Running)
-                return;
+            cancellationToken.ThrowIfCancellationRequested();
             
             var elapsed = DateTime.UtcNow - this.lastPollCompletion;
             this.lastPollCompletion = DateTime.UtcNow;

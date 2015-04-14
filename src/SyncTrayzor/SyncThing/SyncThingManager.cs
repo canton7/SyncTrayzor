@@ -299,7 +299,7 @@ namespace SyncTrayzor.SyncThing
                     this.connectionsWatcher.Dispose();
                 this.connectionsWatcher = this.connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
                 this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
-                this.connectionsWatcher.Running = true;
+                this.connectionsWatcher.Start();
 
                 if (this.eventWatcher != null)
                     this.eventWatcher.Dispose();
@@ -310,7 +310,7 @@ namespace SyncTrayzor.SyncThing
                 this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
                 this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
                 this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
-                this.eventWatcher.Running = true;
+                this.eventWatcher.Start();
             }
             catch (OperationCanceledException)
             { }
