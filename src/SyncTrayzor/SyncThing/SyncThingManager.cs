@@ -189,6 +189,7 @@ namespace SyncTrayzor.SyncThing
             catch (Exception e)
             {
                 logger.Error("Error starting SyncThing", e);
+                this.Kill();
                 throw;
             }
         }
