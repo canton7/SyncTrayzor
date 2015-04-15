@@ -84,10 +84,11 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
-            logger.Info("Starting syncthing: {0}", this.ExecutablePath);
-
+            logger.Debug("SyncThingProcessRunner.Start called");
             // This might cause our config to be set...
             this.OnStarting();
+
+            logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
