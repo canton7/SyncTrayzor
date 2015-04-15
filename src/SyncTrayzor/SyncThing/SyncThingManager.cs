@@ -37,6 +37,7 @@ namespace SyncTrayzor.SyncThing
         bool SyncthingDenyUpgrade { get; set; }
         bool SyncthingRunLowPriority { get; set; }
         bool SyncthingHideDeviceIds { get; set; }
+        TimeSpan SyncthingConnectTimeout { get; set; }
         DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
@@ -123,6 +124,7 @@ namespace SyncTrayzor.SyncThing
         public bool SyncthingDenyUpgrade { get; set; }
         public bool SyncthingRunLowPriority { get; set; }
         public bool SyncthingHideDeviceIds { get; set; }
+        public TimeSpan SyncthingConnectTimeout { get; set; }
 
         // Folders is a ConcurrentDictionary, which suffices for most access
         // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
@@ -299,7 +301,7 @@ namespace SyncTrayzor.SyncThing
         private async Task CreateApiClientAsync()
         {
             logger.Debug("Starting API clients");
-            this.apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.apiAbortCts.Token);
+            this.apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.SyncthingConnectTimeout, this.apiAbortCts.Token);
             logger.Debug("Have the API client! It's {0}", this.apiClient.GetType().Name);
 
             this.SetState(SyncThingState.Running);

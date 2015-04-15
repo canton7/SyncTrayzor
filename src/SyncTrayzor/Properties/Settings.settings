@@ -58,5 +58,8 @@
   &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
 &lt;/PathConfiguration&gt;</Value>
     </Setting>
+    <Setting Name="SyncthingConnectTimeoutSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">120</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
