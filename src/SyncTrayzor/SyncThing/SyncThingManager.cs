@@ -165,38 +165,14 @@ namespace SyncTrayzor.SyncThing
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
-            this.processRunner.Starting += (o, e) =>
-            {
-                this.processRunner.ApiKey = this.ApiKey;
-                this.processRunner.HostAddress = this.Address.ToString();
-                this.processRunner.ExecutablePath = this.ExecutablePath;
-                this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
-                this.processRunner.Traces = this.SyncthingTraceFacilities;
-                this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
-                this.processRunner.RunLowPriority = this.SyncthingRunLowPriority;
-                this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;
-
-                this.SetState(SyncThingState.Starting);
-            };
+            this.processRunner.ProcessRestarted += (o, e) => this.ProcessRestarted();
+            this.processRunner.Starting += (o, e) => this.ProcessStarting();
         }
 
         public async Task StartAsync()
         {
-            try
-            {
-                this.apiAbortCts = new CancellationTokenSource();
-                this.processRunner.Start();
-                await this.CreateApiClientAsync();
-                await this.LoadStartupDataAsync(this.apiAbortCts.Token);
-                this.StartApiClients();
-            }
-            catch (OperationCanceledException) { } // Don't throw up
-            catch (Exception e)
-            {
-                logger.Error("Error starting SyncThing", e);
-                this.Kill();
-                throw;
-            }
+            this.processRunner.Start();
+            await this.StartClientAsync();
         }
 
         public async Task StopAsync()
@@ -281,7 +257,10 @@ namespace SyncTrayzor.SyncThing
                 if (this._state == SyncThingState.Stopped && state == SyncThingState.Running)
                     return;
 
-                if ((this._state == SyncThingState.Running || this._state == SyncThingState.Starting) && state == SyncThingState.Stopped)
+                if ((this._state == SyncThingState.Running && state == SyncThingState.Starting) ||
+                    (this._state == SyncThingState.Running && state == SyncThingState.Stopped) ||
+                    (this._state == SyncThingState.Running && state == SyncThingState.Restarting) ||
+                    (this._state == SyncThingState.Starting && state == SyncThingState.Stopped))
                     abortApi = true;
 
                 logger.Debug("Setting state: {0} -> {1}", this._state, state);
@@ -307,7 +286,25 @@ namespace SyncTrayzor.SyncThing
             this.SetState(SyncThingState.Running);
         }
 
-        private void StartApiClients()
+        private async Task StartClientAsync()
+        {
+            try
+            {
+                this.apiAbortCts = new CancellationTokenSource();
+                await this.CreateApiClientAsync();
+                await this.LoadStartupDataAsync(this.apiAbortCts.Token);
+                this.StartWatchers();
+            }
+            catch (OperationCanceledException) { } // If Syncthing dies on its own, etc
+            catch (Exception e)
+            {
+                logger.Error("Error starting Syncthing API", e);
+                this.Kill();
+                throw e;
+            }
+        }
+
+        private void StartWatchers()
         {
             try
             {
@@ -347,11 +344,36 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher = null;
         }
 
+        private async void ProcessStarting()
+        {
+            this.processRunner.ApiKey = this.ApiKey;
+            this.processRunner.HostAddress = this.Address.ToString();
+            this.processRunner.ExecutablePath = this.ExecutablePath;
+            this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
+            this.processRunner.Traces = this.SyncthingTraceFacilities;
+            this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
+            this.processRunner.RunLowPriority = this.SyncthingRunLowPriority;
+            this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;
+
+            var isRestart = (this.State == SyncThingState.Restarting);
+            this.SetState(SyncThingState.Starting);
+
+            // Catch restart cases, and re-start the API
+            // This isn't ideal, as we don't get to nicely propagate any exceptions to the UI
+            if (isRestart)
+                await this.StartClientAsync();
+        }
+
         private void ProcessStopped(SyncThingExitStatus exitStatus)
         {
             this.SetState(SyncThingState.Stopped);
             if (exitStatus == SyncThingExitStatus.Error)
                 this.OnProcessExitedWithError();
+        }
+
+        private void ProcessRestarted()
+        {
+            this.SetState(SyncThingState.Restarting);
         }
 
         private async Task LoadStartupDataAsync(CancellationToken cancellationToken)

@@ -11,6 +11,7 @@ namespace SyncTrayzor.SyncThing
         Stopped,
         Starting,
         Running,
-        Stopping
+        Stopping,
+        Restarting
     }
 }

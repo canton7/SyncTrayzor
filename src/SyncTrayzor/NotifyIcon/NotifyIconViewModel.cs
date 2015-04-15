@@ -30,7 +30,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public bool SyncThingStarted
         {
-            get { return this.SyncThingState != SyncThingState.Stopped; }
+            get { return this.SyncThingState == SyncThingState.Running; }
         }
 
         public bool SyncThingSyncing { get; private set; }
