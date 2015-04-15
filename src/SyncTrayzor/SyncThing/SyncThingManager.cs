@@ -184,8 +184,11 @@ namespace SyncTrayzor.SyncThing
             {
                 this.apiAbortCts = new CancellationTokenSource();
                 this.processRunner.Start();
-                await this.StartApiClientsAsync();
+                await this.CreateApiClientAsync();
+                await this.LoadStartupDataAsync(this.apiAbortCts.Token);
+                this.StartApiClients();
             }
+            catch (OperationCanceledException) { } // Don't throw up
             catch (Exception e)
             {
                 logger.Error("Error starting SyncThing", e);
@@ -293,13 +296,21 @@ namespace SyncTrayzor.SyncThing
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
         }
 
-        private async Task StartApiClientsAsync()
+        private async Task CreateApiClientAsync()
+        {
+            logger.Debug("Starting API clients");
+            this.apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.apiAbortCts.Token);
+            logger.Debug("Have the API client! It's {0}", this.apiClient.GetType().Name);
+
+            this.SetState(SyncThingState.Running);
+        }
+
+        private void StartApiClients()
         {
             try
             {
-                logger.Debug("Starting API clients");
-                this.apiClient = await this.apiClientFactory.CreateCorrectApiClientAsync(this.Address, this.ApiKey, this.apiAbortCts.Token);
-                logger.Debug("Have the API client! It's {0}", this.apiClient.GetType().Name);
+                if (this.apiClient == null)
+                    throw new InvalidOperationException("API client not set");
 
                 if (this.connectionsWatcher != null)
                     this.connectionsWatcher.Dispose();
@@ -310,7 +321,6 @@ namespace SyncTrayzor.SyncThing
                 if (this.eventWatcher != null)
                     this.eventWatcher.Dispose();
                 this.eventWatcher = this.eventWatcherFactory.CreateEventWatcher(this.apiClient);
-                this.eventWatcher.StartupComplete += (o, e) => this.OnStartupComplete();
                 this.eventWatcher.SyncStateChanged += (o, e) => this.OnFolderSyncStateChanged(e);
                 this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
                 this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
@@ -342,21 +352,9 @@ namespace SyncTrayzor.SyncThing
                 this.OnProcessExitedWithError();
         }
 
-        private async void OnStartupComplete()
-        {
-            // We'll get cancelled if the startup aborts - e.g. if Syncthing can't lock its config directory
-            try
-            {
-                await this.LoadStartupDataAsync(this.apiAbortCts.Token);
-            }
-            catch (OperationCanceledException)
-            { }
-        }
-
         private async Task LoadStartupDataAsync(CancellationToken cancellationToken)
         {
             logger.Debug("StartupComplete! Loading startup data");
-            this.SetState(SyncThingState.Running);
 
             var configTask = this.apiClient.FetchConfigAsync();
             var systemTask = this.apiClient.FetchSystemInfoAsync();
