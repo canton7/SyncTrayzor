@@ -44,8 +44,6 @@ namespace InstallerRunner
                 return 4;
             }
 
-            Console.WriteLine(String.Join(", ", args));
-
             var startInfo = new ProcessStartInfo()
             {
                 FileName = args[0],
