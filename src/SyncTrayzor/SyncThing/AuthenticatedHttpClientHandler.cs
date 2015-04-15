@@ -24,10 +24,10 @@ namespace SyncTrayzor.SyncThing
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             request.Headers.Add("X-API-Key", this.apiKey);
-            if (logger.IsDebugEnabled)
+            if (logger.IsTraceEnabled)
             {
                 var response = await base.SendAsync(request, cancellationToken);
-                logger.Debug((await response.Content.ReadAsStringAsync()).Trim());
+                logger.Trace((await response.Content.ReadAsStringAsync()).Trim());
                 return response;
             }
             else
