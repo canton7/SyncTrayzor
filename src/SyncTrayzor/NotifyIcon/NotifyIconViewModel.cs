@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
+using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
@@ -17,6 +18,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
+        private readonly IProcessStartProvider processStartProvider;
 
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
@@ -38,11 +40,13 @@ namespace SyncTrayzor.NotifyIcon
         public NotifyIconViewModel(
             IWindowManager windowManager,
             ISyncThingManager syncThingManager,
-            Func<SettingsViewModel> settingsViewModelFactory)
+            Func<SettingsViewModel> settingsViewModelFactory,
+            IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
+            this.processStartProvider = processStartProvider;
 
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -61,7 +65,7 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.DataLoaded += (o, e) =>
             {
                 this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.FetchAllFolders()
-                    .Select(x => new FolderViewModel(x)));
+                    .Select(x => new FolderViewModel(x, this.processStartProvider)));
             };
         }
 
@@ -144,11 +148,14 @@ namespace SyncTrayzor.NotifyIcon
     public class FolderViewModel : ICommand
     {
         private readonly Folder folder;
+        private readonly IProcessStartProvider processStartProvider;
+
         public string FolderId { get { return this.folder.FolderId; } }
 
-        public FolderViewModel(Folder folder)
+        public FolderViewModel(Folder folder, IProcessStartProvider processStartProvider)
         {
             this.folder = folder;
+            this.processStartProvider = processStartProvider;
         }
 
         public event EventHandler CanExecuteChanged { add { } remove { } }
@@ -156,7 +163,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public void Execute(object parameter)
         {
-            Process.Start("explorer.exe", this.folder.Path);
+            this.processStartProvider.StartDetached("explorer.exe", this.folder.Path);
         }
     }
 }

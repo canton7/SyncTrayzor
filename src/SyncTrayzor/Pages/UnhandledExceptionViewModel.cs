@@ -14,6 +14,8 @@ namespace SyncTrayzor.Pages
 {
     public class UnhandledExceptionViewModel : Screen
     {
+        private readonly IProcessStartProvider processStartProvider;
+
         public Exception Exception { get; set; }
 
         public string IssuesUrl { get; private set; }
@@ -27,15 +29,17 @@ namespace SyncTrayzor.Pages
             get { return SystemIcons.Error; }
         }
 
-        public UnhandledExceptionViewModel(IApplicationPathsProvider applicationPathsProvider)
+        public UnhandledExceptionViewModel(IApplicationPathsProvider applicationPathsProvider, IProcessStartProvider processStartProvider)
         {
+            this.processStartProvider = processStartProvider;
+
             this.IssuesUrl = Settings.Default.IssuesUrl;
             this.LogFilePath = applicationPathsProvider.LogFilePath;
         }
 
         public void ShowIssues()
         {
-            Process.Start(this.IssuesUrl);
+            this.processStartProvider.StartDetached(this.IssuesUrl);
         }
 
         public void Close()

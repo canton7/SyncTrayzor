@@ -21,6 +21,7 @@ namespace SyncTrayzor.Pages
         private readonly ISyncThingManager syncThingManager;
         private readonly IUpdateManager updateManager;
         private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
+        private readonly IProcessStartProvider processStartProvider;
 
         public string Version { get; set; }
         public string SyncthingVersion { get; set; }
@@ -38,12 +39,14 @@ namespace SyncTrayzor.Pages
             ISyncThingManager syncThingManager,
             IConfigurationProvider configurationProvider,
             IUpdateManager updateManager,
-            Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory)
+            Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory,
+            IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.updateManager = updateManager;
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
+            this.processStartProvider = processStartProvider;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = Settings.Default.HomepageUrl;
@@ -70,7 +73,7 @@ namespace SyncTrayzor.Pages
 
         public void ShowHomepage()
         {
-            Process.Start(this.HomepageUrl);
+            this.processStartProvider.StartDetached(this.HomepageUrl);
         }
 
         public void DownloadNewerVersion()
@@ -78,7 +81,7 @@ namespace SyncTrayzor.Pages
             if (this.newerVersionDownloadUrl == null)
                 return;
 
-            Process.Start(this.newerVersionDownloadUrl);
+            this.processStartProvider.StartDetached(this.newerVersionDownloadUrl);
         }
 
         public void ShowLicenses()

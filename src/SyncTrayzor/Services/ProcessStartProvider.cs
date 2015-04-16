@@ -14,6 +14,7 @@ namespace SyncTrayzor.Services
         void Start(string filename);
         void Start(string filename, string arguments);
         void StartDetached(string filename);
+        void StartDetached(string filename, string arguments);
         void StartElevatedDetached(string filename, string arguments, string launchAfterFinished = null);
     }
 
@@ -42,7 +43,23 @@ namespace SyncTrayzor.Services
             var startInfo = new ProcessStartInfo()
             {
                 FileName = "cmd.exe",
-                Arguments = "/c start " + filename,
+                Arguments = String.Format("/c start {0}", filename),
+                CreateNoWindow = true,
+                UseShellExecute = false,
+            };
+
+            Process.Start(startInfo);
+        }
+
+        public void StartDetached(string filename, string arguments)
+        {
+            if (arguments == null)
+                arguments = String.Empty;
+
+            var startInfo = new ProcessStartInfo()
+            {
+                FileName = "cmd.exe",
+                Arguments = String.Format("/c start {0} {1}", filename, arguments),
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };

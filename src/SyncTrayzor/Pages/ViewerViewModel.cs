@@ -16,6 +16,7 @@ using SyncTrayzor.Localization;
 using SyncTrayzor.Services.Config;
 using System.Threading;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Services;
 
 namespace SyncTrayzor.Pages
 {
@@ -23,6 +24,7 @@ namespace SyncTrayzor.Pages
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
+        private readonly IProcessStartProvider processStartProvider;
 
         private readonly object cultureLock = new object(); // This can be read from many threads
         private CultureInfo culture;
@@ -37,10 +39,16 @@ namespace SyncTrayzor.Pages
 
         private JavascriptCallbackObject callback;
 
-        public ViewerViewModel(IWindowManager windowManager, ISyncThingManager syncThingManager, IConfigurationProvider configurationProvider)
+        public ViewerViewModel(
+            IWindowManager windowManager,
+            ISyncThingManager syncThingManager,
+            IConfigurationProvider configurationProvider,
+            IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
+            this.processStartProvider = processStartProvider;
+
             this.syncThingManager.StateChanged += (o, e) =>
             {
                 this.syncThingState = e.NewState;
@@ -107,7 +115,8 @@ namespace SyncTrayzor.Pages
             Folder folder;
             if (!this.syncThingManager.TryFetchFolderById(folderId, out folder))
                 return;
-            Process.Start("explorer.exe", folder.Path);
+
+            this.processStartProvider.StartDetached("explorer.exe", folder.Path);
         }
 
         protected override void OnClose()
@@ -148,7 +157,7 @@ namespace SyncTrayzor.Pages
             var uri = new Uri(request.Url);
             if ((uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
             {
-                Process.Start(request.Url);
+                this.processStartProvider.StartDetached(request.Url);
                 return true;
             }
 
@@ -186,7 +195,7 @@ namespace SyncTrayzor.Pages
 
         bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browser, string url, ref int x, ref int y, ref int width, ref int height)
         {
-            Process.Start(url);
+            this.processStartProvider.StartDetached(url);
             return true;
         }
 

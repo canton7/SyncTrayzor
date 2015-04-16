@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,8 +13,12 @@ namespace SyncTrayzor.Pages
 {
     public class ThirdPartyComponentsViewModel : Conductor<ThirdPartyComponent>.Collection.OneActive
     {
-        public ThirdPartyComponentsViewModel()
+        private readonly IProcessStartProvider processStartProvider;
+
+        public ThirdPartyComponentsViewModel(IProcessStartProvider processStartProvider)
         {
+            this.processStartProvider = processStartProvider;
+
             this.Items.AddRange(new[]
             {
                 // I'm in two minds as to whether to localize these or not...
@@ -111,7 +116,7 @@ namespace SyncTrayzor.Pages
 
         public void ViewHomepage()
         {
-            Process.Start(this.ActiveItem.Homepage);
+            this.processStartProvider.StartDetached(this.ActiveItem.Homepage);
         }
     }
 
