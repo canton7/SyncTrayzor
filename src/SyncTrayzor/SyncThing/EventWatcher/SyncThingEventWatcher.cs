@@ -49,29 +49,23 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         protected override async Task PollAsync(CancellationToken cancellationToken)
         {
-            try
+            List<Event> events;
+            // If this is the first poll, don't fetch the history
+            if (this.lastEventId == 0)
+                events = await this.apiClient.FetchEventsAsync(0, 1, cancellationToken);
+            else
+                events = await this.apiClient.FetchEventsAsync(this.lastEventId, cancellationToken);
+
+            // We can be aborted in the time it takes to fetch the events
+            cancellationToken.ThrowIfCancellationRequested();
+
+            logger.Debug("Received {0} events", events.Count);
+
+            foreach (var evt in events)
             {
-                var events = await this.apiClient.FetchEventsAsync(this.lastEventId, cancellationToken);
-
-                // We can be aborted in the time it takes to fetch the events
-                cancellationToken.ThrowIfCancellationRequested();
-
-                logger.Debug("Received {0} events", events.Count);
-
-                foreach (var evt in events)
-                {
-                    this.lastEventId = Math.Max(this.lastEventId, evt.Id);
-                    logger.Debug(evt);
-                    evt.Visit(this);
-                }
-            }
-            catch (IOException)
-            {
-                // A restart means the lastEventId will be reset
-                this.lastEventId = 0;
-
-                // Need the base method to do the error handling
-                throw; 
+                this.lastEventId = Math.Max(this.lastEventId, evt.Id);
+                logger.Debug(evt);
+                evt.Visit(this);
             }
         }
 
