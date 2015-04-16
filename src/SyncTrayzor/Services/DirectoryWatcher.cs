@@ -183,7 +183,7 @@ namespace SyncTrayzor.Services
             {
                 var ea = new PreviewDirectoryChangedEventArgs(this.directory, subPath);
                 handler(this, ea);
-                logger.Debug("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.directory, subPath), ea.Cancel);
+                logger.Trace("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.directory, subPath), ea.Cancel);
                 return ea.Cancel;
             }
             return false;
