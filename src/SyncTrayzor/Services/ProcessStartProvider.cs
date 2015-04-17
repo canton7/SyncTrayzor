@@ -21,6 +21,7 @@ namespace SyncTrayzor.Services
     public class ProcessStartProvider : IProcessStartProvider
     {
         private static readonly string installerRunner = "InstallerRunner.exe";
+        private static readonly string processDetacher = "ProcessDetacher.exe";
         private readonly string exeDir;
 
         public ProcessStartProvider(IAssemblyProvider assemblyProvider)
@@ -40,15 +41,7 @@ namespace SyncTrayzor.Services
 
         public void StartDetached(string filename)
         {
-            var startInfo = new ProcessStartInfo()
-            {
-                FileName = "cmd.exe",
-                Arguments = String.Format("/c start {0}", filename),
-                CreateNoWindow = true,
-                UseShellExecute = false,
-            };
-
-            Process.Start(startInfo);
+            this.StartDetached(filename, null);
         }
 
         public void StartDetached(string filename, string arguments)
@@ -58,8 +51,8 @@ namespace SyncTrayzor.Services
 
             var startInfo = new ProcessStartInfo()
             {
-                FileName = "cmd.exe",
-                Arguments = String.Format("/c start {0} {1}", filename, arguments),
+                FileName = Path.Combine(Path.GetDirectoryName(this.exeDir), processDetacher),
+                Arguments = String.Format("\"{0}\" {1}", filename, arguments),
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };
@@ -77,8 +70,8 @@ namespace SyncTrayzor.Services
 
             var startInfo = new ProcessStartInfo()
             {
-                FileName = Path.Combine(Path.GetDirectoryName(this.exeDir), installerRunner),
-                Arguments = String.Format("\"{0}\" {1}", filename, arguments),
+                FileName = Path.Combine(Path.GetDirectoryName(this.exeDir), processDetacher),
+                Arguments = String.Format("\"{0}\" \"{1}\" {2}", Path.Combine(Path.GetDirectoryName(this.exeDir), installerRunner), filename, arguments),
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };

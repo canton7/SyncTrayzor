@@ -5,10 +5,13 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncTrayzor", "SyncTrayzor\SyncTrayzor.csproj", "{D1F89B3D-7967-4DC6-AE45-50A7817FE54F}"
 	ProjectSection(ProjectDependencies) = postProject
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E} = {C478717A-5C23-46DB-B48D-E4B4E2E1A13E}
 		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5} = {E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerRunner", "InstallerRunner\InstallerRunner.csproj", "{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDetacher", "ProcessDetacher\ProcessDetacher.csproj", "{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +37,14 @@ Global
 		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x64.Build.0 = Release|x64
 		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x86.ActiveCfg = Release|x86
 		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x86.Build.0 = Release|x86
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Debug|x64.ActiveCfg = Debug|x64
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Debug|x64.Build.0 = Debug|x64
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Debug|x86.ActiveCfg = Debug|x86
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Debug|x86.Build.0 = Debug|x86
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Release|x64.ActiveCfg = Release|x64
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Release|x64.Build.0 = Release|x64
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Release|x86.ActiveCfg = Release|x86
+		{C478717A-5C23-46DB-B48D-E4B4E2E1A13E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
