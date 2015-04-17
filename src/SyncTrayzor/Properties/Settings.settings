@@ -59,7 +59,7 @@
 &lt;/PathConfiguration&gt;</Value>
     </Setting>
     <Setting Name="SyncthingConnectTimeoutSeconds" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">120</Value>
+      <Value Profile="(Default)">600</Value>
     </Setting>
   </Settings>
 </SettingsFile>

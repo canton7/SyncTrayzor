@@ -147,7 +147,7 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("120")]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public int SyncthingConnectTimeoutSeconds {
             get {
                 return ((int)(this["SyncthingConnectTimeoutSeconds"]));
