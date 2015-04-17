@@ -65,25 +65,43 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
+   '1.0.14' => [
+      'installed' => [
+         'direct_download_url' => []
+      ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.14',
+      'release_notes' => "- Give Syncthing more than 10 seconds to start, fixing crash (#47, #48, #50)\n- Better Syncthing API management in general\n- Add support for 150% and 200% DPI to tray icon\n- Slightly improve UI\n",
+   ],
+
    '1.0.13' => [
-      // No direct_download_url, as it turns out the 1.0.12 auto-upgrader is a bit broken (will restart SyncTrayzor as admin)
-      // 'installed' => [
-      //    'direct_download_url' => [
-      //       'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.13/SyncTrayzorSetup-x64.exe',
-      //       'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.13/SyncTrayzorSetup-x86.exe'
-      //    ],
-      // ],
+      'installed' => [
+         'direct_download_url' => []
+      ],
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.13',
       'release_notes' => "- Fix crash if 'Show tray icon only on close' is checked (#45)\n- Fix undocumented REST API change in Syncthing 0.11 (#46)\n- Check for updates on resume from sleep\n- Ensure SyncTrayzor is started as original user after auto-update",
    ],
 ];
 
 $upgrades = [
-   '1.0.12' => ['to' => '1.0.13', 'formatter' => '1'],
+   '1.0.13' => ['to' => '1.0.14', 'formatter' => '2'],
+   '1.0.12' => ['to' => '1.0.14', 'formatter' => '1'],
 ];
 
 $response_formatters = [
+   // 1.0.12 and 1.0.13 shouldn't download installers directly, as they doesn't know how to run them properly
    '1' => function($arch, $variant, $to_version, $to_version_info, $overrides)
+   {
+      $data = [
+         'version' => $to_version,
+         'direct_download_url' => null,
+         'release_page_url' => $to_version_info['release_page_url'],
+         'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
+      ];
+
+      return $data;
+   },
+   // For when everything's working....
+   '2' => function($arch, $variant, $to_version, $to_version_info, $overrides)
    {
       $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
 
