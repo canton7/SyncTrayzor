@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="https://github.com/canton7/Stylet"
                     xmlns:l="clr-namespace:SyncTrayzor.Localization"
+                    xmlns:ni="clr-namespace:SyncTrayzor.NotifyIcon"
                     xmlns:tb="http://www.hardcodet.net/taskbar">
 
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/stopped.ico"/>
@@ -16,7 +17,7 @@
                     MenuActivation="RightClick">
         <tb:TaskbarIcon.Resources>
             <Storyboard x:Key="IconAnimation">
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IconSource" Duration="0:0:2" RepeatBehavior="Forever">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ni:NotifyIconResolutionUtilities.IconSource)" Duration="0:0:2" RepeatBehavior="Forever">
                     <ObjectAnimationUsingKeyFrames.KeyFrames>
                         <DiscreteObjectKeyFrame KeyTime="0:0:0">
                             <DiscreteObjectKeyFrame.Value>
@@ -44,10 +45,10 @@
         </tb:TaskbarIcon.Resources>
         <tb:TaskbarIcon.Style>
             <Style TargetType="tb:TaskbarIcon">
-                <Setter Property="IconSource" Value="{StaticResource TaskbarSyncing1Icon}"/>
+                <Setter Property="ni:NotifyIconResolutionUtilities.IconSource" Value="{StaticResource TaskbarSyncing1Icon}"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding SyncThingStarted}" Value="False">
-                        <Setter Property="IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
+                        <Setter Property="ni:NotifyIconResolutionUtilities.IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
                     </DataTrigger>
 
                     <DataTrigger Binding="{Binding SyncThingSyncing}" Value="True">
