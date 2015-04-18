@@ -25,6 +25,7 @@ namespace SyncTrayzor.Pages
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IProcessStartProvider processStartProvider;
+        private readonly IConfigurationProvider configurationProvider;
 
         private readonly object cultureLock = new object(); // This can be read from many threads
         private CultureInfo culture;
@@ -48,6 +49,7 @@ namespace SyncTrayzor.Pages
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.processStartProvider = processStartProvider;
+            this.configurationProvider = configurationProvider;
 
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -101,6 +103,7 @@ namespace SyncTrayzor.Pages
                     webBrowser.ExecuteScriptAsync(script);
                 }
             };
+            WebBrowser.ZoomLevel = this.configurationProvider.Load().SyncthingWebBrowserZoomLevel;
         }
 
         public void RefreshBrowser()
@@ -108,6 +111,34 @@ namespace SyncTrayzor.Pages
             this.Location = "about:blank";
             if (this.syncThingManager.State == SyncThingState.Running)
                 this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
+        }
+
+        public void ZoomIn()
+        {
+            this.ZoomBy(0.2);
+        }
+
+        public void ZoomOut()
+        {
+            this.ZoomBy(-0.2);
+        }
+
+        private void ZoomBy(double amount)
+        {
+            if (this.WebBrowser == null || this.syncThingState != SyncThingState.Running)
+                return;
+
+            this.WebBrowser.ZoomLevel += amount;
+            this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingWebBrowserZoomLevel = this.WebBrowser.ZoomLevel);
+        }
+
+        public void ZoomReset()
+        {
+            if (this.WebBrowser == null || this.syncThingState != SyncThingState.Running)
+                return;
+
+            this.WebBrowser.ZoomLevel = 0;
+            this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingWebBrowserZoomLevel = this.WebBrowser.ZoomLevel);
         }
 
         private void OpenFolder(string folderId)

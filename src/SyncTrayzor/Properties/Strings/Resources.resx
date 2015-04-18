@@ -545,4 +545,16 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
     <value>View Changelog</value>
   </data>
+  <data name="ShellView_Menu_Zoom" xml:space="preserve">
+    <value>_Zoom Browser</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
+    <value>Zoom _In</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
+    <value>Zoom _Out</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
+    <value>_Reset</value>
+  </data>
 </root>

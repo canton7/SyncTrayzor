@@ -28,6 +28,11 @@
             </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_View}">
                 <MenuItem Header="{l:Loc ShellView_Menu_View_SyncthingConsole}" IsCheckable="True" IsChecked="{Binding ShowConsole}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Zoom}" IsEnabled="{Binding CanZoomBrowser}">
+                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom_In}" InputGestureText="Ctrl++" Command="{s:Action BrowserZoomIn}"/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Out}" InputGestureText="Ctrl+-" Command="{s:Action BrowserZoomOut}"/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Reset}" InputGestureText="Ctrl+0" Command="{s:Action BrowserZoomReset}"/>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_Help}">
                 <MenuItem Header="{l:Loc ShellView_Menu_Help_About}" Command="{s:Action ShowAbout}"/>

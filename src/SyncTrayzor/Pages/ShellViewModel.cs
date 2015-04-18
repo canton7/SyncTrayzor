@@ -138,6 +138,26 @@ namespace SyncTrayzor.Pages
             this.windowManager.ShowDialog(vm);
         }
 
+        public bool CanZoomBrowser
+        {
+            get { return this.SyncThingState == SyncThingState.Running; }
+        }
+
+        public void BrowserZoomIn()
+        {
+            this.Viewer.ZoomIn();
+        }
+
+        public void BrowserZoomOut()
+        {
+            this.Viewer.ZoomOut();
+        }
+
+        public void BrowserZoomReset()
+        {
+            this.Viewer.ZoomReset();
+        }
+
         public void ShowAbout()
         {
             var vm = this.aboutViewModelFactory();

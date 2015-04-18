@@ -5,15 +5,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
              xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"/>
+        <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}">
+            <cefSharp:ChromiumWebBrowser.InputBindings>
+                <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlUp}" Command="{s:Action ZoomIn}" s:View.ActionTarget="{Binding}"/>
+                <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlDown}" Command="{s:Action ZoomOut}" s:View.ActionTarget="{Binding}"/>
+                <KeyBinding Key="OemPlus" Modifiers="Control+Shift" Command="{s:Action ZoomIn}" s:View.ActionTarget="{Binding}"/>
+                <KeyBinding Key="OemMinus" Modifiers="Control" Command="{s:Action ZoomOut}" s:View.ActionTarget="{Binding}"/>
+                <KeyBinding Key="D0" Modifiers="Control" Command="{s:Action ZoomReset}" s:View.ActionTarget="{Binding}"/>
+            </cefSharp:ChromiumWebBrowser.InputBindings>
+        </cefSharp:ChromiumWebBrowser>
+
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStarting}"
                    Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                    FontSize="16"/>
-
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                    Visibility="{Binding ShowSyncThingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
