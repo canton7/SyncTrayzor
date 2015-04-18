@@ -90,9 +90,9 @@ var
 begin
   if CurStep = ssInstall then
   begin
-    { We might be being run from InstallerRunner.exe, *and* we might be trying to update it. Funsies. Let's rename it (which Windows lets us do) }
-    DeleteFile(ExpandConstant('{app}\InstallerRunner.exe.old'));
-    RenameFile(ExpandConstant('{app}\InstallerRunner.exe'), ExpandConstant('{app}\InstallerRunner.exe.old'));
+    { We might be being run from ProcessRunner.exe, *and* we might be trying to update it. Funsies. Let's rename it (which Windows lets us do) }
+    DeleteFile(ExpandConstant('{app}\ProcessRunner.exe.old'));
+    RenameFile(ExpandConstant('{app}\ProcessRunner.exe'), ExpandConstant('{app}\ProcessRunner.exe.old'));
 
     { This is really evil, but CefSharp.BrowserSubprocess.exe doesn't like to exit if we ask it nicely, so we have to kill it }
     ShellExec('open', 'taskkill.exe', '/f /t /im SyncTrayzor.exe', '', SW_HIDE, ewNoWait, ResultCode);
@@ -111,6 +111,6 @@ begin
 end;
 
 [UninstallDelete]
-Type: files; Name: "{app}\InstallerRunner.exe.old"
+Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
