@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Refit;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 using EventWatcher = SyncTrayzor.SyncThing.EventWatcher;
 
 namespace SyncTrayzor.SyncThing
@@ -294,6 +294,12 @@ namespace SyncTrayzor.SyncThing
                 this.StartWatchers();
             }
             catch (OperationCanceledException) { } // If Syncthing dies on its own, etc
+            catch (ApiException e)
+            {
+                logger.Error(String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase), e);
+                this.Kill();
+                throw e;
+            }
             catch (Exception e)
             {
                 logger.Error("Error starting Syncthing API", e);
