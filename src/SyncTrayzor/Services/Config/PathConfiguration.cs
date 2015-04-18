@@ -14,6 +14,7 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingCustomHomePath { get; set; }
         public string SyncthingPath { get; set; }
         public string ConfigurationFilePath { get; set; }
+        public string ConfigurationFileBackupPath { get; set; }
 
         public PathConfiguration()
         {
@@ -21,6 +22,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingCustomHomePath = @"%EXEPATH%\data\syncthing";
             this.SyncthingPath = @"%EXEPATH%\syncthing.exe";
             this.ConfigurationFilePath = @"%EXEPATH%\data\config.xml";
+            this.ConfigurationFileBackupPath = @"%EXEPATH%\data\config-backups";
         }
 
         public void Transform(Func<string, string> transfomer)
@@ -29,6 +31,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingCustomHomePath = transfomer(this.SyncthingCustomHomePath);
             this.SyncthingPath = transfomer(this.SyncthingPath);
             this.ConfigurationFilePath = transfomer(this.ConfigurationFilePath);
+            this.ConfigurationFileBackupPath = transfomer(this.ConfigurationFileBackupPath);
         }
     }
 }

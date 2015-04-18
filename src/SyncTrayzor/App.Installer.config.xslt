@@ -10,6 +10,7 @@
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//SyncthingCustomHomePath/text()">%LOCALAPPDATA%\SyncTrayzor\syncthing</xsl:template>
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//SyncthingPath/text()">%APPDATA%\SyncTrayzor\syncthing.exe</xsl:template>
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//ConfigurationFilePath/text()">%APPDATA%\SyncTrayzor\config.xml</xsl:template>
+  <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//ConfigurationFileBackupPath/text()">%APPDATA%\SyncTrayzor\config-backups</xsl:template>
 
   <xsl:template match="/configuration/applicationSettings//setting[@name='DefaultUserConfiguration']//SyncthingUseCustomHome/text()">false</xsl:template>
   

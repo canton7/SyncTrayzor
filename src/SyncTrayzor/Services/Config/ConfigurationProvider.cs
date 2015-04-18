@@ -46,6 +46,8 @@ namespace SyncTrayzor.Services.Config
         private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
         private const int apiKeyLength = 40;
 
+        private readonly Func<XDocument, XDocument>[] migrations;
+
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
@@ -62,6 +64,8 @@ namespace SyncTrayzor.Services.Config
         {
             this.paths = paths;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
+
+            this.migrations = new Func<XDocument, XDocument>[0];
         }
 
         public void Initialize(Configuration defaultConfiguration)
@@ -106,56 +110,71 @@ namespace SyncTrayzor.Services.Config
                 defaultConfig = XDocument.Load(ms);
             }
 
+            XDocument loadedConfig;
             if (File.Exists(this.paths.ConfigurationFilePath))
             {
                 logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
-                var loadedConfig = XDocument.Load(this.paths.ConfigurationFilePath);
+                loadedConfig = XDocument.Load(this.paths.ConfigurationFilePath);
+                loadedConfig = this.MigrationConfiguration(loadedConfig);
+
                 var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
                 loadedConfig.Root.ReplaceNodes(merged);
-                loadedConfig.Save(this.paths.ConfigurationFilePath);
             }
             else
             {
-                defaultConfig.Save(this.paths.ConfigurationFilePath);
-            }
-            
-            Configuration configuration;
-            using (var stream = File.OpenRead(this.paths.ConfigurationFilePath))
-            {
-                configuration = (Configuration)this.serializer.Deserialize(stream);
-                logger.Info("Loaded configuration: {0}", configuration);
+                loadedConfig = defaultConfig;
             }
 
-            this.MigrateConfiguration(configuration);
+            var configuration = (Configuration)this.serializer.Deserialize(loadedConfig.CreateReader());
+            if (configuration.SyncthingApiKey == null)
+                configuration.SyncthingApiKey = this.GenerateApiKey();
+
+            this.SaveToFile(configuration);
 
             return configuration;
         }
 
-        private void MigrateConfiguration(Configuration configuration)
+        private XDocument MigrationConfiguration(XDocument configuration)
         {
-            bool altered = false;
-
-            if (configuration.SyncthingApiKey == null)
+            var version = (int?)configuration.Root.Attribute("Version");
+            if (version == null)
             {
-                configuration.SyncthingApiKey = this.GenerateApiKey();
-                altered = true;
+                configuration = this.LegacyMigrationConfiguration(configuration);
+                version = 1;
             }
+
+            // Element 0 is the migration from 0 -> 1, etc
+            for (int i = version.Value; i < Configuration.CurrentVersion; i++)
+            {
+                logger.Info("Migration config version {0} to {1}", i, i + 1);
+
+                if (this.paths.ConfigurationFileBackupPath != null)
+                {
+                    if (!File.Exists(this.paths.ConfigurationFileBackupPath))
+                        Directory.CreateDirectory(this.paths.ConfigurationFileBackupPath);
+                    var backupPath = Path.Combine(this.paths.ConfigurationFileBackupPath, String.Format("config-v{0}.xml", i));
+                    logger.Debug("Backing up configuration to {0}", backupPath);
+                    configuration.Save(backupPath);
+                }
+                
+                configuration = this.migrations[i - 1](configuration);
+                configuration.Root.Attribute("Version").SetValue(i + 1);
+            }
+
+            return configuration;
+        }
+
+        private XDocument LegacyMigrationConfiguration(XDocument configuration)
+        {
+            var address = configuration.Root.Element("SyncthingAddress").Value;
 
             // We used to store http/https in the config, but we no longer do. A migration is necessary
-            if (configuration.SyncthingAddress.StartsWith("http://"))
-            {
-                configuration.SyncthingAddress = configuration.SyncthingAddress.Substring("http://".Length);
-                altered = true;
-            }
+            if (address.StartsWith("http://"))
+                configuration.Root.Element("SyncthingAddress").Value = address.Substring("http://".Length);
+            else if (address.StartsWith("https://"))
+                configuration.Root.Element("SyncthingAddress").Value = address.Substring("https://".Length);
 
-            if (configuration.SyncthingAddress.StartsWith("https://"))
-            {
-                configuration.SyncthingAddress = configuration.SyncthingAddress.Substring("https://".Length);
-                altered = true;
-            }
-
-            if (altered)
-                this.SaveToFile(configuration);
+            return configuration;
         }
 
         public Configuration Load()

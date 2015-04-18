@@ -38,6 +38,19 @@ namespace SyncTrayzor.Services.Config
     [XmlRoot("Configuration")]
     public class Configuration
     {
+        public const int CurrentVersion = 1;
+
+        [XmlAttribute("Version")]
+        public int Version
+        {
+            get { return CurrentVersion; }
+            set
+            {
+                if (CurrentVersion != value)
+                    throw new InvalidOperationException(String.Format("Can't deserialize config of version {0} (expected {1})", value, CurrentVersion));
+            }
+        }
+
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
