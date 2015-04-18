@@ -54,7 +54,7 @@ Name: "syncthing0p11"; Description: "Syncthing v0.11 (beta)"; GroupDescription: 
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
-Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe"; Flags: ignoreversion recursesubdirs
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
@@ -92,6 +92,10 @@ var
 begin
   if CurStep = ssInstall then
   begin
+    { We might be being run from ProcessRunner.exe, *and* we might be trying to update it. Funsies. Let's rename it (which Windows lets us do) }
+    DeleteFile(ExpandConstant('{app}\ProcessRunner.exe.old'));
+    RenameFile(ExpandConstant('{app}\ProcessRunner.exe'), ExpandConstant('{app}\ProcessRunner.exe.old'));
+
     { This is really evil, but CefSharp.BrowserSubprocess.exe doesn't like to exit if we ask it nicely, so we have to kill it }
     ShellExec('open', 'taskkill.exe', '/f /t /im SyncTrayzor.exe', '', SW_HIDE, ewNoWait, ResultCode);
   end
@@ -109,5 +113,6 @@ begin
 end;
 
 [UninstallDelete]
+Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"

@@ -121,6 +121,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
+    <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -174,6 +175,7 @@
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
     <Compile Include="SyncThing\AuthenticatedHttpClientHandler.cs" />
+    <Compile Include="SyncThing\SyncThingConnectionRefusedException.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcherFactory.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcherFactory.cs" />
     <Compile Include="Localization\LocalizeConverter.cs" />

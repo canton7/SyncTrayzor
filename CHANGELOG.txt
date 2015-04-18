@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.0.14
+-------
+
+ - Give Syncthing more than 10 seconds to start, fixing crash (#47, #48, #50)
+ - Better Syncthing API management in general
+ - Add support for 150% and 200% DPI to tray icon
+ - Slightly improve UI
+
 v1.0.13
 -------
 

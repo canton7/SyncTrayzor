@@ -51,6 +51,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
             this.syncThingManager.ExecutablePath = this.pathsProvider.SyncthingPath;
+            this.syncThingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
 
             this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
             this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(Settings.Default.UpdateCheckIntervalSeconds);

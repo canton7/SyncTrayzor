@@ -144,5 +144,14 @@ namespace SyncTrayzor.Properties {
                 return ((global::SyncTrayzor.Services.Config.PathConfiguration)(this["PathConfiguration"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public int SyncthingConnectTimeoutSeconds {
+            get {
+                return ((int)(this["SyncthingConnectTimeoutSeconds"]));
+            }
+        }
     }
 }

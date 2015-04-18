@@ -45,3 +45,4 @@ RefitStubs.cs
 SyncTrayzorPortable
 *.pfx
 *.pvk
+/src/SyncTrayzor/Icons/*.png

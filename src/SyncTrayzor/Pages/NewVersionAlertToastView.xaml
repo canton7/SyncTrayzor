@@ -8,7 +8,7 @@
              xmlns:l="clr-namespace:SyncTrayzor.Localization"
              mc:Ignorable="d" 
              Width="500">
-    <Border CornerRadius="2" BorderThickness="1" BorderBrush="Black" Background="White">
+    <Border CornerRadius="6" BorderThickness="4" BorderBrush="Gray" Background="White">
         <DockPanel Margin="10" LastChildFill="False">
             <TextBlock DockPanel.Dock="Top" TextAlignment="Center" FontWeight="Bold" FontSize="20">SyncTrayzor Update Available</TextBlock>
             <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,10,0,0">

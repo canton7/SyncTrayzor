@@ -44,6 +44,7 @@ class ArchDirConfig
 end
 
 ARCH_CONFIG = [ArchDirConfig.new('x64'), ArchDirConfig.new('x86')]
+ASSEMBLY_INFOS = FileList['**/AssemblyInfo.cs']
 
 namespace :build do
   ARCH_CONFIG.each do |arch_config|
@@ -130,7 +131,9 @@ namespace :portable do
       Dir.mktmpdir do |tmp|
         portable_dir = File.join(tmp, arch_config.portable_output_dir)
         Dir.chdir(arch_config.bin_dir) do
-          files = FileList['**/*'].exclude('*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll', '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe')
+          files = FileList['**/*'].exclude(
+            '*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll',
+            '*System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data')
 
           files.each do |file|
             cp_to_portable(portable_dir, file)
@@ -200,3 +203,13 @@ end
 
 desc 'Build installer and portable for all architectures'
 task :package => ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }
+
+desc "Bump version number"
+task :version, [:version] do |t, args|
+  ASSEMBLY_INFOS.each do |info|
+    content = IO.read(info)
+    content[/\[assembly: AssemblyVersion\(\"(.+?).0\"\)\]/, 1] = args[:version]
+    content[/\[assembly: AssemblyFileVersion\(\"(.+?).0\"\)\]/, 1] = args[:version]
+    File.open(info, 'w'){ |f| f.write(content) }
+  end
+end

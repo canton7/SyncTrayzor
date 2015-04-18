@@ -213,7 +213,7 @@
     <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
-    <value>SyncTrayzor version {0} is available!</value>
+    <value>Μια νέα έκδοση {0} του SyncTrayzor είναι διαθέσιμη</value>
     <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
   </data>
   <data name="NewVersionAlertView_Title" xml:space="preserve">
@@ -540,9 +540,9 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Syncthing κονσόλα</value>
   </data>
   <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
-    <value>Install Now</value>
+    <value>Εγκατάσταση Τώρα</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
-    <value>View Changelog</value>
+    <value>Εμφάνιση αρχείου καταγραφής αλλαγών</value>
   </data>
 </root>

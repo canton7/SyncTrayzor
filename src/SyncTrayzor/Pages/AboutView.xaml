@@ -11,16 +11,12 @@
     </Window.Resources>
     <DockPanel LastChildFill="False" Margin="10">
         <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
-            <TextBlock Text="{l:Loc AboutView_Version, ValueBinding={Binding Version}}"/>
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5">
-            <TextBlock Text="{l:Loc AboutView_SyncthingVersion, ValueBinding={Binding SyncthingVersion}}"/>
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5"
+        <TextBlock DockPanel.Dock="Top" Margin="0,5" Text="{l:Loc AboutView_Version, ValueBinding={Binding Version}}"/>
+        <TextBlock DockPanel.Dock="Top" Margin="0,5" Text="{l:Loc AboutView_SyncthingVersion, ValueBinding={Binding SyncthingVersion}}"/>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,5"
                     Visibility="{Binding NewerVersion, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
             <TextBlock Foreground="Red" Text="{l:Loc AboutView_NewAppVersionAvailable, ValueBinding={Binding NewerVersion}}"/>
-            <TextBlock Margin="5,0,0,0">
+            <TextBlock>
                 <Hyperlink Command="{s:Action DownloadNewerVersion}">
                     <TextBlock Text="{l:Loc AboutView_DownloadNewVersion}"/>
                 </Hyperlink>

@@ -34,7 +34,7 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
         public SyncThingConnectionsWatcher(ISyncThingApiClient apiClient)
-            : base(TimeSpan.FromSeconds(2))
+            : base(TimeSpan.FromSeconds(10))
         {
             this.apiClient = apiClient;
         }
@@ -44,8 +44,7 @@ namespace SyncTrayzor.SyncThing
             var connections = await this.apiClient.FetchConnectionsAsync();
 
             // We can be stopped in the time it takes this to complete
-            if (!this.Running)
-                return;
+            cancellationToken.ThrowIfCancellationRequested();
             
             var elapsed = DateTime.UtcNow - this.lastPollCompletion;
             this.lastPollCompletion = DateTime.UtcNow;

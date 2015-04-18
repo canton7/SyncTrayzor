@@ -45,6 +45,7 @@ namespace SyncTrayzor.SyncThing
         bool HideDeviceIds { get; set; }
 
         event EventHandler Starting;
+        event EventHandler ProcessRestarted;
         event EventHandler<MessageLoggedEventArgs> MessageLogged;
         event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
@@ -73,6 +74,7 @@ namespace SyncTrayzor.SyncThing
         public bool HideDeviceIds { get; set; }
 
         public event EventHandler Starting;
+        public event EventHandler ProcessRestarted;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
         public event EventHandler<ProcessStoppedEventArgs> ProcessStopped;
 
@@ -82,10 +84,11 @@ namespace SyncTrayzor.SyncThing
 
         public void Start()
         {
-            logger.Info("Starting syncthing: {0}", this.ExecutablePath);
-
+            logger.Debug("SyncThingProcessRunner.Start called");
             // This might cause our config to be set...
             this.OnStarting();
+
+            logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
@@ -122,7 +125,7 @@ namespace SyncTrayzor.SyncThing
                 this.process.BeginOutputReadLine();
                 this.process.BeginErrorReadLine();
 
-                this.process.Exited += (o, e) => this.OnProcessStopped();
+                this.process.Exited += (o, e) => this.OnProcessExited();
             }
         }
 
@@ -183,7 +186,7 @@ namespace SyncTrayzor.SyncThing
             }
         }
 
-        private void OnProcessStopped()
+        private void OnProcessExited()
         {
             SyncThingExitStatus exitStatus;
             lock (this.processLock)
@@ -196,19 +199,32 @@ namespace SyncTrayzor.SyncThing
             if (exitStatus == SyncThingExitStatus.Restarting || exitStatus == SyncThingExitStatus.Upgrading)
             {
                 logger.Info("Syncthing process requested restart, so restarting");
+                this.OnProcessRestarted();
                 this.Start();
             }
             else
             {
-                var handler = this.ProcessStopped;
-                if (handler != null)
-                    handler(this, new ProcessStoppedEventArgs(exitStatus));
+                this.OnProcessStopped(exitStatus);
             }
         }
 
         private void OnStarting()
         {
             var handler = this.Starting;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void OnProcessStopped(SyncThingExitStatus exitStatus)
+        {
+            var handler = this.ProcessStopped;
+            if (handler != null)
+                handler(this, new ProcessStoppedEventArgs(exitStatus));
+        }
+
+        private void OnProcessRestarted()
+        {
+            var handler = this.ProcessRestarted;
             if (handler != null)
                 handler(this, EventArgs.Empty);
         }
@@ -223,6 +239,7 @@ namespace SyncTrayzor.SyncThing
 
         public void KillAllSyncthingProcesses()
         {
+            logger.Debug("Kill all Syncthing processes");
             foreach (var process in Process.GetProcessesByName("syncthing"))
             {
                 process.Kill();

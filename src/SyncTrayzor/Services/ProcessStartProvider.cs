@@ -14,17 +14,18 @@ namespace SyncTrayzor.Services
         void Start(string filename);
         void Start(string filename, string arguments);
         void StartDetached(string filename);
+        void StartDetached(string filename, string arguments);
         void StartElevatedDetached(string filename, string arguments, string launchAfterFinished = null);
     }
 
     public class ProcessStartProvider : IProcessStartProvider
     {
-        private static readonly string installerRunner = "InstallerRunner.exe";
-        private readonly string exeDir;
+        private static readonly string processRunner = "ProcessRunner.exe";
+        private readonly string processRunnerPath;
 
         public ProcessStartProvider(IAssemblyProvider assemblyProvider)
         {
-            this.exeDir = assemblyProvider.Location;
+            this.processRunnerPath = Path.Combine(Path.GetDirectoryName(assemblyProvider.Location), processRunner);
         }
 
         public void Start(string filename)
@@ -39,10 +40,18 @@ namespace SyncTrayzor.Services
 
         public void StartDetached(string filename)
         {
+            this.StartDetached(filename, null);
+        }
+
+        public void StartDetached(string filename, string arguments)
+        {
+            if (arguments == null)
+                arguments = String.Empty;
+
             var startInfo = new ProcessStartInfo()
             {
-                FileName = "cmd.exe",
-                Arguments = "/c start " + filename,
+                FileName = processRunnerPath,
+                Arguments = String.Format("--shell -- \"{0}\" {1}", filename, arguments),
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };
@@ -55,13 +64,12 @@ namespace SyncTrayzor.Services
             if (arguments == null)
                 arguments = String.Empty;
 
-            if (launchAfterFinished != null)
-                arguments += String.Format(" -launch \"{0}\"", launchAfterFinished);
+            var launch = launchAfterFinished == null ? null : String.Format("--launch=\"{0}\"", launchAfterFinished.Replace("\"", "\\\""));
 
             var startInfo = new ProcessStartInfo()
             {
-                FileName = Path.Combine(Path.GetDirectoryName(this.exeDir), installerRunner),
-                Arguments = String.Format("\"{0}\" {1}", filename, arguments),
+                FileName = processRunnerPath,
+                Arguments = String.Format("--nowindow -- \"{0}\" --runas {1} -- \"{2}\" {3}", processRunnerPath, launch, filename, arguments),
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };

@@ -23,6 +23,7 @@ namespace SyncTrayzor.Pages
         private readonly IConfigurationProvider configurationProvider;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly Func<AboutViewModel> aboutViewModelFactory;
+        private readonly IProcessStartProvider processStartProvider;
 
         public bool WindowActivated { get; set; }
         public bool ShowConsole { get; set; }
@@ -39,7 +40,8 @@ namespace SyncTrayzor.Pages
             ConsoleViewModel console,
             ViewerViewModel viewer,
             Func<SettingsViewModel> settingsViewModelFactory,
-            Func<AboutViewModel> aboutViewModelFactory)
+            Func<AboutViewModel> aboutViewModelFactory,
+            IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
@@ -49,6 +51,7 @@ namespace SyncTrayzor.Pages
             this.Viewer = viewer;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.aboutViewModelFactory = aboutViewModelFactory;
+            this.processStartProvider = processStartProvider;
 
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
@@ -111,7 +114,7 @@ namespace SyncTrayzor.Pages
         }
         public void OpenBrowser()
         {
-            Process.Start(this.syncThingManager.Address.NormalizeZeroHost().ToString());
+            this.processStartProvider.StartDetached(this.syncThingManager.Address.NormalizeZeroHost().ToString());
         }
 
         public void KillAllSyncthingProcesses()

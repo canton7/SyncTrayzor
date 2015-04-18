@@ -5,10 +5,10 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncTrayzor", "SyncTrayzor\SyncTrayzor.csproj", "{D1F89B3D-7967-4DC6-AE45-50A7817FE54F}"
 	ProjectSection(ProjectDependencies) = postProject
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5} = {E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2} = {692BB2F9-CD24-482F-B13A-4335F27F6EC2}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerRunner", "InstallerRunner\InstallerRunner.csproj", "{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessRunner", "ProcessRunner\ProcessRunner.csproj", "{692BB2F9-CD24-482F-B13A-4335F27F6EC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,14 +26,14 @@ Global
 		{D1F89B3D-7967-4DC6-AE45-50A7817FE54F}.Release|x64.Build.0 = Release|x64
 		{D1F89B3D-7967-4DC6-AE45-50A7817FE54F}.Release|x86.ActiveCfg = Release|x86
 		{D1F89B3D-7967-4DC6-AE45-50A7817FE54F}.Release|x86.Build.0 = Release|x86
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Debug|x64.ActiveCfg = Debug|x64
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Debug|x64.Build.0 = Debug|x64
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Debug|x86.ActiveCfg = Debug|x86
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Debug|x86.Build.0 = Debug|x86
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x64.ActiveCfg = Release|x64
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x64.Build.0 = Release|x64
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x86.ActiveCfg = Release|x86
-		{E33FE8E5-18A5-4D1B-A5D9-21851DC0B1D5}.Release|x86.Build.0 = Release|x86
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Debug|x64.ActiveCfg = Debug|x64
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Debug|x64.Build.0 = Debug|x64
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Debug|x86.ActiveCfg = Debug|x86
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Debug|x86.Build.0 = Debug|x86
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x64.ActiveCfg = Release|x64
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x64.Build.0 = Release|x64
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x86.ActiveCfg = Release|x86
+		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
