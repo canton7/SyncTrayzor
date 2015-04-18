@@ -156,6 +156,7 @@
     <Compile Include="Services\AssemblyProvider.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
+    <Compile Include="Services\Config\WindowPlacement.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
@@ -280,6 +281,7 @@
     <Compile Include="Xaml\ScrollToEndBehaviour.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
     <Compile Include="Xaml\ActivateBehaviour.cs" />
+    <Compile Include="Xaml\WindowPlacementBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
