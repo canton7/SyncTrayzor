@@ -69,7 +69,7 @@ namespace SyncTrayzor.Services
 
             this.syncThingManager.Address = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
-            this.syncThingManager.SyncthingTraceFacilities = configuration.SyncthingTraceFacilities;
+            this.syncThingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
             this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.pathsProvider.SyncthingCustomHomePath : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;

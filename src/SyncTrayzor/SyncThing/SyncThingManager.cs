@@ -32,7 +32,7 @@ namespace SyncTrayzor.SyncThing
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
         Uri Address { get; set; }
-        string SyncthingTraceFacilities { get; set; }
+        IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
         string SyncthingCustomHomeDir { get; set; }
         bool SyncthingDenyUpgrade { get; set; }
         bool SyncthingRunLowPriority { get; set; }
@@ -120,7 +120,7 @@ namespace SyncTrayzor.SyncThing
         public string ApiKey { get; set; }
         public Uri Address { get; set; }
         public string SyncthingCustomHomeDir { get; set; }
-        public string SyncthingTraceFacilities { get; set; }
+        public IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
         public bool SyncthingRunLowPriority { get; set; }
         public bool SyncthingHideDeviceIds { get; set; }
@@ -348,7 +348,7 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.HostAddress = this.Address.ToString();
             this.processRunner.ExecutablePath = this.ExecutablePath;
             this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
-            this.processRunner.Traces = this.SyncthingTraceFacilities;
+            this.processRunner.EnvironmentalVariables = this.SyncthingEnvironmentalVariables;
             this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
             this.processRunner.RunLowPriority = this.SyncthingRunLowPriority;
             this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;

@@ -305,8 +305,8 @@
     <value>Settings</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
-  <data name="SettingsView_TraceVariables" xml:space="preserve">
-    <value>Syncthing Trace Variables:</value>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Syncthing Environmental Variables:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
     <value>The following folders will be watched for changes, which avoids polling.</value>
@@ -556,5 +556,8 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
     <value>_Reset</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Must be in the format 'VAR=value VAR2="val1 vla2"'</value>
   </data>
 </root>

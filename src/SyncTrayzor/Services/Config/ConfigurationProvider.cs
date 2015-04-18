@@ -65,7 +65,10 @@ namespace SyncTrayzor.Services.Config
             this.paths = paths;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
 
-            this.migrations = new Func<XDocument, XDocument>[0];
+            this.migrations = new Func<XDocument, XDocument>[]
+            {
+                this.MigrateV1ToV2
+            };
         }
 
         public void Initialize(Configuration defaultConfiguration)
@@ -158,7 +161,26 @@ namespace SyncTrayzor.Services.Config
                 }
                 
                 configuration = this.migrations[i - 1](configuration);
-                configuration.Root.Attribute("Version").SetValue(i + 1);
+                configuration.Root.SetAttributeValue("Version", i + 1);
+            }
+
+            return configuration;
+        }
+
+        private XDocument MigrateV1ToV2(XDocument configuration)
+        {
+            var trace = configuration.Root.Element("SyncthingTraceFacilities").Value;
+            // No need to remove - it'll be ignored when we deserialize into Configuration, and not written back to file
+            if (trace != null)
+            {
+                configuration.Root.Add(
+                    new XElement("SyncthingEnvironmentalVariables",
+                        new XElement("Item",
+                            new XElement("Key", "STTRACE"),
+                            new XElement("Value", trace)
+                        )
+                    )
+                );
             }
 
             return configuration;

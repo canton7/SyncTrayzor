@@ -135,8 +135,8 @@
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingDenyUpgrade}"
                                           Content="{l:Loc SettingsView_SyncthingDenyUpgrade}"
                                           ToolTip="{l:Loc SettingsView_SyncthingDenyUpgrade_ToolTip}"/>
-                                <Label DockPanel.Dock="Top" Target="{Binding ElementName=TraceVariables}" Content="{l:Loc SettingsView_TraceVariables}"/>
-                                <TextBox DockPanel.Dock="Top" x:Name="TraceVariables" Text="{Binding TraceVariables, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
+                                <TextBox DockPanel.Dock="Top" x:Name="SyncThingEnvironmentalVariables" Text="{Binding SyncThingEnvironmentalVariables, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
                             </DockPanel>
                         </GroupBox>
                     </Expander>

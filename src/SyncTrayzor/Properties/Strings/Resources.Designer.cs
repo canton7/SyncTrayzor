@@ -546,6 +546,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing Environmental Variables:.
+        /// </summary>
+        public static string SettingsView_SyncthingEnvironmentalVariables {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingEnvironmentalVariables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run Syncthing as a low-priority process.
         /// </summary>
         public static string SettingsView_SyncthingRunLowPriority {
@@ -600,15 +609,6 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Trace Variables:.
-        /// </summary>
-        public static string SettingsView_TraceVariables {
-            get {
-                return ResourceManager.GetString("SettingsView_TraceVariables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect.
         /// </summary>
         public static string SettingsView_UseComputerCulture {
@@ -632,6 +632,15 @@ namespace SyncTrayzor.Properties.Strings {
         public static string SettingsView_Validation_NotShouldBeEmpty {
             get {
                 return ResourceManager.GetString("SettingsView_Validation_NotShouldBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must be in the format &apos;VAR=value VAR2=&quot;val1 vla2&quot;&apos;.
+        /// </summary>
+        public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat", resourceCulture);
             }
         }
         
