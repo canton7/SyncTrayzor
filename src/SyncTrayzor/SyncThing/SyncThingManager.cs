@@ -257,9 +257,7 @@ namespace SyncTrayzor.SyncThing
                 if (this._state == SyncThingState.Stopped && state == SyncThingState.Running)
                     return;
 
-                if ((this._state == SyncThingState.Running && state == SyncThingState.Starting) ||
-                    (this._state == SyncThingState.Running && state == SyncThingState.Stopped) ||
-                    (this._state == SyncThingState.Running && state == SyncThingState.Restarting) ||
+                if (this._state == SyncThingState.Running ||
                     (this._state == SyncThingState.Starting && state == SyncThingState.Stopped))
                     abortApi = true;
 
