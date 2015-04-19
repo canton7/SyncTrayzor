@@ -52,6 +52,9 @@ namespace SyncTrayzor.Pages
                 if (subParts[1].StartsWith("\"") != subParts[1].EndsWith("\""))
                     return false;
 
+                if (finalResult.ContainsKey(subParts[0]))
+                    return false;
+
                 finalResult.Add(subParts[0], subParts[1].Trim('"'));
             }
 
