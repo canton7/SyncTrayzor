@@ -41,7 +41,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
                     logger.Debug("Failed to connect on attempt {0}", retryCount);
                     // Expected when Syncthing's still starting
                     if (DateTime.UtcNow - connectionAttemptsStarted > timeout)
-                        throw new SyncThingConnectionRefusedException(String.Format("Syncthing didn't connect after {0}", timeout), e);
+                        throw new SyncThingDidNotStartCorrectlyException(String.Format("Syncthing didn't connect after {0}", timeout), e);
                 }
                 catch (ApiException e)
                 {

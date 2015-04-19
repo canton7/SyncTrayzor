@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -310,29 +311,24 @@ namespace SyncTrayzor.SyncThing
 
         private void StartWatchers()
         {
-            try
-            {
-                if (this.apiClient == null)
-                    throw new InvalidOperationException("API client not set");
+            if (this.apiClient == null)
+                throw new InvalidOperationException("API client not set");
 
-                if (this.connectionsWatcher != null)
-                    this.connectionsWatcher.Dispose();
-                this.connectionsWatcher = this.connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
-                this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
-                this.connectionsWatcher.Start();
+            if (this.connectionsWatcher != null)
+                this.connectionsWatcher.Dispose();
+            this.connectionsWatcher = this.connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
+            this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
+            this.connectionsWatcher.Start();
 
-                if (this.eventWatcher != null)
-                    this.eventWatcher.Dispose();
-                this.eventWatcher = this.eventWatcherFactory.CreateEventWatcher(this.apiClient);
-                this.eventWatcher.SyncStateChanged += (o, e) => this.OnFolderSyncStateChanged(e);
-                this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
-                this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
-                this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
-                this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
-                this.eventWatcher.Start();
-            }
-            catch (OperationCanceledException)
-            { }
+            if (this.eventWatcher != null)
+                this.eventWatcher.Dispose();
+            this.eventWatcher = this.eventWatcherFactory.CreateEventWatcher(this.apiClient);
+            this.eventWatcher.SyncStateChanged += (o, e) => this.OnFolderSyncStateChanged(e);
+            this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
+            this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
+            this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
+            this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
+            this.eventWatcher.Start();
         }
 
         private void StopApiClients()
@@ -405,7 +401,7 @@ namespace SyncTrayzor.SyncThing
 
             var folderConstructionTasks = configTask.Result.Folders.Select(async folder =>
             {
-                var ignores = await this.apiClient.FetchIgnoresAsync(folder.ID);
+                var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
                 var path = folder.Path;
                 if (path.StartsWith("~"))
                     path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
@@ -419,9 +415,42 @@ namespace SyncTrayzor.SyncThing
             this.Version = versionTask.Result;
 
             cancellationToken.ThrowIfCancellationRequested();
-            this.OnDataLoaded();
+            
             this.StartedTime = DateTime.UtcNow;
             this.IsDataLoaded = true;
+            this.OnDataLoaded();
+        }
+
+        private async Task<Ignores> FetchFolderIgnoresAsync(string folderId, CancellationToken cancellationToken)
+        {
+            // Until startup is complete, these can return a 500.
+            // There's no sensible way to determine when startup *is* complete, so we just have to keep trying...
+            // It's slightly evil to re-use SyncthingConnectTimeout here, but...
+
+            Ignores ignores;
+            var startedTime = DateTime.UtcNow;
+            while (true)
+            {
+                try
+                {
+                    ignores = await this.apiClient.FetchIgnoresAsync(folderId);
+                    // No need to log: ApiClient did that for us
+                    break;
+                }
+                catch (ApiException e)
+                {
+                    logger.Debug("Attempting to fetch folder {0}, but received status {1}", folderId, e.StatusCode);
+                    if (e.StatusCode != HttpStatusCode.InternalServerError)
+                        throw;
+                }
+
+                if (DateTime.UtcNow - startedTime > this.SyncthingConnectTimeout)
+                    throw new SyncThingDidNotStartCorrectlyException(String.Format("Unable to fetch ignores for folder {0}. Syncthing returned 500 after {1}", folderId, DateTime.UtcNow - startedTime));
+
+                await Task.Delay(1000, cancellationToken);
+            }
+
+            return ignores;
         }
 
         private void ItemStarted(string folderId, string item)
