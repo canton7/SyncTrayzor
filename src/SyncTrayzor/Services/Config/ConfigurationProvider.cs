@@ -169,18 +169,21 @@ namespace SyncTrayzor.Services.Config
 
         private XDocument MigrateV1ToV2(XDocument configuration)
         {
-            var trace = configuration.Root.Element("SyncthingTraceFacilities").Value;
+            var traceElement = configuration.Root.Element("SyncthingTraceFacilities");
             // No need to remove - it'll be ignored when we deserialize into Configuration, and not written back to file
-            if (trace != null)
+            if (traceElement != null)
             {
-                configuration.Root.Add(
-                    new XElement("SyncthingEnvironmentalVariables",
-                        new XElement("Item",
-                            new XElement("Key", "STTRACE"),
-                            new XElement("Value", trace)
-                        )
+                var envVarsNode = new XElement("SyncthingEnvironmentalVariables",
+                    new XElement("Item",
+                        new XElement("Key", "STTRACE"),
+                        new XElement("Value", traceElement.Value)
                     )
                 );
+                var existingEnvVars = configuration.Root.Element("SyncthingEnvironmentalVariables");
+                if (existingEnvVars != null)
+                    existingEnvVars.ReplaceWith(envVarsNode);
+                else
+                    configuration.Root.Add(envVarsNode);
             }
 
             return configuration;
