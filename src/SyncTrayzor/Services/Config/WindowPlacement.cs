@@ -35,7 +35,7 @@ namespace SyncTrayzor.Services.Config
 
         public void ReadXml(XmlReader reader)
         {
-            var root = XElement.Load(reader.ReadSubtree());
+            var root = XElement.Parse(reader.ReadOuterXml());
             this.IsMaximised = (bool)root.Element("IsMaximised");
             this.MinPosition = (Point)pointConverter.ConvertFrom(root.Element("MinPosition").Value);
             this.MaxPosition = (Point)pointConverter.ConvertFrom(root.Element("MaxPosition").Value);

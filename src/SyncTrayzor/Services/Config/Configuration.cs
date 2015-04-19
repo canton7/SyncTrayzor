@@ -46,7 +46,9 @@ namespace SyncTrayzor.Services.Config
 
         public void ReadXml(XmlReader reader)
         {
-            var root = XElement.Load(reader.ReadSubtree());
+            // Used to use XElement.Load(reader.ReadSubtree()), but that effectively closed the reader
+            // and nothing else would get parsed.
+            var root = XElement.Parse(reader.ReadOuterXml());
             foreach (var element in root.Elements("Item"))
             {
                 this.Add(element.Element("Key").Value, element.Element("Value").Value);
