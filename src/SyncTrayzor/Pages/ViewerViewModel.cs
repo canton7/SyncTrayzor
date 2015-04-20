@@ -90,10 +90,18 @@ namespace SyncTrayzor.Pages
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
+
             webBrowser.FrameLoadEnd += (o, e) =>
             {
                 if (e.IsMainFrame && e.Url != "about:blank")
                 {
+                    Execute.OnUIThread(() =>
+                    {
+                        // See https://github.com/cefsharp/CefSharp/issues/738#issuecomment-91099199
+                        // ... Except that FrameLoadStart doesn't appear to work for me. FrameLoadEnd does though
+                        webBrowser.ZoomLevel = this.configurationProvider.Load().SyncthingWebBrowserZoomLevel;
+                    });
+
                     var script = @"$('#folders .panel-footer .pull-right').prepend(" +
                     @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
                     @"<span class=""glyphicon glyphicon-folder-open""></span>" +
@@ -103,7 +111,6 @@ namespace SyncTrayzor.Pages
                     webBrowser.ExecuteScriptAsync(script);
                 }
             };
-            WebBrowser.ZoomLevel = this.configurationProvider.Load().SyncthingWebBrowserZoomLevel;
         }
 
         public void RefreshBrowser()
