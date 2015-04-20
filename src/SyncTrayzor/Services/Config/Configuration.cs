@@ -74,7 +74,8 @@ namespace SyncTrayzor.Services.Config
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
+        public const double DefaultSyncthingConsoleHeight = 100;
 
         [XmlAttribute("Version")]
         public int Version
@@ -116,7 +117,7 @@ namespace SyncTrayzor.Services.Config
         }
 
         public bool UseComputerCulture { get; set; }
-        public bool ShowSyncthingConsole { get; set; }
+        public double SyncthingConsoleHeight { get; set; }
         public WindowPlacement WindowPlacement { get; set; }
         public double SyncthingWebBrowserZoomLevel { get; set; }
 
@@ -141,7 +142,7 @@ namespace SyncTrayzor.Services.Config
             this.ObfuscateDeviceIDs = true;
             this.LatestNotifiedVersion = null;
             this.UseComputerCulture = true;
-            this.ShowSyncthingConsole = true;
+            this.SyncthingConsoleHeight = Configuration.DefaultSyncthingConsoleHeight;
             this.WindowPlacement = null;
             this.SyncthingWebBrowserZoomLevel = 0;
         }
@@ -165,7 +166,7 @@ namespace SyncTrayzor.Services.Config
             this.ObfuscateDeviceIDs = other.ObfuscateDeviceIDs;
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
             this.UseComputerCulture = other.UseComputerCulture;
-            this.ShowSyncthingConsole = other.ShowSyncthingConsole;
+            this.SyncthingConsoleHeight = other.SyncthingConsoleHeight;
             this.WindowPlacement = other.WindowPlacement;
             this.SyncthingWebBrowserZoomLevel = other.SyncthingWebBrowserZoomLevel;
         }
@@ -175,12 +176,12 @@ namespace SyncTrayzor.Services.Config
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
                 "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingEnvironmentalVariables=[{8}] " +
                 "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
-                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} ShowSyncthingConsole={17} WindowPlacement={18} " +
+                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} SyncthingConsoleHeight={17} WindowPlacement={18} " +
                 "SyncthingWebBrowserZoomLevel={19}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
                 this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, String.Join(" ", this.SyncthingEnvironmentalVariables.Select(x => String.Format("{0}={1}", x.Key, x.Value))),
                 this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders), this.NotifyOfNewVersions,
-                this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.ShowSyncthingConsole, this.WindowPlacement,
+                this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.SyncthingConsoleHeight, this.WindowPlacement,
                 this.SyncthingWebBrowserZoomLevel);
         }
     }

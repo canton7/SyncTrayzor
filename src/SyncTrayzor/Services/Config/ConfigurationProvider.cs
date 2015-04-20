@@ -67,7 +67,8 @@ namespace SyncTrayzor.Services.Config
 
             this.migrations = new Func<XDocument, XDocument>[]
             {
-                this.MigrateV1ToV2
+                this.MigrateV1ToV2,
+                this.MigrateV2ToV3,
             };
         }
 
@@ -186,6 +187,13 @@ namespace SyncTrayzor.Services.Config
                     configuration.Root.Add(envVarsNode);
             }
 
+            return configuration;
+        }
+
+        private XDocument MigrateV2ToV3(XDocument configuration)
+        {
+            bool? visible = (bool?)configuration.Root.Element("ShowSyncthingConsole");
+            configuration.Root.Add(new XElement("SyncthingConsoleHeight", visible == true ? Configuration.DefaultSyncthingConsoleHeight : 0.0));
             return configuration;
         }
 
