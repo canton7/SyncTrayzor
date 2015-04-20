@@ -65,6 +65,16 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
+   '1.0.15' => [
+      'installed' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.15/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.15/SyncTrayzorSetup-x86.exe',
+         ],
+      ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.15',
+      'release_notes' => "- Fix crash on startup if Syncthing is slow to start (#55)\n- Remember window size-position (#51)\n- Zoom built-in borwser (#52)\n- Add support for aribtrary environmental variables for Syncthing\n",
+   ],
    '1.0.14' => [
       'installed' => [
          'direct_download_url' => []
@@ -72,7 +82,6 @@ $versions = [
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.14',
       'release_notes' => "- Give Syncthing more than 10 seconds to start, fixing crash (#47, #48, #50)\n- Better Syncthing API management in general\n- Add support for 150% and 200% DPI to tray icon\n- Slightly improve UI\n",
    ],
-
    '1.0.13' => [
       'installed' => [
          'direct_download_url' => []
@@ -83,8 +92,9 @@ $versions = [
 ];
 
 $upgrades = [
-   '1.0.13' => ['to' => '1.0.14', 'formatter' => '2'],
-   '1.0.12' => ['to' => '1.0.14', 'formatter' => '1'],
+   '1.0.14' => ['to' => 'latest', 'formatter' => '2'],
+   '1.0.13' => ['to' => 'latest', 'formatter' => '1'],
+   '1.0.12' => ['to' => 'latest', 'formatter' => '1'],
 ];
 
 $response_formatters = [
@@ -134,6 +144,8 @@ try
    else if (isset($upgrades[$version]))
    {
       $to_version = $upgrades[$version]['to'];
+      if ($to_version == 'latest')
+         $to_version = array_keys($versions)[0];
       $formatter = $response_formatters[$upgrades[$version]['formatter']];
       $overrides = isset($upgrades[$version]['overrides']) ? $upgrades[$version]['overrides'] : [];
       $to_version_info = $versions[$to_version];

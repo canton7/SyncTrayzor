@@ -121,7 +121,7 @@
     <value>Creado por Antony Male.</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Descargar</value>
+    <value>Open Download Page</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
@@ -198,7 +198,7 @@
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Descargar ahora</value>
+    <value>Open Download Page</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
@@ -544,5 +544,17 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
     <value>View Changelog</value>
+  </data>
+  <data name="ShellView_Menu_Zoom" xml:space="preserve">
+    <value>_Zoom Browser</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
+    <value>Zoom _In</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
+    <value>Zoom _Out</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
+    <value>_Reset</value>
   </data>
 </root>
