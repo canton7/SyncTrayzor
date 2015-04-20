@@ -636,7 +636,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must be in the format &apos;VAR=value VAR2=&quot;val1 vla2&quot;&apos;.
+        ///   Looks up a localized string similar to Must be in the format &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;.
         /// </summary>
         public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {
             get {
