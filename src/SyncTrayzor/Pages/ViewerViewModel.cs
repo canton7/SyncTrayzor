@@ -173,17 +173,17 @@ namespace SyncTrayzor.Pages
             return false;
         }
 
-        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browser, IRequest request, bool isRedirect)
+        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browser, IRequest request, bool isRedirect, bool isMainFrame)
         {
             return false;
         }
 
-        bool IRequestHandler.OnBeforePluginLoad(IWebBrowser browser, string url, string policyUrl, IWebPluginInfo info)
+        bool IRequestHandler.OnBeforePluginLoad(IWebBrowser browser, string url, string policyUrl, WebPluginInfo info)
         {
             return false;
         }
 
-        bool IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, IResponse response)
+        bool IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, bool isMainFrame)
         {
             var uri = new Uri(request.Url);
             if ((uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
@@ -224,9 +224,9 @@ namespace SyncTrayzor.Pages
         {
         }
 
-        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browser, string url, ref int x, ref int y, ref int width, ref int height)
+        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browser, string sourceUrl, string targetUrl, ref int x, ref int y, ref int width, ref int height)
         {
-            this.processStartProvider.StartDetached(url);
+            this.processStartProvider.StartDetached(targetUrl);
             return true;
         }
 
