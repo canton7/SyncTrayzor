@@ -73,7 +73,7 @@ $versions = [
          ],
       ],
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.15',
-      'release_notes' => "- Fix crash on startup if Syncthing is slow to start (#55)\n- Remember window size-position (#51)\n- Zoom built-in borwser (#52)\n- Add support for aribtrary environmental variables for Syncthing\n",
+      'release_notes' => "- Fix crash on startup if Syncthing is slow to start (#55)\n- Remember window size/position (#51)\n- Zoom built-in browser (#52)\n- Add support for arbitrary environmental variables for Syncthing\n",
    ],
    '1.0.14' => [
       'installed' => [
