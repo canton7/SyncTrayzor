@@ -10,15 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}">
-            <cefSharp:ChromiumWebBrowser.InputBindings>
-                <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlUp}" Command="{s:Action ZoomIn}" s:View.ActionTarget="{Binding}"/>
-                <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlDown}" Command="{s:Action ZoomOut}" s:View.ActionTarget="{Binding}"/>
-                <KeyBinding Key="OemPlus" Modifiers="Control+Shift" Command="{s:Action ZoomIn}" s:View.ActionTarget="{Binding}"/>
-                <KeyBinding Key="OemMinus" Modifiers="Control" Command="{s:Action ZoomOut}" s:View.ActionTarget="{Binding}"/>
-                <KeyBinding Key="D0" Modifiers="Control" Command="{s:Action ZoomReset}" s:View.ActionTarget="{Binding}"/>
-            </cefSharp:ChromiumWebBrowser.InputBindings>
-        </cefSharp:ChromiumWebBrowser>
+        <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"/>
 
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStarting}"
                    Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"

@@ -11,6 +11,18 @@
         <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
         <xaml:WindowPlacementBehaviour Placement="{Binding Placement}"/>
     </i:Interaction.Behaviors>
+    <Window.InputBindings>
+        <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlUp}" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
+        <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlDown}" Command="{s:Action BrowserZoomOut}" s:View.ActionTarget="{Binding}"/>
+        <!-- Lots of different sorts of + and - on the keyboard: gotta catch em all! -->
+        <KeyBinding Key="OemPlus" Modifiers="Control+Shift" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="OemPlus" Modifiers="Control" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="Add" Modifiers="Control" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="OemMinus" Modifiers="Control" Command="{s:Action BrowserZoomOut}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="Subtract" Modifiers="Control" Command="{s:Action BrowserZoomOut}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="D0" Modifiers="Control" Command="{s:Action BrowserZoomReset}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="NumPad0" Modifiers="Control" Command="{s:Action BrowserZoomReset}" s:View.ActionTarget="{Binding}"/>
+    </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{l:Loc ShellView_Menu_File}">
