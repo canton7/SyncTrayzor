@@ -15,8 +15,8 @@ namespace SyncTrayzor.Xaml
         protected override void OnAttached()
         {
             base.OnAttached();
-            this.AssociatedObject.Loaded += AssociatedObjectLoaded;
-            this.AssociatedObject.Unloaded += AssociatedObjectUnloaded;
+            this.AssociatedObject.Initialized += this.AssociatedObjectInitialized;
+            this.AssociatedObject.Unloaded += this.AssociatedObjectUnloaded;
         }
 
         protected override void OnDetaching()
@@ -32,14 +32,14 @@ namespace SyncTrayzor.Xaml
             {
                 this.isCleanedUp = true;
 
-                this.AssociatedObject.Loaded -= AssociatedObjectLoaded;
+                this.AssociatedObject.Initialized -= AssociatedObjectInitialized;
                 this.AssociatedObject.Unloaded -= AssociatedObjectUnloaded;
                 BindingOperations.ClearAllBindings(this); // This was a surprise...
                 this.DetachHandlers();
             }
         }
 
-        private void AssociatedObjectLoaded(object sender, RoutedEventArgs e)
+        private void AssociatedObjectInitialized(object sender, EventArgs e)
         {
             this.AttachHandlers();
         }

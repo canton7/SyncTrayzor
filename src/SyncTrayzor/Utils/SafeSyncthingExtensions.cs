@@ -31,7 +31,7 @@ namespace SyncTrayzor.Utils
                     Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Title"),
                     MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
-            catch (SyncThingConnectionRefusedException)
+            catch (SyncThingDidNotStartCorrectlyException)
             {
                 // Haven't translated yet - still debugging
                 windowManager.ShowMessageBox(

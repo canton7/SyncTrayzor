@@ -39,7 +39,7 @@ namespace SyncTrayzor.SyncThing
         string ApiKey { get; set; }
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
-        string Traces { get; set; }
+        IDictionary<string, string> EnvironmentalVariables { get; set; }
         bool DenyUpgrade { get; set; }
         bool RunLowPriority { get; set; }
         bool HideDeviceIds { get; set; }
@@ -68,7 +68,7 @@ namespace SyncTrayzor.SyncThing
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
-        public string Traces { get; set; }
+        public IDictionary<string, string> EnvironmentalVariables { get; set; }
         public bool DenyUpgrade { get; set; }
         public bool RunLowPriority { get; set; }
         public bool HideDeviceIds { get; set; }
@@ -104,8 +104,10 @@ namespace SyncTrayzor.SyncThing
                 RedirectStandardOutput = true,
             };
 
-            if (!String.IsNullOrWhiteSpace(this.Traces))
-                processStartInfo.EnvironmentVariables["STTRACE"] = this.Traces;
+            foreach (var kvp in this.EnvironmentalVariables)
+            {
+                processStartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
+            }
             if (this.DenyUpgrade)
                 processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
 

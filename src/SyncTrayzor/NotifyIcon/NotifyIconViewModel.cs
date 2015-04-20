@@ -65,7 +65,8 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.DataLoaded += (o, e) =>
             {
                 this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.FetchAllFolders()
-                    .Select(x => new FolderViewModel(x, this.processStartProvider)));
+                    .Select(x => new FolderViewModel(x, this.processStartProvider))
+                    .OrderBy(x => x.FolderId));
             };
         }
 

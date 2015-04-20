@@ -27,6 +27,7 @@ namespace SyncTrayzor.Pages
 
         public bool WindowActivated { get; set; }
         public bool ShowConsole { get; set; }
+        public WindowPlacement Placement { get; set; }
         public ConsoleViewModel Console { get; private set; }
         public ViewerViewModel Viewer { get; private set; }
 
@@ -53,14 +54,19 @@ namespace SyncTrayzor.Pages
             this.aboutViewModelFactory = aboutViewModelFactory;
             this.processStartProvider = processStartProvider;
 
+            var configuration = this.configurationProvider.Load();
+
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
 
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
             this.syncThingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
 
-            this.ShowConsole = this.configurationProvider.Load().ShowSyncthingConsole;
-            this.Bind(s => s.ShowConsole, (o, e) => this.SetConsoleVisible(e.NewValue));
+            this.ShowConsole = configuration.ShowSyncthingConsole;
+            this.Bind(s => s.ShowConsole, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.ShowSyncthingConsole = e.NewValue));
+
+            this.Placement = configuration.WindowPlacement;
+            this.Bind(s => s.Placement, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.WindowPlacement = e.NewValue));
         }
 
         public bool CanStart
@@ -132,15 +138,30 @@ namespace SyncTrayzor.Pages
             this.windowManager.ShowDialog(vm);
         }
 
+        public bool CanZoomBrowser
+        {
+            get { return this.SyncThingState == SyncThingState.Running; }
+        }
+
+        public void BrowserZoomIn()
+        {
+            this.Viewer.ZoomIn();
+        }
+
+        public void BrowserZoomOut()
+        {
+            this.Viewer.ZoomOut();
+        }
+
+        public void BrowserZoomReset()
+        {
+            this.Viewer.ZoomReset();
+        }
+
         public void ShowAbout()
         {
             var vm = this.aboutViewModelFactory();
             this.windowManager.ShowDialog(vm);
-        }
-
-        public void SetConsoleVisible(bool visible)
-        {
-            this.configurationProvider.AtomicLoadAndSave(configuration => configuration.ShowSyncthingConsole = visible);
         }
 
         public void ShowExitedWithError()

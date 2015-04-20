@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace SyncTrayzor.Services.Config
@@ -34,10 +37,56 @@ namespace SyncTrayzor.Services.Config
         }
     }
 
+    public class EnvironmentalVariableCollection : Dictionary<string, string>, IXmlSerializable
+    {
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            // Used to use XElement.Load(reader.ReadSubtree()), but that effectively closed the reader
+            // and nothing else would get parsed.
+            var root = XElement.Parse(reader.ReadOuterXml());
+            foreach (var element in root.Elements("Item"))
+            {
+                this.Add(element.Element("Key").Value, element.Element("Value").Value);
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            var elements = this.Select(item =>
+            {
+                return new XElement("Item",
+                    new XElement("Key", item.Key),
+                    new XElement("Value", item.Value)
+                );
+            });
+            foreach (var element in elements)
+            {
+                element.WriteTo(writer);
+            }
+        }
+    }
 
     [XmlRoot("Configuration")]
     public class Configuration
     {
+        public const int CurrentVersion = 2;
+
+        [XmlAttribute("Version")]
+        public int Version
+        {
+            get { return CurrentVersion; }
+            set
+            {
+                if (CurrentVersion != value)
+                    throw new InvalidOperationException(String.Format("Can't deserialize config of version {0} (expected {1})", value, CurrentVersion));
+            }
+        }
+
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
@@ -46,12 +95,14 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingAddress { get; set; }
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
-        public string SyncthingTraceFacilities { get; set; }
+        public EnvironmentalVariableCollection SyncthingEnvironmentalVariables { get; set; }
         public bool SyncthingUseCustomHome { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
         public bool SyncthingRunLowPriority { get; set; }
+
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
+
         public bool NotifyOfNewVersions { get; set; }
         public bool ObfuscateDeviceIDs { get; set; }
 
@@ -66,6 +117,8 @@ namespace SyncTrayzor.Services.Config
 
         public bool UseComputerCulture { get; set; }
         public bool ShowSyncthingConsole { get; set; }
+        public WindowPlacement WindowPlacement { get; set; }
+        public double SyncthingWebBrowserZoomLevel { get; set; }
 
         public Configuration()
         {
@@ -79,7 +132,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingAddress = "localhost:8384";
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = null;
-            this.SyncthingTraceFacilities = null;
+            this.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection();
             this.SyncthingUseCustomHome = true;
             this.SyncthingDenyUpgrade = false;
             this.SyncthingRunLowPriority = false;
@@ -89,6 +142,8 @@ namespace SyncTrayzor.Services.Config
             this.LatestNotifiedVersion = null;
             this.UseComputerCulture = true;
             this.ShowSyncthingConsole = true;
+            this.WindowPlacement = null;
+            this.SyncthingWebBrowserZoomLevel = 0;
         }
 
         public Configuration(Configuration other)
@@ -101,7 +156,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingAddress = other.SyncthingAddress;
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
-            this.SyncthingTraceFacilities = other.SyncthingTraceFacilities;
+            this.SyncthingEnvironmentalVariables = other.SyncthingEnvironmentalVariables;
             this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.SyncthingDenyUpgrade = other.SyncthingDenyUpgrade;
             this.SyncthingRunLowPriority = other.SyncthingRunLowPriority;
@@ -111,18 +166,22 @@ namespace SyncTrayzor.Services.Config
             this.LatestNotifiedVersion = other.LatestNotifiedVersion;
             this.UseComputerCulture = other.UseComputerCulture;
             this.ShowSyncthingConsole = other.ShowSyncthingConsole;
+            this.WindowPlacement = other.WindowPlacement;
+            this.SyncthingWebBrowserZoomLevel = other.SyncthingWebBrowserZoomLevel;
         }
 
         public override string ToString()
         {
             return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
-                "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingTraceFacilities={8} " +
+                "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingEnvironmentalVariables=[{8}] " +
                 "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
-                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} ShowSyncthingConsole={17}>",
+                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} ShowSyncthingConsole={17} WindowPlacement={18} " +
+                "SyncthingWebBrowserZoomLevel={19}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
-                this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, this.SyncthingTraceFacilities,
-                this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders),
-                this.NotifyOfNewVersions, this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.ShowSyncthingConsole);
+                this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, String.Join(" ", this.SyncthingEnvironmentalVariables.Select(x => String.Format("{0}={1}", x.Key, x.Value))),
+                this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders), this.NotifyOfNewVersions,
+                this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.ShowSyncthingConsole, this.WindowPlacement,
+                this.SyncthingWebBrowserZoomLevel);
         }
     }
 }

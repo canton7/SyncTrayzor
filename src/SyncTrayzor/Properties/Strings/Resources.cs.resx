@@ -121,7 +121,7 @@
     <value>Vytvořil Antony Male.</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Stáhnout</value>
+    <value>Otevřít stránku pro stažení</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
@@ -167,7 +167,7 @@
     <value>_Nastavení</value>
   </data>
   <data name="ShellView_Menu_Help" xml:space="preserve">
-    <value>_Pomoc</value>
+    <value>P_omoc</value>
   </data>
   <data name="ShellView_Menu_Help_About" xml:space="preserve">
     <value>_O programu</value>
@@ -198,7 +198,7 @@
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Stáhnout nyní</value>
+    <value>Otevřít stránku pro stažení</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
@@ -221,7 +221,7 @@
     <comment>When a new version is available, the user receives a prompt. This is the title of that prompt.</comment>
   </data>
   <data name="SettingsView_AlertOnNewVersion" xml:space="preserve">
-    <value>Upozornit na novou verzi SyncTrayzor</value>
+    <value>Upozorňovat na nové verze SyncTrayzor</value>
   </data>
   <data name="SettingsView_ApiKey" xml:space="preserve">
     <value>API klíč:</value>
@@ -231,7 +231,7 @@
     <comment>ToolTip shown when a user hovers over the SettingsView_ApiKey text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_CloseToTray" xml:space="preserve">
-    <value>Zavřít do tray</value>
+    <value>Zavírat do tray</value>
     <comment>Setting allowing the user to indicate that the 'close' button on the top right of the window should put Syncthing down into the tray, rather than closing the application</comment>
   </data>
   <data name="SettingsView_MinimizeToTray" xml:space="preserve">
@@ -242,17 +242,17 @@
     <value>Pro promítnutí změn musíte restartovat Syncthing</value>
   </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
-    <value>Zkrátit ID zařízení v náhledu logu</value>
+    <value>Zkracovat ID zařízení v náhledu logu</value>
   </data>
   <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
-    <value>Zobrazit ikonu v tray pouze při zavření</value>
+    <value>Zobrazovat ikonu v tray pouze při zavření</value>
   </data>
   <data name="SettingsView_Section_Advanced" xml:space="preserve">
     <value>Pokročilé</value>
     <comment>Section header for advanced settings</comment>
   </data>
   <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
-    <value>Spustit při přihlášení</value>
+    <value>Spouštění po přihlášení</value>
     <comment>Section header for settings to do with automatically starting SyncTrayzor when the user logs in</comment>
   </data>
   <data name="SettingsView_Section_Syncthing" xml:space="preserve">
@@ -272,11 +272,11 @@
     <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
   </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
-    <value>Spustit minimalizováno</value>
+    <value>Spouštět minimalizováno</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
   </data>
   <data name="SettingsView_StartOnLogin" xml:space="preserve">
-    <value>Spustit po přihlášení</value>
+    <value>Spouštět po přihlášení</value>
     <comment>Setting allowing the user to specify that SyncTrayzor should be started when the user logs in</comment>
   </data>
   <data name="SettingsView_StartOnLogin_PermissionDenied" xml:space="preserve">
@@ -284,7 +284,7 @@
     <comment>Message displayed instead of SettingsView_StartOnLogin SettingsView_StartMinimized when the user doesn't have permission to edit the registry</comment>
   </data>
   <data name="SettingsView_StartSyncthingAutomatically" xml:space="preserve">
-    <value>Spustit Syncthing při spuštění SyncTrayzor</value>
+    <value>Spouštět Syncthing při spuštění SyncTrayzor</value>
     <comment>Setting allowing the user to specify that Syncthing should be start automatically when SyncTrayzor starts</comment>
   </data>
   <data name="SettingsView_SyncthingAddress" xml:space="preserve">
@@ -295,7 +295,7 @@
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseCustomHome" xml:space="preserve">
-    <value>Použít vlastní domovskou složku Syncthing</value>
+    <value>Používat vlastní domovskou složku Syncthing</value>
   </data>
   <data name="SettingsView_SyncthingUseCustomHome_ToolTip" xml:space="preserve">
     <value>To znamená, že SyncTrayzor bude používat jiné konfigurační soubory než všechny ostatní instance Syncthing běžící na tomto počítači.</value>
@@ -435,11 +435,11 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately before the log path</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
-    <value>a vložit následující informace:</value>
+    <value>a vložte následující informace:</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately after the link to github, and also prompts the user to include the stack trace shown directly below this text</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Pre" xml:space="preserve">
-    <value>Prosím založte problém (Open an issue) na</value>
+    <value>Prosím upozorněte na problém (Open an issue) na</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately before the link to github</comment>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
@@ -531,10 +531,10 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Použít jazyk mého počítače všude, kde je to možné. Aby změna vstoupila v platnost, budete muset restartovat SyncTrayzor</value>
+    <value>Používat jazyk mého počítače všude, kde je to možné. Aby změna vstoupila v platnost, budete muset restartovat SyncTrayzor</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
-    <value>Zobraz_it</value>
+    <value>_Zobrazení</value>
   </data>
   <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
     <value>Příkazový řádek Syncthing</value>
@@ -544,5 +544,17 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
     <value>Zobrazit changelog</value>
+  </data>
+  <data name="ShellView_Menu_Zoom" xml:space="preserve">
+    <value>_Přiblížení</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
+    <value>_Přiblížit</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
+    <value>_Oddálit</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
+    <value>_Resetovat</value>
   </data>
 </root>

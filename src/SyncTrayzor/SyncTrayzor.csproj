@@ -156,6 +156,7 @@
     <Compile Include="Services\AssemblyProvider.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
+    <Compile Include="Services\Config\WindowPlacement.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
@@ -175,7 +176,7 @@
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
     <Compile Include="SyncThing\AuthenticatedHttpClientHandler.cs" />
-    <Compile Include="SyncThing\SyncThingConnectionRefusedException.cs" />
+    <Compile Include="SyncThing\SyncThingDidNotStartCorrectlyException.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcherFactory.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcherFactory.cs" />
     <Compile Include="Localization\LocalizeConverter.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
+    <Compile Include="Xaml\MouseWheelGesture.cs" />
     <Compile Include="Xaml\UacImageSource.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />
@@ -280,6 +282,7 @@
     <Compile Include="Xaml\ScrollToEndBehaviour.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
     <Compile Include="Xaml\ActivateBehaviour.cs" />
+    <Compile Include="Xaml\WindowPlacementBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />

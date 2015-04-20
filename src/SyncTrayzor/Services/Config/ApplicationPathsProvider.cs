@@ -15,6 +15,7 @@ namespace SyncTrayzor.Services.Config
         string SyncthingCustomHomePath { get; }
         string SyncthingBackupPath { get; }
         string ConfigurationFilePath { get; }
+        string ConfigurationFileBackupPath { get; }
         string UpdatesDownloadPath { get; }
 
         void Initialize(PathConfiguration pathConfiguration);
@@ -44,6 +45,7 @@ namespace SyncTrayzor.Services.Config
             logger.Debug("SyncThingPath: {0}", this.SyncthingPath);
             logger.Debug("SyncThingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
+            logger.Debug("ConfigurationFileBackupPath: {0}", this.ConfigurationFileBackupPath);
         }
 
         public string ExePath { get; set; }
@@ -73,6 +75,10 @@ namespace SyncTrayzor.Services.Config
             get { return this.pathConfiguration.ConfigurationFilePath; }
         }
 
+        public string ConfigurationFileBackupPath
+        {
+            get { return this.pathConfiguration.ConfigurationFileBackupPath; }
+        }
 
         public string UpdatesDownloadPath
         {

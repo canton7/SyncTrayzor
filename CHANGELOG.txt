@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.0.15
+-------
+
+ - Fix crash on startup if Syncthing is slow to start (#55)
+ - Remember window size-position (#51)
+ - Zoom built-in borwser (#52)
+ - Add support for aribtrary environmental variables for Syncthing
+
 v1.0.14
 -------
 

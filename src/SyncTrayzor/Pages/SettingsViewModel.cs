@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.Pages
@@ -16,6 +17,50 @@ namespace SyncTrayzor.Pages
     {
         public string Folder { get; set; }
         public bool IsSelected { get; set; }
+    }
+
+    public static class EnvironmentalVariablesParser
+    {
+        public static string Format(EnvironmentalVariableCollection result)
+        {
+            return String.Join(" ", result.Select(x => String.Format("{0}={1}", x.Key, x.Value.Contains(' ') ? "\"" + x.Value + "\"" : x.Value)));
+        }
+
+        public static bool TryParse(string input, out EnvironmentalVariableCollection result)
+        {
+            if (String.IsNullOrWhiteSpace(input))
+            {
+                result = new EnvironmentalVariableCollection();
+                return true;
+            }
+
+            result = null;
+
+            // http://stackoverflow.com/a/4780801/1086121
+            var parts = Regex.Split(input.Trim(), "(?<=^[^\"]+(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
+            var finalResult = new EnvironmentalVariableCollection();
+            foreach (var part in parts)
+            {
+                var subParts = part.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                if (subParts.Length != 2)
+                    return false;
+
+                if (subParts[0].Contains('"'))
+                    return false;
+
+                if (subParts[1].StartsWith("\"") != subParts[1].EndsWith("\""))
+                    return false;
+
+                if (finalResult.ContainsKey(subParts[0]))
+                    return false;
+
+                finalResult.Add(subParts[0], subParts[1].Trim('"'));
+            }
+
+            result = finalResult;
+            return true;
+        }
     }
 
     public class SettingsViewModelValidator : AbstractValidator<SettingsViewModel>
@@ -37,6 +82,12 @@ namespace SyncTrayzor.Pages
             }).WithMessage(Localizer.Translate("SettingsView_Validation_InvalidUrl"));
 
             RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
+
+            RuleFor(x => x.SyncThingEnvironmentalVariables).Must(str =>
+            {
+                EnvironmentalVariableCollection result;
+                return EnvironmentalVariablesParser.TryParse(str, out result);
+            }).WithMessage(Localizer.Translate("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat"));
         }
     }
 
@@ -80,7 +131,7 @@ namespace SyncTrayzor.Pages
         public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
 
         public bool SyncthingUseCustomHome { get; set; }
-        public string TraceVariables { get; set; }
+        public string SyncThingEnvironmentalVariables { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
 
         public SettingsViewModel(
@@ -124,7 +175,7 @@ namespace SyncTrayzor.Pages
                 IsSelected = x.IsWatched
             }));
             this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
-            this.TraceVariables = configuration.SyncthingTraceFacilities;
+            this.SyncThingEnvironmentalVariables = EnvironmentalVariablesParser.Format(configuration.SyncthingEnvironmentalVariables);
             this.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
         }
 
@@ -165,7 +216,11 @@ namespace SyncTrayzor.Pages
 
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
             configuration.SyncthingUseCustomHome = this.SyncthingUseCustomHome;
-            configuration.SyncthingTraceFacilities = String.IsNullOrWhiteSpace(this.TraceVariables) ? null : this.TraceVariables;
+
+            EnvironmentalVariableCollection envVars;
+            EnvironmentalVariablesParser.TryParse(this.SyncThingEnvironmentalVariables, out envVars);
+            configuration.SyncthingEnvironmentalVariables = envVars;
+
             configuration.SyncthingDenyUpgrade = this.SyncthingDenyUpgrade;
 
             this.configurationProvider.Save(configuration);

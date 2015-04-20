@@ -36,7 +36,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
         public SyncThingEventWatcher(ISyncThingApiClient apiClient)
-            : base(TimeSpan.Zero)
+            : base(TimeSpan.Zero, TimeSpan.FromSeconds(10))
         {
             this.apiClient = apiClient;
         }

@@ -34,7 +34,7 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
         public SyncThingConnectionsWatcher(ISyncThingApiClient apiClient)
-            : base(TimeSpan.FromSeconds(10))
+            : base(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10))
         {
             this.apiClient = apiClient;
         }
