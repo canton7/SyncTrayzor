@@ -274,6 +274,7 @@
     <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Xaml\MouseWheelGesture.cs" />
+    <Compile Include="Xaml\RemoveMnemonicsConverter.cs" />
     <Compile Include="Xaml\UacImageSource.cs" />
     <Compile Include="Utils\UriExtensions.cs" />
     <Compile Include="Xaml\CollapsingRowDefinitionBehaviour.cs" />
