@@ -309,7 +309,7 @@
     <value>Syncthing Environmental Variables:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>The following folders will be watched for changes, which avoids polling.</value>
+    <value>The following folders will be watched for changes, which means you can set a longer polling interval.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Folders unavailable. Please start Syncthing</value>
