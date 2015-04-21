@@ -52,9 +52,9 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             List<Event> events;
             // If this is the first poll, don't fetch the history
             if (this.lastEventId == 0)
-                events = await this.apiClient.FetchEventsAsync(0, 1, cancellationToken);
+                events = await this.apiClient.FetchEventsAsync(0, 1);
             else
-                events = await this.apiClient.FetchEventsAsync(this.lastEventId, cancellationToken);
+                events = await this.apiClient.FetchEventsAsync(this.lastEventId);
 
             // We can be aborted in the time it takes to fetch the events
             cancellationToken.ThrowIfCancellationRequested();
