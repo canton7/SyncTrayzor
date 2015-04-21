@@ -265,6 +265,7 @@
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
+    <Compile Include="Utils\ChromiumWebBrowserExtensions.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
