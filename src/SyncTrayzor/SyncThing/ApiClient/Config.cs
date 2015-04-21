@@ -41,9 +41,13 @@ namespace SyncTrayzor.SyncThing.ApiClient
             set { this.RescanIntervalSeconds = (long)value.TotalSeconds; }
         }
 
+        [JsonProperty("invalid")]
+        public string Invalid { get; set; }
+
         public override string ToString()
         {
-            return String.Format("<Folder id={0} path={1} devices=[{2}] readonly={3} rescalinterval={4}>", this.ID, this.Path, String.Join(", ", this.Devices), this.ReadOnly, this.RescanInterval);
+            return String.Format("<Folder id={0} path={1} devices=[{2}] readonly={3} rescalinterval={4} invalid={5}>",
+                this.ID, this.Path, String.Join(", ", this.Devices), this.ReadOnly, this.RescanInterval, this.Invalid);
         }
     }
 
