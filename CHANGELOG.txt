@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v1.0.16
+-------
+
+ - Installer recommends Syncthing 0.11 (#64)
+ - Fix bad browser zoom after restart (#57)
+ - Fix display of folders which contain an underscore (#58)
+ - Handle duplicate devices/folders in Syncthing config (#61)
+ - Fix bad character encoding in Syncthing console (#62)
+ - Fix installer's handling of Syncthing version changes (#63)
+ - Clarify some UI wording/typos (#60, others)
+ - Remember size of Syncthing console (#56)
+ - Updated translations
+
 v1.0.15
 -------
 
