@@ -41,12 +41,12 @@ TouchDate=current
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
-SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%n%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta).
+SyncthingVersion=%nPlease select the Syncthing version.%n%nv0.11 and v0.10 are incompatible. All of your devices must either use v0.11 or v0.10.%n
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "syncthing0p10"; Description: "Syncthing v0.10 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive
-Name: "syncthing0p11"; Description: "Syncthing v0.11 (beta)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked
+Name: "syncthing0p11"; Description: "Syncthing v0.11 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive 
+Name: "syncthing0p10"; Description: "Syncthing v0.10"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked 
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
