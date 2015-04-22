@@ -423,27 +423,36 @@ namespace SyncTrayzor.SyncThing
             cancellationToken.ThrowIfCancellationRequested();
             await Task.WhenAll(configTask, systemTask, versionTask, connectionsTask);
 
-            this.devices = new ConcurrentDictionary<string, Device>(configTask.Result.Devices.Select(device =>
+            // We can potentially see duplicate devices (if the user set their config file that way). Ignore them.
+            var devices = configTask.Result.Devices.DistinctBy(x => x.DeviceID).Select(device =>
             {
                 var deviceObj = new Device(device.DeviceID, device.Name);
                 ItemConnectionData connectionData;
                 if (connectionsTask.Result.DeviceConnections.TryGetValue(device.DeviceID, out connectionData))
                     deviceObj.SetConnected(connectionData.Address);
-                return new KeyValuePair<string, Device>(device.DeviceID, deviceObj);
-            }));
+                return deviceObj;
+            });
+            this.devices = new ConcurrentDictionary<string, Device>(devices.Select(x => new KeyValuePair<string, Device>(x.DeviceId, x)));
 
             var tilde = systemTask.Result.Tilde;
 
-            var folderConstructionTasks = configTask.Result.Folders.Select(async folder =>
-            {
-                var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
-                var path = folder.Path;
-                if (path.StartsWith("~"))
-                    path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-                return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
-            });
+            // If the folder is invalid for any reason, we'll ignore it.
+            // Again, there's the potential for duplicate folder IDs (if the user's been fiddling their config). 
+            // In this case, there's nothing really sensible we can do. Just pick one of them :)
+            var folderConstructionTasks = configTask.Result.Folders
+                .Where(x => String.IsNullOrWhiteSpace(x.Invalid))
+                .DistinctBy(x => x.ID)
+                .Select(async folder =>
+                {
+                    var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
+                    var path = folder.Path;
+                    if (path.StartsWith("~"))
+                        path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                    return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
+                });
 
             cancellationToken.ThrowIfCancellationRequested();
+
             var folders = await Task.WhenAll(folderConstructionTasks);
             this.folders = new ConcurrentDictionary<string, Folder>(folders.Select(x => new KeyValuePair<string, Folder>(x.FolderId, x)));
 

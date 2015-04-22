@@ -43,12 +43,13 @@ TouchDate=current
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
-SyncthingVersion=%nPlease select the Syncthing version.%n%n!! IMPORTANT !!%n%nv0.10 and v0.11 (beta) are incompatible. All of your devices must either use v0.10 or v0.11 (beta).
+SyncthingVersion=%nPlease select the Syncthing version.%n%nv0.11 and v0.10 are incompatible. All of your devices must either use v0.11 or v0.10.%n
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "syncthing0p10"; Description: "Syncthing v0.10 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive
-Name: "syncthing0p11"; Description: "Syncthing v0.11 (beta)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked
+Name: "syncthing0p11"; Description: "Syncthing v0.11 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive 
+Name: "syncthing0p10"; Description: "Syncthing v0.10"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked             
+
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
@@ -86,12 +87,32 @@ begin
   result := not exists or (release < 378758);
 end;
 
+procedure BumpInstallCount;
+var
+  fileContents: AnsiString;
+  installCount: integer;
+begin
+  { Increment the install count in InstallCount.txt if it exists, or create it with the contents '1' if it doesn't }
+  if LoadStringFromFile(ExpandConstant('{app}\InstallCount.txt'), fileContents) then
+  begin
+    installCount := StrTointDef(Trim(string(fileContents)), 0) + 1;
+  end
+  else
+  begin
+    installCount := 1;
+  end;
+
+  SaveStringToFile(ExpandConstant('{app}\InstallCount.txt'), IntToStr(installCount), False);
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ResultCode: integer;
 begin
   if CurStep = ssInstall then
   begin
+    BumpInstallCount();
+
     { We might be being run from ProcessRunner.exe, *and* we might be trying to update it. Funsies. Let's rename it (which Windows lets us do) }
     DeleteFile(ExpandConstant('{app}\ProcessRunner.exe.old'));
     RenameFile(ExpandConstant('{app}\ProcessRunner.exe'), ExpandConstant('{app}\ProcessRunner.exe.old'));
@@ -114,5 +135,6 @@ end;
 
 [UninstallDelete]
 Type: files; Name: "{app}\ProcessRunner.exe.old"
+Type: files; Name: "{app}\InstallCount.txt"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"

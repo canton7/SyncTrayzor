@@ -29,6 +29,7 @@ namespace SyncTrayzor.Pages
 
         private readonly object cultureLock = new object(); // This can be read from many threads
         private CultureInfo culture;
+        private double zoomLevel;
 
         public string Location { get; private set; }
         
@@ -36,7 +37,7 @@ namespace SyncTrayzor.Pages
         public bool ShowSyncThingStarting { get { return this.syncThingState == SyncThingState.Starting; } }
         public bool ShowSyncThingStopped { get { return this.syncThingState == SyncThingState.Stopped; ; } }
 
-        public IWpfWebBrowser WebBrowser { get; set; }
+        public ChromiumWebBrowser WebBrowser { get; set; }
 
         private JavascriptCallbackObject callback;
 
@@ -50,6 +51,9 @@ namespace SyncTrayzor.Pages
             this.syncThingManager = syncThingManager;
             this.processStartProvider = processStartProvider;
             this.configurationProvider = configurationProvider;
+
+            var configuration = this.configurationProvider.Load();
+            this.zoomLevel = configuration.SyncthingWebBrowserZoomLevel;
 
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -65,7 +69,7 @@ namespace SyncTrayzor.Pages
                     this.InitializeBrowser(e.NewValue);
             });
 
-            this.SetCulture(configurationProvider.Load());
+            this.SetCulture(configuration);
             configurationProvider.ConfigurationChanged += (o, e) => this.SetCulture(e.NewConfiguration);
         }
 
@@ -85,11 +89,25 @@ namespace SyncTrayzor.Pages
             });
         }
 
-        private void InitializeBrowser(IWpfWebBrowser webBrowser)
+        private void InitializeBrowser(ChromiumWebBrowser webBrowser)
         {
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
+
+            // So. Fun story. From https://github.com/cefsharp/CefSharp/issues/738#issuecomment-91099199, we need to set the zoom level
+            // in the FrameLoadStart event. However, the IWpfWebBrowser's ZoomLevel is a DependencyProperty, and it wraps
+            // the SetZoomLevel method on the unmanaged browser (which is exposed directly by ChromiumWebBrowser, but not by IWpfWebBrowser).
+            // Now, FrameLoadState and FrameLoadEnd are called on a background thread, and since ZoomLevel is a DP, it can only be changed
+            // from the UI thread (it's "helpful" and does a dispatcher check for us). But, if we dispatch back to the UI thread to call
+            // ZoomLevel = xxx, then CEF seems to hit threading issues, and can sometimes render things entirely badly (massive icons, no
+            // localization, bad spacing, no JavaScript at all, etc).
+            // So, in this case, we need to call SetZoomLevel directly, as we can do that from the thread on which FrameLoadStart is called,
+            // and everything's happy.
+            // However, this means that the DP value isn't updated... Which means we can't use the DP at all. We have to call SetZoomLevel
+            // *everywhere*, and that means keeping a local field zoomLevel to track the current zoom level. Such is life
+
+            webBrowser.FrameLoadStart += (o, e) => webBrowser.SetZoomLevel(this.zoomLevel);
             webBrowser.FrameLoadEnd += (o, e) =>
             {
                 if (e.IsMainFrame && e.Url != "about:blank")
@@ -103,7 +121,6 @@ namespace SyncTrayzor.Pages
                     webBrowser.ExecuteScriptAsync(script);
                 }
             };
-            WebBrowser.ZoomLevel = this.configurationProvider.Load().SyncthingWebBrowserZoomLevel;
         }
 
         public void RefreshBrowser()
@@ -115,30 +132,27 @@ namespace SyncTrayzor.Pages
 
         public void ZoomIn()
         {
-            this.ZoomBy(0.2);
+            this.ZoomTo(this.zoomLevel + 0.2);
         }
 
         public void ZoomOut()
         {
-            this.ZoomBy(-0.2);
-        }
-
-        private void ZoomBy(double amount)
-        {
-            if (this.WebBrowser == null || this.syncThingState != SyncThingState.Running)
-                return;
-
-            this.WebBrowser.ZoomLevel += amount;
-            this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingWebBrowserZoomLevel = this.WebBrowser.ZoomLevel);
+            this.ZoomTo(this.zoomLevel - 0.2);
         }
 
         public void ZoomReset()
         {
+            this.ZoomTo(0.0);
+        }
+
+        private void ZoomTo(double zoomLevel)
+        {
             if (this.WebBrowser == null || this.syncThingState != SyncThingState.Running)
                 return;
 
-            this.WebBrowser.ZoomLevel = 0;
-            this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingWebBrowserZoomLevel = this.WebBrowser.ZoomLevel);
+            this.zoomLevel = zoomLevel;
+            this.WebBrowser.SetZoomLevel(zoomLevel);
+            this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingWebBrowserZoomLevel = zoomLevel);
         }
 
         private void OpenFolder(string folderId)

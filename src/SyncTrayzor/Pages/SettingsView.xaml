@@ -119,7 +119,10 @@
                             <ItemsControl ItemsSource="{Binding WatchedFolders}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <CheckBox Content="{Binding Folder}" IsChecked="{Binding IsSelected}"/>
+                                        <CheckBox IsChecked="{Binding IsSelected}">
+                                            <!-- TextBlock needed so that underscores aren't turned into mnemonics -->
+                                            <TextBlock Text="{Binding Folder}"/>
+                                        </CheckBox>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

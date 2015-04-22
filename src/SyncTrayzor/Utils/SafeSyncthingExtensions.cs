@@ -35,8 +35,8 @@ namespace SyncTrayzor.Utils
             {
                 // Haven't translated yet - still debugging
                 windowManager.ShowMessageBox(
-                    "Syncthing didn't start correctly",
                     "Syncthing started running, but we were enable to connect to it. Please report this as a bug",
+                    "Syncthing didn't start correctly",
                     MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
         }

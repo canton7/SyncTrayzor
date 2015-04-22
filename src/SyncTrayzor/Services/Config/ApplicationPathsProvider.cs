@@ -17,6 +17,7 @@ namespace SyncTrayzor.Services.Config
         string ConfigurationFilePath { get; }
         string ConfigurationFileBackupPath { get; }
         string UpdatesDownloadPath { get; }
+        string InstallCountFilePath { get; }
 
         void Initialize(PathConfiguration pathConfiguration);
     }
@@ -83,6 +84,11 @@ namespace SyncTrayzor.Services.Config
         public string UpdatesDownloadPath
         {
             get { return Path.Combine(Path.GetTempPath(), "SyncTrayzor"); }
+        }
+
+        public string InstallCountFilePath
+        {
+            get { return Path.Combine(this.ExePath, "InstallCount.txt"); }
         }
     }
 }

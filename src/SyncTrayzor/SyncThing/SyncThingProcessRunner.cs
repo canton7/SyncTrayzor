@@ -102,6 +102,8 @@ namespace SyncTrayzor.SyncThing
                 RedirectStandardInput = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
 
             foreach (var kvp in this.EnvironmentalVariables)

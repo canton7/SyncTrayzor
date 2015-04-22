@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Interactivity;
 
 namespace SyncTrayzor.Xaml
@@ -43,8 +44,15 @@ namespace SyncTrayzor.Xaml
             this.Refresh();
         }
 
+        protected override void OnDetaching()
+        {
+            BindingOperations.ClearBinding(this.AssociatedObject, RowDefinition.HeightProperty);
+        }
+
         private void Refresh()
         {
+            BindingOperations.ClearBinding(this.AssociatedObject, RowDefinition.HeightProperty);
+
             if (this.RowVisibility == Visibility.Collapsed)
             {
                 this.AssociatedObject.Height = new GridLength(0);
@@ -52,7 +60,13 @@ namespace SyncTrayzor.Xaml
             }
             else
             {
-                this.AssociatedObject.Height = this.Height;
+                var heightBinding = new Binding("Height")
+                {
+                    Source = this,
+                    Mode = BindingMode.TwoWay,
+                };
+                BindingOperations.SetBinding(this.AssociatedObject, RowDefinition.HeightProperty, heightBinding);
+
                 this.AssociatedObject.MinHeight = this.MinHeight;
             }
         }

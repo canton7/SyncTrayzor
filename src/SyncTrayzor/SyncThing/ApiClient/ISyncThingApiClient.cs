@@ -10,8 +10,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
     public interface ISyncThingApiClient
     {
         Task ShutdownAsync();
-        Task<List<Event>> FetchEventsAsync(int since, int limit, CancellationToken cancellationToken);
-        Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken);
+        Task<List<Event>> FetchEventsAsync(int since, int limit);
+        Task<List<Event>> FetchEventsAsync(int since);
         Task<Config> FetchConfigAsync();
         Task ScanAsync(string folderId, string subPath);
         Task<SystemInfo> FetchSystemInfoAsync();

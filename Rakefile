@@ -43,6 +43,8 @@ class ArchDirConfig
   end
 end
 
+SYNCTHING_VERSIONS_TO_UPDATE = ['0.11']
+
 ARCH_CONFIG = [ArchDirConfig.new('x64'), ArchDirConfig.new('x86')]
 ASSEMBLY_INFOS = FileList['**/AssemblyInfo.cs']
 
@@ -166,7 +168,7 @@ namespace :"update-syncthing" do
   ARCH_CONFIG.each do |arch_config|
     desc "Update syncthing binaries (#{arch_config.arch}"
     task arch_config.arch do
-      arch_config.syncthing_binaries.values.each do |bin|
+      arch_config.syncthing_binaries.values_at(*SYNCTHING_VERSIONS_TO_UPDATE).each do |bin|
         path = File.join(arch_config.installer_dir, bin)
         raise "Could not find #{path}" unless File.exist?(path)
         sh path, '-upgrade' do; end

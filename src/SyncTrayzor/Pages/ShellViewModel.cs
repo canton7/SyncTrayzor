@@ -27,6 +27,7 @@ namespace SyncTrayzor.Pages
 
         public bool WindowActivated { get; set; }
         public bool ShowConsole { get; set; }
+        public double ConsoleHeight { get; set; }
         public WindowPlacement Placement { get; set; }
         public ConsoleViewModel Console { get; private set; }
         public ViewerViewModel Viewer { get; private set; }
@@ -62,8 +63,14 @@ namespace SyncTrayzor.Pages
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
             this.syncThingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
 
-            this.ShowConsole = configuration.ShowSyncthingConsole;
-            this.Bind(s => s.ShowConsole, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.ShowSyncthingConsole = e.NewValue));
+            this.ConsoleHeight = configuration.SyncthingConsoleHeight;
+            this.Bind(s => s.ConsoleHeight, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingConsoleHeight = e.NewValue));
+
+            this.ShowConsole = configuration.SyncthingConsoleHeight > 0;
+            this.Bind(s => s.ShowConsole, (o, e) =>
+            {
+                this.ConsoleHeight = e.NewValue ? Configuration.DefaultSyncthingConsoleHeight : 0.0;
+            });
 
             this.Placement = configuration.WindowPlacement;
             this.Bind(s => s.Placement, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.WindowPlacement = e.NewValue));

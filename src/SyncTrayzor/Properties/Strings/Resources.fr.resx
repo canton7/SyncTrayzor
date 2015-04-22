@@ -179,7 +179,7 @@
     <value>_Arrêter</value>
   </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
-    <value>Arrêter _tous les processus  Syncthing</value>
+    <value>Arrêter _tous les processus Syncthing</value>
   </data>
   <data name="ShellView_Menu_Syncthing_OpenExternal" xml:space="preserve">
     <value>_Ouvrir dans le navigateur externe</value>
@@ -305,11 +305,11 @@
     <value>Paramètres</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
-  <data name="SettingsView_TraceVariables" xml:space="preserve">
-    <value>Syncthing Trace Variables:</value>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Variables d’environnement de Syncthing :</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>The following folders will be watched for changes, which avoids polling.</value>
+    <value>The following folders will be watched for changes, which means you can set a longer polling interval.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Dossiers indisponibles. Veuillez démarrer Syncthing</value>
@@ -537,7 +537,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>_Vue</value>
   </data>
   <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
-    <value>Syncthing Console</value>
+    <value>Afficher la console de Syncthing</value>
   </data>
   <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
     <value>Installer maintenant</value>
@@ -546,15 +546,18 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>View Changelog</value>
   </data>
   <data name="ShellView_Menu_Zoom" xml:space="preserve">
-    <value>_Zoom Browser</value>
+    <value>Zoom</value>
   </data>
   <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
-    <value>Zoom _In</value>
+    <value>Zoom _avant</value>
   </data>
   <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
-    <value>Zoom _Out</value>
+    <value>Zoom _arrière</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
-    <value>_Reset</value>
+    <value>_Normal</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Doit être dans le format suivant : &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
 </root>
