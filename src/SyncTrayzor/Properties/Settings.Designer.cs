@@ -134,6 +134,7 @@ namespace SyncTrayzor.Properties {
   <UseComputerCulture>true</UseComputerCulture>
   <SyncthingConsoleHeight>100</SyncthingConsoleHeight>
   <SyncthingWebBrowserZoomLevel>0</SyncthingWebBrowserZoomLevel>
+  <LastSeenInstallCount>0</LastSeenInstallCount>
 </Configuration>")]
         public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
             get {

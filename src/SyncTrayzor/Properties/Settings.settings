@@ -52,6 +52,7 @@
   &lt;UseComputerCulture&gt;true&lt;/UseComputerCulture&gt;
   &lt;SyncthingConsoleHeight&gt;100&lt;/SyncthingConsoleHeight&gt;
   &lt;SyncthingWebBrowserZoomLevel&gt;0&lt;/SyncthingWebBrowserZoomLevel&gt;
+  &lt;LastSeenInstallCount&gt;0&lt;/LastSeenInstallCount&gt;
 &lt;/Configuration&gt;</Value>
     </Setting>
     <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">

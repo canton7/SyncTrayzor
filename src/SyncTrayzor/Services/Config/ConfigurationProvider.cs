@@ -80,25 +80,59 @@ namespace SyncTrayzor.Services.Config
             if (!File.Exists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
                 Directory.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
-            if (!File.Exists(this.paths.SyncthingPath))
+            this.currentConfig = this.LoadFromDisk(defaultConfiguration);
+
+            bool installCountChanged = false;
+            bool updateConfigInstallCount = false;
+            int latestInstallCount = 0;
+            // Might be portable, in which case this file won't exist
+            if (File.Exists(this.paths.InstallCountFilePath))
             {
-                if (File.Exists(this.paths.SyncthingBackupPath))
+                latestInstallCount = Int32.Parse(File.ReadAllText(this.paths.InstallCountFilePath).Trim());
+                if (latestInstallCount != this.currentConfig.LastSeenInstallCount)
                 {
-                    logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath);
-                    File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath);
+                    installCountChanged = true;
+                    updateConfigInstallCount = true;
                 }
-                else
-                    throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath));
-            }
-            else if (this.paths.SyncthingPath != this.paths.SyncthingBackupPath && File.Exists(this.paths.SyncthingBackupPath) &&
-                File.GetLastWriteTimeUtc(this.paths.SyncthingPath) < File.GetLastWriteTimeUtc(this.paths.SyncthingBackupPath))
-            {
-                logger.Info("Syncthing at {0} is older ({1}) than at {2} ({3}, so overwriting from backup",
-                    this.paths.SyncthingPath, File.GetLastWriteTimeUtc(this.paths.SyncthingPath), this.paths.SyncthingBackupPath, File.GetLastWriteTimeUtc(this.paths.SyncthingBackupPath));
-                File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath, true);
             }
 
-            this.currentConfig = this.LoadFromDisk(defaultConfiguration);
+            // They're the same if we're portable, in which case, nothing to do
+            if (this.paths.SyncthingPath != this.paths.SyncthingBackupPath)
+            {
+                if (!File.Exists(this.paths.SyncthingPath))
+                {
+                    if (File.Exists(this.paths.SyncthingBackupPath))
+                    {
+                        logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath);
+                        File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath);
+                    }
+                    else
+                    {
+                        throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath));
+                    }
+                }
+                else if (installCountChanged)
+                {
+                    // If we hit this, then latestInstallCount is set to a real value
+                    logger.Info("Install Count changed, so updating Syncthing at {0} from {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath);
+                    try
+                    {
+                        File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath, true);
+                    }
+                    catch (IOException e)
+                    {
+                        // Syncthing.exe was probably running. We'll try again next time
+                        updateConfigInstallCount = false;
+                        logger.Error(String.Format("Failed to copy Syncthing from {0} to {1}", this.paths.SyncthingBackupPath, this.paths.SyncthingPath), e);
+                    }
+                }
+            }
+
+            if (updateConfigInstallCount)
+            {
+                this.currentConfig.LastSeenInstallCount = latestInstallCount;
+                this.SaveToFile(this.currentConfig);
+            }
         }
 
         private Configuration LoadFromDisk(Configuration defaultConfiguration)
