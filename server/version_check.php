@@ -65,6 +65,16 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
+   '1.0.16' => [
+      'installed' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.16/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.16/SyncTrayzorSetup-x86.exe',
+         ],
+      ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.16',
+      'release_notes' => "- Installer recommends Syncthing 0.11 (#64)\n- Fix bad browser zoom after restart (#57)\n- Fix display of folders which contain an underscore (#58)\n- Handle duplicate devices/folders in Syncthing config (#61)\n- Fix bad character encoding in Syncthing console (#62)\n- Fix installer's handling of Syncthing version changes (#63)\n- Clarify some UI wording/typos (#60, others)\n- Remember size of Syncthing console (#56)\n- Updated translations",
+   ],
    '1.0.15' => [
       'installed' => [
          'direct_download_url' => [
@@ -73,14 +83,14 @@ $versions = [
          ],
       ],
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.15',
-      'release_notes' => "- Fix crash on startup if Syncthing is slow to start (#55)\n- Remember window size/position (#51)\n- Zoom built-in browser (#52)\n- Add support for arbitrary environmental variables for Syncthing\n",
+      'release_notes' => "- Fix crash on startup if Syncthing is slow to start (#55)\n- Remember window size/position (#51)\n- Zoom built-in browser (#52)\n- Add support for arbitrary environmental variables for Syncthing",
    ],
    '1.0.14' => [
       'installed' => [
          'direct_download_url' => []
       ],
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.14',
-      'release_notes' => "- Give Syncthing more than 10 seconds to start, fixing crash (#47, #48, #50)\n- Better Syncthing API management in general\n- Add support for 150% and 200% DPI to tray icon\n- Slightly improve UI\n",
+      'release_notes' => "- Give Syncthing more than 10 seconds to start, fixing crash (#47, #48, #50)\n- Better Syncthing API management in general\n- Add support for 150% and 200% DPI to tray icon\n- Slightly improve UI",
    ],
    '1.0.13' => [
       'installed' => [
@@ -92,6 +102,7 @@ $versions = [
 ];
 
 $upgrades = [
+   '1.0.15' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.14' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.13' => ['to' => 'latest', 'formatter' => '1'],
    '1.0.12' => ['to' => 'latest', 'formatter' => '1'],

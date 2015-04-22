@@ -167,7 +167,7 @@
     <value>_Nastavení</value>
   </data>
   <data name="ShellView_Menu_Help" xml:space="preserve">
-    <value>P_omoc</value>
+    <value>_Pomoc</value>
   </data>
   <data name="ShellView_Menu_Help_About" xml:space="preserve">
     <value>_O programu</value>
@@ -305,11 +305,11 @@
     <value>Nastavení</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
-  <data name="SettingsView_TraceVariables" xml:space="preserve">
-    <value>Proměnné sledování Syncthing:</value>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Proměnné prostředí Syncthing:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>V následujících adresářích budou sledovány změny, což zabrání opakovanému skenování.</value>
+    <value>V následujících adresářích budou sledovány změny, tudíž pro ně můžete nastavit delší interval opakování skenování.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Adresáře nejsou dostupné. Spusťte prosím Syncthing</value>
@@ -556,5 +556,8 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
     <value>_Resetovat</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Musí být ve formátu &apos;PROM=hodnota PROM2=&quot;hodnota1 hodnota2&quot;&apos;</value>
   </data>
 </root>
