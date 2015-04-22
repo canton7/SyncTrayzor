@@ -91,6 +91,7 @@ namespace SyncTrayzor.Services.Config
                 latestInstallCount = Int32.Parse(File.ReadAllText(this.paths.InstallCountFilePath).Trim());
                 if (latestInstallCount != this.currentConfig.LastSeenInstallCount)
                 {
+                    logger.Debug("InstallCount changed from {0} to {1}", this.currentConfig.LastSeenInstallCount, latestInstallCount);
                     installCountChanged = true;
                     updateConfigInstallCount = true;
                 }
