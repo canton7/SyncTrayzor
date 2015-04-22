@@ -305,11 +305,11 @@
     <value>Instellingen</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
-  <data name="SettingsView_TraceVariables" xml:space="preserve">
-    <value>Syncthing-opsporingsvariabelen:</value>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Syncthing Environmental Variables:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>De volgende mappen zullen in de gaten worden gehouden op wijzigingen:</value>
+    <value>The following folders will be watched for changes, which means you can set a longer polling interval.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Geen mappen beschikbaar. Start Syncthing.</value>
@@ -556,5 +556,8 @@ SyncTrayzor gaat nu afsluiten. Onze excuses.</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
     <value>_Reset</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Must be in the format &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
 </root>

@@ -121,7 +121,7 @@
     <value>Δημιουργήθηκε από τον Antony Male.</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Λήψη</value>
+    <value>Άνοιγμα σελίδας λήψης</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
@@ -198,7 +198,7 @@
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Λήψη τώρα</value>
+    <value>Άνοιγμα σελίδας λήψης</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
@@ -305,11 +305,11 @@
     <value>Ρυθμίσεις</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
-  <data name="SettingsView_TraceVariables" xml:space="preserve">
-    <value>Syncthing ανίχνευση μεταβλητών:</value>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Syncthing περιβαλλοντικές μεταβλητές:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Οι ακόλουθοι φάκελοι θα πρέπει να παρακολουθούνται για αλλαγές, πράγμα που αποτρέπει την ψηφοφορία.</value>
+    <value>The following folders will be watched for changes, which means you can set a longer polling interval.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Φάκελοι μη διαθέσιμη. Παρακαλούμε ξεκινήστε το Syncthing</value>
@@ -544,5 +544,20 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
     <value>Εμφάνιση αρχείου καταγραφής αλλαγών</value>
+  </data>
+  <data name="ShellView_Menu_Zoom" xml:space="preserve">
+    <value>_Zoom Browser</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
+    <value>Μεγέθυνση</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
+    <value>Σμίκρυνση</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
+    <value>Eπαναφορά</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Πρέπει να είναι στη μορφή &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
 </root>

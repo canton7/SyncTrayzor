@@ -121,7 +121,7 @@
     <value>Creado por Antony Male.</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Open Download Page</value>
+    <value>Abrir la página de descargas</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
@@ -185,7 +185,7 @@
     <value>_Abrir en navegador externo</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Refresh" xml:space="preserve">
-    <value>_Refrescar navegador</value>
+    <value>Re_frescar navegador</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Start" xml:space="preserve">
     <value>_Comenzar</value>
@@ -198,7 +198,7 @@
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Open Download Page</value>
+    <value>Abrir la página  de descargas</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
@@ -213,7 +213,7 @@
     <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
-    <value>SyncTrayzor version {0} is available!</value>
+    <value>¡La versión {0} de SyncTrayzor está disponible!</value>
     <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
   </data>
   <data name="NewVersionAlertView_Title" xml:space="preserve">
@@ -239,7 +239,7 @@
     <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
   </data>
   <data name="SettingsView_MustRestartSyncthingWarning" xml:space="preserve">
-    <value>Debes reiniciar Syncthing para que los nuevos cambios surtan efecto.</value>
+    <value>Debes reiniciar Syncthing para que los nuevos cambios surtan efecto</value>
   </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
     <value>Ofuscar el ID de dispositivo en la ventana de log</value>
@@ -252,7 +252,7 @@
     <comment>Section header for advanced settings</comment>
   </data>
   <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
-    <value>iniciar al hacer login</value>
+    <value>Iniciar al hacer login</value>
     <comment>Section header for settings to do with automatically starting SyncTrayzor when the user logs in</comment>
   </data>
   <data name="SettingsView_Section_Syncthing" xml:space="preserve">
@@ -264,7 +264,7 @@
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
   <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
-    <value>Carpetas Vigiladas</value>
+    <value>Carpetas Supervisadas</value>
     <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
   </data>
   <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
@@ -295,7 +295,7 @@
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseCustomHome" xml:space="preserve">
-    <value>Usar el directorio principal para Syncthing.</value>
+    <value>Usar el directorio principal para Syncthing</value>
   </data>
   <data name="SettingsView_SyncthingUseCustomHome_ToolTip" xml:space="preserve">
     <value>Esto significa que SyncTrayzor verá un conjunto diferente de carpetas configuradas con respecto a cualquier otra instancia de Syncthing en tu ordenador.</value>
@@ -305,11 +305,11 @@
     <value>Preferencias</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
-  <data name="SettingsView_TraceVariables" xml:space="preserve">
-    <value>Variables de trazado de Syncthing:</value>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Variables de Entorno de Syncthing:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Las siguiente carpetas estarán vigiladas durante los cambios, lo cual evita el muestreo.</value>
+    <value>Las siguientes carpetas estarán supervisadas por si cambian, lo que significa que puedes configurar un intervalo de consulta más largo.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Carpetas no disponibles. Por favor inicia Syncthing</value>
@@ -531,30 +531,33 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Usar el idioma de mi ordenador, si está disponible. Es necesario reiniciar SyncTrayzor para que el cambio surta efecto.</value>
+    <value>Usar el idioma de mi ordenador si está disponible. Es necesario reiniciar SyncTrayzor para que el cambio surta efecto</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
-    <value>_View</value>
+    <value>_Ver</value>
   </data>
   <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
-    <value>Syncthing Console</value>
+    <value>_Mostrar la consola de Syncthing</value>
   </data>
   <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
-    <value>Install Now</value>
+    <value>Instalar ahora</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
-    <value>View Changelog</value>
+    <value>Ver lista de cambios</value>
   </data>
   <data name="ShellView_Menu_Zoom" xml:space="preserve">
-    <value>_Zoom Browser</value>
+    <value>_Zoom del navegador</value>
   </data>
   <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
-    <value>Zoom _In</value>
+    <value>_Acercar</value>
   </data>
   <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
-    <value>Zoom _Out</value>
+    <value>Al_ejar</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
-    <value>_Reset</value>
+    <value>_Restaurar</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Debe estar en el formato &apos;VAR=valor VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
 </root>
