@@ -19,7 +19,7 @@ PORTABLE_DIR = 'portable'
 
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
-PORTABLE_SYNCTHING_VERSION = '0.10'
+PORTABLE_SYNCTHING_VERSION = '0.11'
 
 class ArchDirConfig
   attr_reader :arch
