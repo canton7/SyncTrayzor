@@ -112,8 +112,9 @@ namespace SyncTrayzor.Pages
             {
                 if (e.IsMainFrame && e.Url != "about:blank")
                 {
+                    // In 0.11, it changed from 'folder.ID' to 'folder.id'
                     var script = @"$('#folders .panel-footer .pull-right').prepend(" +
-                    @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.ID)"">" +
+                    @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id || angular.element(this).folder.ID)"">" +
                     @"<span class=""glyphicon glyphicon-folder-open""></span>" +
                     @"<span style=""margin-left: 12px"">" +
                     Localizer.Translate("ViewerView_OpenFolder") +
