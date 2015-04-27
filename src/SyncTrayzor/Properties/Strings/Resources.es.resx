@@ -444,7 +444,7 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>¡Error!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Iniciando Syncthing...</value>

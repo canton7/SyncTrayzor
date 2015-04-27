@@ -444,10 +444,10 @@ SyncTrayzor sa musí zavrieť. Ospravedlňujeme sa</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Chyba!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
-    <value>Syncting sa spúšťa...</value>
+    <value>Syncthing sa spúšťa...</value>
     <comment>Text shown in the centre of the screen when Syncthing is starting, but there's no UI to display yet</comment>
   </data>
   <data name="ViewerView_SyncthingStopped" xml:space="preserve">

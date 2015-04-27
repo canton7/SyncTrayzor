@@ -22,7 +22,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public async Task<ISyncThingApiClient> CreateCorrectApiClientAsync(Uri baseAddress, string apiKey, TimeSpan timeout, CancellationToken cancellationToken)
         {
-            // This is a bit fugly - there's no way to determine which one we're talking to without trying a request and have it fail...
+            // This is a bit ugly - there's no way to determine which one we're talking to without trying a request and have it fail...
             ISyncThingApiClient client = new SyncThingApiClientV0p10(baseAddress, apiKey);
 
             // We abort because of the CancellationToken or because we take too long, or succeed

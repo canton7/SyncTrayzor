@@ -5,11 +5,11 @@
  * 
  * Clients request this with their current version, arch, and variant (portable, etc)
  * and this gives them a version to upgrade to (if any), along with the method of
- * ugprading to it (manual navigation to github release page, automatic silent upgrade,
+ * upgrading to it (manual navigation to Github release page, automatic silent upgrade,
  * etc). 
  * 
  * $versions is a record of all of the current releases, which we might want to upgrade
- * people to. It has the struture:
+ * people to. It has the structure:
  * [
  *    version => [
  *       variant => [
@@ -41,7 +41,7 @@
  * ]
  *
  * old_version: version being upgraded from
- * new_version: version to upgrade ot
+ * new_version: version to upgrade to
  * formatter_version: formatter version to use (in $response_formatters)
  * overrides: optional overrides, used by the formatter
  */
