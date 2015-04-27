@@ -444,7 +444,7 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Chyba!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Syncthing se spouští...</value>

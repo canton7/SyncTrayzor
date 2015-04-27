@@ -444,7 +444,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Erreur !</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Démarrage de Syncthing...</value>
@@ -513,7 +513,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>Arrêter la mise à jour automatique de Syncthing</value>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
-    <value>Empêcher Syncting de se mettre à jour automatiquement. Ceci est utile lorsqu&apos;une nouvelle version de Syncthing n&apos;est plus compatible avec SyncTrayzor. Vous devrez rétrograder la version du fichier syncthing.exe dans le dossier de configuration de SyncTrayzor</value>
+    <value>Empêcher Syncthing de se mettre à jour automatiquement. Ceci est utile lorsqu&apos;une nouvelle version de Syncthing n&apos;est plus compatible avec SyncTrayzor. Vous devrez rétrograder la version du fichier syncthing.exe dans le dossier de configuration de SyncTrayzor</value>
   </data>
   <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
     <value>Démarrer Syncthing en tant que processus à faible priorité</value>
