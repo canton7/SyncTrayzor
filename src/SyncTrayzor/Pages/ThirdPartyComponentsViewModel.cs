@@ -100,7 +100,7 @@ namespace SyncTrayzor.Pages
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",
                     License = "MIT",
-                    Notes = "Not distributed with SyncTrayzor, but provides aweomse compile-time features",
+                    Notes = "Not distributed with SyncTrayzor, but provides awesome compile-time features",
                     LicenseText = this.LoadLicense("Fody.txt")
                 },
             });
