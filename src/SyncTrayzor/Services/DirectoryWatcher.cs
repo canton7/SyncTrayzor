@@ -95,7 +95,7 @@ namespace SyncTrayzor.Services
                 watcher.Changed += OnChanged;
                 watcher.Created += OnChanged;
                 watcher.Deleted += OnChanged;
-                watcher.Renamed += OnRenamed;
+                watcher.Renamed += OnChanged;
 
                 watcher.EnableRaisingEvents = true;
 
@@ -113,12 +113,6 @@ namespace SyncTrayzor.Services
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             this.PathChanged(e.FullPath);
-        }
-
-        private void OnRenamed(object source, RenamedEventArgs e)
-        {
-            this.PathChanged(e.FullPath);
-            this.PathChanged(e.OldFullPath);
         }
 
         private void PathChanged(string path)
