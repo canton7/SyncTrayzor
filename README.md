@@ -25,7 +25,7 @@ Features include:
 Installation
 ------------
 
-SyncTrayzor is packaged as both an installer and a standalone zip.
+SyncTrayzor is packaged as both an installer and a standalone zip. It will run on Windows Vista, 7, and 8.
 
 ### Installer
 
