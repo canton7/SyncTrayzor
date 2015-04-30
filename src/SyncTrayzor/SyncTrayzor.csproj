@@ -91,6 +91,9 @@
       <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
+    <Reference Include="Pri.LongPath">
+      <HintPath>..\packages\Pri.LongPath.1.3.2.0\lib\net45\Pri.LongPath.dll</HintPath>
+    </Reference>
     <Reference Include="Refit">
       <HintPath>..\packages\refit.2.2.0\lib\Net45\Refit.dll</HintPath>
     </Reference>
