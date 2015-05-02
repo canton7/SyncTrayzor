@@ -1,4 +1,5 @@
 ﻿using NLog;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-
 using Path = Pri.LongPath.Path;
 
 namespace SyncTrayzor.Services
@@ -131,6 +131,9 @@ namespace SyncTrayzor.Services
 
         private void PathChanged(string path)
         {
+            // First, we need to convert to a long path, just in case anyone's using the short path
+            path = PathEx.GetLongPathName(path);
+
             if (!path.StartsWith(this.directory))
                 return;
 
