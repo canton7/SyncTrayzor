@@ -134,8 +134,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public async Task<bool?> ShowBalloonAsync(object viewModel, CancellationToken cancellationToken)
         {
-            if (this.balloonTcs != null)
-                this.balloonTcs.SetResult(null);
+            this.CloseCurrentlyOpenBalloon(cancel: false);
 
             var view = this.viewManager.CreateViewForModel(viewModel);
             this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
@@ -147,14 +146,26 @@ namespace SyncTrayzor.NotifyIcon
             using (cancellationToken.Register(() =>
             {
                 if (this.taskbarIcon.CustomBalloon.Child == view)
-                {
-                    this.balloonTcs.SetCanceled();
-                    this.taskbarIcon.CloseBalloon();
-                }
+                    this.CloseCurrentlyOpenBalloon(cancel: true);
             }))
             {
                 return await this.balloonTcs.Task;
             }
+        }
+
+        private void CloseCurrentlyOpenBalloon(bool cancel)
+        {
+            if (this.balloonTcs == null)
+                return;
+
+            this.taskbarIcon.CloseBalloon();
+
+            if (cancel)
+                this.balloonTcs.TrySetCanceled();
+            else
+                this.balloonTcs.TrySetResult(null);
+
+            this.balloonTcs = null;
         }
 
         public void EnsureIconVisible()
