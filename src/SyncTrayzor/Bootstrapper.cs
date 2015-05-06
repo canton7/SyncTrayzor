@@ -31,6 +31,12 @@ namespace SyncTrayzor
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
         private bool exiting;
+        private bool startMinimized;
+
+        protected override void OnStart()
+        {
+            this.startMinimized = this.Args.Contains("-minimized");
+        }
 
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
@@ -133,7 +139,7 @@ namespace SyncTrayzor
 
         protected override void Launch()
         {
-            if (this.Args.Contains("-minimized"))
+            if (this.startMinimized)
                 this.Container.Get<INotifyIconManager>().EnsureIconVisible();
             else
                 base.Launch();
@@ -144,6 +150,14 @@ namespace SyncTrayzor
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();
+
+            // If we've just been upgraded, and we're minimized, show a bit of toast explaining the fact
+            if (this.startMinimized && this.Container.Get<IConfigurationProvider>().WasUpgraded)
+            {
+                var updatedVm = this.Container.Get<NewVersionInstalledToastViewModel>();
+                updatedVm.Version = this.Container.Get<IAssemblyProvider>().Version;
+                this.Container.Get<INotifyIconManager>().ShowBalloonAsync(updatedVm, timeout: 5000); 
+            }
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)

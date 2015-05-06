@@ -23,12 +23,13 @@ namespace SyncTrayzor.Services
         public AssemblyProvider()
         {
             this.assembly = Assembly.GetExecutingAssembly();
+
+            // Don't include the revision in this version
+            var version = this.assembly.GetName().Version;
+            this.Version = new Version(version.Major, version.Minor, version.Build);
         }
 
-        public Version Version
-        {
-            get { return this.assembly.GetName().Version; }
-        }
+        public Version Version { get; private set; }
 
         public string Location
         {

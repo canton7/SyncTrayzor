@@ -560,4 +560,10 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
     <value>Must be in the format 'VAR=value VAR2="val1 val2"'</value>
   </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>SyncTrayzor version {0} was successfully installed.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor Updated</value>
+  </data>
 </root>
