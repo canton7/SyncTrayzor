@@ -1,4 +1,5 @@
 ﻿using NLog;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Path = Pri.LongPath.Path;
 
 namespace SyncTrayzor.Services
 {
@@ -95,7 +97,7 @@ namespace SyncTrayzor.Services
                 watcher.Changed += OnChanged;
                 watcher.Created += OnChanged;
                 watcher.Deleted += OnChanged;
-                watcher.Renamed += OnChanged;
+                watcher.Renamed += OnRenamed;
 
                 watcher.EnableRaisingEvents = true;
 
@@ -115,8 +117,23 @@ namespace SyncTrayzor.Services
             this.PathChanged(e.FullPath);
         }
 
+        private void OnRenamed(object source, RenamedEventArgs e)
+        {
+            this.PathChanged(e.FullPath);
+            // Irritatingly, e.OldFullPath will throw an exception if the path is longer than the windows max
+            // (but e.FullPath is fine).
+            // So, construct it from e.FullPath and e.OldName
+            // Note that we're using Pri.LongPath to get a Path.GetDirectoryName implementation that can handle
+            // long paths
+            var oldFullPath = Path.Combine(Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.OldName));
+            this.PathChanged(oldFullPath);
+        }
+
         private void PathChanged(string path)
         {
+            // First, we need to convert to a long path, just in case anyone's using the short path
+            path = PathEx.GetLongPathName(path);
+
             if (!path.StartsWith(this.directory))
                 return;
 
