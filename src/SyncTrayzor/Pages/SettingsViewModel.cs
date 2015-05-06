@@ -174,6 +174,7 @@ namespace SyncTrayzor.Pages
                 Folder = x.ID,
                 IsSelected = x.IsWatched
             }));
+
             this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
             this.SyncThingEnvironmentalVariables = EnvironmentalVariablesParser.Format(configuration.SyncthingEnvironmentalVariables);
             this.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
