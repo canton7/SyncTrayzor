@@ -111,7 +111,14 @@ namespace SyncTrayzor
 
             // Horrible workaround for a CefSharp crash on logout/shutdown
             // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
-            this.Application.SessionEnding += (o, e) => Process.GetCurrentProcess().Kill();
+            // Also handles Restart Manager requests - sent by the installer. We need to shutdown syncthing and Cef in this case
+            this.Application.SessionEnding += (o, e) =>
+            {
+                var manager = this.Container.Get<ISyncThingManager>();
+                manager.StopAsync().Wait(250);
+                manager.Kill();
+                Process.GetCurrentProcess().Kill();
+            };
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
