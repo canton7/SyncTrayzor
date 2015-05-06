@@ -997,7 +997,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to R_estart.
+        ///   Looks up a localized string similar to R_estart Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_RestartSyncthing {
             get {
@@ -1024,7 +1024,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Start.
+        ///   Looks up a localized string similar to _Start Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_StartSyncthing {
             get {
@@ -1033,7 +1033,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to S_top.
+        ///   Looks up a localized string similar to S_top Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_StopSyncthing {
             get {
