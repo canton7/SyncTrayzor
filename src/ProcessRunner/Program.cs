@@ -60,7 +60,7 @@ namespace ProcessRunner
             var startInfo = new ProcessStartInfo()
             {
                 FileName = remainder[0],
-                Arguments = String.Join(" ", remainder.Skip(1).Select(x => x.Contains(' ') ? String.Format("\"{0}\"", x) : x)),
+                Arguments = StringExtensions.JoinCommandLine(remainder.Skip(1)),
                 UseShellExecute = shell,
                 CreateNoWindow = noWindow,
             };
@@ -71,13 +71,28 @@ namespace ProcessRunner
                 startInfo.UseShellExecute = true;
             }
 
+            string launchFilename = null;
+            string launchArguments = null;
+
+            if (!String.IsNullOrWhiteSpace(launch))
+            {
+                var parts = StringExtensions.SplitCommandLine(launch);
+                launchFilename = parts.First();
+                launchArguments = StringExtensions.JoinCommandLine(parts.Skip(1));
+            }
+
             try
             { 
                 var process = Process.Start(startInfo);
-                if (!String.IsNullOrWhiteSpace(launch))
+                if (!String.IsNullOrWhiteSpace(launchFilename))
                 {
                     process.WaitForExit();
-                    Process.Start(launch);
+                    var launchStartInfo = new ProcessStartInfo()
+                    {
+                        FileName = launchFilename,
+                        Arguments = launchArguments,
+                    };
+                    Process.Start(launchStartInfo);
                 }
             }
             catch (Win32Exception e)

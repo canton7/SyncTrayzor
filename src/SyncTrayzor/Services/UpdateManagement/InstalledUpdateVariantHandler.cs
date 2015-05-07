@@ -57,7 +57,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 throw new InvalidOperationException("TryHandleUpdateAvailableAsync returned false: cannot call AutoInstall");
 
             var path = String.Format("\"{0}\"", this.assemblyProvider.Location);
-            if (this.applicationState.HasMainWindow)
+            if (!this.applicationState.HasMainWindow)
                 path += " -minimized";
 
             this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT", path);
