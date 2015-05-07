@@ -415,11 +415,11 @@ Debajo se muestran los detalles de cada componente y sus licencias.</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Iniciar</value>
+    <value>_Iniciar Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>_Parar</value>
+    <value>_Parar Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -444,7 +444,7 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>¡Error!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Iniciando Syncthing...</value>
@@ -498,7 +498,7 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
     <value>_Reiniciar</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>_Reiniciar</value>
+    <value>_Reiniciar Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -559,5 +559,11 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
     <value>Debe estar en el formato &apos;VAR=valor VAR2=&quot;val1 val2&quot;&apos;</value>
+  </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>La versión {0} de SyncTrayzor se instaló correctamente.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor se actualizó</value>
   </data>
 </root>

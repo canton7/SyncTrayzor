@@ -415,11 +415,11 @@ Detaily a licence každé komponenty jsou zobrazeny níže.</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Spustit</value>
+    <value>_Spustit Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>_Ukončit</value>
+    <value>U_končit Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -444,7 +444,7 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Chyba!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Syncthing se spouští...</value>
@@ -477,7 +477,7 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <value>Zobrazovat bublinová upozornění &apos;Zařízení připojeno/odpojeno&apos;</value>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
-    <value>{0} připojen</value>
+    <value>{0} připojeno</value>
     <comment>Message of tray icon balloon show when another device connects
 {0}: device name</comment>
   </data>
@@ -486,7 +486,7 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <comment>Title of tray icon balloon when another device connected</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceDisconnected_Message" xml:space="preserve">
-    <value>{0} odpojen</value>
+    <value>{0} odpojeno</value>
     <comment>Message of tray icon balloon show when another device disconnects
 {0}: device name</comment>
   </data>
@@ -498,7 +498,7 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <value>_Restartovat</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>_Restartovat</value>
+    <value>_Restartovat Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -519,7 +519,7 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <value>Spouštět Syncthing jako proces s nízkou prioritou</value>
   </data>
   <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
-    <value>Ote_vřít adresář</value>
+    <value>_Otevřít adresář</value>
     <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
   </data>
   <data name="ViewerView_OpenFolder" xml:space="preserve">
@@ -559,5 +559,11 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
     <value>Musí být ve formátu &apos;PROM=hodnota PROM2=&quot;hodnota1 hodnota2&quot;&apos;</value>
+  </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>Instalace SyncTrayzor verze {0} proběhla úspěšně.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor aktualizován</value>
   </data>
 </root>

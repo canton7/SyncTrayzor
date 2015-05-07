@@ -65,6 +65,16 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
+   '1.0.17' => [
+      'installed' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.17/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.17/SyncTrayzorSetup-x86.exe',
+         ],
+      ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.17',
+      'release_notes' => "- Fix crash when renaming a file whose path exceeds the Windows path length limit (#72)\n- Fix 'Open Folder' button in Syncthing UI (#65)\n- Ensure that folder list in Settings does not exceed screen height (#76)\n- Start minimized after automatic upgrade (#59)\n- Add italian translation (thanks stukdev)\n- Improve text in icon context menu (#71)\n- Console will scroll to end after resize (#67)",
+   ],
    '1.0.16' => [
       'installed' => [
          'direct_download_url' => [
@@ -102,6 +112,7 @@ $versions = [
 ];
 
 $upgrades = [
+   '1.0.16' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.15' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.14' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.13' => ['to' => 'latest', 'formatter' => '1'],
