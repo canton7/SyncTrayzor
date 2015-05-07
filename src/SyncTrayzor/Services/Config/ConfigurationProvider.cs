@@ -34,6 +34,7 @@ namespace SyncTrayzor.Services.Config
         event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
         bool HadToCreateConfiguration { get; }
+        bool WasUpgraded { get; }
 
         void Initialize(Configuration defaultConfiguration);
         Configuration Load();
@@ -59,6 +60,7 @@ namespace SyncTrayzor.Services.Config
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
         public bool HadToCreateConfiguration { get; private set; }
+        public bool WasUpgraded { get; private set; }
 
         public ConfigurationProvider(IApplicationPathsProvider paths)
         {
@@ -82,7 +84,6 @@ namespace SyncTrayzor.Services.Config
 
             this.currentConfig = this.LoadFromDisk(defaultConfiguration);
 
-            bool installCountChanged = false;
             bool updateConfigInstallCount = false;
             int latestInstallCount = 0;
             // Might be portable, in which case this file won't exist
@@ -92,7 +93,7 @@ namespace SyncTrayzor.Services.Config
                 if (latestInstallCount != this.currentConfig.LastSeenInstallCount)
                 {
                     logger.Debug("InstallCount changed from {0} to {1}", this.currentConfig.LastSeenInstallCount, latestInstallCount);
-                    installCountChanged = true;
+                    this.WasUpgraded = true;
                     updateConfigInstallCount = true;
                 }
             }

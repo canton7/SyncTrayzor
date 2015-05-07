@@ -23,7 +23,7 @@ namespace SyncTrayzor.NotifyIcon
 
         void EnsureIconVisible();
 
-        Task<bool?> ShowBalloonAsync(object viewModel, CancellationToken cancellationToken);
+        Task<bool?> ShowBalloonAsync(object viewModel, int? timeout = null, CancellationToken? cancellationToken = null);
     }
 
     public class NotifyIconManager : INotifyIconManager
@@ -132,29 +132,42 @@ namespace SyncTrayzor.NotifyIcon
             this.application.ShutdownMode = this._closeToTray ? ShutdownMode.OnExplicitShutdown : ShutdownMode.OnMainWindowClose;
         }
 
-        public async Task<bool?> ShowBalloonAsync(object viewModel, CancellationToken cancellationToken)
+        public async Task<bool?> ShowBalloonAsync(object viewModel, int? timeout = null, CancellationToken? cancellationToken = null)
         {
-            if (this.balloonTcs != null)
-                this.balloonTcs.SetResult(null);
+            var token = cancellationToken ?? CancellationToken.None;
+
+            this.CloseCurrentlyOpenBalloon(cancel: false);
 
             var view = this.viewManager.CreateViewForModel(viewModel);
-            this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+            this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Slide, timeout);
             this.viewManager.BindViewToModel(view, viewModel); // Re-assign DataContext, after NotifyIcon overwrote it ><
 
             this.balloonTcs = new TaskCompletionSource<bool?>();
             new BalloonConductor(this.taskbarIcon, viewModel, view, this.balloonTcs);
 
-            using (cancellationToken.Register(() =>
+            using (token.Register(() =>
             {
                 if (this.taskbarIcon.CustomBalloon.Child == view)
-                {
-                    this.balloonTcs.SetCanceled();
-                    this.taskbarIcon.CloseBalloon();
-                }
+                    this.CloseCurrentlyOpenBalloon(cancel: true);
             }))
             {
                 return await this.balloonTcs.Task;
             }
+        }
+
+        private void CloseCurrentlyOpenBalloon(bool cancel)
+        {
+            if (this.balloonTcs == null)
+                return;
+
+            this.taskbarIcon.CloseBalloon();
+
+            if (cancel)
+                this.balloonTcs.TrySetCanceled();
+            else
+                this.balloonTcs.TrySetResult(null);
+
+            this.balloonTcs = null;
         }
 
         public void EnsureIconVisible()

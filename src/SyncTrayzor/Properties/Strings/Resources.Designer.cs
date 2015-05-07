@@ -330,6 +330,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SyncTrayzor version {0} was successfully installed..
+        /// </summary>
+        public static string NewVersionInstalledView_Message {
+            get {
+                return ResourceManager.GetString("NewVersionInstalledView_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SyncTrayzor Updated.
+        /// </summary>
+        public static string NewVersionInstalledView_Title {
+            get {
+                return ResourceManager.GetString("NewVersionInstalledView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alert if a new version of SyncTrayzor is available.
         /// </summary>
         public static string SettingsView_AlertOnNewVersion {
