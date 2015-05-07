@@ -22,14 +22,14 @@ namespace SyncTrayzor.Properties.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    public class Resources_it_IT {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal Resources_it_IT() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace SyncTrayzor.Properties.Strings {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SyncTrayzor.Properties.Strings.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SyncTrayzor.Properties.Strings.Resources.it_IT", typeof(Resources_it_IT).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Created by Antony Male..
+        ///   Looks up a localized string similar to Creato da Antony Male..
         /// </summary>
         public static string AboutView_CreatedByAuthor {
             get {
@@ -70,7 +70,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Download Page.
+        ///   Looks up a localized string similar to Apri Pagina Download.
         /// </summary>
         public static string AboutView_DownloadNewVersion {
             get {
@@ -79,7 +79,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New version available: {0}.
+        ///   Looks up a localized string similar to Nuova versione disponibile : {0}.
         /// </summary>
         public static string AboutView_NewAppVersionAvailable {
             get {
@@ -88,7 +88,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Released under the MIT license..
+        ///   Looks up a localized string similar to Rilasciato sotto la licenza MIT..
         /// </summary>
         public static string AboutView_ReleasedLicense {
             get {
@@ -97,7 +97,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Open Source Licenses.
+        ///   Looks up a localized string similar to Mostra Licenze Open Source.
         /// </summary>
         public static string AboutView_ShowOtherLicenses {
             get {
@@ -106,7 +106,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Version: {0}.
+        ///   Looks up a localized string similar to Versione Syncthing : {0}.
         /// </summary>
         public static string AboutView_SyncthingVersion {
             get {
@@ -115,7 +115,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown.
+        ///   Looks up a localized string similar to Sconosciuto.
         /// </summary>
         public static string AboutView_UnknownVersion {
             get {
@@ -124,7 +124,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version: {0}.
+        ///   Looks up a localized string similar to Versione: {0}.
         /// </summary>
         public static string AboutView_Version {
             get {
@@ -133,7 +133,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?.
+        ///   Looks up a localized string similar to Sei sicuro di voler terminare tutti i processi Syncthing, anche quelli non gestiti da SyncTrayzor?.
         /// </summary>
         public static string Dialog_ConfirmKillAllProcesses_Message {
             get {
@@ -142,7 +142,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Really?.
+        ///   Looks up a localized string similar to Sei Sicuro?.
         /// </summary>
         public static string Dialog_ConfirmKillAllProcesses_Title {
             get {
@@ -151,11 +151,11 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to start Syncthing.
+        ///   Looks up a localized string similar to Impossibile avviare Syncthing.
         ///
-        ///Please read the log to determine the cause.
+        ///Prego leggere il log per capirne la causa.
         ///
-        ///If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again..
+        ///Se appare l&apos;errore &quot;FATAL:Cannot open database&quot;,  prego chiudere tutte le altre instanze di Syncthing. Se SyncTrayzor ha avuto un precedente crash, ci possono essere dei processi ancora attivi in background. Usare il menu &quot;Syncthing-&gt;Termina tutti i processi Syncthing&quot; per terminarli, e &quot;Syncthing-&gt;Avvia&quot; per riavviare Syncthing..
         /// </summary>
         public static string Dialog_FailedToStartSyncthing_Message {
             get {
@@ -164,7 +164,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing failed to start.
+        ///   Looks up a localized string similar to Impossibile avviare Syncthing.
         /// </summary>
         public static string Dialog_FailedToStartSyncthing_Title {
             get {
@@ -173,11 +173,11 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to start Syncthing: {0}
+        ///   Looks up a localized string similar to Impossibile avviare Syncthing: {0}
         ///
-        ///This could be because Windows if set up to forbid executing files in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.
+        ///Ciò potrebbe essere perchè Windows, è impostato in modo da vietare l&apos;esecuzione di files in AppData o perchè hai installato un anti-malware (es: CryptoPrevent ) che impedisce l&apos;esecuzione di files in AppData.
         ///
-        ///Please adjust your settings / whitelists to allow &apos;{1}&apos; to execute.
+        ///Prego modifica le tue impostazioni / whitelist &apos;{1}&apos; per consentire l&apos;esecuzione.
         /// </summary>
         public static string Dialog_SyncthingBlockedByGroupPolicy_Message {
             get {
@@ -186,7 +186,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error starting Syncthing.
+        ///   Looks up a localized string similar to Errore nel lanciare Syncthing.
         /// </summary>
         public static string Dialog_SyncthingBlockedByGroupPolicy_Title {
             get {
@@ -195,7 +195,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cancel.
+        ///   Looks up a localized string similar to Annulla.
         /// </summary>
         public static string Generic_Dialog_Cancel {
             get {
@@ -204,7 +204,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close.
+        ///   Looks up a localized string similar to Chiudi.
         /// </summary>
         public static string Generic_Dialog_Close {
             get {
@@ -231,7 +231,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save.
+        ///   Looks up a localized string similar to Salva.
         /// </summary>
         public static string Generic_Dialog_Save {
             get {
@@ -240,7 +240,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Yes.
+        ///   Looks up a localized string similar to Si.
         /// </summary>
         public static string Generic_Dialog_Yes {
             get {
@@ -249,7 +249,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t Remind Me Again.
+        ///   Looks up a localized string similar to Non ricordarmelo ancora.
         /// </summary>
         public static string NewVersionAlertView_Button_DontRemind {
             get {
@@ -258,7 +258,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Download Page.
+        ///   Looks up a localized string similar to Apri Pagina dei Download.
         /// </summary>
         public static string NewVersionAlertView_Button_Download {
             get {
@@ -267,7 +267,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Install Now.
+        ///   Looks up a localized string similar to Installa Ora.
         /// </summary>
         public static string NewVersionAlertView_Button_Install {
             get {
@@ -276,7 +276,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remind Me Later.
+        ///   Looks up a localized string similar to Ricordamelo Successivamente.
         /// </summary>
         public static string NewVersionAlertView_Button_RemindLater {
             get {
@@ -285,7 +285,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changelog:.
+        ///   Looks up a localized string similar to Note di rilascio:.
         /// </summary>
         public static string NewVersionAlertView_Changelog {
             get {
@@ -294,7 +294,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;Don&apos;t Remind Me Again&apos; will silence reminders for this version. You can permanently disable new version alerts from the Settings page. Visit Help -&gt; About to manually check for a new version..
+        ///   Looks up a localized string similar to &quot;Non Ricordarmelo&quot; disabiliterà tutti i promemoria per questa versione. Puoi disattivare in modo permanente i nuovi avvisi nella pagina delle Impostazioni. Controlla Aiuto-&gt; Info per cercare una nuova versione manualmente..
         /// </summary>
         public static string NewVersionAlertView_DontRemindMeExplanation {
             get {
@@ -303,7 +303,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor version {0} is available!.
+        ///   Looks up a localized string similar to La versione {0} di SyncTrayzor è disponibile!.
         /// </summary>
         public static string NewVersionAlertView_NewVersionAvailable {
             get {
@@ -312,7 +312,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor Update Available.
+        ///   Looks up a localized string similar to SyncTrayzor Aggiornamento Disponibile.
         /// </summary>
         public static string NewVersionAlertView_Title {
             get {
@@ -321,7 +321,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View Changelog.
+        ///   Looks up a localized string similar to Vedi Note di Rilascio.
         /// </summary>
         public static string NewVersionAlertView_ViewChangelog {
             get {
@@ -330,7 +330,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor version {0} was successfully installed..
+        ///   Looks up a localized string similar to La versione {0} di SyncTrayzor è stata installata correttamente..
         /// </summary>
         public static string NewVersionInstalledView_Message {
             get {
@@ -339,7 +339,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor Updated.
+        ///   Looks up a localized string similar to SyncTrayzor Aggiornato.
         /// </summary>
         public static string NewVersionInstalledView_Title {
             get {
@@ -348,7 +348,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alert if a new version of SyncTrayzor is available.
+        ///   Looks up a localized string similar to Avvisa se una nuova versione di SyncTrayzor è disponibile.
         /// </summary>
         public static string SettingsView_AlertOnNewVersion {
             get {
@@ -357,7 +357,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to API Key:.
+        ///   Looks up a localized string similar to Chiave API:.
         /// </summary>
         public static string SettingsView_ApiKey {
             get {
@@ -366,7 +366,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor overrides the API key specified in Syncthing&apos;s configuration. However, you can set it to whatever value you like here..
+        ///   Looks up a localized string similar to SyncTrayzor sovrascrive la chiave API specificata nella configurazione di Syncthing. Tuttavia, puoi impostare qualsiasi valore qua..
         /// </summary>
         public static string SettingsView_ApiKey_ToolTip {
             get {
@@ -375,7 +375,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close to tray.
+        ///   Looks up a localized string similar to Chiudi nella barra delle applicazioni.
         /// </summary>
         public static string SettingsView_CloseToTray {
             get {
@@ -384,7 +384,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimize to tray.
+        ///   Looks up a localized string similar to Minimizza nella barra delle applicazioni.
         /// </summary>
         public static string SettingsView_MinimizeToTray {
             get {
@@ -393,7 +393,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must restart Syncthing for changes in these settings to take effect.
+        ///   Looks up a localized string similar to È necessario riavviare Syncthing affinchè le modifiche a queste impostazioni abbiano effetto.
         /// </summary>
         public static string SettingsView_MustRestartSyncthingWarning {
             get {
@@ -402,7 +402,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Obfuscate device IDs in the log view.
+        ///   Looks up a localized string similar to Offuscare ID dei dispositivi nel log.
         /// </summary>
         public static string SettingsView_ObfuscateDeviceIds {
             get {
@@ -411,7 +411,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Tray Icon only on close.
+        ///   Looks up a localized string similar to Mostra Icona nella barra delle applicazioni solo alla chiusura.
         /// </summary>
         public static string SettingsView_OnlyShowTrayIconOnClose {
             get {
@@ -420,7 +420,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advanced.
+        ///   Looks up a localized string similar to Avanzate.
         /// </summary>
         public static string SettingsView_Section_Advanced {
             get {
@@ -429,7 +429,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start on Login.
+        ///   Looks up a localized string similar to Avvia al Login.
         /// </summary>
         public static string SettingsView_Section_StartOnLogin {
             get {
@@ -456,7 +456,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tray Icon.
+        ///   Looks up a localized string similar to Icona barra delle applicazioni.
         /// </summary>
         public static string SettingsView_Section_TrayIcon {
             get {
@@ -465,7 +465,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Watched Folders.
+        ///   Looks up a localized string similar to Cartelle Monitorate.
         /// </summary>
         public static string SettingsView_Section_WatchedFolders {
             get {
@@ -474,7 +474,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages.
+        ///   Looks up a localized string similar to Mostra i messaggi informativi &apos;Sincronizzato&apos;.
         /// </summary>
         public static string SettingsView_ShowBalloonWhenSynchronized {
             get {
@@ -483,7 +483,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show device Connected/Disconnected balloon messages.
+        ///   Looks up a localized string similar to Mostra i dispositivi Connessi/Disconnessi nei messaggi informativi.
         /// </summary>
         public static string SettingsView_ShowDeviceConnectivityBalloons {
             get {
@@ -492,7 +492,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start Minimized.
+        ///   Looks up a localized string similar to Avvia Minimizzato.
         /// </summary>
         public static string SettingsView_StartMinimized {
             get {
@@ -501,7 +501,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatically start on login.
+        ///   Looks up a localized string similar to Avvia in automatico al login.
         /// </summary>
         public static string SettingsView_StartOnLogin {
             get {
@@ -510,7 +510,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Permission denied. Please start SyncTrayzor as an Administrator to change these settings..
+        ///   Looks up a localized string similar to Permesso negato. Prego avviare SyncTrayzor come Amministratore per cambiare questi parametri..
         /// </summary>
         public static string SettingsView_StartOnLogin_PermissionDenied {
             get {
@@ -519,7 +519,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start Syncthing when SyncTrayzor starts.
+        ///   Looks up a localized string similar to Avvia Syncthing quando SyncTrayzor si sta avviando.
         /// </summary>
         public static string SettingsView_StartSyncthingAutomatically {
             get {
@@ -528,7 +528,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GUI Listen Address:.
+        ///   Looks up a localized string similar to Indirizzo Di Ascolto GUI:.
         /// </summary>
         public static string SettingsView_SyncthingAddress {
             get {
@@ -537,7 +537,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor overrides the &quot;GUI Listen Address&quot; specified in Syncthing&apos;s configuration. However, you can set it to whatever value you like here..
+        ///   Looks up a localized string similar to SyncTrayzor sovrascrive l&apos;indirizzo di ascolto GUI specificato nella configurazione di Syncthing. Tuttavia, puoi impostarlo qua..
         /// </summary>
         public static string SettingsView_SyncthingAddress_ToolTip {
             get {
@@ -546,7 +546,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stop Syncthing auto-upgrading.
+        ///   Looks up a localized string similar to Ferma l&apos;auto-aggiornamento di Syncthing.
         /// </summary>
         public static string SettingsView_SyncthingDenyUpgrade {
             get {
@@ -555,7 +555,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor&apos;s config folder.
+        ///   Looks up a localized string similar to Ferma l&apos;auto-aggiornamento di Syncthing. Questo è utile se una nuova versione di Syncthing non è retrocompatibile con SyncTrayzor. Dovrai effettuare il downgrade del file syncthing.exe nella cartella di configurazione di SyncTrayzor.
         /// </summary>
         public static string SettingsView_SyncthingDenyUpgrade_ToolTip {
             get {
@@ -564,7 +564,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Environmental Variables:.
+        ///   Looks up a localized string similar to Variabili Di Ambiente Synchting:.
         /// </summary>
         public static string SettingsView_SyncthingEnvironmentalVariables {
             get {
@@ -573,7 +573,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run Syncthing as a low-priority process.
+        ///   Looks up a localized string similar to Esegui Syncthing come un processo a bassa priorità.
         /// </summary>
         public static string SettingsView_SyncthingRunLowPriority {
             get {
@@ -582,7 +582,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use custom home directory for Syncthing..
+        ///   Looks up a localized string similar to Usa una cartella personalizzata come Home per Syncthing..
         /// </summary>
         public static string SettingsView_SyncthingUseCustomHome {
             get {
@@ -591,7 +591,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer..
+        ///   Looks up a localized string similar to Ciò significa che SyncTrayzor vedrà un differente set di cartelle configurate per qualsiasi altra instanza di Syncthing sul computer..
         /// </summary>
         public static string SettingsView_SyncthingUseCustomHome_ToolTip {
             get {
@@ -618,7 +618,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to Impostazioni.
         /// </summary>
         public static string SettingsView_Title {
             get {
@@ -627,7 +627,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect.
+        ///   Looks up a localized string similar to Usa la lingua predefinita del computer, quando disponibile. Dovrai riavviare SyncTrayzor affinchè le modifiche abbiano effetto..
         /// </summary>
         public static string SettingsView_UseComputerCulture {
             get {
@@ -636,7 +636,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must be a valid URL.
+        ///   Looks up a localized string similar to Deve essere un URL valido.
         /// </summary>
         public static string SettingsView_Validation_InvalidUrl {
             get {
@@ -645,7 +645,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Should not be empty.
+        ///   Looks up a localized string similar to Non può essere vuoto.
         /// </summary>
         public static string SettingsView_Validation_NotShouldBeEmpty {
             get {
@@ -654,7 +654,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must be in the format &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;.
+        ///   Looks up a localized string similar to Deve essere nel formato &apos;VAR=valore VAR2=&quot;val1 val2&quot;&apos;.
         /// </summary>
         public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {
             get {
@@ -663,7 +663,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following folders will be watched for changes, which means you can set a longer polling interval..
+        ///   Looks up a localized string similar to Le seguenti cartelle saranno controllate per eventuali cambiamenti, significa che puoi impostare un lungo intervallo di polling..
         /// </summary>
         public static string SettingsView_WatchedFolders_Explanation {
             get {
@@ -672,7 +672,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Folders unavailable. Please start Syncthing.
+        ///   Looks up a localized string similar to Cartelle non disponibili. Prego avviare Synchting..
         /// </summary>
         public static string SettingsView_WatchedFolders_Unavailable {
             get {
@@ -690,7 +690,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Exit.
+        ///   Looks up a localized string similar to _Esci.
         /// </summary>
         public static string ShellView_Menu_File_Exit {
             get {
@@ -699,7 +699,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Settings.
+        ///   Looks up a localized string similar to _Impostazioni.
         /// </summary>
         public static string ShellView_Menu_File_Settings {
             get {
@@ -708,7 +708,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Help.
+        ///   Looks up a localized string similar to Ai_uto.
         /// </summary>
         public static string ShellView_Menu_Help {
             get {
@@ -717,7 +717,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _About.
+        ///   Looks up a localized string similar to I_nfo.
         /// </summary>
         public static string ShellView_Menu_Help_About {
             get {
@@ -735,7 +735,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Kill.
+        ///   Looks up a localized string similar to _Termina.
         /// </summary>
         public static string ShellView_Menu_Syncthing_Kill {
             get {
@@ -744,7 +744,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kill _all Syncthing processes.
+        ///   Looks up a localized string similar to T_ermina tutti i processi Syncthing.
         /// </summary>
         public static string ShellView_Menu_Syncthing_KillAll {
             get {
@@ -753,7 +753,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Open in external browser.
+        ///   Looks up a localized string similar to A_pri nel browser esterno.
         /// </summary>
         public static string ShellView_Menu_Syncthing_OpenExternal {
             get {
@@ -762,7 +762,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Refresh browser.
+        ///   Looks up a localized string similar to A_ggiorna browser.
         /// </summary>
         public static string ShellView_Menu_Syncthing_Refresh {
             get {
@@ -771,7 +771,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to R_estart.
+        ///   Looks up a localized string similar to _Riavvio.
         /// </summary>
         public static string ShellView_Menu_Syncthing_Restart {
             get {
@@ -780,7 +780,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Start.
+        ///   Looks up a localized string similar to _Avvia.
         /// </summary>
         public static string ShellView_Menu_Syncthing_Start {
             get {
@@ -789,7 +789,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to S_top.
+        ///   Looks up a localized string similar to Fer_ma.
         /// </summary>
         public static string ShellView_Menu_Syncthing_Stop {
             get {
@@ -798,7 +798,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _View.
+        ///   Looks up a localized string similar to M_ostra.
         /// </summary>
         public static string ShellView_Menu_View {
             get {
@@ -825,7 +825,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zoom _In.
+        ///   Looks up a localized string similar to In_grandisci.
         /// </summary>
         public static string ShellView_Menu_Zoom_In {
             get {
@@ -834,7 +834,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zoom _Out.
+        ///   Looks up a localized string similar to Ri_duci.
         /// </summary>
         public static string ShellView_Menu_Zoom_Out {
             get {
@@ -843,7 +843,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Reset.
+        ///   Looks up a localized string similar to Re_set.
         /// </summary>
         public static string ShellView_Menu_Zoom_Reset {
             get {
@@ -852,7 +852,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Description:.
+        ///   Looks up a localized string similar to Descrizione:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentDescriptionLabel {
             get {
@@ -870,7 +870,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to License:.
+        ///   Looks up a localized string similar to Licenza:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentLicenseLabel {
             get {
@@ -879,7 +879,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to License Text:.
+        ///   Looks up a localized string similar to Testo Licenza:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentLicenseTextLabel {
             get {
@@ -888,7 +888,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name:.
+        ///   Looks up a localized string similar to Nome:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentNameLabel {
             get {
@@ -897,7 +897,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Notes:.
+        ///   Looks up a localized string similar to Note:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentNotesLabel {
             get {
@@ -906,8 +906,8 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor is built using many open-source components, and would not exist without them.
-        ///Details on each component, and its license text, are shown below..
+        ///   Looks up a localized string similar to SyncTrayzor è compilato usando molti componenti open-source, e non esisterebbe senza di essi.
+        ///I dettagli di ogni componente, e le licenze sono indicati di seguito..
         /// </summary>
         public static string ThirdPartyComponentsView_Intro {
             get {
@@ -916,7 +916,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Third Party Components.
+        ///   Looks up a localized string similar to Componenti Di Terze Parti.
         /// </summary>
         public static string ThirdPartyComponentsView_Title {
             get {
@@ -925,7 +925,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;LANGUAGE&gt; translation by &lt;YOUR NAME&gt;.
+        ///   Looks up a localized string similar to Italian translation by stukdev.
         /// </summary>
         public static string TranslatorAttributation {
             get {
@@ -934,7 +934,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} connected.
+        ///   Looks up a localized string similar to {0} connesso.
         /// </summary>
         public static string TrayIcon_Balloon_DeviceConnected_Message {
             get {
@@ -943,7 +943,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Device Connected.
+        ///   Looks up a localized string similar to Dispositivo Connesso.
         /// </summary>
         public static string TrayIcon_Balloon_DeviceConnected_Title {
             get {
@@ -952,7 +952,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} disconnected.
+        ///   Looks up a localized string similar to {0} disconnesso.
         /// </summary>
         public static string TrayIcon_Balloon_DeviceDisconnected_Message {
             get {
@@ -961,7 +961,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Device Disconnected.
+        ///   Looks up a localized string similar to Dispositivo Disconnesso.
         /// </summary>
         public static string TrayIcon_Balloon_DeviceDisconnected_Title {
             get {
@@ -970,7 +970,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: Finished Syncing.
+        ///   Looks up a localized string similar to {0}: Sincronizzazione Completata.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_Message {
             get {
@@ -979,7 +979,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finished Syncing.
+        ///   Looks up a localized string similar to Sincronizzazione Completata.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_Title {
             get {
@@ -988,7 +988,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close to Tray.
+        ///   Looks up a localized string similar to Chiudi nella barra delle applicazioni.
         /// </summary>
         public static string TrayIcon_Menu_CloseToTray {
             get {
@@ -997,7 +997,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Exit.
+        ///   Looks up a localized string similar to _Esci.
         /// </summary>
         public static string TrayIcon_Menu_Exit {
             get {
@@ -1006,7 +1006,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Open Folder.
+        ///   Looks up a localized string similar to _Apri Cartella.
         /// </summary>
         public static string TrayIcon_Menu_OpenFolder {
             get {
@@ -1015,7 +1015,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to R_estart Syncthing.
+        ///   Looks up a localized string similar to _Riavvia Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_RestartSyncthing {
             get {
@@ -1024,7 +1024,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Restore.
+        ///   Looks up a localized string similar to _Ripristina.
         /// </summary>
         public static string TrayIcon_Menu_Restore {
             get {
@@ -1033,7 +1033,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sett_ings.
+        ///   Looks up a localized string similar to _Impostazioni.
         /// </summary>
         public static string TrayIcon_Menu_Settings {
             get {
@@ -1042,7 +1042,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Start Syncthing.
+        ///   Looks up a localized string similar to _Avvia Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_StartSyncthing {
             get {
@@ -1051,7 +1051,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to S_top Syncthing.
+        ///   Looks up a localized string similar to _Ferma Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_StopSyncthing {
             get {
@@ -1060,8 +1060,8 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Oops! Something went badly wrong.
-        ///SyncTrayzor is going to have to close. Sorry about that.
+        ///   Looks up a localized string similar to Oops! Qualcosa è andato storto.
+        ///SyncTrayzor dovrà essere terminato. Ci scusiamo..
         /// </summary>
         public static string UnhandledExceptionView_IntroMessage {
             get {
@@ -1079,7 +1079,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You may be asked to provide a log file. You can find this in:.
+        ///   Looks up a localized string similar to Potrebbe essere richiesto un file di log. Lo puoi trovare in:.
         /// </summary>
         public static string UnhandledExceptionView_LogFileLocation_Pre {
             get {
@@ -1088,7 +1088,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to and include the following information:.
+        ///   Looks up a localized string similar to e aggiungi le seguenti informazioni:.
         /// </summary>
         public static string UnhandledExceptionView_PleaseOpenIssue_Post {
             get {
@@ -1097,7 +1097,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please open an issue at.
+        ///   Looks up a localized string similar to Prego aprire un ticket a.
         /// </summary>
         public static string UnhandledExceptionView_PleaseOpenIssue_Pre {
             get {
@@ -1106,7 +1106,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error!.
+        ///   Looks up a localized string similar to Errore!.
         /// </summary>
         public static string UnhandledExceptionView_Title {
             get {
@@ -1115,7 +1115,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Folder.
+        ///   Looks up a localized string similar to Apri Cartella.
         /// </summary>
         public static string ViewerView_OpenFolder {
             get {
@@ -1124,7 +1124,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start Syncthing.
+        ///   Looks up a localized string similar to Avvia Syncthing.
         /// </summary>
         public static string ViewerView_StartSyncthing {
             get {
@@ -1133,7 +1133,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Starting....
+        ///   Looks up a localized string similar to Syncthing in avvio....
         /// </summary>
         public static string ViewerView_SyncthingStarting {
             get {
@@ -1142,7 +1142,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Stopped.
+        ///   Looks up a localized string similar to Syncthing fermato..
         /// </summary>
         public static string ViewerView_SyncthingStopped {
             get {

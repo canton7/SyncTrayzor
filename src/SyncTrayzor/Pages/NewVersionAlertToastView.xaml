@@ -10,7 +10,7 @@
              Width="500">
     <Border CornerRadius="6" BorderThickness="4" BorderBrush="Gray" Background="White">
         <DockPanel Margin="10" LastChildFill="False">
-            <TextBlock DockPanel.Dock="Top" TextAlignment="Center" FontWeight="Bold" FontSize="20">SyncTrayzor Update Available</TextBlock>
+            <TextBlock DockPanel.Dock="Top" TextAlignment="Center" FontWeight="Bold" FontSize="20" Text="{l:Loc NewVersionAlertView_Title}"/>
             <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,10,0,0">
                 <ContentControl Content="{l:Loc NewVersionAlertView_NewVersionAvailable, ValueBinding={Binding Version}}"/>
             </TextBlock>

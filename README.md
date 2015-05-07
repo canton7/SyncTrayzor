@@ -25,7 +25,7 @@ Features include:
 Installation
 ------------
 
-SyncTrayzor is packged as both an installer and a standalone zip.
+SyncTrayzor is packaged as both an installer and a standalone zip. It will run on Windows Vista, 7, and 8.
 
 ### Installer
 
@@ -46,7 +46,7 @@ Something went wrong!
 
 First, what went wrong? Remember that SyncTrayzor is a wrapper around [Syncthing](http://github.com/syncthing/syncthing).
 Syncthing is the file synchronization program, which has a web interface.
-SyncTrayzor is the tray utilty, looks like a normal Windows program, and has menus and suchlike, and a big area where Syncthing's web interface is displayed.
+SyncTrayzor is the tray utility, looks like a normal Windows program, and has menus and suchlike, and a big area where Syncthing's web interface is displayed.
 
  - If you're having problems connection to other devices, your files aren't synchronizing, or you're getting error messages in the console area, [raise an issue with Syncthing](http://github.com/syncthing/syncthing) or [post on the Syncthing forums](http://discourse.syncthing.net).
  - If SyncTrayzor isn't talking to Syncthing, you're getting error dialogs, it's not auto-starting, etc, [raise an issue with SyncTrayzor](http://github.com/canton7/SyncTrayzor).

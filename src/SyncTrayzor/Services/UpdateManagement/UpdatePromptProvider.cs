@@ -65,7 +65,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             vm.Version = checkResults.NewVersion;
             vm.CanInstall = canAutoInstall;
 
-            var dialogResult = await this.notifyIconManager.ShowBalloonAsync(vm, cancellationToken);
+            var dialogResult = await this.notifyIconManager.ShowBalloonAsync(vm, cancellationToken: cancellationToken);
 
             if (dialogResult == true)
                 return canAutoInstall ? VersionPromptResult.InstallNow : VersionPromptResult.Download;

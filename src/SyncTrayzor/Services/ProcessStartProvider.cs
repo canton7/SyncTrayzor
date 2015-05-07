@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -21,6 +22,7 @@ namespace SyncTrayzor.Services
     public class ProcessStartProvider : IProcessStartProvider
     {
         private static readonly string processRunner = "ProcessRunner.exe";
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly string processRunnerPath;
 
         public ProcessStartProvider(IAssemblyProvider assemblyProvider)
@@ -30,11 +32,13 @@ namespace SyncTrayzor.Services
 
         public void Start(string filename)
         {
+            logger.Info("Starting {0}", filename);
             Process.Start(filename);
         }
 
         public void Start(string filename, string arguments)
         {
+            logger.Info("Starting {0} {1}", filename, arguments);
             Process.Start(filename, arguments);
         }
 
@@ -48,10 +52,13 @@ namespace SyncTrayzor.Services
             if (arguments == null)
                 arguments = String.Empty;
 
+            var formattedArguments = String.Format("--shell -- \"{0}\" {1}", filename, arguments);
+
+            logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
             var startInfo = new ProcessStartInfo()
             {
                 FileName = processRunnerPath,
-                Arguments = String.Format("--shell -- \"{0}\" {1}", filename, arguments),
+                Arguments = formattedArguments,
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };
@@ -65,11 +72,14 @@ namespace SyncTrayzor.Services
                 arguments = String.Empty;
 
             var launch = launchAfterFinished == null ? null : String.Format("--launch=\"{0}\"", launchAfterFinished.Replace("\"", "\\\""));
+            var formattedArguments = String.Format("--nowindow -- \"{0}\" --runas {1} -- \"{2}\" {3}", processRunnerPath, launch, filename, arguments);
+
+            logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
 
             var startInfo = new ProcessStartInfo()
             {
                 FileName = processRunnerPath,
-                Arguments = String.Format("--nowindow -- \"{0}\" --runas {1} -- \"{2}\" {3}", processRunnerPath, launch, filename, arguments),
+                Arguments = formattedArguments,
                 CreateNoWindow = true,
                 UseShellExecute = false,
             };

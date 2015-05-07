@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.NewVersionInstalledToastView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             xmlns:s="https://github.com/canton7/Stylet"
+             mc:Ignorable="d">
+    <Border CornerRadius="6" BorderThickness="2" BorderBrush="Gray" Background="White">
+        <DockPanel Margin="10" LastChildFill="False">
+            <TextBlock DockPanel.Dock="Top" TextAlignment="Center" FontWeight="Bold" FontSize="20" Text="{l:Loc NewVersionInstalledView_Title}"/>
+            <TextBlock DockPanel.Dock="Top" Margin="0,10" Text="{l:Loc NewVersionInstalledView_Message, ValueBinding={Binding Version}}"/>
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -35,7 +35,7 @@ namespace SyncTrayzor.NotifyIcon
             if (this.taskbarIcon.CustomBalloon.Child != this.view)
                 return;
 
-            this.tcs.SetResult(dialogResult);
+            this.tcs.TrySetResult(dialogResult);
             this.taskbarIcon.CloseBalloon();
         }
     }

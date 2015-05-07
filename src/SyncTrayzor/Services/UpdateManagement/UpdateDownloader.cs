@@ -20,7 +20,7 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private static readonly TimeSpan fileMaxAge = TimeSpan.FromDays(3); // Arbitary, but long
+        private static readonly TimeSpan fileMaxAge = TimeSpan.FromDays(3); // Arbitrary, but long
         private const string downloadFileName = "SyncTrayzorUpdate-{0}.exe";
 
         private readonly string downloadsDir;

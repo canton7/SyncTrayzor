@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v1.0.17
+-------
+
+ - Fix crash when renaming a file whose path exceeds the Windows path length limit (#72)
+ - Fix 'Open Folder' button in Syncthing UI (#65)
+ - Ensure that folder list in Settings does not exceed screen height (#76)
+ - Start minimized after automatic upgrade (#59)
+ - Add italian translation (thanks stukdev)
+ - Improve text in icon context menu (#71)
+ - Console will scroll to end after resize (#67)
+
 v1.0.16
 -------
 
@@ -46,7 +57,7 @@ v1.0.12
  - Add option to hide the console (#41)
  - Obfuscate Device IDs in log files, as well as in the console
  - Logging will take less space if Syncthing is spamming messages (#42)
- - Updated translations (all langauges)
+ - Updated translations (all languages)
  - New translations:
    - Czech (thanks Václav Obrtlík)
    - Greek (thanks alexxtasi and Wasilis Mandratzis-Walz)
@@ -84,8 +95,8 @@ v1.0.9
  - Fix bug with directory watcher and paths containing a tilde (~)
  - Fix resolution issue with taskbar icon
  - Add 'device connected/disconnected' tray icon balloon messages
- - Add Dutch transation (thanks Heimen Stoffels!)
- - Small redution in memory usage
+ - Add Dutch translation (thanks Heimen Stoffels!)
+ - Small reduction in memory usage
  - Add menu item to restart Syncthing
 
 v1.0.8
@@ -156,7 +167,7 @@ v1.0.1
 ------
 
  - Add support for new ItemFinished event
- - Handle lots of log messages in quick successino
+ - Handle lots of log messages in quick succession
 
 v1.0.0
 ------

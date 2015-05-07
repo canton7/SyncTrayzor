@@ -69,7 +69,7 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingEventWatcherFactory eventWatcherFactory;
         private readonly ISyncThingConnectionsWatcherFactory connectionsWatcherFactory;
 
-        // Ths lock covers the eventWatcher, connectionsWatcher, apiClients, and the CTS
+        // This lock covers the eventWatcher, connectionsWatcher, apiClients, and the CTS
         private readonly object apiClientsLock = new object();
         private ISyncThingEventWatcher eventWatcher;
         private ISyncThingConnectionsWatcher connectionsWatcher;
@@ -255,7 +255,7 @@ namespace SyncTrayzor.SyncThing
                 // We really need a proper state machine here....
                 // There's a race if Syncthing can't start because the database is locked by another process on the same port
                 // In this case, we see the process as having failed, but the event watcher chimes in a split-second later with the 'Started' event.
-                // This runs the risk of transitioning us from Stopped -> Starting -> Stopepd -> Running, which is bad news for everyone
+                // This runs the risk of transitioning us from Stopped -> Starting -> Stopped -> Running, which is bad news for everyone
                 // So, get around this by enforcing strict state transitions.
                 if (this._state == SyncThingState.Stopped && state == SyncThingState.Running)
                     return;

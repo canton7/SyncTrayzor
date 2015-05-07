@@ -4,6 +4,7 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:pages="clr-namespace:SyncTrayzor.Pages"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
@@ -12,6 +13,9 @@
         Title="{l:Loc SettingsView_Title}"
         MinWidth="420"
         ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+    <i:Interaction.Behaviors>
+        <xaml:NoSizeBelowScreenBehaviour/>
+    </i:Interaction.Behaviors>
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="InverseVisibilityConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
     </Window.Resources>
@@ -104,32 +108,7 @@
                         </DockPanel>
                     </GroupBox>
 
-                    <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_WatchedFolders}">
-                        <DockPanel>
-                            <Grid DockPanel.Dock="Top">
-                                <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_WatchedFolders_Unavailable}"
-                                   Visibility="{Binding WatchedFolders, Converter={StaticResource InverseVisibilityConverter}}"
-                                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
-
-                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{l:Loc SettingsView_WatchedFolders_Explanation}"
-                                   Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
-                            </Grid>
-
-                            <ItemsControl ItemsSource="{Binding WatchedFolders}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsChecked="{Binding IsSelected}">
-                                            <!-- TextBlock needed so that underscores aren't turned into mnemonics -->
-                                            <TextBlock Text="{Binding Folder}"/>
-                                        </CheckBox>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </DockPanel>
-                    </GroupBox>
-
-                    <Expander DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Advanced}">
+                    <Expander DockPanel.Dock="Bottom" Header="{l:Loc SettingsView_Section_Advanced}">
                         <GroupBox Header="{l:Loc SettingsView_Section_Advanced}">
                             <DockPanel LastChildFill="False">
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}"
@@ -143,6 +122,34 @@
                             </DockPanel>
                         </GroupBox>
                     </Expander>
+
+                    <!-- In case the window exceeds the screen height, something needs to give, and it's this. Therefore place it as the fill child -->
+                    <GroupBox Header="{l:Loc SettingsView_Section_WatchedFolders}">
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_WatchedFolders_Unavailable}"
+                                   Visibility="{Binding WatchedFolders, Converter={StaticResource InverseVisibilityConverter}}"
+                                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
+
+                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{l:Loc SettingsView_WatchedFolders_Explanation}"
+                                   Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
+                            </Grid>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding WatchedFolders}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsSelected}">
+                                                <!-- TextBlock needed so that underscores aren't turned into mnemonics -->
+                                                <TextBlock Text="{Binding Folder}"/>
+                                            </CheckBox>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </GroupBox>
                 </DockPanel>
             </TabItem>
         </TabControl>

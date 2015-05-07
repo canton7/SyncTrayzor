@@ -40,13 +40,8 @@ TouchDate=current
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
-[CustomMessages]
-SyncthingVersion=%nPlease select the Syncthing version.%n%nv0.11 and v0.10 are incompatible. All of your devices must either use v0.11 or v0.10.%n
-
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "syncthing0p11"; Description: "Syncthing v0.11 (recommended)"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive 
-Name: "syncthing0p10"; Description: "Syncthing v0.10"; GroupDescription: "{cm:SyncthingVersion}"; Flags: exclusive unchecked 
 
 [Dirs]
 Name: "{userappdata}\{#AppDataFolder}"
@@ -58,10 +53,7 @@ Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
-
-; It's important to touch, otherwise SyncTrayzor won't pick up on the modification, and won't copy it into %APPDATA%
-Source: "syncthing-0.10.x.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Tasks: "syncthing0p10"; Flags: ignoreversion touch
-Source: "syncthing-0.11.x.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Tasks: "syncthing0p11"; Flags: ignoreversion touch
+Source: "syncthing.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Flags: ignoreversion
 
 Source: "..\dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
 

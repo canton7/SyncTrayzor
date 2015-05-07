@@ -13,17 +13,19 @@ namespace SyncTrayzor.Xaml
     {
         protected override void AttachHandlers()
         {
-            this.AssociatedObject.TextChanged += TextChanged;
+            this.AssociatedObject.TextChanged += this.SomethingChanged;
+            this.AssociatedObject.SizeChanged += this.SomethingChanged;
 
             this.AssociatedObject.ScrollToEnd();
         }
 
         protected override void DetachHandlers()
         {
-            this.AssociatedObject.TextChanged -= TextChanged;
+            this.AssociatedObject.TextChanged -= this.SomethingChanged;
+            this.AssociatedObject.SizeChanged -= this.SomethingChanged;
         }
 
-        private void TextChanged(object sender, TextChangedEventArgs e)
+        private void SomethingChanged(object sender, EventArgs e)
         {
             this.AssociatedObject.ScrollToEnd();
         }

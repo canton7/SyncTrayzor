@@ -121,7 +121,7 @@
     <value>Créé par Antony Male.</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Open Download Page</value>
+    <value>Accéder à la page de téléchargement</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
@@ -130,7 +130,7 @@
 {0}: Latest version of SyncTrayzor </comment>
   </data>
   <data name="AboutView_ReleasedLicense" xml:space="preserve">
-    <value>Distribué sous licence MIT</value>
+    <value>Distribué sous licence MIT.</value>
   </data>
   <data name="AboutView_ShowOtherLicenses" xml:space="preserve">
     <value>Montrer les licences open source</value>
@@ -176,7 +176,7 @@
     <value>_Syncthing</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Kill" xml:space="preserve">
-    <value>_Arrêter</value>
+    <value>_Forcer l&apos;arrêt</value>
   </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
     <value>Arrêter _tous les processus Syncthing</value>
@@ -198,7 +198,7 @@
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Open Download Page</value>
+    <value>Télécharger la dernière version</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
@@ -268,7 +268,7 @@
     <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
   </data>
   <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>Montrer les notifications de synchronisation</value>
+    <value>Montrer les notifications de fin de synchronisation</value>
     <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
   </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
@@ -309,7 +309,7 @@
     <value>Variables d’environnement de Syncthing :</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>The following folders will be watched for changes, which means you can set a longer polling interval.</value>
+    <value>Les changements dans les dossiers suivants seront surveillés, ce qui signifie que vous pouvez régler un intervalle de scan plus grand.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Dossiers indisponibles. Veuillez démarrer Syncthing</value>
@@ -327,11 +327,11 @@
     <comment>Title for the dialog shown when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_FailedToStartSyncthing_Message" xml:space="preserve">
-    <value>Failed to start Syncthing.
+    <value>Impossible de démarrer Syncthing.
 
-Please read the log to determine the cause.
+Veuillez lire le journal pour en déterminer la cause.
 
-If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again.</value>
+Si &quot;FATAL: Cannot open database&quot; apparait, vous devez fermer toute autres instances de Syncthing en cours d&apos;exécution. Si SyncTrayzor a planté juste avant, il se peut qu&apos;il reste un processus zombie de Syncthing. Veuillez alors utiliser le menu &quot;Syncthing &gt; Arrêter tous les processus Syncthing&quot; puis &quot;Syncthing &gt; Démarrer&quot;</value>
     <comment>Content of the dialog shown when Syncthing couldn't be started (and exited with an error). Instructs the user on how to proceed.
 
 "FATAL: Cannot Open Database" should remain in English
@@ -343,11 +343,11 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <comment>Title of the dialog shown when Syncthing couldn't be started (and exited with an error)</comment>
   </data>
   <data name="Dialog_SyncthingBlockedByGroupPolicy_Message" xml:space="preserve">
-    <value>Unable to start Syncthing: {0}
+    <value>Impossible de démarrer Syncthing : {0}
 
-This could be because Windows if set up to forbid executing files in AppData, or because you have anti-malware installed (e.g. CryptoPrevent ) which prevents executing files in AppData.
+C&apos;est peut-être Windows qui est paramétré pour interdire l&apos;exécution de programmes dans le dossier AppData, ou vous avez un logiciel anti-malware (ex : CryptoPrevent) qui empêche l&apos;exécution de programmes dans le dossier AppData.
 
-Please adjust your settings / whitelists to allow &apos;{1}&apos; to execute</value>
+Veuillez ajuster vos paramètres/whitelist pour permettre l&apos;exécution de {1}</value>
     <comment>Content of dialog shown when Syncthing couldn't start because of group policy settings (probably)
 {0}: Exact exception message
 {1}: Path to Syncthing executable</comment>
@@ -415,11 +415,11 @@ Les détails de chaque composant ainsi que l&apos;énoncé de la licence corresp
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Démarrage</value>
+    <value>_Start Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>A_rrêt</value>
+    <value>S_top Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -439,12 +439,12 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately after the link to github, and also prompts the user to include the stack trace shown directly below this text</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Pre" xml:space="preserve">
-    <value>Please open an issue at</value>
+    <value>Merci de signaler le bogue à l&apos;adresse suivante : </value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately before the link to github</comment>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Erreur !</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Démarrage de Syncthing...</value>
@@ -498,7 +498,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>R_edémarrer</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>R_edémarrer</value>
+    <value>R_estart Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -513,7 +513,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>Arrêter la mise à jour automatique de Syncthing</value>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
-    <value>Empêcher Syncting de se mettre à jour automatiquement. Ceci est utile lorsqu&apos;une nouvelle version de Syncthing n&apos;est plus compatible avec SyncTrayzor. Vous devrez rétrograder la version du fichier syncthing.exe dans le dossier de configuration de SyncTrayzor</value>
+    <value>Empêcher Syncthing de se mettre à jour automatiquement. Ceci est utile lorsqu&apos;une nouvelle version de Syncthing n&apos;est plus compatible avec SyncTrayzor. Vous devrez rétrograder la version du fichier syncthing.exe dans le dossier de configuration de SyncTrayzor</value>
   </data>
   <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
     <value>Démarrer Syncthing en tant que processus à faible priorité</value>
@@ -543,7 +543,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>Installer maintenant</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
-    <value>View Changelog</value>
+    <value>Voir la liste des modifications </value>
   </data>
   <data name="ShellView_Menu_Zoom" xml:space="preserve">
     <value>Zoom</value>
@@ -559,5 +559,11 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
     <value>Doit être dans le format suivant : &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
+  </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>SyncTrayzor version {0} was successfully installed.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor Updated</value>
   </data>
 </root>
