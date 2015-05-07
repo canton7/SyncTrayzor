@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.0.18
+-------
+
+ - Fix crash when file in watched folder is renamed (#79)
+
 v1.0.17
 -------
 

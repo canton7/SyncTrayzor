@@ -65,6 +65,16 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
+   '1.0.18' => [
+      'installed' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.18/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.18/SyncTrayzorSetup-x86.exe',
+         ],
+      ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.18',
+      'release_notes' => "- Fix crash when file in watched folder is renamed (#79)",
+   ],
    '1.0.17' => [
       'installed' => [
          'direct_download_url' => [
@@ -112,11 +122,12 @@ $versions = [
 ];
 
 $upgrades = [
-   '1.0.16' => ['to' => 'latest', 'formatter' => '2'],
-   '1.0.15' => ['to' => 'latest', 'formatter' => '2'],
-   '1.0.14' => ['to' => 'latest', 'formatter' => '2'],
-   '1.0.13' => ['to' => 'latest', 'formatter' => '1'],
-   '1.0.12' => ['to' => 'latest', 'formatter' => '1'],
+   '1.0.17' => ['to' => 'latest', 'formatter' => '2'],
+   '1.0.16' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
+   '1.0.15' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
+   '1.0.14' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
+   '1.0.13' => ['to' => 'latest', 'formatter' => '1', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
+   '1.0.12' => ['to' => 'latest', 'formatter' => '1', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
 ];
 
 $response_formatters = [

@@ -415,11 +415,11 @@ Genaueres zu jeder Komponente, sowie die entsprechenden Lizenztexte, werden unte
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Start Syncthing</value>
+    <value>_Syncthing starten</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>S_top Syncthing</value>
+    <value>Syncthing s_toppen</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -498,7 +498,7 @@ SyncTrayzor wird nun geschlossen.</value>
     <value>_Neustart</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>R_estart Syncthing</value>
+    <value>Syncthing n_eustarten</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -561,9 +561,9 @@ SyncTrayzor wird nun geschlossen.</value>
     <value>Muss in diesem Format sein: &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
   <data name="NewVersionInstalledView_Message" xml:space="preserve">
-    <value>SyncTrayzor version {0} was successfully installed.</value>
+    <value>SyncTrayzor wurde erfolgreich auf Version {0} aktualisiert.</value>
   </data>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
-    <value>SyncTrayzor Updated</value>
+    <value>SyncTrayzor aktualisiert</value>
   </data>
 </root>
