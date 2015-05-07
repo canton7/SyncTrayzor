@@ -94,9 +94,9 @@ namespace SyncTrayzor.Services
                     NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
                 };
 
-                watcher.Changed += OnChanged;
-                watcher.Created += OnChanged;
-                watcher.Deleted += OnChanged;
+                watcher.Changed += OnChangedOrCreated;
+                watcher.Created += OnChangedOrCreated;
+                watcher.Deleted += OnDeleted;
                 watcher.Renamed += OnRenamed;
 
                 watcher.EnableRaisingEvents = true;
@@ -112,32 +112,48 @@ namespace SyncTrayzor.Services
             }
         }
 
-        private void OnChanged(object source, FileSystemEventArgs e)
+        private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            this.PathChanged(e.FullPath);
+            this.PathChanged(e.FullPath, fileExists: false);
+        }
+
+        private void OnChangedOrCreated(object source, FileSystemEventArgs e)
+        {
+            this.PathChanged(e.FullPath, fileExists: true);
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            this.PathChanged(e.FullPath);
+            this.PathChanged(e.FullPath, fileExists: true);
             // Irritatingly, e.OldFullPath will throw an exception if the path is longer than the windows max
             // (but e.FullPath is fine).
             // So, construct it from e.FullPath and e.OldName
             // Note that we're using Pri.LongPath to get a Path.GetDirectoryName implementation that can handle
             // long paths
             var oldFullPath = Path.Combine(Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.OldName));
-            this.PathChanged(oldFullPath);
+
+            this.PathChanged(oldFullPath, fileExists: false);
         }
 
-        private void PathChanged(string path)
+        private void PathChanged(string path, bool fileExists)
         {
             // First, we need to convert to a long path, just in case anyone's using the short path
-            path = PathEx.GetLongPathName(path);
+            // We can't do this if we don't expect the file to exist any more...
+            // There's also a chance that the file no longer exists. Catch that exception.
+            // If a short path is renamed or deleted, then we do our best with it in a bit, by removing the short bits
+            // If short path segments are used in the base directory path in this case, tough.
+            if (fileExists)
+                path = this.GetLongPathName(path);
 
             if (!path.StartsWith(this.directory))
                 return;
 
             var subPath = path.Substring(this.directory.Length);
+
+            // If it contains a tilde, then it's a short path that squeezed through GetLongPath above
+            // (e.g. because it was a deletion), then strip it back to the first component without an ~
+            subPath = this.StripShortPathSegments(subPath);
+
             if (this.OnPreviewDirectoryChanged(subPath))
                 return;
 
@@ -151,6 +167,30 @@ namespace SyncTrayzor.Services
             }
 
             this.backoffTimer.Start();
+        }
+
+        private string GetLongPathName(string path)
+        {
+            try
+            {
+                path = PathEx.GetLongPathName(path);
+            }
+            catch (FileNotFoundException e)
+            {
+                logger.Warn(String.Format("Path {0} changed, but it doesn't exist any more", path), e);
+            }
+
+            return path;
+        }
+
+        private string StripShortPathSegments(string path)
+        {
+            if (!path.Contains('~'))
+                return path;
+
+            var parts = path.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            var filteredPaths = parts.TakeWhile(x => !x.Contains('~'));
+            return String.Join(Path.DirectorySeparatorChar.ToString(), filteredPaths);
         }
 
         private string FindCommonPrefix(string path1, string path2)
