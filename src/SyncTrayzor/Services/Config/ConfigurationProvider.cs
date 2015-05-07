@@ -112,21 +112,6 @@ namespace SyncTrayzor.Services.Config
                         throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath));
                     }
                 }
-                else if (installCountChanged)
-                {
-                    // If we hit this, then latestInstallCount is set to a real value
-                    logger.Info("Install Count changed, so updating Syncthing at {0} from {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath);
-                    try
-                    {
-                        File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath, true);
-                    }
-                    catch (IOException e)
-                    {
-                        // Syncthing.exe was probably running. We'll try again next time
-                        updateConfigInstallCount = false;
-                        logger.Error(String.Format("Failed to copy Syncthing from {0} to {1}", this.paths.SyncthingBackupPath, this.paths.SyncthingPath), e);
-                    }
-                }
             }
 
             if (updateConfigInstallCount)

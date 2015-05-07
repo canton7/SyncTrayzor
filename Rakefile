@@ -39,7 +39,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
-    @syncthing_binaries = { '0.10' => 'syncthing-0.10.x.exe', '0.11' => 'syncthing-0.11.x.exe' }
+    @syncthing_binaries = { '0.11' => 'syncthing.exe' }
   end
 end
 
