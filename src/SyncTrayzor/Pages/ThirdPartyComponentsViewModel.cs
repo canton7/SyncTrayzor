@@ -96,6 +96,15 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "LongPath",
+                    Description = "Drop-in library to support long paths in .NET",
+                    Homepage = "https://github.com/peteraritchie/LongPath",
+                    License = "LGPLv3",
+                    Notes = "Required for long path support (since .NET sucks here)",
+                    LicenseText = this.LoadLicense("LongPath.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "PropertyChanged.Fody",
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",
