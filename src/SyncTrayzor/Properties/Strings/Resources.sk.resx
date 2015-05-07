@@ -415,11 +415,11 @@ Detaily o každom z nich a ich text licencie sú uvedené nižšie.</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>Š_tart</value>
+    <value>_Start Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>Sto_p</value>
+    <value>S_top Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -444,7 +444,7 @@ SyncTrayzor sa musí zavrieť. Ospravedlňujeme sa</value>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Chyba!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Syncting sa spúšťa...</value>
@@ -498,7 +498,7 @@ SyncTrayzor sa musí zavrieť. Ospravedlňujeme sa</value>
     <value>R_eštart</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>R_eštart</value>
+    <value>R_estart Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -559,5 +559,11 @@ SyncTrayzor sa musí zavrieť. Ospravedlňujeme sa</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
     <value>Musí byť vo formáte &apos;VAR=hodnota VAR2=&quot;premenná1 premenná2&quot;&apos;</value>
+  </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>SyncTrayzor version {0} was successfully installed.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor Updated</value>
   </data>
 </root>

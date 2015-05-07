@@ -309,7 +309,7 @@
     <value>Syncthing περιβαλλοντικές μεταβλητές:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>The following folders will be watched for changes, which means you can set a longer polling interval.</value>
+    <value>Οι ακόλουθοι φάκελοι θα παρακολουθούνται για αλλαγές, πράγμα που σημαίνει ότι μπορείτε να ορίσετε ένα μεγαλύτερο χρονικό διάστημα των δημοσκοπήσεων.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Φάκελοι μη διαθέσιμη. Παρακαλούμε ξεκινήστε το Syncthing</value>
@@ -415,11 +415,11 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Έναρξη</value>
+    <value>_Start Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>Σ_τοπ</value>
+    <value>S_top Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -444,7 +444,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
     <value>Σφάλμα!</value>
-    <comment>Title of the dialog shown when an unhandled excepotion occurs</comment>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
     <value>Έναρξη του Syncthing...</value>
@@ -498,7 +498,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Επανεκκίνηση</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>Επανεκκίνηση</value>
+    <value>R_estart Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -559,5 +559,11 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
     <value>Πρέπει να είναι στη μορφή &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
+  </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>SyncTrayzor version {0} was successfully installed.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor Updated</value>
   </data>
 </root>
