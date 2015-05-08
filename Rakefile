@@ -135,7 +135,7 @@ namespace :portable do
         Dir.chdir(arch_config.bin_dir) do
           files = FileList['**/*'].exclude(
             '*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll',
-            '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data')
+            '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data/*')
 
           files.each do |file|
             cp_to_portable(portable_dir, file)
