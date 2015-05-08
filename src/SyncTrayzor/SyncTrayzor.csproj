@@ -146,6 +146,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.fr.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Strings\Resources.it_IT.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.it_IT.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Strings\Resources.ru.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -317,6 +322,10 @@
     <EmbeddedResource Include="Properties\Strings\Resources.fr.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.it_IT.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.it_IT.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings\Resources.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
