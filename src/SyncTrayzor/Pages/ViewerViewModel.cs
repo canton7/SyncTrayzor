@@ -83,10 +83,14 @@ namespace SyncTrayzor.Pages
 
         protected override void OnInitialActivate()
         {
-            Cef.Initialize(new CefSettings()
+            var settings = new CefSettings()
             {
                 RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
-            });
+            };
+            // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
+            settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+
+            Cef.Initialize(settings);
         }
 
         private void InitializeBrowser(ChromiumWebBrowser webBrowser)
