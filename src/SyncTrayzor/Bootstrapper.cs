@@ -98,15 +98,9 @@ namespace SyncTrayzor
             autostartProvider.IsEnabled = false;
 #endif
 
-            if (autostartProvider.CanWrite)
-            {
-                // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
-                // Else, keep the config as it was, but update the path to us (if we're not in debug)
-                if (Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
+            // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
+            if (autostartProvider.CanWrite && Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
                     autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
-                else
-                    autostartProvider.UpdatePathToSelf();
-            }
 
             // Needs to be done before ConfigurationApplicator is run
             this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
