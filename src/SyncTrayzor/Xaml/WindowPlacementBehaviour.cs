@@ -13,6 +13,8 @@ namespace SyncTrayzor.Xaml
 {
     public class WindowPlacementBehaviour : DetachingBehaviour<Window>
     {
+        private const int taskbarHeight = 40; // Max height
+
         public WindowPlacement Placement
         {
             get { return (WindowPlacement)GetValue(PlacementProperty); }
@@ -26,12 +28,22 @@ namespace SyncTrayzor.Xaml
         {
             this.AssociatedObject.SourceInitialized += this.SourceInitialized;
             this.AssociatedObject.Closing += this.Closing;
+
+            this.SetDefaultSize();
         }
 
         protected override void DetachHandlers()
         {
             this.AssociatedObject.SourceInitialized -= this.SourceInitialized;
             this.AssociatedObject.Closing -= this.Closing;
+        }
+
+        private void SetDefaultSize()
+        {
+            // Beware, we may be duplicating functionality in NoSizeBelowScreenBehaviour
+
+            this.AssociatedObject.Height = Math.Min(this.AssociatedObject.Height, SystemParameters.VirtualScreenHeight - taskbarHeight);
+            this.AssociatedObject.Width = Math.Min(this.AssociatedObject.Width, SystemParameters.VirtualScreenWidth - taskbarHeight);
         }
 
         private void SourceInitialized(object sender, EventArgs e)
