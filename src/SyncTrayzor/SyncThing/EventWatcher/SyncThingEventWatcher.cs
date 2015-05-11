@@ -17,6 +17,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         event EventHandler StartupComplete;
         event EventHandler<ItemStateChangedEventArgs> ItemStarted;
         event EventHandler<ItemStateChangedEventArgs> ItemFinished;
+        event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
     }
@@ -32,6 +33,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler StartupComplete;
         public event EventHandler<ItemStateChangedEventArgs> ItemStarted;
         public event EventHandler<ItemStateChangedEventArgs> ItemFinished;
+        public event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
@@ -97,6 +99,13 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                 handler(this, new ItemStateChangedEventArgs(folder, item));
         }
 
+        private void OnItemDownloadProgressChanged(string folder, string item, long bytesDone, long bytesTotal)
+        {
+            var handler = this.ItemDownloadProgressChanged;
+            if (handler != null)
+                handler(this, new ItemDownloadProgressChangedEventArgs(folder, item, bytesDone, bytesTotal));
+        }
+
         private void OnDeviceConnected(string deviceId, string address)
         {
             var handler = this.DeviceConnected;
@@ -159,6 +168,13 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(DownloadProgressEvent evt)
         {
+            foreach (var folder in evt.Data.Folders)
+            {
+                foreach (var file in folder.Value.Files)
+                {
+                    this.OnItemDownloadProgressChanged(folder.Key, file.Key, file.Value.BytesDone, file.Value.BytesTotal);
+                }
+            }
         }
 
         #endregion
