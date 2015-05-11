@@ -157,6 +157,11 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             this.OnDeviceDisconnected(evt.Data.Id, evt.Data.Error);
         }
 
+        public void Accept(DownloadProgressEvent evt)
+        {
+        }
+
         #endregion
+
     }
 }

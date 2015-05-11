@@ -180,6 +180,7 @@
     <Compile Include="Services\UpdateManagement\UpdateNotificationClientFactory.cs" />
     <Compile Include="Services\UpdateManagement\UpdateNotificationResponse.cs" />
     <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
+    <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />

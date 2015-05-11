@@ -35,6 +35,9 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [JsonProperty("error")]
         public ItemFinishedEventDataError Error { get; set; }
 
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
         [JsonProperty("action")]
         public string Action { get; set; }
     }
