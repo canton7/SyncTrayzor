@@ -186,7 +186,7 @@
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
     <Compile Include="SyncThing\AuthenticatedHttpClientHandler.cs" />
-    <Compile Include="SyncThing\EventWatcher\ItemProgressChangedEventArgs.cs" />
+    <Compile Include="SyncThing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingDidNotStartCorrectlyException.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcherFactory.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcherFactory.cs" />

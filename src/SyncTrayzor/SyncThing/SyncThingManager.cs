@@ -63,13 +63,11 @@ namespace SyncTrayzor.SyncThing
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly ISyncThingProcessRunner processRunner;
         private readonly ISyncThingApiClientFactory apiClientFactory;
-        private readonly ISyncThingEventWatcherFactory eventWatcherFactory;
-        private readonly ISyncThingConnectionsWatcherFactory connectionsWatcherFactory;
 
         // This lock covers the eventWatcher, connectionsWatcher, apiClients, and the CTS
         private readonly object apiClientsLock = new object();
-        private readonly SynchronizedTransientWrapper<ISyncThingEventWatcher> eventWatcher;
-        private readonly SynchronizedTransientWrapper<ISyncThingConnectionsWatcher> connectionsWatcher;
+        private readonly ISyncThingEventWatcher eventWatcher;
+        private readonly ISyncThingConnectionsWatcher connectionsWatcher;
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
         private CancellationTokenSource apiAbortCts;
 
@@ -153,23 +151,15 @@ namespace SyncTrayzor.SyncThing
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
             this.apiClientFactory = apiClientFactory;
-            this.eventWatcherFactory = eventWatcherFactory;
-            this.connectionsWatcherFactory = connectionsWatcherFactory;
 
             this.apiClient = new SynchronizedTransientWrapper<ISyncThingApiClient>(this.apiClientsLock);
 
-            this.eventWatcher = new SynchronizedTransientWrapper<ISyncThingEventWatcher>(this.apiClientsLock);
-            this.eventWatcher.ValueCreated += (o, e) =>
-            {
-                e.Value.DeviceConnected += (o2, e2) => this.OnDeviceConnected(e2);
-                e.Value.DeviceDisconnected += (o2, e2) => this.OnDeviceDisconnected(e2);
-            };
+            this.eventWatcher = eventWatcherFactory.CreateEventWatcher(this.apiClient);
+            this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
+            this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
 
-            this.connectionsWatcher = new SynchronizedTransientWrapper<ISyncThingConnectionsWatcher>(this.apiClientsLock);
-            this.connectionsWatcher.ValueCreated += (o, e) =>
-            {
-                e.Value.TotalConnectionStatsChanged += (o2, e2) => this.OnTotalConnectionStatsChanged(e2.TotalConnectionStats);
-            };
+            this.connectionsWatcher = connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
+            this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
             // It's slightly evil to re-use SyncthingConnectTimeout here, but...
             this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, this.SyncthingConnectTimeout);
@@ -321,15 +311,9 @@ namespace SyncTrayzor.SyncThing
                 if (apiClient == null)
                     throw new InvalidOperationException("ApiClient must not be null");
 
-                if (this.connectionsWatcher.UnsynchronizedValue != null)
-                    this.connectionsWatcher.UnsynchronizedValue.Dispose();
-                this.connectionsWatcher.UnsynchronizedValue = this.connectionsWatcherFactory.CreateConnectionsWatcher(apiClient.Value);
-                this.connectionsWatcher.UnsynchronizedValue.Start();
+                this.connectionsWatcher.Stop();
 
-                if (this.eventWatcher.UnsynchronizedValue != null)
-                    this.eventWatcher.UnsynchronizedValue.Dispose();
-                this.eventWatcher.UnsynchronizedValue = this.eventWatcherFactory.CreateEventWatcher(apiClient.Value);
-                this.eventWatcher.UnsynchronizedValue.Start();
+                this.eventWatcher.Start();
             }
         }
 
@@ -342,13 +326,8 @@ namespace SyncTrayzor.SyncThing
 
                 this.apiClient.UnsynchronizedValue = null;
 
-                if (this.connectionsWatcher.UnsynchronizedValue != null)
-                    this.connectionsWatcher.UnsynchronizedValue.Dispose();
-                this.connectionsWatcher.UnsynchronizedValue = null;
-
-                if (this.eventWatcher.UnsynchronizedValue != null)
-                    this.eventWatcher.UnsynchronizedValue.Dispose();
-                this.eventWatcher.UnsynchronizedValue = null;
+                this.connectionsWatcher.Stop();
+                this.eventWatcher.Stop();
             }
         }
 
@@ -484,6 +463,8 @@ namespace SyncTrayzor.SyncThing
         {
             this.processRunner.Dispose();
             this.StopApiClients();
+            this.eventWatcher.Dispose();
+            this.connectionsWatcher.Dispose();
         }
     }
 }

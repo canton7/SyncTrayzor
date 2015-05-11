@@ -31,7 +31,7 @@ namespace SyncTrayzor.SyncThing
         private readonly SynchronizedEventDispatcher eventDispatcher;
 
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
-        private readonly SynchronizedTransientWrapper<ISyncThingEventWatcher> eventWatcher;
+        private readonly ISyncThingEventWatcher eventWatcher;
         private readonly TimeSpan ignoresFetchTimeout;
 
         public event EventHandler FoldersChanged;
@@ -51,20 +51,17 @@ namespace SyncTrayzor.SyncThing
 
         public SyncThingFolderManager(
             SynchronizedTransientWrapper<ISyncThingApiClient> apiClient,
-            SynchronizedTransientWrapper<ISyncThingEventWatcher> eventWatcher,
+            ISyncThingEventWatcher eventWatcher,
             TimeSpan ignoresFetchTimeout)
         {
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.apiClient = apiClient;
-            this.eventWatcher = eventWatcher;
             this.ignoresFetchTimeout = ignoresFetchTimeout;
 
-            this.eventWatcher.ValueCreated += (o, e) =>
-            {
-                e.Value.SyncStateChanged += (o2, e2) => this.OnSyncStateChanged(e2);
-                e.Value.ItemStarted += (o2, e2) => this.ItemStarted(e2.Folder, e2.Item);
-                e.Value.ItemFinished += (o2, e2) => this.ItemFinished(e2.Folder, e2.Item);
-            }; 
+            this.eventWatcher = eventWatcher;
+            this.eventWatcher.SyncStateChanged += (o2, e2) => this.OnSyncStateChanged(e2);
+            this.eventWatcher.ItemStarted += (o2, e2) => this.ItemStarted(e2.Folder, e2.Item);
+            this.eventWatcher.ItemFinished += (o2, e2) => this.ItemFinished(e2.Folder, e2.Item);
         }
 
         public bool TryFetchById(string folderId, out Folder folder)

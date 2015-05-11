@@ -25,7 +25,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly ISyncThingApiClient apiClient;
+        private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
 
         private int lastEventId;
 
@@ -37,7 +37,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
-        public SyncThingEventWatcher(ISyncThingApiClient apiClient)
+        public SyncThingEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
             : base(TimeSpan.Zero, TimeSpan.FromSeconds(10))
         {
             this.apiClient = apiClient;
@@ -54,9 +54,9 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             List<Event> events;
             // If this is the first poll, don't fetch the history
             if (this.lastEventId == 0)
-                events = await this.apiClient.FetchEventsAsync(0, 1);
+                events = await this.apiClient.Value.FetchEventsAsync(0, 1);
             else
-                events = await this.apiClient.FetchEventsAsync(this.lastEventId);
+                events = await this.apiClient.Value.FetchEventsAsync(this.lastEventId);
 
             // We can be aborted in the time it takes to fetch the events
             cancellationToken.ThrowIfCancellationRequested();
