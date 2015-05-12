@@ -18,6 +18,7 @@ namespace SyncTrayzor.Services.Config
         string ConfigurationFileBackupPath { get; }
         string UpdatesDownloadPath { get; }
         string InstallCountFilePath { get; }
+        string CefCachePath { get; }
 
         void Initialize(PathConfiguration pathConfiguration);
     }
@@ -47,6 +48,7 @@ namespace SyncTrayzor.Services.Config
             logger.Debug("SyncThingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
             logger.Debug("ConfigurationFileBackupPath: {0}", this.ConfigurationFileBackupPath);
+            logger.Debug("CefCachePath: {0}", this.CefCachePath);
         }
 
         public string ExePath { get; set; }
@@ -79,6 +81,11 @@ namespace SyncTrayzor.Services.Config
         public string ConfigurationFileBackupPath
         {
             get { return this.pathConfiguration.ConfigurationFileBackupPath; }
+        }
+
+        public string CefCachePath
+        {
+            get { return this.pathConfiguration.CefCachePath; }
         }
 
         public string UpdatesDownloadPath

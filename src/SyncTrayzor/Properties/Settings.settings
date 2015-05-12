@@ -63,6 +63,7 @@
   &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
   &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
   &lt;ConfigurationFileBackupPath&gt;%EXEPATH%\data\config-backups&lt;/ConfigurationFileBackupPath&gt;
+  &lt;CefCachePath&gt;%EXEPATH%\data\cef\cache&lt;/CefCachePath&gt;
 &lt;/PathConfiguration&gt;</Value>
     </Setting>
   </Settings>

@@ -15,6 +15,7 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingPath { get; set; }
         public string ConfigurationFilePath { get; set; }
         public string ConfigurationFileBackupPath { get; set; }
+        public string CefCachePath { get; set; }
 
         public PathConfiguration()
         {
@@ -23,6 +24,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingPath = @"%EXEPATH%\syncthing.exe";
             this.ConfigurationFilePath = @"%EXEPATH%\data\config.xml";
             this.ConfigurationFileBackupPath = @"%EXEPATH%\data\config-backups";
+            this.CefCachePath = @"%EXEPATH%\data\cef\cache";
         }
 
         public void Transform(Func<string, string> transfomer)
@@ -32,6 +34,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingPath = transfomer(this.SyncthingPath);
             this.ConfigurationFilePath = transfomer(this.ConfigurationFilePath);
             this.ConfigurationFileBackupPath = transfomer(this.ConfigurationFileBackupPath);
+            this.CefCachePath = transfomer(this.CefCachePath);
         }
     }
 }

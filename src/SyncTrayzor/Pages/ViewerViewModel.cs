@@ -26,6 +26,7 @@ namespace SyncTrayzor.Pages
         private readonly ISyncThingManager syncThingManager;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IConfigurationProvider configurationProvider;
+        private readonly IApplicationPathsProvider pathsProvider;
 
         private readonly object cultureLock = new object(); // This can be read from many threads
         private CultureInfo culture;
@@ -45,12 +46,14 @@ namespace SyncTrayzor.Pages
             IWindowManager windowManager,
             ISyncThingManager syncThingManager,
             IConfigurationProvider configurationProvider,
-            IProcessStartProvider processStartProvider)
+            IProcessStartProvider processStartProvider,
+            IApplicationPathsProvider pathsProvider)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.processStartProvider = processStartProvider;
             this.configurationProvider = configurationProvider;
+            this.pathsProvider = pathsProvider;
 
             var configuration = this.configurationProvider.Load();
             this.zoomLevel = configuration.SyncthingWebBrowserZoomLevel;
@@ -86,6 +89,8 @@ namespace SyncTrayzor.Pages
             var settings = new CefSettings()
             {
                 RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
+                // We really only want to set the LocalStorage path, but we don't have that level of control....
+                CachePath = this.pathsProvider.CefCachePath,
             };
             // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
             settings.CefCommandLineArgs.Add("no-proxy-server", "1");
