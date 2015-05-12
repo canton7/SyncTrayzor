@@ -12,10 +12,15 @@
     <BitmapImage x:Key="TaskbarSyncing3Icon" UriSource="pack://application:,,,/Icons/syncing_3.ico"/>
     <BitmapImage x:Key="TaskbarSyncing4Icon" UriSource="pack://application:,,,/Icons/syncing_4.ico"/>
 
-    <tb:TaskbarIcon x:Key="TaskbarIcon"
+    <tb:TaskbarIcon x:Key="TaskbarIcon" x:Name="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                     DoubleClickCommand="{s:Action DoubleClick}"
                     MenuActivation="RightClick">
+        <tb:TaskbarIcon.TrayPopup>
+            <Popup StaysOpen="False" Placement="Relative" HorizontalOffset="-150" VerticalOffset="100" Width="300" PlacementTarget="{Binding ElementName=TaskbarIcon}">
+                <ContentControl s:View.Model="{Binding FileTransfersViewModel}"/>
+            </Popup>
+        </tb:TaskbarIcon.TrayPopup>
         <tb:TaskbarIcon.Resources>
             <Storyboard x:Key="IconAnimation">
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ni:NotifyIconResolutionUtilities.IconSource)" Duration="0:0:2" RepeatBehavior="Forever">

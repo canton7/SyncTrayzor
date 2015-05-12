@@ -129,8 +129,6 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
-
-            this.Container.Get<IApplicationState>().ApplicationStarted();
         }
 
         protected override void Launch()
@@ -143,6 +141,8 @@ namespace SyncTrayzor
 
         protected override void OnLaunch()
         {
+            this.Container.Get<IApplicationState>().ApplicationStarted();
+
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();
