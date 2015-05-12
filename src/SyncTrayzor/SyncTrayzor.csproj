@@ -275,6 +275,10 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="SyncThing\TransferHistory\FileTransfer.cs" />
+    <Compile Include="SyncThing\TransferHistory\FileTransferChangedEventArgs.cs" />
+    <Compile Include="SyncThing\TransferHistory\FileTransferStatus.cs" />
+    <Compile Include="SyncThing\TransferHistory\SyncThingTransferHistory.cs" />
     <Compile Include="SyncThing\TransientWrapper.cs" />
     <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />

@@ -2,6 +2,7 @@
 using Refit;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Concurrent;
@@ -42,6 +43,7 @@ namespace SyncTrayzor.SyncThing
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersion Version { get; }
         ISyncThingFolderManager Folders { get; }
+        ISyncThingTransferHistory TransferHistory { get; }
 
         Task StartAsync();
         Task StopAsync();
@@ -139,6 +141,12 @@ namespace SyncTrayzor.SyncThing
             get { return this._folders; }
         }
 
+        private readonly ISyncThingTransferHistory _transferHistory;
+        public ISyncThingTransferHistory TransferHistory
+        {
+            get { return this._transferHistory; }
+        }
+
         public SyncThingManager(
             ISyncThingProcessRunner processRunner,
             ISyncThingApiClientFactory apiClientFactory,
@@ -163,6 +171,7 @@ namespace SyncTrayzor.SyncThing
 
             // It's slightly evil to re-use SyncthingConnectTimeout here, but...
             this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, this.SyncthingConnectTimeout);
+            this._transferHistory = new SyncThingTransferHistory(this.eventWatcher);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);

@@ -14,6 +14,7 @@ using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
