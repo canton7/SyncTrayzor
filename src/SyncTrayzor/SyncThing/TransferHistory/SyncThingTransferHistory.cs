@@ -74,41 +74,42 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private FileTransfer FetchOrInsertInProgressFileTransfer(string folder, string path)
         {
             var key = this.KeyForFileTransfer(folder, path);
+            bool created = false;
             FileTransfer fileTransfer;
             lock (this.transfersLock)
             {
                 if (!this.inProgressTransfers.TryGetValue(key, out fileTransfer))
                 {
+                    created = true;
                     fileTransfer = new FileTransfer(folder, path);
                     this.inProgressTransfers.Add(key, fileTransfer);
                 }
-
-                return fileTransfer;
             }
+
+            if (created)
+                this.OnTransferStarted(fileTransfer);
+            return fileTransfer;
         }
 
         private void ItemStarted(object sender, ItemStateChangedEventArgs e)
         {
-            var fileTransfer = this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item);
-            this.OnTransferStarted(fileTransfer);
+            this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item);
         }
 
         private void ItemFinished(object sender, ItemStateChangedEventArgs e)
         {
             // It *should* be in the 'in progress transfers'...
-            FileTransfer fileTransfer = null;
+            FileTransfer fileTransfer;
             lock (this.transfersLock)
             {
                 var key = this.KeyForFileTransfer(e.Folder, e.Item);
-                if (this.inProgressTransfers.TryGetValue(key, out fileTransfer))
-                {
-                    fileTransfer.SetComplete();
-                    this.inProgressTransfers.Remove(key);
+                fileTransfer = this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item);
+                fileTransfer.SetComplete();
+                this.inProgressTransfers.Remove(key);
 
-                    this.completedTransfers.Enqueue(fileTransfer);
-                    if (this.completedTransfers.Count > maxCompletedTransfers)
-                        this.completedTransfers.Dequeue();
-                }
+                this.completedTransfers.Enqueue(fileTransfer);
+                if (this.completedTransfers.Count > maxCompletedTransfers)
+                    this.completedTransfers.Dequeue();
             }
 
             if (fileTransfer != null)

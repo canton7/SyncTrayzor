@@ -58,22 +58,10 @@ namespace SyncTrayzor.SyncThing.ApiClient
         public long BytesDone { get; set; }
     }
 
-    public class DownloadProgressEventFolderData
-    {
-        [JsonExtensionData]
-        public Dictionary<string, DownloadProgressEventFileData> Files { get; set; }
-    }
-
-    public class DownloadProgressEventData
-    {
-        [JsonExtensionData]
-        public Dictionary<string, DownloadProgressEventFolderData> Folders { get; set; }
-    }
-
     public class DownloadProgressEvent : Event
     {
         [JsonProperty("data")]
-        public DownloadProgressEventData Data { get; set; }
+        public Dictionary<string, Dictionary<string, DownloadProgressEventFileData>> Data { get; set; }
 
         public override void Visit(IEventVisitor visitor)
         {
@@ -83,9 +71,9 @@ namespace SyncTrayzor.SyncThing.ApiClient
         public override string ToString()
         {
             var sb = new StringBuilder();
-            foreach (var folder in this.Data.Folders)
+            foreach (var folder in this.Data)
             {
-                foreach (var file in folder.Value.Files)
+                foreach (var file in folder.Value)
                 {
                     sb.AppendFormat("{0}:{1}={2}/{3}", folder.Key, file.Key, file.Value.BytesDone, file.Value.BytesTotal);
                 }

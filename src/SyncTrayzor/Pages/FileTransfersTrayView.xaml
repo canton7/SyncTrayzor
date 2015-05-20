@@ -4,8 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             Height="300">
+             Height="300" d:DesignWidth="300">
     <Border CornerRadius="6" BorderThickness="2" BorderBrush="Gray" Background="White">
-            
+        <DockPanel LastChildFill="False">
+            <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding CompletedTransfers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top">Folder: <TextBlock Text="{Binding FolderId}"/></TextBlock>
+                            <TextBlock DockPanel.Dock="Top">Path: <TextBlock Text="{Binding Path}"/></TextBlock>
+                            <TextBlock DockPanel.Dock="Top">Completed: <TextBlock Text="{Binding Finished}"/></TextBlock>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding InProgressTransfers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top">Folder: <TextBlock Text="{Binding FolderId}"/></TextBlock>
+                            <TextBlock DockPanel.Dock="Top">Path: <TextBlock Text="{Binding Path}"/></TextBlock>
+                            <TextBlock DockPanel.Dock="Top" Text="{Binding ProgressString}"/>
+                            <ProgressBar DockPanel.Dock="Top" Minimum="0" Maximum="100" Value="{Binding ProgressPercent}" Height="10"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
     </Border>
 </UserControl>

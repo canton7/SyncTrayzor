@@ -15,7 +15,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
     {
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         event EventHandler StartupComplete;
-        event EventHandler<ItemStateChangedEventArgs> ItemStarted;
+        event EventHandler<ItemStartedEventArgs> ItemStarted;
         event EventHandler<ItemStateChangedEventArgs> ItemFinished;
         event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
@@ -27,12 +27,17 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
         private ISyncThingApiClient apiClient;
+        private static readonly Dictionary<string, ItemChangedActionType> actionTypeMapping = new Dictionary<string, ItemChangedActionType>()
+        {
+            { "update", ItemChangedActionType.Update },
+            { "delete", ItemChangedActionType.Delete },
+        };
 
         private int lastEventId;
 
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         public event EventHandler StartupComplete;
-        public event EventHandler<ItemStateChangedEventArgs> ItemStarted;
+        public event EventHandler<ItemStartedEventArgs> ItemStarted;
         public event EventHandler<ItemStateChangedEventArgs> ItemFinished;
         public event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
@@ -91,11 +96,16 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                 handler(this, EventArgs.Empty);
         }
 
-        private void OnItemStarted(string folder, string item)
+        private void OnItemStarted(string folder, string item, string action)
         {
             var handler = this.ItemStarted;
             if (handler != null)
-                handler(this, new ItemStateChangedEventArgs(folder, item));
+            {
+                ItemChangedActionType actionType;
+                if (!actionTypeMapping.TryGetValue(action, out actionType))
+                    actionType = ItemChangedActionType.Unknown;
+                handler(this, new ItemStartedEventArgs(folder, item, actionType));
+            }
         }
 
         private void OnItemFinished(string folder, string item)
@@ -149,7 +159,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(ItemStartedEvent evt)
         {
-            this.OnItemStarted(evt.Data.Folder, evt.Data.Item);
+            this.OnItemStarted(evt.Data.Folder, evt.Data.Item, evt.Data.Action);
         }
 
         public void Accept(ItemFinishedEvent evt)
@@ -174,9 +184,9 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(DownloadProgressEvent evt)
         {
-            foreach (var folder in evt.Data.Folders)
+            foreach (var folder in evt.Data)
             {
-                foreach (var file in folder.Value.Files)
+                foreach (var file in folder.Value)
                 {
                     this.OnItemDownloadProgressChanged(folder.Key, file.Key, file.Value.BytesDone, file.Value.BytesTotal);
                 }

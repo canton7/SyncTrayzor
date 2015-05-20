@@ -4,7 +4,8 @@
                     xmlns:l="clr-namespace:SyncTrayzor.Localization"
                     xmlns:ni="clr-namespace:SyncTrayzor.NotifyIcon"
                     xmlns:tb="http://www.hardcodet.net/taskbar"
-                    xmlns:xaml="clr-namespace:SyncTrayzor.Xaml">
+                    xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
 
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/stopped.ico"/>
     <BitmapImage x:Key="TaskbarSyncing1Icon" UriSource="pack://application:,,,/Icons/default_tray.ico"/>
@@ -17,7 +18,11 @@
                     DoubleClickCommand="{s:Action DoubleClick}"
                     MenuActivation="RightClick">
         <tb:TaskbarIcon.TrayPopup>
-            <Popup StaysOpen="False" Placement="Relative" HorizontalOffset="-150" VerticalOffset="100" Width="300" PlacementTarget="{Binding ElementName=TaskbarIcon}">
+            <Popup StaysOpen="False" Placement="Relative" HorizontalOffset="-150" VerticalOffset="100" Width="300" PlacementTarget="{Binding ElementName=TaskbarIcon}" AllowsTransparency="True">
+                <i:Interaction.Behaviors>
+                    <xaml:PopupConductorBehaviour DataContext="{Binding FileTransfersViewModel}"/>
+                </i:Interaction.Behaviors>
+                
                 <ContentControl s:View.Model="{Binding FileTransfersViewModel}"/>
             </Popup>
         </tb:TaskbarIcon.TrayPopup>
