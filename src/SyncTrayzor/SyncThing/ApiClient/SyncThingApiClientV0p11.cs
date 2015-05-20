@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NLog;
-using Refit;
+using RestEase;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.Utils;
 using System;
@@ -20,18 +20,16 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public SyncThingApiClientV0p11(Uri baseAddress, string apiKey)
         {
-            var httpClient = new HttpClient(new AuthenticatedHttpClientHandler(apiKey))
+            var httpClient = new HttpClient(new SyncThingHttpClientHandler())
             {
                 BaseAddress = baseAddress.NormalizeZeroHost(),
                 Timeout = TimeSpan.FromSeconds(70),
             };
-            this.api = RestService.For<ISyncThingApiV0p11>(httpClient, new RefitSettings()
+            this.api = RestClient.For<ISyncThingApiV0p11>(httpClient, new JsonSerializerSettings()
             {
-                JsonSerializerSettings = new JsonSerializerSettings()
-                {
-                    Converters = { new EventConverter() }
-                },
+                Converters = { new EventConverter() }
             });
+            this.api.ApiKey = apiKey;
         }
 
         public Task ShutdownAsync()
@@ -40,14 +38,14 @@ namespace SyncTrayzor.SyncThing.ApiClient
             return this.api.ShutdownAsync();
         }
 
-        public Task<List<Event>> FetchEventsAsync(int since, int limit)
+        public Task<List<Event>> FetchEventsAsync(int since, int limit, CancellationToken cancellationToken)
         {
-            return this.api.FetchEventsLimitAsync(since, limit);
+            return this.api.FetchEventsLimitAsync(since, limit, cancellationToken);
         }
 
-        public Task<List<Event>> FetchEventsAsync(int since)
+        public Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken)
         {
-            return this.api.FetchEventsAsync(since);
+            return this.api.FetchEventsAsync(since, cancellationToken);
         }
 
         public async Task<Config> FetchConfigAsync()

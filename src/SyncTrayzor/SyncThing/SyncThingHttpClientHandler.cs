@@ -9,21 +9,18 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
-    public class AuthenticatedHttpClientHandler : WebRequestHandler
+    public class SyncThingHttpClientHandler : WebRequestHandler
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly string apiKey;
 
-        public AuthenticatedHttpClientHandler(string apiKey)
+        public SyncThingHttpClientHandler()
         {
-            this.apiKey = apiKey;
             // We expect Syncthing to return invalid certs
             this.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.Add("X-API-Key", this.apiKey);
             if (logger.IsTraceEnabled)
             {
                 var response = await base.SendAsync(request, cancellationToken);

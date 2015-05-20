@@ -1,5 +1,5 @@
 ﻿using NLog;
-using Refit;
+using RestEase;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;

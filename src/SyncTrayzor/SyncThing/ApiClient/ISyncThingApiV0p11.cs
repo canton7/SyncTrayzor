@@ -1,4 +1,4 @@
-﻿using Refit;
+﻿using RestEase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +10,14 @@ namespace SyncTrayzor.SyncThing.ApiClient
 {
     public interface ISyncThingApiV0p11
     {
-        [Get("/rest/events")]
-        Task<List<Event>> FetchEventsAsync(int since);
+        [Header("X-API-Key")]
+        string ApiKey { get; set; }
 
         [Get("/rest/events")]
-        Task<List<Event>> FetchEventsLimitAsync(int since, int limit);
+        Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken);
+
+        [Get("/rest/events")]
+        Task<List<Event>> FetchEventsLimitAsync(int since, int limit, CancellationToken cancellationToken);
 
         [Get("/rest/system/config")]
         Task<Config> FetchConfigAsync();
