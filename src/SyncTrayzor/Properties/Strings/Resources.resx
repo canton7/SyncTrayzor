@@ -566,6 +566,12 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
     <value>SyncTrayzor Updated</value>
   </data>
+  <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
+    <value>Syncthing started running, but we were unable to communicate with it after 10 minutes of trying. This can happen if Syncthing has database corruption, or there may be other causes. Please see Syncthing's console output for clues.</value>
+  </data>
+  <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
+    <value>Syncthing didn't start correctly</value>
+  </data>
   <data name="Generic_Copy" xml:space="preserve">
     <value>_Copy</value>
   </data>

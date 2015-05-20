@@ -195,6 +195,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing started running, but we were unable to communicate with it after 10 minutes of trying. This can happen if Syncthing has database corruption, or there may be other causes. Please see Syncthing&apos;s console output for clues..
+        /// </summary>
+        public static string Dialog_SyncthingDidNotStart_Message {
+            get {
+                return ResourceManager.GetString("Dialog_SyncthingDidNotStart_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing didn&apos;t start correctly.
+        /// </summary>
+        public static string Dialog_SyncthingDidNotStart_Title {
+            get {
+                return ResourceManager.GetString("Dialog_SyncthingDidNotStart_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Copy.
         /// </summary>
         public static string Generic_Copy {
