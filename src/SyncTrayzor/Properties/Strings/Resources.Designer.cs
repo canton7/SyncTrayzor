@@ -627,20 +627,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use custom home directory for Syncthing..
+        ///   Looks up a localized string similar to Use Syncthing&apos;s default database location.
         /// </summary>
-        public static string SettingsView_SyncthingUseCustomHome {
+        public static string SettingsView_SyncthingUseDefaultHome {
             get {
-                return ResourceManager.GetString("SettingsView_SyncthingUseCustomHome", resourceCulture);
+                return ResourceManager.GetString("SettingsView_SyncthingUseDefaultHome", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer..
+        ///   Looks up a localized string similar to If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer..
         /// </summary>
-        public static string SettingsView_SyncthingUseCustomHome_ToolTip {
+        public static string SettingsView_SyncthingUseDefaultHome_ToolTip {
             get {
-                return ResourceManager.GetString("SettingsView_SyncthingUseCustomHome_ToolTip", resourceCulture);
+                return ResourceManager.GetString("SettingsView_SyncthingUseDefaultHome_ToolTip", resourceCulture);
             }
         }
         

@@ -94,6 +94,9 @@
 
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically}" Content="{l:Loc SettingsView_StartSyncthingAutomatically}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingRunLowPriority}" Content="{l:Loc SettingsView_SyncthingRunLowPriority}"/>
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseDefaultHome}"
+                                          Content="{l:Loc SettingsView_SyncthingUseDefaultHome}"
+                                          ToolTip="{l:Loc SettingsView_SyncthingUseDefaultHome_ToolTip}"/>
 
                             <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
                             <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
@@ -111,9 +114,6 @@
                     <Expander DockPanel.Dock="Bottom" Header="{l:Loc SettingsView_Section_Advanced}">
                         <GroupBox Header="{l:Loc SettingsView_Section_Advanced}">
                             <DockPanel LastChildFill="False">
-                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseCustomHome}"
-                                          Content="{l:Loc SettingsView_SyncthingUseCustomHome}"
-                                          ToolTip="{l:Loc SettingsView_SyncthingUseCustomHome_ToolTip}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingDenyUpgrade}"
                                           Content="{l:Loc SettingsView_SyncthingDenyUpgrade}"
                                           ToolTip="{l:Loc SettingsView_SyncthingDenyUpgrade_ToolTip}"/>
