@@ -10,7 +10,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <cefSharp:ChromiumWebBrowser x:Name="browser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"/>
+        <cefSharp:ChromiumWebBrowser x:Name="WebBrowser" Address="{Binding Location}" WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}">
+            <cefSharp:ChromiumWebBrowser.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{l:Loc Generic_Cut}" Command="{Binding WebBrowser.CutCommand}"/>
+                    <MenuItem Header="{l:Loc Generic_Copy}" Command="{Binding WebBrowser.CopyCommand}"/>
+                    <MenuItem Header="{l:Loc Generic_Paste}" Command="{Binding WebBrowser.PasteCommand}"/>
+                </ContextMenu>
+            </cefSharp:ChromiumWebBrowser.ContextMenu>
+        </cefSharp:ChromiumWebBrowser>
 
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStarting}"
                    Visibility="{Binding ShowSyncThingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"

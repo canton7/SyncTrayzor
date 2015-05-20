@@ -195,6 +195,24 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Copy.
+        /// </summary>
+        public static string Generic_Copy {
+            get {
+                return ResourceManager.GetString("Generic_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cu_t.
+        /// </summary>
+        public static string Generic_Cut {
+            get {
+                return ResourceManager.GetString("Generic_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Generic_Dialog_Cancel {
@@ -245,6 +263,15 @@ namespace SyncTrayzor.Properties.Strings {
         public static string Generic_Dialog_Yes {
             get {
                 return ResourceManager.GetString("Generic_Dialog_Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Paste.
+        /// </summary>
+        public static string Generic_Paste {
+            get {
+                return ResourceManager.GetString("Generic_Paste", resourceCulture);
             }
         }
         

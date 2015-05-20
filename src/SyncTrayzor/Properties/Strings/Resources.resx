@@ -566,4 +566,13 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
     <value>SyncTrayzor Updated</value>
   </data>
+  <data name="Generic_Copy" xml:space="preserve">
+    <value>_Copy</value>
+  </data>
+  <data name="Generic_Cut" xml:space="preserve">
+    <value>Cu_t</value>
+  </data>
+  <data name="Generic_Paste" xml:space="preserve">
+    <value>_Paste</value>
+  </data>
 </root>
