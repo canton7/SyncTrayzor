@@ -117,7 +117,9 @@ namespace SyncTrayzor
             {
                 var manager = this.Container.Get<ISyncThingManager>();
                 manager.StopAsync().Wait(250);
+                Task.Delay(250).Wait();
                 manager.Kill();
+
                 Process.GetCurrentProcess().Kill();
             };
 
