@@ -110,6 +110,14 @@ namespace SyncTrayzor.Services
                 // re-create us shortly if needs be
                 return null;
             }
+            catch (FileNotFoundException e)
+            {
+                // This can happen if e.g. the user points us towards 'My Documents' on Vista+, and we get an
+                // 'Error reading the xxx directory'
+                logger.Warn(String.Format("Watcher for {0} couldn't be created: {1}", this.directory, e.Message), e);
+                // We'll try again soon
+                return null;
+            }
         }
 
         private void OnDeleted(object source, FileSystemEventArgs e)
