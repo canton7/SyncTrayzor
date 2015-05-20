@@ -135,6 +135,8 @@ namespace SyncTrayzor.Properties {
   <SyncthingConsoleHeight>100</SyncthingConsoleHeight>
   <SyncthingWebBrowserZoomLevel>0</SyncthingWebBrowserZoomLevel>
   <LastSeenInstallCount>0</LastSeenInstallCount>
+  <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
+  <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
 </Configuration>")]
         public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
             get {
@@ -147,8 +149,6 @@ namespace SyncTrayzor.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <PathConfiguration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
   <LogFilePath>%EXEPATH%\logs</LogFilePath>
-  <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
-  <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
   <ConfigurationFilePath>%EXEPATH%\data\config.xml</ConfigurationFilePath>
   <ConfigurationFileBackupPath>%EXEPATH%\data\config-backups</ConfigurationFileBackupPath>
   <CefCachePath>%EXEPATH%\data\cef\cache</CefCachePath>

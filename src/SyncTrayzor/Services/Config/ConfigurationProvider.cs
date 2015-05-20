@@ -98,19 +98,21 @@ namespace SyncTrayzor.Services.Config
                 }
             }
 
+            var expandedSyncthingPath = EnvVarTransformer.Transform(this.currentConfig.SyncthingPath);
+
             // They're the same if we're portable, in which case, nothing to do
-            if (this.paths.SyncthingPath != this.paths.SyncthingBackupPath)
+            if (expandedSyncthingPath != this.paths.SyncthingBackupPath)
             {
-                if (!File.Exists(this.paths.SyncthingPath))
+                if (!File.Exists(expandedSyncthingPath))
                 {
                     if (File.Exists(this.paths.SyncthingBackupPath))
                     {
-                        logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath);
-                        File.Copy(this.paths.SyncthingBackupPath, this.paths.SyncthingPath);
+                        logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
+                        File.Copy(this.paths.SyncthingBackupPath, expandedSyncthingPath);
                     }
                     else
                     {
-                        throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", this.paths.SyncthingPath, this.paths.SyncthingBackupPath));
+                        throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath));
                     }
                 }
             }
@@ -140,7 +142,7 @@ namespace SyncTrayzor.Services.Config
             {
                 logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
                 loadedConfig = XDocument.Load(this.paths.ConfigurationFilePath);
-                loadedConfig = this.MigrationConfiguration(loadedConfig);
+                loadedConfig = this.MigrateConfiguration(loadedConfig);
 
                 var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
                 loadedConfig.Root.ReplaceNodes(merged);
@@ -159,7 +161,7 @@ namespace SyncTrayzor.Services.Config
             return configuration;
         }
 
-        private XDocument MigrationConfiguration(XDocument configuration)
+        private XDocument MigrateConfiguration(XDocument configuration)
         {
             var version = (int?)configuration.Root.Attribute("Version");
             if (version == null)

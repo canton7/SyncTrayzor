@@ -78,8 +78,7 @@ namespace SyncTrayzor
         protected override void Configure()
         {
             var pathConfiguration = Settings.Default.PathConfiguration;
-            pathConfiguration.Transform(EnvVarTransformer.Transform);
-            GlobalDiagnosticsContext.Set("LogFilePath", pathConfiguration.LogFilePath);
+            GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
 
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 

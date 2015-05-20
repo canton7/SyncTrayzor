@@ -3,6 +3,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,6 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncThingManager.ExecutablePath = this.pathsProvider.SyncthingPath;
             this.syncThingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
 
             this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
@@ -70,10 +70,13 @@ namespace SyncTrayzor.Services
             this.syncThingManager.Address = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncThingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
-            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ? this.pathsProvider.SyncthingCustomHomePath : null;
+            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
+                EnvVarTransformer.Transform(configuration.SyncthingCustomHomePath)
+                : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
+            this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

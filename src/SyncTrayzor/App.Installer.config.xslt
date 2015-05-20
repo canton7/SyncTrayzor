@@ -7,13 +7,13 @@
   <xsl:template match="/configuration/applicationSettings//setting[@name='Variant']/value/text()">Installed</xsl:template>
   
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//LogFilePath/text()">%APPDATA%\SyncTrayzor\logs</xsl:template>
-  <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//SyncthingCustomHomePath/text()">%LOCALAPPDATA%\SyncTrayzor\syncthing</xsl:template>
-  <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//SyncthingPath/text()">%APPDATA%\SyncTrayzor\syncthing.exe</xsl:template>
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//ConfigurationFilePath/text()">%APPDATA%\SyncTrayzor\config.xml</xsl:template>
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//ConfigurationFileBackupPath/text()">%APPDATA%\SyncTrayzor\config-backups</xsl:template>
   <xsl:template match="/configuration/applicationSettings//setting[@name='PathConfiguration']//CefCachePath/text()">%LOCALAPPDATA%\SyncTrayzor\cef\cache</xsl:template>
 
   <xsl:template match="/configuration/applicationSettings//setting[@name='DefaultUserConfiguration']//SyncthingUseCustomHome/text()">false</xsl:template>
+  <xsl:template match="/configuration/applicationSettings//setting[@name='DefaultUserConfiguration']//SyncthingCustomHomePath/text()">%LOCALAPPDATA%\SyncTrayzor\syncthing</xsl:template>
+  <xsl:template match="/configuration/applicationSettings//setting[@name='DefaultUserConfiguration']//SyncthingPath/text()">%APPDATA%\SyncTrayzor\syncthing.exe</xsl:template>
   
   <!-- Default template -->
   <xsl:template match="node()|@*">
