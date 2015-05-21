@@ -1,47 +1,73 @@
 ﻿using Stylet;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.TransferHistory;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace SyncTrayzor.Pages
 {
     public class FileTransferViewModel : PropertyChangedBase
     {
         public readonly FileTransfer FileTransfer;
+        private readonly DispatcherTimer completedTimeAgoUpdateTimer;
 
         public string FolderId { get; private set; }
         public string Path { get; private set; }
-        public DateTime Finished { get; private set; }
+        public Icon Icon { get; private set; }
+        
+        public string CompletedTimeAgo
+        {
+            get
+            {
+                if (this.FileTransfer.FinishedUtc.HasValue)
+                    return FormatUtils.TimeSpanToTimeAgo(DateTime.UtcNow - this.FileTransfer.FinishedUtc.Value);
+                else
+                    return null;
+            }
+        }
 
         public string ProgressString { get; private set; }
+        public bool IsStarting { get; private set; }
         public float ProgressPercent { get; private set; }
 
         public FileTransferViewModel(FileTransfer fileTransfer)
         {
+            this.completedTimeAgoUpdateTimer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromMinutes(1),
+            };
+            this.completedTimeAgoUpdateTimer.Tick += (o, e) => this.NotifyOfPropertyChange(() => this.CompletedTimeAgo);
+            this.completedTimeAgoUpdateTimer.Start();
+
             this.FileTransfer = fileTransfer;
+            this.FolderId = this.FileTransfer.FolderId;
+            this.Path = this.FileTransfer.Path;
+            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path);
 
             this.UpdateState();
         }
 
         public void UpdateState()
         {
-            this.FolderId = this.FileTransfer.FolderId;
-            this.Path = this.FileTransfer.Path;
-            this.Finished = this.FileTransfer.FinishedUtc.GetValueOrDefault().ToLocalTime();
-
             switch (this.FileTransfer.Status)
             {
                 case FileTransferStatus.Started:
                     this.ProgressString = "Starting...";
+                    this.IsStarting = true;
                     this.ProgressPercent = 0;
                     break;
 
                 case FileTransferStatus.InProgress:
-                    this.ProgressString = "Downloading..."; // TODO show xx/yyMB
+                    this.ProgressString = String.Format("Downloading {0}/{1}",
+                        FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
+                        FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
+                    this.IsStarting = false;
                     this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / (float)this.FileTransfer.TotalBytes) * 100;
                     break;
             }
@@ -65,7 +91,7 @@ namespace SyncTrayzor.Pages
 
         protected override void OnActivate()
         {
-            foreach (var completedTransfer in this.transferHistory.CompletedTransfers)
+            foreach (var completedTransfer in this.transferHistory.CompletedTransfers.Take(10))
             {
                 this.CompletedTransfers.Add(new FileTransferViewModel(completedTransfer));
             }
