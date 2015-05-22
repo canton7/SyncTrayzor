@@ -11,7 +11,7 @@ namespace SyncTrayzor.Utils
     {
         private static readonly string[] sizes = { "B", "KB", "MB", "GB" };
 
-        public static string BytesToHuman(long bytes)
+        public static string BytesToHuman(double bytes, int decimalPlaces = 0)
         {
             // http://stackoverflow.com/a/281679/1086121
             int order = 0;
@@ -20,7 +20,7 @@ namespace SyncTrayzor.Utils
                 order++;
                 bytes = bytes / 1024;
             }
-            return String.Format("{0:0.#}{1}", bytes, sizes[order]);
+            return Math.Round(bytes, decimalPlaces).ToString() + sizes[order];
         }
 
         public static string TimeSpanToTimeAgo(TimeSpan timeSpan)

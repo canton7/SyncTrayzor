@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
+using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using System;
 using System.Collections.Generic;
@@ -15,26 +16,46 @@ namespace SyncTrayzor.Design
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
 
+        public bool HasCompletedTransfers
+        {
+            get { return this.CompletedTransfers.Count > 0; }
+        }
+        public bool HasInProgressTransfers
+        {
+            get { return this.InProgressTransfers.Count > 0; }
+        }
+
+        public string InConnectionRate { get; private set; }
+        public string OutConnectionRate { get; private set; }
+
+        public bool AnyTransfers { get; private set; }
+
         public DummyFileTransfersTrayViewModel()
         {
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
 
-            var completedFileTransfer1 = new FileTransfer("folder", "path.pdf");
-            completedFileTransfer1.SetComplete();
+            var completedFileTransfer1 = new FileTransfer("folder", "path.pdf", ItemChangedItemType.File, ItemChangedActionType.Update);
+            completedFileTransfer1.SetComplete(null);
 
-            var completedFileTransfer2 = new FileTransfer("folder", "a really very long path that's far too long to sit on the page.h");
-            completedFileTransfer2.SetComplete();
+            var completedFileTransfer2 = new FileTransfer("folder", "a really very long path that's far too long to sit on the page.h", ItemChangedItemType.File, ItemChangedActionType.Delete);
+            completedFileTransfer2.SetComplete("Something went very wrong");
 
-            this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer1));
-            this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer2));
+            //this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer1));
+            //this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer2));
 
-            var inProgressTransfer1 = new FileTransfer("folder", "path.txt");
+            var inProgressTransfer1 = new FileTransfer("folder", "path.txt", ItemChangedItemType.File, ItemChangedActionType.Update);
             inProgressTransfer1.SetDownloadProgress(5*1024*1024, 100*1024*1024);
-            this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer1));
 
-            var inProgressTransfer2 = new FileTransfer("folder", "path.txt");
+            var inProgressTransfer2 = new FileTransfer("folder", "path", ItemChangedItemType.Folder, ItemChangedActionType.Update);
+
+            this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer1));
             this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer2));
+
+            this.InConnectionRate = "In: 1.2MB/s";
+            this.OutConnectionRate = "Out: 0.0MB/s";
+
+            this.AnyTransfers = true;
         }
     }
 }

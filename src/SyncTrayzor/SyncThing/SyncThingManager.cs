@@ -320,8 +320,7 @@ namespace SyncTrayzor.SyncThing
                 if (apiClient == null)
                     throw new InvalidOperationException("ApiClient must not be null");
 
-                this.connectionsWatcher.Stop();
-
+                this.connectionsWatcher.Start();
                 this.eventWatcher.Start();
             }
         }

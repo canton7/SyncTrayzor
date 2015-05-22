@@ -26,52 +26,71 @@
     <Border CornerRadius="6" BorderThickness="2" BorderBrush="Gray" Background="White">
         <DockPanel>
             <Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="0,0,0,1">
-                <TextBlock Height="25" Margin="5,8,0,0" FontSize="14">Syncing...</TextBlock>
+                <DockPanel Margin="5,8,5,0" LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Left" Height="25" FontSize="15" FontWeight="Bold">SyncTrayzor</TextBlock>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Text="{Binding OutConnectionRate}"/>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="{Binding InConnectionRate}"/>
+                </DockPanel>
             </Border>
             
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <DockPanel LastChildFill="False">
-                    <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
-                            Visibility="{Binding CompletedTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                        <TextBlock Style="{StaticResource SectionTitleStyle}">Recently Downloaded</TextBlock>
-                    </Border>
-                    <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding CompletedTransfers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource ItemBorderStyle}">
-                                    <DockPanel Margin="5">
-                                        <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
-                                               Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
-                                        <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock DockPanel.Dock="Top" Foreground="DimGray" Text="{Binding CompletedTimeAgo}"/>
-                                    </DockPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+            <Grid>
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Visibility="{Binding AnyTransfers, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}">
+                    No recent file transfers
+                </TextBlock>
 
-                    <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
-                            Visibility="{Binding InProgressTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                        <TextBlock Style="{StaticResource SectionTitleStyle}">Downloading</TextBlock>
-                    </Border>
-                    <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding InProgressTransfers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource ItemBorderStyle}">
-                                    <DockPanel Margin="5">
-                                        <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DockPanel LastChildFill="False">
+                        <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
+                            Visibility="{Binding HasInProgressTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                            <TextBlock Style="{StaticResource SectionTitleStyle}">Downloading</TextBlock>
+                        </Border>
+                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding InProgressTransfers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource ItemBorderStyle}">
+                                        <DockPanel Margin="5">
+                                            <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
                                                Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
-                                        <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock DockPanel.Dock="Top" Foreground="DimGray" Text="{Binding ProgressString}"/>
-                                        <ProgressBar DockPanel.Dock="Top" Minimum="0" Maximum="100" Height="10"
+                                            <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock DockPanel.Dock="Top" Foreground="DimGray" Text="{Binding ProgressString}"/>
+                                            <ProgressBar DockPanel.Dock="Top" Margin="0,4,0,0" Minimum="0" Maximum="100" Height="10"
                                                  Value="{Binding ProgressPercent}" IsIndeterminate="{Binding IsStarting}"/>
-                                    </DockPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </DockPanel>
-            </ScrollViewer>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
+                            Visibility="{Binding HasCompletedTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                            <TextBlock Style="{StaticResource SectionTitleStyle}">Recently Updated</TextBlock>
+                        </Border>
+                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding CompletedTransfers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource ItemBorderStyle}">
+                                        <DockPanel Margin="5">
+                                            <TextBlock DockPanel.Dock="Bottom" Margin="5,5,0,0" Foreground="Red" FontWeight="Bold"
+                                                   TextWrapping="Wrap"
+                                                   Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                                                   Text="{Binding Error}"/>
+                                            <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
+                                               Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                            <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}"/>    
+                                                <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="(deleted)"
+                                                           Visibility="{Binding WasDeleted, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DockPanel>
+                </ScrollViewer>
+            </Grid>
         </DockPanel>
     </Border>
 </UserControl>

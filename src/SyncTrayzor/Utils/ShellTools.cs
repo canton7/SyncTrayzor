@@ -11,10 +11,10 @@ namespace SyncTrayzor.Utils
     // See http://codesdirectory.blogspot.co.uk/2013/01/displaying-system-icon-in-c-wpf.html
     public static class ShellTools
     {
-        public static Icon GetIcon(string path)
+        public static Icon GetIcon(string path, bool isFile)
         {
             var flags = (uint)(SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
-            var attribute = (uint)FILE_ATTRIBUTE_FILE;
+            var attribute = isFile ? (uint)FILE_ATTRIBUTE_FILE : (uint)FILE_ATTRIBUTE_DIRECTORY;
             var shfi = new SHFileInfo();
             var res = SHGetFileInfo(path, attribute, out shfi, (uint)Marshal.SizeOf(shfi), flags);
 

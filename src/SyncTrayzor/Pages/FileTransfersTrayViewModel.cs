@@ -20,6 +20,8 @@ namespace SyncTrayzor.Pages
         public string FolderId { get; private set; }
         public string Path { get; private set; }
         public Icon Icon { get; private set; }
+        public string Error { get; private set; }
+        public bool WasDeleted { get; private set; }
         
         public string CompletedTimeAgo
         {
@@ -48,7 +50,8 @@ namespace SyncTrayzor.Pages
             this.FileTransfer = fileTransfer;
             this.FolderId = this.FileTransfer.FolderId;
             this.Path = this.FileTransfer.Path;
-            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path);
+            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType == SyncThing.EventWatcher.ItemChangedItemType.File);
+            this.WasDeleted = this.FileTransfer.ActionType == SyncThing.EventWatcher.ItemChangedActionType.Delete;
 
             this.UpdateState();
         }
@@ -71,46 +74,74 @@ namespace SyncTrayzor.Pages
                     this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / (float)this.FileTransfer.TotalBytes) * 100;
                     break;
             }
+
+            this.Error = this.FileTransfer.Error;
         }
     }
 
     public class FileTransfersTrayViewModel : Screen
     {
-        private readonly ISyncThingTransferHistory transferHistory;
+        private readonly ISyncThingManager syncThingManager;
 
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
 
+        public bool HasCompletedTransfers
+        {
+            get { return this.CompletedTransfers.Count > 0; }
+        }
+        public bool HasInProgressTransfers
+        {
+            get { return this.InProgressTransfers.Count > 0; }
+        }
+
+        public string InConnectionRate { get; private set; }
+        public string OutConnectionRate { get; private set; }
+
+        public bool AnyTransfers
+        {
+            get { return this.HasCompletedTransfers || this.HasInProgressTransfers; }
+        }
+
         public FileTransfersTrayViewModel(ISyncThingManager syncThingManager)
         {
-            this.transferHistory = syncThingManager.TransferHistory;
+            this.syncThingManager = syncThingManager;
 
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
+
+            this.CompletedTransfers.CollectionChanged += (o, e) => { this.NotifyOfPropertyChange(() => this.HasCompletedTransfers); this.NotifyOfPropertyChange(() => this.AnyTransfers); };
+            this.InProgressTransfers.CollectionChanged += (o, e) => { this.NotifyOfPropertyChange(() => this.HasInProgressTransfers); this.NotifyOfPropertyChange(() => this.AnyTransfers); };
         }
 
         protected override void OnActivate()
         {
-            foreach (var completedTransfer in this.transferHistory.CompletedTransfers.Take(10))
+            foreach (var completedTransfer in this.syncThingManager.TransferHistory.CompletedTransfers.Take(10).Reverse())
             {
                 this.CompletedTransfers.Add(new FileTransferViewModel(completedTransfer));
             }
 
-            foreach (var inProgressTranser in this.transferHistory.InProgressTransfers)
+            foreach (var inProgressTranser in this.syncThingManager.TransferHistory.InProgressTransfers.Reverse())
             {
                 this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTranser));
             }
 
-            this.transferHistory.TransferStarted += this.TransferStarted;
-            this.transferHistory.TransferCompleted += this.TransferCompleted;
-            this.transferHistory.TransferStateChanged += this.TransferStateChanged;
+            this.syncThingManager.TransferHistory.TransferStarted += this.TransferStarted;
+            this.syncThingManager.TransferHistory.TransferCompleted += this.TransferCompleted;
+            this.syncThingManager.TransferHistory.TransferStateChanged += this.TransferStateChanged;
+
+            this.UpdateConnectionStats(this.syncThingManager.TotalConnectionStats);
+
+            this.syncThingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
         }
 
         protected override void OnDeactivate()
         {
-            this.transferHistory.TransferStarted -= this.TransferStarted;
-            this.transferHistory.TransferCompleted -= this.TransferCompleted;
-            this.transferHistory.TransferStateChanged -= this.TransferStateChanged;
+            this.syncThingManager.TransferHistory.TransferStarted -= this.TransferStarted;
+            this.syncThingManager.TransferHistory.TransferCompleted -= this.TransferCompleted;
+            this.syncThingManager.TransferHistory.TransferStateChanged -= this.TransferStateChanged;
+
+            this.syncThingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
 
             this.CompletedTransfers.Clear();
             this.InProgressTransfers.Clear();
@@ -118,14 +149,14 @@ namespace SyncTrayzor.Pages
 
         private void TransferStarted(object sender, FileTransferChangedEventArgs e)
         {
-            this.InProgressTransfers.Add(new FileTransferViewModel(e.FileTransfer));
+            this.InProgressTransfers.Insert(0, new FileTransferViewModel(e.FileTransfer));
         }
 
         private void TransferCompleted(object sender, FileTransferChangedEventArgs e)
         {
             var transferVm = this.InProgressTransfers.First(x => x.FileTransfer == e.FileTransfer);
             this.InProgressTransfers.Remove(transferVm);
-            this.CompletedTransfers.Add(transferVm);
+            this.CompletedTransfers.Insert(0, transferVm);
             transferVm.UpdateState();
         }
 
@@ -134,6 +165,25 @@ namespace SyncTrayzor.Pages
             var transferVm = this.InProgressTransfers.FirstOrDefault(x => x.FileTransfer == e.FileTransfer);
             if (transferVm != null)
                 transferVm.UpdateState();
+        }
+
+        private void TotalConnectionStatsChanged(object sender, ConnectionStatsChangedEventArgs e)
+        {
+            this.UpdateConnectionStats(e.TotalConnectionStats);
+        }
+
+        private void UpdateConnectionStats(SyncThingConnectionStats connectionStats)
+        {
+            if (connectionStats == null)
+            {
+                this.InConnectionRate = "0.0KB/s";
+                this.OutConnectionRate = "0.0KB/s";
+            }
+            else
+            {
+                this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1) + "/s";
+                this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1) + "/s";
+            }
         }
     }
 }

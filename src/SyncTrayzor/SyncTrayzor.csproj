@@ -190,6 +190,9 @@
     <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
+    <Compile Include="SyncThing\EventWatcher\ItemChangedActionType.cs" />
+    <Compile Include="SyncThing\EventWatcher\ItemChangedItemType.cs" />
+    <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
