@@ -20,7 +20,8 @@ namespace SyncTrayzor.Utils
                 order++;
                 bytes = bytes / 1024;
             }
-            return Math.Round(bytes, decimalPlaces).ToString() + sizes[order];
+            var placesFmtString = new String('0', decimalPlaces);
+            return String.Format("{0:0." + placesFmtString + "}{1}", bytes, sizes[order]);
         }
 
         public static string TimeSpanToTimeAgo(TimeSpan timeSpan)
