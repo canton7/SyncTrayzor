@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
+             x:Name="RootObject"
              Height="300" d:DesignWidth="300"
              d:DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=FileTransfersTrayViewModel}">
     <UserControl.Resources>
@@ -73,6 +75,13 @@
                                 <DataTemplate>
                                     <Border Style="{StaticResource ItemBorderStyle}">
                                         <DockPanel Margin="5">
+                                            <!-- Use an InvokeCommandAction so we can pass a parameter -->
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                    <i:InvokeCommandAction s:View.ActionTarget="{Binding DataContext, Source={x:Reference RootObject}}"
+                                                        Command="{s:Action ItemClicked}" CommandParameter="{Binding}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
                                             <TextBlock DockPanel.Dock="Bottom" Margin="5,5,0,0" Foreground="Red" FontWeight="Bold"
                                                    TextWrapping="Wrap"
                                                    Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"

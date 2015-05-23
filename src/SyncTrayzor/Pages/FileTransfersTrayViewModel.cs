@@ -1,6 +1,9 @@
-﻿using Stylet;
+﻿using Pri.LongPath;
+using Stylet;
 using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
@@ -18,7 +21,6 @@ namespace SyncTrayzor.Pages
         public readonly FileTransfer FileTransfer;
         private readonly DispatcherTimer completedTimeAgoUpdateTimer;
 
-        public string FolderId { get; private set; }
         public string Path { get; private set; }
         public Icon Icon { get; private set; }
         public string Error { get; private set; }
@@ -49,8 +51,7 @@ namespace SyncTrayzor.Pages
             this.completedTimeAgoUpdateTimer.Start();
 
             this.FileTransfer = fileTransfer;
-            this.FolderId = this.FileTransfer.FolderId;
-            this.Path = this.FileTransfer.Path;
+            this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
             this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType == SyncThing.EventWatcher.ItemChangedItemType.File);
             this.WasDeleted = this.FileTransfer.ActionType == SyncThing.EventWatcher.ItemChangedActionType.Delete;
 
@@ -94,6 +95,7 @@ namespace SyncTrayzor.Pages
     public class FileTransfersTrayViewModel : Screen
     {
         private readonly ISyncThingManager syncThingManager;
+        private readonly IProcessStartProvider processStartProvider;
 
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
@@ -115,9 +117,10 @@ namespace SyncTrayzor.Pages
             get { return this.HasCompletedTransfers || this.HasInProgressTransfers; }
         }
 
-        public FileTransfersTrayViewModel(ISyncThingManager syncThingManager)
+        public FileTransfersTrayViewModel(ISyncThingManager syncThingManager, IProcessStartProvider processStartProvider)
         {
             this.syncThingManager = syncThingManager;
+            this.processStartProvider = processStartProvider;
 
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
@@ -195,6 +198,23 @@ namespace SyncTrayzor.Pages
             {
                 this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1);
                 this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1);
+            }
+        }
+
+        public void ItemClicked(FileTransferViewModel fileTransferVm)
+        {
+            var fileTransfer = fileTransferVm.FileTransfer;
+            Folder folder;
+            if (!this.syncThingManager.Folders.TryFetchById(fileTransfer.FolderId, out folder))
+                return; // Huh? Nothing we can do about it...
+
+            // Not sure of the best way to deal with deletions yet...
+            if (fileTransfer.ActionType == ItemChangedActionType.Update)
+            {
+                if (fileTransfer.ItemType == ItemChangedItemType.File)
+                    this.processStartProvider.StartDetached("explorer.exe", String.Format("/select, \"{0}\"", Path.Combine(folder.Path, fileTransfer.Path)));
+                else
+                    this.processStartProvider.StartDetached("explorer.exe", Path.Combine(folder.Path, fileTransfer.Path));
             }
         }
     }
