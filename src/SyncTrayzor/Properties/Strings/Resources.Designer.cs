@@ -195,7 +195,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing started running, but we were unable to communicate with it after 10 minutes of trying. This can happen if Syncthing has database corruption, or there may be other causes. Please see Syncthing&apos;s console output for clues..
+        ///   Looks up a localized string similar to Unable to start Syncthing: {0}. Please see Syncthing&apos;s console output for clues..
         /// </summary>
         public static string Dialog_SyncthingDidNotStart_Message {
             get {

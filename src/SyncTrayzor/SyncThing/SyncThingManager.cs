@@ -169,8 +169,7 @@ namespace SyncTrayzor.SyncThing
             this.connectionsWatcher = connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
-            // It's slightly evil to re-use SyncthingConnectTimeout here, but...
-            this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, this.SyncthingConnectTimeout);
+            this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
             this._transferHistory = new SyncThingTransferHistory(this.eventWatcher);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
