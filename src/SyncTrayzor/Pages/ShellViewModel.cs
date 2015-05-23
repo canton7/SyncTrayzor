@@ -25,7 +25,6 @@ namespace SyncTrayzor.Pages
         private readonly Func<AboutViewModel> aboutViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
 
-        public bool WindowActivated { get; set; }
         public bool ShowConsole { get; set; }
         public double ConsoleHeight { get; set; }
         public WindowPlacement Placement { get; set; }
@@ -193,7 +192,6 @@ namespace SyncTrayzor.Pages
         {
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
-            this.WindowActivated = true;
         }
     }
 }

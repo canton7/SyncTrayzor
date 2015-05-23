@@ -66,6 +66,10 @@ namespace SyncTrayzor.Xaml
             };
 
             SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement);
+
+            // Not 100% sure why this is needed, but if the window is minimzed before being closed to tray,
+            // then is restored, we can end up in a state where we aren't active
+            this.AssociatedObject.Activate();
         }
 
         private void Closing(object sender, CancelEventArgs e)

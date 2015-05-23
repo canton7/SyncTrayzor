@@ -305,7 +305,6 @@
     <Compile Include="Xaml\LogMessageListToStringConverter.cs" />
     <Compile Include="Xaml\ScrollToEndBehaviour.cs" />
     <Compile Include="Xaml\TextBoxUtilities.cs" />
-    <Compile Include="Xaml\ActivateBehaviour.cs" />
     <Compile Include="Xaml\WindowPlacementBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>

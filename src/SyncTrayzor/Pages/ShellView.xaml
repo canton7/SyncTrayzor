@@ -8,7 +8,6 @@
         Height="700" Width="1100"
         Title="SyncTrayzor">
     <i:Interaction.Behaviors>
-        <xaml:ActivateBehaviour Activated="{Binding WindowActivated}"/>
         <xaml:WindowPlacementBehaviour Placement="{Binding Placement}"/>
     </i:Interaction.Behaviors>
     <Window.InputBindings>
