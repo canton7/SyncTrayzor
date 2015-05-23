@@ -52,8 +52,8 @@ namespace SyncTrayzor.Design
             this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer1));
             this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer2));
 
-            this.InConnectionRate = "In: 1.2MB/s";
-            this.OutConnectionRate = "Out: 0.0MB/s";
+            this.InConnectionRate = "1.2MB";
+            this.OutConnectionRate = "0.0MB";
 
             this.AnyTransfers = true;
         }

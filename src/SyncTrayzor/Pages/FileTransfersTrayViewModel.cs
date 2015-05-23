@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
@@ -61,13 +62,13 @@ namespace SyncTrayzor.Pages
             switch (this.FileTransfer.Status)
             {
                 case FileTransferStatus.Started:
-                    this.ProgressString = "Starting...";
+                    this.ProgressString = Resources.FileTransfersTrayView_Starting;
                     this.IsStarting = true;
                     this.ProgressPercent = 0;
                     break;
 
                 case FileTransferStatus.InProgress:
-                    this.ProgressString = String.Format("Downloading {0}/{1}",
+                    this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading,
                         FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
                         FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
                     this.IsStarting = false;
@@ -176,13 +177,13 @@ namespace SyncTrayzor.Pages
         {
             if (connectionStats == null)
             {
-                this.InConnectionRate = "0.0KB/s";
-                this.OutConnectionRate = "0.0KB/s";
+                this.InConnectionRate = "0.0KB";
+                this.OutConnectionRate = "0.0KB";
             }
             else
             {
-                this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1) + "/s";
-                this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1) + "/s";
+                this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1);
+                this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1);
             }
         }
     }

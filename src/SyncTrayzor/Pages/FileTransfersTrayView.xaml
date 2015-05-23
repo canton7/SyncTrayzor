@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
              mc:Ignorable="d" 
              Height="300" d:DesignWidth="300"
              d:DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=FileTransfersTrayViewModel}">
@@ -28,22 +29,23 @@
             <Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="0,0,0,1">
                 <DockPanel Margin="5,8,5,0" LastChildFill="False">
                     <TextBlock DockPanel.Dock="Left" Height="25" FontSize="15" FontWeight="Bold">SyncTrayzor</TextBlock>
-                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Text="{Binding OutConnectionRate}"/>
-                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="{Binding InConnectionRate}"/>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center"
+                               Text="{l:Loc FileTransfersTrayView_OutConnectionRate, ValueBinding={Binding OutConnectionRate}}"/>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0"
+                               Text="{l:Loc FileTransfersTrayView_InConnectionRate, ValueBinding={Binding InConnectionRate}}"/>
                 </DockPanel>
             </Border>
             
             <Grid>
                 <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Visibility="{Binding AnyTransfers, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}">
-                    No recent file transfers
-                </TextBlock>
+                       Visibility="{Binding AnyTransfers, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"
+                           Text="{l:Loc FileTransfersTrayView_NothingToShow}"/>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <DockPanel LastChildFill="False">
                         <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
                             Visibility="{Binding HasInProgressTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                            <TextBlock Style="{StaticResource SectionTitleStyle}">Downloading</TextBlock>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{l:Loc FileTranfersTrayView_Header_Downloading}"/>
                         </Border>
                         <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding InProgressTransfers}">
                             <ItemsControl.ItemTemplate>
@@ -64,7 +66,7 @@
 
                         <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
                             Visibility="{Binding HasCompletedTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                            <TextBlock Style="{StaticResource SectionTitleStyle}">Recently Updated</TextBlock>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{l:Loc FileTransfersTrayView_Header_RecentlyUpdated}"/>
                         </Border>
                         <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding CompletedTransfers}">
                             <ItemsControl.ItemTemplate>
@@ -79,8 +81,8 @@
                                                Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
                                             <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
                                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}"/>    
-                                                <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="(deleted)"
+                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}"/>
+                                                <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="{l:Loc FileTransfersTrayView_Deleted}"
                                                            Visibility="{Binding WasDeleted, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
                                             </StackPanel>
                                         </DockPanel>

@@ -28,19 +28,27 @@ namespace SyncTrayzor.Utils
             if (timeSpan.TotalDays > 365)
             {
                 int years = (int)Math.Ceiling((float)timeSpan.Days / 365);
-                return String.Format(years == 1 ? "{0} year ago" : "{0} years ago", years);
+                return years == 1 ?
+                    Resources.TimeAgo_Years_Singular :
+                    String.Format(Resources.TimeAgo_Years_Plural, years);
             }
 
             if (timeSpan.TotalDays > 1.0)
-                return String.Format((int)timeSpan.TotalDays == 1 ? "{0} day ago" : "{0} days ago", (int)timeSpan.TotalDays);
+                return (int)timeSpan.TotalDays == 1 ?
+                    Resources.TimeAgo_Days_Singular :
+                    String.Format(Resources.TimeAgo_Days_Plural, (int)timeSpan.TotalDays);
 
             if (timeSpan.TotalHours > 1.0)
-                return String.Format((int)timeSpan.TotalHours == 1 ? "{0} hour ago" : "{0} hours ago", (int)timeSpan.TotalHours);
+                return (int)timeSpan.TotalHours == 1 ?
+                    Resources.TimeAgo_Hours_Singular :
+                    String.Format(Resources.TimeAgo_Hours_Plural, (int)timeSpan.TotalHours);
 
             if (timeSpan.TotalMinutes > 1.0)
-                return String.Format((int)timeSpan.TotalMinutes == 1 ? "{0} minute ago" : "{0} minutes ago", (int)timeSpan.TotalMinutes);
+                return (int)timeSpan.TotalMinutes == 1 ?
+                    Resources.TimeAgo_Minutes_Singular :
+                    String.Format(Resources.TimeAgo_Minutes_Plural, (int)timeSpan.TotalMinutes);
 
-            return "Just now";
+            return Resources.TimeAgo_JustNow;
         }
     }
 }
