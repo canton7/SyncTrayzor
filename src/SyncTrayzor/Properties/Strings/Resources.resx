@@ -589,7 +589,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>(deleted)</value>
     <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
   </data>
-  <data name="FileTransfersTrayView_Downloading" xml:space="preserve">
+  <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
     <value>Downloading {0}/{1}</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
@@ -640,5 +640,15 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   </data>
   <data name="TimeAgo_Years_Singular" xml:space="preserve">
     <value>1 year ago</value>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
+    <value>Downloading {0}/{1} ({2}/s)</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download
+{2}: The current download rate, e.g. 2.0MB</comment>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
   </data>
 </root>

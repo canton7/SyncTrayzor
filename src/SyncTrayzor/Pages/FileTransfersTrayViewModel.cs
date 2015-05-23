@@ -68,9 +68,20 @@ namespace SyncTrayzor.Pages
                     break;
 
                 case FileTransferStatus.InProgress:
-                    this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading,
-                        FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
-                        FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
+                    if (this.FileTransfer.DownloadBytesPerSecond.HasValue)
+                    {
+                        this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading_RateKnown,
+                            FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
+                            FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes),
+                            FormatUtils.BytesToHuman(this.FileTransfer.DownloadBytesPerSecond.Value, 1));
+                    }
+                    else
+                    {
+                            this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading_RateUnknown,
+                            FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
+                            FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
+                    }
+                    
                     this.IsStarting = false;
                     this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / (float)this.FileTransfer.TotalBytes) * 100;
                     break;

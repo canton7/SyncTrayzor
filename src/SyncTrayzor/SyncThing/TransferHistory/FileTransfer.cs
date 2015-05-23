@@ -13,6 +13,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
         public long BytesTransferred { get; private set; }
         public long TotalBytes { get; private set; }
+        public double? DownloadBytesPerSecond { get; private set; }
 
         public string FolderId { get; private set; }
         public string Path { get; private set; }
@@ -23,6 +24,8 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         public DateTime? FinishedUtc { get; private set; }
 
         public string Error { get; private set; }
+
+        private DateTime? lastProgressUpdateUtc;
 
         public FileTransfer(string folderId, string path, ItemChangedItemType itemType, ItemChangedActionType actionType)
         {
@@ -37,9 +40,17 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
         public void SetDownloadProgress(long bytesTransferred, long totalBytes)
         {
+            var now = DateTime.UtcNow;
+            if (this.lastProgressUpdateUtc.HasValue)
+            {
+                var deltaBytesTransferred = bytesTransferred - this.BytesTransferred;
+                this.DownloadBytesPerSecond = deltaBytesTransferred / (now - this.lastProgressUpdateUtc.Value).TotalSeconds;
+            }
+
             this.BytesTransferred = bytesTransferred;
             this.TotalBytes = totalBytes;
             this.Status = FileTransferStatus.InProgress;
+            this.lastProgressUpdateUtc = now;
         }
 
         public void SetComplete(string error)

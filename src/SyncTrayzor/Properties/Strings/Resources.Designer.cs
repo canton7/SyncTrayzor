@@ -231,11 +231,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Downloading {0}/{1} ({2}/s).
+        /// </summary>
+        public static string FileTransfersTrayView_Downloading_RateKnown {
+            get {
+                return ResourceManager.GetString("FileTransfersTrayView_Downloading_RateKnown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading {0}/{1}.
         /// </summary>
-        public static string FileTransfersTrayView_Downloading {
+        public static string FileTransfersTrayView_Downloading_RateUnknown {
             get {
-                return ResourceManager.GetString("FileTransfersTrayView_Downloading", resourceCulture);
+                return ResourceManager.GetString("FileTransfersTrayView_Downloading_RateUnknown", resourceCulture);
             }
         }
         
@@ -965,6 +974,15 @@ namespace SyncTrayzor.Properties.Strings {
         public static string ShellView_Menu_Zoom_Reset {
             get {
                 return ResourceManager.GetString("ShellView_Menu_Zoom_Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         
