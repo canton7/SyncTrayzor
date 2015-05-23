@@ -25,7 +25,8 @@ namespace SyncTrayzor.SyncThing.EventWatcher
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
+        private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
+        private ISyncThingApiClient apiClient;
 
         private int lastEventId;
 
@@ -40,13 +41,18 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public SyncThingEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
             : base(TimeSpan.Zero, TimeSpan.FromSeconds(10))
         {
-            this.apiClient = apiClient;
+            this.apiClientWrapper = apiClient;
         }
 
-        protected override void StartInternal(CancellationToken cancellationToken)
+        protected override void OnStart()
         {
             this.lastEventId = 0;
-            base.StartInternal(cancellationToken);
+            this.apiClient = this.apiClientWrapper.Value;
+        }
+
+        protected override void OnStop()
+        {
+            this.apiClient = null;
         }
 
         protected override async Task PollAsync(CancellationToken cancellationToken)
@@ -54,9 +60,9 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             List<Event> events;
             // If this is the first poll, don't fetch the history
             if (this.lastEventId == 0)
-                events = await this.apiClient.Value.FetchEventsAsync(0, 1, cancellationToken);
+                events = await this.apiClient.FetchEventsAsync(0, 1, cancellationToken);
             else
-                events = await this.apiClient.Value.FetchEventsAsync(this.lastEventId, cancellationToken);
+                events = await this.apiClient.FetchEventsAsync(this.lastEventId, cancellationToken);
 
             // We can be aborted in the time it takes to fetch the events
             cancellationToken.ThrowIfCancellationRequested();
