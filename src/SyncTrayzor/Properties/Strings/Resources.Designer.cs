@@ -249,6 +249,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        public static string FileTransfersTrayView_Error {
+            get {
+                return ResourceManager.GetString("FileTransfersTrayView_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recently Updated.
         /// </summary>
         public static string FileTransfersTrayView_Header_RecentlyUpdated {
@@ -974,15 +983,6 @@ namespace SyncTrayzor.Properties.Strings {
         public static string ShellView_Menu_Zoom_Reset {
             get {
                 return ResourceManager.GetString("ShellView_Menu_Zoom_Reset", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string String1 {
-            get {
-                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         

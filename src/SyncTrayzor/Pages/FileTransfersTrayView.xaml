@@ -85,7 +85,7 @@
                                             <TextBlock DockPanel.Dock="Bottom" Margin="5,5,0,0" Foreground="Red" FontWeight="Bold"
                                                    TextWrapping="Wrap"
                                                    Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                                                   Text="{Binding Error}"/>
+                                                   Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
                                             <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
                                                Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
                                             <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>

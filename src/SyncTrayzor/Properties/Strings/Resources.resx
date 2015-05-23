@@ -648,7 +648,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
 {1}: The total amount to download
 {2}: The current download rate, e.g. 2.0MB</comment>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
+  <data name="FileTransfersTrayView_Error" xml:space="preserve">
+    <value>Error: {0}</value>
   </data>
 </root>
