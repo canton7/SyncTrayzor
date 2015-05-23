@@ -35,7 +35,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         private static readonly Dictionary<string, ItemChangedItemType> itemTypeMapping = new Dictionary<string, ItemChangedItemType>()
         {
             { "file", ItemChangedItemType.File },
-            { "folder", ItemChangedItemType.Folder },
+            { "dir", ItemChangedItemType.Folder },
         };
 
         private int lastEventId;
