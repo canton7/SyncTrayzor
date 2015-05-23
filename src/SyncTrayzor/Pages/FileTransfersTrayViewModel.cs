@@ -177,8 +177,8 @@ namespace SyncTrayzor.Pages
         {
             if (connectionStats == null)
             {
-                this.InConnectionRate = "0.0KB";
-                this.OutConnectionRate = "0.0KB";
+                this.InConnectionRate = "0.0B";
+                this.OutConnectionRate = "0.0B";
             }
             else
             {
