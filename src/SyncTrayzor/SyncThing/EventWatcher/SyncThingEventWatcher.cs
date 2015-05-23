@@ -15,8 +15,8 @@ namespace SyncTrayzor.SyncThing.EventWatcher
     {
         event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         event EventHandler StartupComplete;
-        event EventHandler<ItemStateChangedEventArgs> ItemStarted;
-        event EventHandler<ItemStateChangedEventArgs> ItemFinished;
+        event EventHandler<ItemStartedEventArgs> ItemStarted;
+        event EventHandler<ItemFinishedEventArgs> ItemFinished;
         event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
@@ -27,13 +27,23 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
         private ISyncThingApiClient apiClient;
+        private static readonly Dictionary<string, ItemChangedActionType> actionTypeMapping = new Dictionary<string, ItemChangedActionType>()
+        {
+            { "update", ItemChangedActionType.Update },
+            { "delete", ItemChangedActionType.Delete },
+        };
+        private static readonly Dictionary<string, ItemChangedItemType> itemTypeMapping = new Dictionary<string, ItemChangedItemType>()
+        {
+            { "file", ItemChangedItemType.File },
+            { "dir", ItemChangedItemType.Folder },
+        };
 
         private int lastEventId;
 
         public event EventHandler<SyncStateChangedEventArgs> SyncStateChanged;
         public event EventHandler StartupComplete;
-        public event EventHandler<ItemStateChangedEventArgs> ItemStarted;
-        public event EventHandler<ItemStateChangedEventArgs> ItemFinished;
+        public event EventHandler<ItemStartedEventArgs> ItemStarted;
+        public event EventHandler<ItemFinishedEventArgs> ItemFinished;
         public event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
@@ -91,18 +101,20 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                 handler(this, EventArgs.Empty);
         }
 
-        private void OnItemStarted(string folder, string item)
+        private void OnItemStarted(string folder, string item, ItemChangedActionType action, ItemChangedItemType itemType)
         {
             var handler = this.ItemStarted;
             if (handler != null)
-                handler(this, new ItemStateChangedEventArgs(folder, item));
+            {
+                handler(this, new ItemStartedEventArgs(folder, item, action, itemType));
+            }
         }
 
-        private void OnItemFinished(string folder, string item)
+        private void OnItemFinished(string folder, string item, ItemChangedActionType action, ItemChangedItemType itemType, string error)
         {
             var handler = this.ItemFinished;
             if (handler != null)
-                handler(this, new ItemStateChangedEventArgs(folder, item));
+                handler(this, new ItemFinishedEventArgs(folder, item, action, itemType, error));
         }
 
         private void OnItemDownloadProgressChanged(string folder, string item, long bytesDone, long bytesTotal)
@@ -149,12 +161,16 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(ItemStartedEvent evt)
         {
-            this.OnItemStarted(evt.Data.Folder, evt.Data.Item);
+            var actionType = actionTypeMapping[evt.Data.Action];
+            var itemType = itemTypeMapping[evt.Data.Type];
+            this.OnItemStarted(evt.Data.Folder, evt.Data.Item, actionType, itemType);
         }
 
         public void Accept(ItemFinishedEvent evt)
         {
-            this.OnItemFinished(evt.Data.Folder, evt.Data.Item);
+            var actionType = actionTypeMapping[evt.Data.Action];
+            var itemType = itemTypeMapping[evt.Data.Type];
+            this.OnItemFinished(evt.Data.Folder, evt.Data.Item, actionType, itemType, evt.Data.Error);
         }
 
         public void Accept(StartupCompleteEvent evt)
@@ -174,9 +190,9 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(DownloadProgressEvent evt)
         {
-            foreach (var folder in evt.Data.Folders)
+            foreach (var folder in evt.Data)
             {
-                foreach (var file in folder.Value.Files)
+                foreach (var file in folder.Value)
                 {
                     this.OnItemDownloadProgressChanged(folder.Key, file.Key, file.Value.BytesDone, file.Value.BytesTotal);
                 }

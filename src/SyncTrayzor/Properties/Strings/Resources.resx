@@ -581,4 +581,74 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="Generic_Paste" xml:space="preserve">
     <value>_Paste</value>
   </data>
+  <data name="FileTranfersTrayView_Header_Downloading" xml:space="preserve">
+    <value>Downloading</value>
+    <comment>Header for section containing downloading files</comment>
+  </data>
+  <data name="FileTransfersTrayView_Deleted" xml:space="preserve">
+    <value>(deleted)</value>
+    <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
+    <value>Downloading {0}/{1}</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download</comment>
+  </data>
+  <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
+    <value>Recently Updated</value>
+    <comment>Header for section containing files that were recently downloaded or deleted</comment>
+  </data>
+  <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
+    <value>In: {0}/s</value>
+    <comment>{0}: a value such as '1.2kb'</comment>
+  </data>
+  <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
+    <value>No recent file transfers</value>
+  </data>
+  <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
+    <value>Out: {0}/s</value>
+    <comment>{0}: a value such as '1.2kb'</comment>
+  </data>
+  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
+    <value>Starting...</value>
+    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
+  </data>
+  <data name="TimeAgo_Days_Plural" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="TimeAgo_Days_Singular" xml:space="preserve">
+    <value>1 day ago</value>
+  </data>
+  <data name="TimeAgo_Hours_Plural" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="TimeAgo_Hours_Singular" xml:space="preserve">
+    <value>1 hour ago</value>
+  </data>
+  <data name="TimeAgo_JustNow" xml:space="preserve">
+    <value>Just now</value>
+  </data>
+  <data name="TimeAgo_Minutes_Plural" xml:space="preserve">
+    <value>{0} minutes ago</value>
+  </data>
+  <data name="TimeAgo_Minutes_Singular" xml:space="preserve">
+    <value>1 minute ago</value>
+  </data>
+  <data name="TimeAgo_Years_Plural" xml:space="preserve">
+    <value>{0} years ago</value>
+  </data>
+  <data name="TimeAgo_Years_Singular" xml:space="preserve">
+    <value>1 year ago</value>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
+    <value>Downloading {0}/{1} ({2}/s)</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download
+{2}: The current download rate, e.g. 2.0MB</comment>
+  </data>
+  <data name="FileTransfersTrayView_Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
 </root>

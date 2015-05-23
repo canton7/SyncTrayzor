@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyncTrayzor.Properties.Strings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace SyncTrayzor.Utils
     {
         private static readonly string[] sizes = { "B", "KB", "MB", "GB" };
 
-        public static string BytesToHuman(long bytes)
+        public static string BytesToHuman(double bytes, int decimalPlaces = 0)
         {
             // http://stackoverflow.com/a/281679/1086121
             int order = 0;
@@ -19,7 +20,36 @@ namespace SyncTrayzor.Utils
                 order++;
                 bytes = bytes / 1024;
             }
-            return String.Format("{0:0.#}{1}", bytes, sizes[order]);
+            var placesFmtString = new String('0', decimalPlaces);
+            return String.Format("{0:0." + placesFmtString + "}{1}", bytes, sizes[order]);
+        }
+
+        public static string TimeSpanToTimeAgo(TimeSpan timeSpan)
+        {
+            if (timeSpan.TotalDays > 365)
+            {
+                int years = (int)Math.Ceiling((float)timeSpan.Days / 365);
+                return years == 1 ?
+                    Resources.TimeAgo_Years_Singular :
+                    String.Format(Resources.TimeAgo_Years_Plural, years);
+            }
+
+            if (timeSpan.TotalDays > 1.0)
+                return (int)timeSpan.TotalDays == 1 ?
+                    Resources.TimeAgo_Days_Singular :
+                    String.Format(Resources.TimeAgo_Days_Plural, (int)timeSpan.TotalDays);
+
+            if (timeSpan.TotalHours > 1.0)
+                return (int)timeSpan.TotalHours == 1 ?
+                    Resources.TimeAgo_Hours_Singular :
+                    String.Format(Resources.TimeAgo_Hours_Plural, (int)timeSpan.TotalHours);
+
+            if (timeSpan.TotalMinutes > 1.0)
+                return (int)timeSpan.TotalMinutes == 1 ?
+                    Resources.TimeAgo_Minutes_Singular :
+                    String.Format(Resources.TimeAgo_Minutes_Plural, (int)timeSpan.TotalMinutes);
+
+            return Resources.TimeAgo_JustNow;
         }
     }
 }

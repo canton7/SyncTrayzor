@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,23 +8,6 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public class ItemFinishedEventDataError
-    {
-        [JsonProperty("Op")]
-        public string Op { get; set; }
-
-        [JsonProperty("Path")]
-        public string Path { get; set; }
-
-        [JsonProperty("Err")]
-        public int ErrorCode { get; set; }
-
-        public override string ToString()
-        {
-            return String.Format("<Error Op={0} Path={1} Err={2}>", this.Op, this.Path, this.ErrorCode);
-        }
-    }
-
     public class ItemFinishedEventData
     {
         [JsonProperty("item")]
@@ -32,8 +16,25 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [JsonProperty("folder")]
         public string Folder { get; set; }
 
+        // Irritatingly, 'error' is currently a structure containing an 'Err' property,
+        // but in the future may just become a string....
+
         [JsonProperty("error")]
-        public ItemFinishedEventDataError Error { get; set; }
+        public JToken ErrorRaw { get; set; }
+
+        public string Error
+        {
+            get
+            {
+                if (this.ErrorRaw == null)
+                    return null;
+                if (this.ErrorRaw.Type == JTokenType.String)
+                    return (string)this.ErrorRaw;
+                if (this.ErrorRaw.Type == JTokenType.Object)
+                    return (string)((JObject)this.ErrorRaw)["Err"];
+                return null;
+            }
+        }
 
         [JsonProperty("type")]
         public string Type { get; set; }
