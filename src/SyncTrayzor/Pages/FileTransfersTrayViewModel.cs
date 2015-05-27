@@ -94,6 +94,8 @@ namespace SyncTrayzor.Pages
 
     public class FileTransfersTrayViewModel : Screen
     {
+        private const int initialCompletedTransfersToDisplay = 100;
+
         private readonly ISyncThingManager syncThingManager;
         private readonly IProcessStartProvider processStartProvider;
 
@@ -131,7 +133,7 @@ namespace SyncTrayzor.Pages
 
         protected override void OnActivate()
         {
-            foreach (var completedTransfer in this.syncThingManager.TransferHistory.CompletedTransfers.Take(10).Reverse())
+            foreach (var completedTransfer in this.syncThingManager.TransferHistory.CompletedTransfers.Take(initialCompletedTransfersToDisplay).Reverse())
             {
                 this.CompletedTransfers.Add(new FileTransferViewModel(completedTransfer));
             }
