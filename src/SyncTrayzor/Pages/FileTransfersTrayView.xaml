@@ -74,7 +74,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource ItemBorderStyle}">
-                                        <DockPanel Margin="5">
+                                        <DockPanel Margin="5" Background="Transparent">
                                             <!-- Use an InvokeCommandAction so we can pass a parameter -->
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="MouseLeftButtonUp">
