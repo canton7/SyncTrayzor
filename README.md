@@ -11,6 +11,7 @@ Features include:
 
  - Has a built-in web browser, so you don't need to fire up an external browser.
  - Optionally starts on login, so you don't need to set up Syncthing as a service.
+ - Has drop-box style file download. progress window
  - Can watch your folders for changes, so you don't have to poll them frequently:
     - Syncthing on its own has to poll your folders, in order to see if any files have changed.
     - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
