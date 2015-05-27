@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.20
+-------
+
+ - Update translations:
+   - Updates to all languages
+   - New languages: Catalan (Valencian), Portuguese (Brazil)
+
 v1.0.19
 -------
 
@@ -15,9 +22,6 @@ v1.0.19
  - Add context menu to web browser (cut/copy/paste) (#85)
  - Allow multiple SyncTrayzor installations (portable and installed) to co-exist (#81)
  - Ignore system proxy settings when connecting to Syncthing (#80)
- - Update translations:
-   - Updates to all languages
-   - New languages: Catalan (Valencian), Portuguese (Brazil)
 
 v1.0.18
 -------
