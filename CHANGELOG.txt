@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.0.21
+-------
+
+ - Fix version bump script, which was causing incorrect assembly version to be written
+
 v1.0.20
 -------
 
