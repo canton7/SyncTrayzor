@@ -224,8 +224,8 @@ task :version, [:version] do |t, args|
   version = parts.join('.')
   ASSEMBLY_INFOS.each do |info|
     content = IO.read(info)
-    content[/\[assembly: AssemblyVersion\(\"(.+?)\"\)\]/, 1] = version
-    content[/\[assembly: AssemblyFileVersion\(\"(.+?)\"\)\]/, 1] = version
+    content[/^\[assembly: AssemblyVersion\(\"(.+?)\"\)\]/, 1] = version
+    content[/^\[assembly: AssemblyFileVersion\(\"(.+?)\"\)\]/, 1] = version
     File.open(info, 'w'){ |f| f.write(content) }
   end
 end
