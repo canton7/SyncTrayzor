@@ -294,12 +294,12 @@
     <value>Το SyncTrayzor παρακάμπτει την GUI διεύθυνση που καθορίζεται στην διαμόρφωση του Syncthing. Ωστόσο, μπορείτε να το ρυθμίσετε σε  οτι τιμή σας αρέσει εδώ.</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
-  <data name="SettingsView_SyncthingUseCustomHome" xml:space="preserve">
-    <value>Χρήση προσαρμοσμένου καταλόγου για το Syncthing</value>
+  <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
+    <value>Use Syncthing&apos;s default database location</value>
   </data>
-  <data name="SettingsView_SyncthingUseCustomHome_ToolTip" xml:space="preserve">
-    <value>Αυτό θα σημαίνει ότι το Syncrayzor θα εμφανισει ένα διαφορετικό σύνολο διαμορφωμένων φακέλων σε άλλες περιπτώσεις του Syncthing στον υπολογιστή σας.</value>
-    <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseCustomHome text input. This shows more information on the input.</comment>
+  <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
+    <value>If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
+    <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_Title" xml:space="preserve">
     <value>Ρυθμίσεις</value>
@@ -415,11 +415,11 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Start Syncthing</value>
+    <value>Έναρξη του Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>S_top Syncthing</value>
+    <value>Διακοπή του Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
@@ -498,7 +498,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Επανεκκίνηση</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>R_estart Syncthing</value>
+    <value>Επανεκκίνηση του Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -561,9 +561,94 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Πρέπει να είναι στη μορφή &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
   <data name="NewVersionInstalledView_Message" xml:space="preserve">
-    <value>SyncTrayzor version {0} was successfully installed.</value>
+    <value>Μια νέα έκδοση {0} του SyncTrayzor εγκαταστάθηκε με επιτυχία.</value>
   </data>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
-    <value>SyncTrayzor Updated</value>
+    <value>Το SyncTrayzor ενημερώθηκε</value>
+  </data>
+  <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
+    <value>Unable to start Syncthing: {0}. Please see Syncthing&apos;s console output for clues.</value>
+  </data>
+  <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
+    <value>Syncthing didn&apos;t start correctly</value>
+  </data>
+  <data name="Generic_Copy" xml:space="preserve">
+    <value>_Copy</value>
+  </data>
+  <data name="Generic_Cut" xml:space="preserve">
+    <value>Cu_t</value>
+  </data>
+  <data name="Generic_Paste" xml:space="preserve">
+    <value>_Paste</value>
+  </data>
+  <data name="FileTranfersTrayView_Header_Downloading" xml:space="preserve">
+    <value>Downloading</value>
+    <comment>Header for section containing downloading files</comment>
+  </data>
+  <data name="FileTransfersTrayView_Deleted" xml:space="preserve">
+    <value>(deleted)</value>
+    <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
+    <value>Downloading {0}/{1}</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download</comment>
+  </data>
+  <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
+    <value>Recently Updated</value>
+    <comment>Header for section containing files that were recently downloaded or deleted</comment>
+  </data>
+  <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
+    <value>In: {0}/s</value>
+    <comment>{0}: a value such as '1.2kb'</comment>
+  </data>
+  <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
+    <value>No recent file transfers</value>
+  </data>
+  <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
+    <value>Out: {0}/s</value>
+    <comment>{0}: a value such as '1.2kb'</comment>
+  </data>
+  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
+    <value>Starting...</value>
+    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
+  </data>
+  <data name="TimeAgo_Days_Plural" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="TimeAgo_Days_Singular" xml:space="preserve">
+    <value>1 day ago</value>
+  </data>
+  <data name="TimeAgo_Hours_Plural" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="TimeAgo_Hours_Singular" xml:space="preserve">
+    <value>1 hour ago</value>
+  </data>
+  <data name="TimeAgo_JustNow" xml:space="preserve">
+    <value>Just now</value>
+  </data>
+  <data name="TimeAgo_Minutes_Plural" xml:space="preserve">
+    <value>{0} minutes ago</value>
+  </data>
+  <data name="TimeAgo_Minutes_Singular" xml:space="preserve">
+    <value>1 minute ago</value>
+  </data>
+  <data name="TimeAgo_Years_Plural" xml:space="preserve">
+    <value>{0} years ago</value>
+  </data>
+  <data name="TimeAgo_Years_Singular" xml:space="preserve">
+    <value>1 year ago</value>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
+    <value>Downloading {0}/{1} ({2}/s)</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download
+{2}: The current download rate, e.g. 2.0MB</comment>
+  </data>
+  <data name="FileTransfersTrayView_Error" xml:space="preserve">
+    <value>Error: {0}</value>
   </data>
 </root>

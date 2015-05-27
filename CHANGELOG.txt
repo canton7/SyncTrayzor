@@ -1,6 +1,24 @@
 Changelog
 =========
 
+v1.0.19
+-------
+
+ - Add Dropbox-style window with current file transfers. Single-click the icon to view (#18)
+ - Remember Syncthing langauge selection (#87)
+ - Reword 'use custom home for Syncthing' option in Settings to be clearer (#88)
+ - Don't show main window outside of desktop on very small screens (#84)
+ - Don't crash if watched folder is a symlink (#89)
+ - Improve error message if Syncthing cannot start (#90)
+ - Fix possible crash if computer locale is changed (#91)
+ - Allow custom Syncthing paths (by hand-editing config file, useful for edge case setups) (#86)
+ - Add context menu to web browser (cut/copy/paste) (#85)
+ - Allow multiple SyncTrayzor installations (portable and installed) to co-exist (#81)
+ - Ignore system proxy settings when connecting to Syncthing (#80)
+ - Update translations:
+   - Updates to all languages
+   - New languages: Catalan (Valencian), Portuguese (Brazil)
+
 v1.0.18
 -------
 
