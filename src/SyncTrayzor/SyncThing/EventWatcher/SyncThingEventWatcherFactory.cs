@@ -11,12 +11,12 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 {
     public interface ISyncThingEventWatcherFactory
     {
-        ISyncThingEventWatcher CreateEventWatcher(ISyncThingApiClient apiClient);
+        ISyncThingEventWatcher CreateEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient);
     }
 
     public class SyncThingEventWatcherFactory : ISyncThingEventWatcherFactory
     {
-        public ISyncThingEventWatcher CreateEventWatcher(ISyncThingApiClient apiClient)
+        public ISyncThingEventWatcher CreateEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
         {
             return new SyncThingEventWatcher(apiClient);
         }

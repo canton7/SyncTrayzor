@@ -1,5 +1,5 @@
 ﻿using NLog;
-using Refit;
+using RestEase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public UpdateNotificationClient(string url)
         {
-            this.api = RestService.For<IUpdateNotificationApi>(url);
+            this.api = RestClient.For<IUpdateNotificationApi>(url);
         }
 
         public async Task<UpdateNotificationResponse> FetchUpdateAsync(string version, string arch, string variant)

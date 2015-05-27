@@ -37,9 +37,24 @@ namespace SyncTrayzor.Services.Config
         {
             var root = XElement.Parse(reader.ReadOuterXml());
             this.IsMaximised = (bool)root.Element("IsMaximised");
-            this.MinPosition = (Point)pointConverter.ConvertFrom(root.Element("MinPosition").Value);
-            this.MaxPosition = (Point)pointConverter.ConvertFrom(root.Element("MaxPosition").Value);
-            this.NormalPosition = (Rectangle)rectangleConverter.ConvertFrom(root.Element("NormalPosition").Value);
+
+            // Lovely little backwards-compat issue, because I screwed up...
+            // We used to read/write in a culture-specific format (oops), then that was changed to culture-invariant
+            // Now we need to handle parsing both.
+            // Use 'minPosition' as the sample, but this test could apply to any
+            var minPosition = root.Element("MinPosition").Value;
+            if (minPosition.Contains(','))
+            {
+                this.MinPosition = (Point)pointConverter.ConvertFromInvariantString(root.Element("MinPosition").Value);
+                this.MaxPosition = (Point)pointConverter.ConvertFromInvariantString(root.Element("MaxPosition").Value);
+                this.NormalPosition = (Rectangle)rectangleConverter.ConvertFromInvariantString(root.Element("NormalPosition").Value);
+            }
+            else
+            {
+                this.MinPosition = (Point)pointConverter.ConvertFrom(root.Element("MinPosition").Value);
+                this.MaxPosition = (Point)pointConverter.ConvertFrom(root.Element("MaxPosition").Value);
+                this.NormalPosition = (Rectangle)rectangleConverter.ConvertFrom(root.Element("NormalPosition").Value);
+            }
         }
 
         public void WriteXml(XmlWriter writer)
@@ -47,9 +62,9 @@ namespace SyncTrayzor.Services.Config
             var elements = new[]
             {
                 new XElement("IsMaximised", this.IsMaximised),
-                new XElement("MinPosition", pointConverter.ConvertToString(this.MinPosition)),
-                new XElement("MaxPosition", pointConverter.ConvertToString(this.MaxPosition)),
-                new XElement("NormalPosition", rectangleConverter.ConvertToString(this.NormalPosition))
+                new XElement("MinPosition", pointConverter.ConvertToInvariantString(this.MinPosition)),
+                new XElement("MaxPosition", pointConverter.ConvertToInvariantString(this.MaxPosition)),
+                new XElement("NormalPosition", rectangleConverter.ConvertToInvariantString(this.NormalPosition))
             };
 
             foreach (var element in elements)

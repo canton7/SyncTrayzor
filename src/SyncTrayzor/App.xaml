@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:local="clr-namespace:SyncTrayzor">
+             xmlns:local="clr-namespace:SyncTrayzor"
+             xmlns:design="clr-namespace:SyncTrayzor.Design">
     <Application.Resources>
         <s:ApplicationLoader>
             <s:ApplicationLoader.Bootstrapper>
@@ -12,6 +13,10 @@
             <s:ApplicationLoader.MergedDictionaries>
                 <ResourceDictionary Source="NotifyIcon/TaskbarIconResources.xaml"/>
                 <ResourceDictionary Source="Xaml/Resources.xaml"/>
+                
+                <ResourceDictionary>
+                    <design:ViewModelLocator x:Key="ViewModelLocator"/>
+                </ResourceDictionary>
             </s:ApplicationLoader.MergedDictionaries>
         </s:ApplicationLoader>
     </Application.Resources>

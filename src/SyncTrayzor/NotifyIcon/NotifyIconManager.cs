@@ -78,11 +78,12 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager = syncThingManager;
 
             this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
-            this.viewManager.BindViewToModel(this.taskbarIcon, this.viewModel);
+            // Need to hold off until after the application is started, otherwise the ViewManager won't be set
+            this.application.Startup += (o, e) => this.viewManager.BindViewToModel(this.taskbarIcon, this.viewModel);
 
             this.applicationWindowState.RootWindowActivated += this.RootViewModelActivated;
             this.applicationWindowState.RootWindowDeactivated += this.RootViewModelDeactivated;
-            this.applicationWindowState.RootWindowClosed += this.RootViewModelClosed; 
+            this.applicationWindowState.RootWindowClosed += this.RootViewModelClosed;
 
             this.viewModel.WindowOpenRequested += (o, e) =>
             {
@@ -96,7 +97,7 @@ namespace SyncTrayzor.NotifyIcon
             };
             this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
-            this.syncThingManager.FolderSyncStateChanged += (o, e) =>
+            this.syncThingManager.Folders.SyncStateChanged += (o, e) =>
             {
                 if (this.ShowSynchronizedBalloon &&
                     DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
@@ -140,6 +141,7 @@ namespace SyncTrayzor.NotifyIcon
 
             var view = this.viewManager.CreateViewForModel(viewModel);
             this.taskbarIcon.ShowCustomBalloon(view, System.Windows.Controls.Primitives.PopupAnimation.Slide, timeout);
+            this.taskbarIcon.CustomBalloon.StaysOpen = false;
             this.viewManager.BindViewToModel(view, viewModel); // Re-assign DataContext, after NotifyIcon overwrote it ><
 
             this.balloonTcs = new TaskCompletionSource<bool?>();

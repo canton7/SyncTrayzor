@@ -13,6 +13,8 @@ namespace SyncTrayzor.Xaml
 {
     public class WindowPlacementBehaviour : DetachingBehaviour<Window>
     {
+        private const int taskbarHeight = 40; // Max height
+
         public WindowPlacement Placement
         {
             get { return (WindowPlacement)GetValue(PlacementProperty); }
@@ -26,12 +28,22 @@ namespace SyncTrayzor.Xaml
         {
             this.AssociatedObject.SourceInitialized += this.SourceInitialized;
             this.AssociatedObject.Closing += this.Closing;
+
+            this.SetDefaultSize();
         }
 
         protected override void DetachHandlers()
         {
             this.AssociatedObject.SourceInitialized -= this.SourceInitialized;
             this.AssociatedObject.Closing -= this.Closing;
+        }
+
+        private void SetDefaultSize()
+        {
+            // Beware, we may be duplicating functionality in NoSizeBelowScreenBehaviour
+
+            this.AssociatedObject.Height = Math.Min(this.AssociatedObject.Height, SystemParameters.VirtualScreenHeight - taskbarHeight);
+            this.AssociatedObject.Width = Math.Min(this.AssociatedObject.Width, SystemParameters.VirtualScreenWidth - taskbarHeight);
         }
 
         private void SourceInitialized(object sender, EventArgs e)
@@ -54,6 +66,10 @@ namespace SyncTrayzor.Xaml
             };
 
             SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement);
+
+            // Not 100% sure why this is needed, but if the window is minimzed before being closed to tray,
+            // then is restored, we can end up in a state where we aren't active
+            this.AssociatedObject.Activate();
         }
 
         private void Closing(object sender, CancelEventArgs e)

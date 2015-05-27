@@ -121,6 +121,8 @@ namespace SyncTrayzor.Services.Config
         public WindowPlacement WindowPlacement { get; set; }
         public double SyncthingWebBrowserZoomLevel { get; set; }
         public int LastSeenInstallCount { get; set; }
+        public string SyncthingPath { get; set; }
+        public string SyncthingCustomHomePath { get; set; }
 
         public Configuration()
         {
@@ -147,6 +149,8 @@ namespace SyncTrayzor.Services.Config
             this.WindowPlacement = null;
             this.SyncthingWebBrowserZoomLevel = 0;
             this.LastSeenInstallCount = 0;
+            this.SyncthingPath = @"%EXEPATH%\syncthing.exe";
+            this.SyncthingCustomHomePath = @"%EXEPATH%\data\syncthing";
         }
 
         public Configuration(Configuration other)
@@ -172,6 +176,8 @@ namespace SyncTrayzor.Services.Config
             this.WindowPlacement = other.WindowPlacement;
             this.SyncthingWebBrowserZoomLevel = other.SyncthingWebBrowserZoomLevel;
             this.LastSeenInstallCount = other.LastSeenInstallCount;
+            this.SyncthingPath = other.SyncthingPath;
+            this.SyncthingCustomHomePath = other.SyncthingCustomHomePath;
         }
 
         public override string ToString()
@@ -180,12 +186,12 @@ namespace SyncTrayzor.Services.Config
                 "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingEnvironmentalVariables=[{8}] " +
                 "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
                 "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} SyncthingConsoleHeight={17} WindowPlacement={18} " +
-                "SyncthingWebBrowserZoomLevel={19} LastSeenInstallCount={20}>",
+                "SyncthingWebBrowserZoomLevel={19} LastSeenInstallCount={20} SyncthingPath={21} SyncthingCustomHomePath={22}>",
                 this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
                 this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, String.Join(" ", this.SyncthingEnvironmentalVariables.Select(x => String.Format("{0}={1}", x.Key, x.Value))),
                 this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders), this.NotifyOfNewVersions,
                 this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.SyncthingConsoleHeight, this.WindowPlacement,
-                this.SyncthingWebBrowserZoomLevel, this.LastSeenInstallCount);
+                this.SyncthingWebBrowserZoomLevel, this.LastSeenInstallCount, this.SyncthingPath, this.SyncthingCustomHomePath);
         }
     }
 }

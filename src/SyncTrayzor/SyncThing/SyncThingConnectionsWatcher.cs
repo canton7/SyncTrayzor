@@ -25,7 +25,8 @@ namespace SyncTrayzor.SyncThing
 
     public class SyncThingConnectionsWatcher : SyncThingPoller, ISyncThingConnectionsWatcher
     {
-        private readonly ISyncThingApiClient apiClient;
+        private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
+        private ISyncThingApiClient apiClient;
         
         private DateTime lastPollCompletion;
         private Connections prevConnections;
@@ -33,10 +34,20 @@ namespace SyncTrayzor.SyncThing
 
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
-        public SyncThingConnectionsWatcher(ISyncThingApiClient apiClient)
+        public SyncThingConnectionsWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
             : base(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10))
         {
-            this.apiClient = apiClient;
+            this.apiClientWrapper = apiClient;
+        }
+
+        protected override void OnStart()
+        {
+            this.apiClient = this.apiClientWrapper.Value;
+        }
+
+        protected override void OnStop()
+        {
+            this.apiClient = null;
         }
 
         protected override async Task PollAsync(CancellationToken cancellationToken)

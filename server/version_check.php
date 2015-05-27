@@ -68,66 +68,23 @@ $versions = [
    '1.0.18' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.18/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.18/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.19/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.19/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.18',
-      'release_notes' => "- Fix crash when file in watched folder is renamed (#79)",
-   ],
-   '1.0.17' => [
-      'installed' => [
-         'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.17/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.17/SyncTrayzorSetup-x86.exe',
-         ],
-      ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.17',
-      'release_notes' => "- Fix crash when renaming a file whose path exceeds the Windows path length limit (#72)\n- Fix 'Open Folder' button in Syncthing UI (#65)\n- Ensure that folder list in Settings does not exceed screen height (#76)\n- Start minimized after automatic upgrade (#59)\n- Add italian translation (thanks stukdev)\n- Improve text in icon context menu (#71)\n- Console will scroll to end after resize (#67)",
-   ],
-   '1.0.16' => [
-      'installed' => [
-         'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.16/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.16/SyncTrayzorSetup-x86.exe',
-         ],
-      ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.16',
-      'release_notes' => "- Installer recommends Syncthing 0.11 (#64)\n- Fix bad browser zoom after restart (#57)\n- Fix display of folders which contain an underscore (#58)\n- Handle duplicate devices/folders in Syncthing config (#61)\n- Fix bad character encoding in Syncthing console (#62)\n- Fix installer's handling of Syncthing version changes (#63)\n- Clarify some UI wording/typos (#60, others)\n- Remember size of Syncthing console (#56)\n- Updated translations",
-   ],
-   '1.0.15' => [
-      'installed' => [
-         'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.15/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.15/SyncTrayzorSetup-x86.exe',
-         ],
-      ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.15',
-      'release_notes' => "- Fix crash on startup if Syncthing is slow to start (#55)\n- Remember window size/position (#51)\n- Zoom built-in browser (#52)\n- Add support for arbitrary environmental variables for Syncthing",
-   ],
-   '1.0.14' => [
-      'installed' => [
-         'direct_download_url' => []
-      ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.14',
-      'release_notes' => "- Give Syncthing more than 10 seconds to start, fixing crash (#47, #48, #50)\n- Better Syncthing API management in general\n- Add support for 150% and 200% DPI to tray icon\n- Slightly improve UI",
-   ],
-   '1.0.13' => [
-      'installed' => [
-         'direct_download_url' => []
-      ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.13',
-      'release_notes' => "- Fix crash if 'Show tray icon only on close' is checked (#45)\n- Fix undocumented REST API change in Syncthing 0.11 (#46)\n- Check for updates on resume from sleep\n- Ensure SyncTrayzor is started as original user after auto-update",
-   ],
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.19',
+      'release_notes' => "- Add Dropbox-style window with current file transfers. Single-click the icon to view (#18)\n- Remember Syncthing langauge selection (#87)\n- Reword 'use custom home for Syncthing' option in Settings to be clearer (#88)\n- Don't show main window outside of desktop on very small screens (#84)\n- Don't crash if watched folder is a symlink (#89)\n- Improve error message if Syncthing cannot start (#90)\n- Fix possible crash if computer locale is changed (#91)\n- Allow custom Syncthing paths (by hand-editing config file, useful for edge case setups) (#86)\n- Add context menu to web browser (cut/copy/paste) (#85)\n- Allow multiple SyncTrayzor installations (portable and installed) to co-exist (#81)\n- Ignore system proxy settings when connecting to Syncthing (#80)\n- Update translations:\n - Updates to all languages\n - New languages: Catalan (Valencian), Portuguese (Brazil)",
+   ]
 ];
 
 $upgrades = [
+   '1.0.18' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.17' => ['to' => 'latest', 'formatter' => '2'],
-   '1.0.16' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
-   '1.0.15' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
-   '1.0.14' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
-   '1.0.13' => ['to' => 'latest', 'formatter' => '1', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
-   '1.0.12' => ['to' => 'latest', 'formatter' => '1', 'overrides' => ['release_notes' => $versions['1.0.17']['release_notes']]],
+   '1.0.16' => ['to' => 'latest', 'formatter' => '2'],
+   '1.0.15' => ['to' => 'latest', 'formatter' => '2'],
+   '1.0.14' => ['to' => 'latest', 'formatter' => '2'],
+   '1.0.13' => ['to' => 'latest', 'formatter' => '1'],
+   '1.0.12' => ['to' => 'latest', 'formatter' => '1'],
 ];
 
 $response_formatters = [

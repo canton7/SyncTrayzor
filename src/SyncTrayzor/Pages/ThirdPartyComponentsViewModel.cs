@@ -42,6 +42,15 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "RestEase",
+                    Description = "Easy-to-use typesafe REST API client library, which is simple and customisableT",
+                    Homepage = "https://github.com/canton7/RestEase",
+                    License = "MIT",
+                    Notes = "Used for making REST API request to Syncthing and Github",
+                    LicenseText = this.LoadLicense("RestEase.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "CEF",
                     Description = "Simple framework for embedding Chromium-based browsers in other applications",
                     Homepage = "https://code.google.com/p/chromiumembedded",
@@ -57,15 +66,6 @@ namespace SyncTrayzor.Pages
                     License = "New BSD License",
                     Notes = "WPF adapter for CEF",
                     LicenseText = this.LoadLicense("CefSharp.txt")
-                },
-                new ThirdPartyComponent()
-                {
-                    Name = "Refit",
-                    Description = "The automatic type-safe REST library for Xamarin and .NET",
-                    Homepage = "http://paulcbetts.github.io/refit",
-                    License = "MIT",
-                    Notes = "Used for making REST API request to Syncthing and Github",
-                    LicenseText = this.LoadLicense("Refit.txt")
                 },
                 new ThirdPartyComponent()
                 {

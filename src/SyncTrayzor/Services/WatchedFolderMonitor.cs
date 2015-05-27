@@ -62,7 +62,7 @@ namespace SyncTrayzor.Services
             if (this.syncThingManager.State != SyncThingState.Running || !this.syncThingManager.IsDataLoaded)
                 return;
 
-            foreach (var folder in this.syncThingManager.FetchAllFolders())
+            foreach (var folder in this.syncThingManager.Folders.FetchAll())
             {
                 if (!this._watchedFolders.Contains(folder.FolderId))
                     continue;

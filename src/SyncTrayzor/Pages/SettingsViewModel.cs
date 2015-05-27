@@ -130,7 +130,7 @@ namespace SyncTrayzor.Pages
 
         public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
 
-        public bool SyncthingUseCustomHome { get; set; }
+        public bool SyncthingUseDefaultHome { get; set; }
         public string SyncThingEnvironmentalVariables { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
 
@@ -175,7 +175,7 @@ namespace SyncTrayzor.Pages
                 IsSelected = x.IsWatched
             }));
 
-            this.SyncthingUseCustomHome = configuration.SyncthingUseCustomHome;
+            this.SyncthingUseDefaultHome = !configuration.SyncthingUseCustomHome;
             this.SyncThingEnvironmentalVariables = EnvironmentalVariablesParser.Format(configuration.SyncthingEnvironmentalVariables);
             this.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
         }
@@ -216,7 +216,7 @@ namespace SyncTrayzor.Pages
             }
 
             configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
-            configuration.SyncthingUseCustomHome = this.SyncthingUseCustomHome;
+            configuration.SyncthingUseCustomHome = !this.SyncthingUseDefaultHome;
 
             EnvironmentalVariableCollection envVars;
             EnvironmentalVariablesParser.TryParse(this.SyncThingEnvironmentalVariables, out envVars);

@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.FileTransfersTrayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             x:Name="RootObject"
+             Height="300" d:DesignWidth="300"
+             d:DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=FileTransfersTrayViewModel}">
+    <UserControl.Resources>
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DimGray"/>
+            <Setter Property="Margin" Value="5,3,0,3"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style x:Key="IconStyle" TargetType="Image">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+        <Style x:Key="ItemBorderStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+        </Style>
+    </UserControl.Resources>
+    <Border CornerRadius="6" BorderThickness="2" BorderBrush="Gray" Background="White">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="0,0,0,1">
+                <DockPanel Margin="5,8,5,0" LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Left" Height="25" FontSize="15" FontWeight="Bold">SyncTrayzor</TextBlock>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center"
+                               Text="{l:Loc FileTransfersTrayView_OutConnectionRate, ValueBinding={Binding OutConnectionRate}}"/>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0"
+                               Text="{l:Loc FileTransfersTrayView_InConnectionRate, ValueBinding={Binding InConnectionRate}}"/>
+                </DockPanel>
+            </Border>
+            
+            <Grid>
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Visibility="{Binding AnyTransfers, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"
+                           Text="{l:Loc FileTransfersTrayView_NothingToShow}"/>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DockPanel LastChildFill="False">
+                        <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
+                            Visibility="{Binding HasInProgressTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{l:Loc FileTranfersTrayView_Header_Downloading}"/>
+                        </Border>
+                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding InProgressTransfers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource ItemBorderStyle}">
+                                        <DockPanel Margin="5">
+                                            <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
+                                               Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                            <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock DockPanel.Dock="Top" Foreground="DimGray" Text="{Binding ProgressString}"/>
+                                            <ProgressBar DockPanel.Dock="Top" Margin="0,4,0,0" Minimum="0" Maximum="100" Height="10"
+                                                 Value="{Binding ProgressPercent}" IsIndeterminate="{Binding IsStarting}"/>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0,0,0,1"
+                            Visibility="{Binding HasCompletedTransfers, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{l:Loc FileTransfersTrayView_Header_RecentlyUpdated}"/>
+                        </Border>
+                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding CompletedTransfers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource ItemBorderStyle}">
+                                        <DockPanel Margin="5" Background="Transparent">
+                                            <!-- Use an InvokeCommandAction so we can pass a parameter -->
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                    <i:InvokeCommandAction s:View.ActionTarget="{Binding DataContext, Source={x:Reference RootObject}}"
+                                                        Command="{s:Action ItemClicked}" CommandParameter="{Binding}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                            <TextBlock DockPanel.Dock="Bottom" Margin="5,5,0,0" Foreground="Red" FontWeight="Bold"
+                                                   TextWrapping="Wrap"
+                                                   Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                                                   Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
+                                            <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
+                                               Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                            <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}"/>
+                                                <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="{l:Loc FileTransfersTrayView_Deleted}"
+                                                           Visibility="{Binding WasDeleted, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DockPanel>
+                </ScrollViewer>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

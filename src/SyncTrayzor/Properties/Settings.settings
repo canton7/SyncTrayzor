@@ -53,16 +53,17 @@
   &lt;SyncthingConsoleHeight&gt;100&lt;/SyncthingConsoleHeight&gt;
   &lt;SyncthingWebBrowserZoomLevel&gt;0&lt;/SyncthingWebBrowserZoomLevel&gt;
   &lt;LastSeenInstallCount&gt;0&lt;/LastSeenInstallCount&gt;
+  &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
+  &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
 &lt;/Configuration&gt;</Value>
     </Setting>
     <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;LogFilePath&gt;%EXEPATH%\logs&lt;/LogFilePath&gt;
-  &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
-  &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
   &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
   &lt;ConfigurationFileBackupPath&gt;%EXEPATH%\data\config-backups&lt;/ConfigurationFileBackupPath&gt;
+  &lt;CefCachePath&gt;%EXEPATH%\data\cef\cache&lt;/CefCachePath&gt;
 &lt;/PathConfiguration&gt;</Value>
     </Setting>
   </Settings>

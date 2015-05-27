@@ -1,4 +1,5 @@
 ﻿using NLog;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,13 +12,12 @@ namespace SyncTrayzor.Services.Config
     public interface IApplicationPathsProvider
     {
         string LogFilePath { get; }
-        string SyncthingPath { get; }
-        string SyncthingCustomHomePath { get; }
         string SyncthingBackupPath { get; }
         string ConfigurationFilePath { get; }
         string ConfigurationFileBackupPath { get; }
         string UpdatesDownloadPath { get; }
         string InstallCountFilePath { get; }
+        string CefCachePath { get; }
 
         void Initialize(PathConfiguration pathConfiguration);
     }
@@ -42,28 +42,17 @@ namespace SyncTrayzor.Services.Config
 
             logger.Debug("ExePath: {0}", this.ExePath);
             logger.Debug("LogFilePath: {0}", this.LogFilePath);
-            logger.Debug("SyncthingCustomHomePath: {0}", this.SyncthingCustomHomePath);
-            logger.Debug("SyncThingPath: {0}", this.SyncthingPath);
             logger.Debug("SyncThingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
             logger.Debug("ConfigurationFileBackupPath: {0}", this.ConfigurationFileBackupPath);
+            logger.Debug("CefCachePath: {0}", this.CefCachePath);
         }
 
         public string ExePath { get; set; }
 
         public string LogFilePath
         {
-            get { return this.pathConfiguration.LogFilePath; }
-        }
-
-        public string SyncthingCustomHomePath
-        {
-            get { return this.pathConfiguration.SyncthingCustomHomePath; }
-        }
-
-        public string SyncthingPath
-        {
-            get { return this.pathConfiguration.SyncthingPath; }
+            get { return EnvVarTransformer.Transform(this.pathConfiguration.LogFilePath); }
         }
 
         public string SyncthingBackupPath
@@ -73,12 +62,17 @@ namespace SyncTrayzor.Services.Config
 
         public string ConfigurationFilePath
         {
-            get { return this.pathConfiguration.ConfigurationFilePath; }
+            get { return EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFilePath); }
         }
 
         public string ConfigurationFileBackupPath
         {
-            get { return this.pathConfiguration.ConfigurationFileBackupPath; }
+            get { return EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFileBackupPath); }
+        }
+
+        public string CefCachePath
+        {
+            get { return EnvVarTransformer.Transform(this.pathConfiguration.CefCachePath); }
         }
 
         public string UpdatesDownloadPath

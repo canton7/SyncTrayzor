@@ -31,12 +31,11 @@ namespace SyncTrayzor.Utils
                     Localizer.Translate("Dialog_SyncthingBlockedByGroupPolicy_Title"),
                     MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
-            catch (SyncThingDidNotStartCorrectlyException)
+            catch (SyncThingDidNotStartCorrectlyException e)
             {
-                // Haven't translated yet - still debugging
                 windowManager.ShowMessageBox(
-                    "Syncthing started running, but we were enable to connect to it. Please report this as a bug",
-                    "Syncthing didn't start correctly",
+                    Localizer.Translate("Dialog_SyncthingDidNotStart_Message", e.Message),
+                    Localizer.Translate("Dialog_SyncthingDidNotStart_Title"),
                     MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
         }

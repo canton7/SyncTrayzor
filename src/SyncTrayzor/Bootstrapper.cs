@@ -14,6 +14,7 @@ using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -77,8 +78,7 @@ namespace SyncTrayzor
         protected override void Configure()
         {
             var pathConfiguration = Settings.Default.PathConfiguration;
-            pathConfiguration.Transform(EnvVarTransformer.Transform);
-            GlobalDiagnosticsContext.Set("LogFilePath", pathConfiguration.LogFilePath);
+            GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
 
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
@@ -98,15 +98,9 @@ namespace SyncTrayzor
             autostartProvider.IsEnabled = false;
 #endif
 
-            if (autostartProvider.CanWrite)
-            {
-                // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
-                // Else, keep the config as it was, but update the path to us (if we're not in debug)
-                if (Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
+            // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
+            if (autostartProvider.CanWrite && Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
                     autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
-                else
-                    autostartProvider.UpdatePathToSelf();
-            }
 
             // Needs to be done before ConfigurationApplicator is run
             this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
@@ -122,7 +116,9 @@ namespace SyncTrayzor
             {
                 var manager = this.Container.Get<ISyncThingManager>();
                 manager.StopAsync().Wait(250);
+                Task.Delay(250).Wait();
                 manager.Kill();
+
                 Process.GetCurrentProcess().Kill();
             };
 
@@ -133,8 +129,6 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
                 { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
             };
-
-            this.Container.Get<IApplicationState>().ApplicationStarted();
         }
 
         protected override void Launch()
@@ -147,6 +141,8 @@ namespace SyncTrayzor
 
         protected override void OnLaunch()
         {
+            this.Container.Get<IApplicationState>().ApplicationStarted();
+
             var config = this.Container.Get<IConfigurationProvider>().Load();
             if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
                 ((ShellViewModel)this.RootViewModel).Start();

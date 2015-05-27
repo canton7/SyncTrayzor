@@ -23,6 +23,7 @@ namespace SyncTrayzor.NotifyIcon
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
         public BindableCollection<FolderViewModel> Folders { get; private set; }
+        public FileTransfersTrayViewModel FileTransfersViewModel { get; private set; }
 
         public event EventHandler WindowOpenRequested;
         public event EventHandler WindowCloseRequested;
@@ -41,12 +42,14 @@ namespace SyncTrayzor.NotifyIcon
             IWindowManager windowManager,
             ISyncThingManager syncThingManager,
             Func<SettingsViewModel> settingsViewModelFactory,
-            IProcessStartProvider processStartProvider)
+            IProcessStartProvider processStartProvider,
+            FileTransfersTrayViewModel fileTransfersViewModel)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.processStartProvider = processStartProvider;
+            this.FileTransfersViewModel = fileTransfersViewModel;
 
             this.syncThingManager.StateChanged += (o, e) =>
             {
@@ -64,7 +67,7 @@ namespace SyncTrayzor.NotifyIcon
 
             this.syncThingManager.DataLoaded += (o, e) =>
             {
-                this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.FetchAllFolders()
+                this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.Folders.FetchAll()
                     .Select(x => new FolderViewModel(x, this.processStartProvider))
                     .OrderBy(x => x.FolderId));
             };

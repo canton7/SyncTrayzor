@@ -1,0 +1,654 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutView_CreatedByAuthor" xml:space="preserve">
+    <value>Criado por Antony Male.</value>
+  </data>
+  <data name="AboutView_DownloadNewVersion" xml:space="preserve">
+    <value>Abrir página de download</value>
+    <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
+  </data>
+  <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
+    <value>Nova versão disponível: {0}</value>
+    <comment>Prompt showing the user that a new version of SynTrayzor is available
+{0}: Latest version of SyncTrayzor </comment>
+  </data>
+  <data name="AboutView_ReleasedLicense" xml:space="preserve">
+    <value>Licenciado sob a Licença MIT.</value>
+  </data>
+  <data name="AboutView_ShowOtherLicenses" xml:space="preserve">
+    <value>Mostrar licenças Código Aberto (Open Source)</value>
+  </data>
+  <data name="AboutView_SyncthingVersion" xml:space="preserve">
+    <value>Syncthing versão: {0}</value>
+    <comment>Information showing the user the current version of Syncthing
+{0}: Current Syncthing version</comment>
+  </data>
+  <data name="AboutView_Version" xml:space="preserve">
+    <value>Versão: {0}</value>
+    <comment>Information showing the user the current version of SyncTrayzor
+{0}: Current SyncTrayzor version</comment>
+  </data>
+  <data name="Generic_Dialog_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>'Cancel' button shown in various dialogs</comment>
+  </data>
+  <data name="Generic_Dialog_Close" xml:space="preserve">
+    <value>Fechar</value>
+    <comment>'Close' button shown on various dialogs</comment>
+  </data>
+  <data name="Generic_Dialog_Save" xml:space="preserve">
+    <value>Salvar</value>
+    <comment>'Save' button shown on various dialogs</comment>
+  </data>
+  <data name="ShellView_Menu_File" xml:space="preserve">
+    <value>_Arquivo</value>
+  </data>
+  <data name="ShellView_Menu_File_Exit" xml:space="preserve">
+    <value>_Sair</value>
+  </data>
+  <data name="ShellView_Menu_File_Settings" xml:space="preserve">
+    <value>_Configurações</value>
+  </data>
+  <data name="ShellView_Menu_Help" xml:space="preserve">
+    <value>A_juda</value>
+  </data>
+  <data name="ShellView_Menu_Help_About" xml:space="preserve">
+    <value>S_obre</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing" xml:space="preserve">
+    <value>_Syncthing</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing_Kill" xml:space="preserve">
+    <value>_Finalizar</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
+    <value>Finalizar _todos os processos do Syncthing</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing_OpenExternal" xml:space="preserve">
+    <value>_Abrir no navegador externo</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing_Refresh" xml:space="preserve">
+    <value>_Recarregar esta página</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing_Start" xml:space="preserve">
+    <value>_Iniciar</value>
+  </data>
+  <data name="ShellView_Menu_Syncthing_Stop" xml:space="preserve">
+    <value>_Parar</value>
+  </data>
+  <data name="NewVersionAlertView_Button_DontRemind" xml:space="preserve">
+    <value>Não me lembrar novamente</value>
+    <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
+  </data>
+  <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
+    <value>Abrir página de download</value>
+    <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
+  </data>
+  <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
+    <value>Lembrar-me depois</value>
+    <comment>When a new version is available, the user receives a prompt. This button allows them to say they want to be prompted the next time they start SyncTrayzor</comment>
+  </data>
+  <data name="NewVersionAlertView_Changelog" xml:space="preserve">
+    <value>Histórico de mudanças:</value>
+  </data>
+  <data name="NewVersionAlertView_DontRemindMeExplanation" xml:space="preserve">
+    <value>&quot;Não me lembrar novamente&quot; silenciará avisos para esta versão. Você pode desabilitar os avisos de novas versões, permanentemente, a partir da página de Configurações. Visite Ajuda -&gt; Sobre para verificar se há nova versão disponível.</value>
+    <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
+  </data>
+  <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
+    <value>SyncTrayzor versão {0} está disponível!</value>
+    <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
+  </data>
+  <data name="NewVersionAlertView_Title" xml:space="preserve">
+    <value>Atualização do SyncTrayzor disponível</value>
+    <comment>When a new version is available, the user receives a prompt. This is the title of that prompt.</comment>
+  </data>
+  <data name="SettingsView_AlertOnNewVersion" xml:space="preserve">
+    <value>Alertar quando uma nova versão do SyncTrayzor estiver disponível</value>
+  </data>
+  <data name="SettingsView_ApiKey" xml:space="preserve">
+    <value>Chave API:</value>
+  </data>
+  <data name="SettingsView_ApiKey_ToolTip" xml:space="preserve">
+    <value>SyncTrayzor toma precedência sobre o valor da chave API especificada nas configurações do Syncthing. Entretanto, você pode configurar a chave API para qualquer valor desejado aqui.</value>
+    <comment>ToolTip shown when a user hovers over the SettingsView_ApiKey text input. This shows more information on the input.</comment>
+  </data>
+  <data name="SettingsView_CloseToTray" xml:space="preserve">
+    <value>Fechar para a área de notificação</value>
+    <comment>Setting allowing the user to indicate that the 'close' button on the top right of the window should put Syncthing down into the tray, rather than closing the application</comment>
+  </data>
+  <data name="SettingsView_MinimizeToTray" xml:space="preserve">
+    <value>Minimizar para a área de notificação</value>
+    <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
+  </data>
+  <data name="SettingsView_MustRestartSyncthingWarning" xml:space="preserve">
+    <value>É necessário reiniciar o Syncthing para que as mudanças nestas configurações surtam efeito</value>
+  </data>
+  <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
+    <value>Ocultar IDs dos dispositivos no histórico</value>
+  </data>
+  <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
+    <value>Mostrar Ícone na Área de Notificação somente ao fechar</value>
+  </data>
+  <data name="SettingsView_Section_Advanced" xml:space="preserve">
+    <value>Avançado</value>
+    <comment>Section header for advanced settings</comment>
+  </data>
+  <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
+    <value>Iniciar no login</value>
+    <comment>Section header for settings to do with automatically starting SyncTrayzor when the user logs in</comment>
+  </data>
+  <data name="SettingsView_Section_Syncthing" xml:space="preserve">
+    <value>Syncthing</value>
+    <comment>Section header for settings to do with configuring Syncthing</comment>
+  </data>
+  <data name="SettingsView_Section_SyncTrayzor" xml:space="preserve">
+    <value>SyncTrayzor</value>
+    <comment>Section header for settings to do with configuring SyncTrayzor</comment>
+  </data>
+  <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
+    <value>Pastas monitoradas</value>
+    <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
+  </data>
+  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
+    <value>Mostrar mensagens de balão &quot;Sincronizado&quot;</value>
+    <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
+  </data>
+  <data name="SettingsView_StartMinimized" xml:space="preserve">
+    <value>Iniciar minimizado</value>
+    <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
+  </data>
+  <data name="SettingsView_StartOnLogin" xml:space="preserve">
+    <value>Iniciar automaticamente no login</value>
+    <comment>Setting allowing the user to specify that SyncTrayzor should be started when the user logs in</comment>
+  </data>
+  <data name="SettingsView_StartOnLogin_PermissionDenied" xml:space="preserve">
+    <value>Permissão negada. Por favor, inicie o SyncTrayzor como Administrador para efetuar estas mudanças.</value>
+    <comment>Message displayed instead of SettingsView_StartOnLogin SettingsView_StartMinimized when the user doesn't have permission to edit the registry</comment>
+  </data>
+  <data name="SettingsView_StartSyncthingAutomatically" xml:space="preserve">
+    <value>Iniciar o Syncthing juntamente com o SyncTrayzor</value>
+    <comment>Setting allowing the user to specify that Syncthing should be start automatically when SyncTrayzor starts</comment>
+  </data>
+  <data name="SettingsView_SyncthingAddress" xml:space="preserve">
+    <value>Endereço GUI Listen:</value>
+  </data>
+  <data name="SettingsView_SyncthingAddress_ToolTip" xml:space="preserve">
+    <value>SyncTrayzor toma precedência sobre o &quot;Endereço GUI Listen&quot; especificado nas configurações do Syncthying. Entretanto, você pode configurar o endereço para qualquer valor desejado aqui.</value>
+    <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
+  </data>
+  <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
+    <value>Use Syncthing&apos;s default database location</value>
+  </data>
+  <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
+    <value>If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
+    <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
+  </data>
+  <data name="SettingsView_Title" xml:space="preserve">
+    <value>Configurações</value>
+    <comment>Title of the 'settings' dialog</comment>
+  </data>
+  <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
+    <value>Variáveis de ambiente do Syncthing:</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
+    <value>As pastas seguintes serão monitoradas para modificações, o que significa que você poderá um intervalo de monitoração mais longo.</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
+    <value>Pastas indisponíveis. Por favor, inicie o Syncthing</value>
+  </data>
+  <data name="AboutView_UnknownVersion" xml:space="preserve">
+    <value>Desconhecido</value>
+    <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
+  </data>
+  <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
+    <value>Você tem certeza que deseja finalizar todos os processos do Syncthing, inclusive aqueles não gerenciados pelo SyncTrayzor?</value>
+    <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
+  </data>
+  <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
+    <value>Tem certeza?</value>
+    <comment>Title for the dialog shown when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
+  </data>
+  <data name="Dialog_FailedToStartSyncthing_Message" xml:space="preserve">
+    <value>Syncthing falhou ao iniciar.
+
+Por favor, leia o histórico a fim de determinar a causa.
+
+Se uma linha contendo &quot;FATAL: Cannot open database&quot; (erro fatal: banco de dados não pode ser aberto), por favor feche todas as instâncias abertas do Syncthing. Se o SyncTrayzor travou anteriormente, podem haver processos órfãos (isolados) ainda ativos do Syncthing. Por favor, utilize a opção &quot;Syncthing -&gt; Finalizar todos os processos do Syncthing&quot; no menu a fim de finalizá-los. Então, selecione &quot;Syncthing -&gt; Iniciar&quot; a fim de iniciar o Syncthing novamente.</value>
+    <comment>Content of the dialog shown when Syncthing couldn't be started (and exited with an error). Instructs the user on how to proceed.
+
+"FATAL: Cannot Open Database" should remain in English
+
+The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to ShellView_Menu_Syncthing_KillAll, while "Syncthing -&gt;Start" corresponds to ShellView_Menu_Syncthing_Start</comment>
+  </data>
+  <data name="Dialog_FailedToStartSyncthing_Title" xml:space="preserve">
+    <value>Syncthing falhou ao iniciar</value>
+    <comment>Title of the dialog shown when Syncthing couldn't be started (and exited with an error)</comment>
+  </data>
+  <data name="Dialog_SyncthingBlockedByGroupPolicy_Message" xml:space="preserve">
+    <value>Não foi possível iniciar Syncthing: {0}
+
+A razão pode ser o Windows configurado para proibir a execução de programas em AppData, ou porque há anti-malware instalado (e.g., CryptoPrevent) que impede a execução de programas em AppData.
+
+Por favor, ajuste sua configuração ou listas de permissão para permitir a execução de &apos;{1}&apos;</value>
+    <comment>Content of dialog shown when Syncthing couldn't start because of group policy settings (probably)
+{0}: Exact exception message
+{1}: Path to Syncthing executable</comment>
+  </data>
+  <data name="Dialog_SyncthingBlockedByGroupPolicy_Title" xml:space="preserve">
+    <value>Erro iniciando Syntthing</value>
+    <comment>Title of dialog shown when Syncthing couldn't start because of group policy settings (probably)</comment>
+  </data>
+  <data name="SettingsView_Validation_InvalidUrl" xml:space="preserve">
+    <value>Obrigatório um URL válido</value>
+    <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress field when the user enters a value which is not a value URL</comment>
+  </data>
+  <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">
+    <value>Não pode ser vazio</value>
+    <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress or SettingsView_ApiKey fields when the user makes this field empty</comment>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentDescriptionLabel" xml:space="preserve">
+    <value>Descrição:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentHomepageLabel" xml:space="preserve">
+    <value>Homepage:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentLicenseLabel" xml:space="preserve">
+    <value>Licença:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentLicenseTextLabel" xml:space="preserve">
+    <value>Texto da Licença:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentNameLabel" xml:space="preserve">
+    <value>Nome:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_ComponentNotesLabel" xml:space="preserve">
+    <value>Notas:</value>
+  </data>
+  <data name="ThirdPartyComponentsView_Intro" xml:space="preserve">
+    <value>SyncTrayzor foi construído usando vários components de código aberto, e não poderia existir sem eles.
+Detalhes de cada component, bem como as licenças, estão abaixo.</value>
+  </data>
+  <data name="ThirdPartyComponentsView_Title" xml:space="preserve">
+    <value>Componentes de Terceiros</value>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_Message" xml:space="preserve">
+    <value>{0}: Sincronização terminada</value>
+    <comment>Content of the balloon message shown when a folder finished synchronization
+
+{0}:The name of the folder which finished synchronizing</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_Title" xml:space="preserve">
+    <value>Sincronização terminada</value>
+  </data>
+  <data name="TrayIcon_Menu_CloseToTray" xml:space="preserve">
+    <value>Fechar para a área de notificação</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to minimize itself to the tray</comment>
+  </data>
+  <data name="TrayIcon_Menu_Exit" xml:space="preserve">
+    <value>_Sair</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to exit</comment>
+  </data>
+  <data name="TrayIcon_Menu_Restore" xml:space="preserve">
+    <value>_Restaurar</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restore itself from the tray, and be visible to the user</comment>
+  </data>
+  <data name="TrayIcon_Menu_Settings" xml:space="preserve">
+    <value>_Configurações</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
+  </data>
+  <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
+    <value>_Iniciar Syncthing</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
+  </data>
+  <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
+    <value>_Parar Syncthing</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
+  </data>
+  <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
+    <value>Opa! Algum erro aconteceu.
+SyncTrayzor terá de fechar. Sinto muito</value>
+  </data>
+  <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
+    <value/>
+    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately after the log path</comment>
+  </data>
+  <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
+    <value>Você poderá ser solicitado a enviar um arquivo de histórico (log). Você pode achar o arquivo em:</value>
+    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately before the log path</comment>
+  </data>
+  <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
+    <value>e inclua as seguintes informações:</value>
+    <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately after the link to github, and also prompts the user to include the stack trace shown directly below this text</comment>
+  </data>
+  <data name="UnhandledExceptionView_PleaseOpenIssue_Pre" xml:space="preserve">
+    <value>Por favor, abra uma requisição em</value>
+    <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately before the link to github</comment>
+  </data>
+  <data name="UnhandledExceptionView_Title" xml:space="preserve">
+    <value>Erro!</value>
+    <comment>Title of the dialog shown when an unhandled exception occurs</comment>
+  </data>
+  <data name="ViewerView_SyncthingStarting" xml:space="preserve">
+    <value>Iniciando Syncthing...</value>
+    <comment>Text shown in the centre of the screen when Syncthing is starting, but there's no UI to display yet</comment>
+  </data>
+  <data name="ViewerView_SyncthingStopped" xml:space="preserve">
+    <value>Syncthing parou</value>
+    <comment>Text shown in the centre of the screen when Syncthing is stopped</comment>
+  </data>
+  <data name="Generic_Dialog_No" xml:space="preserve">
+    <value>Não</value>
+    <comment>'No' button shown on various dialogs</comment>
+  </data>
+  <data name="Generic_Dialog_OK" xml:space="preserve">
+    <value>OK</value>
+    <comment>'OK' button shown on various dialogs</comment>
+  </data>
+  <data name="Generic_Dialog_Yes" xml:space="preserve">
+    <value>Sim</value>
+    <comment>'Yes' button shown on various dialogs</comment>
+  </data>
+  <data name="TranslatorAttributation" xml:space="preserve">
+    <value>Tradução para Português-BR por Marcos Portnoi</value>
+    <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
+  </data>
+  <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
+    <value>Ícone área de notificação</value>
+  </data>
+  <data name="SettingsView_ShowDeviceConnectivityBalloons" xml:space="preserve">
+    <value>Mostrar balões de mensagem Conectado/Desconectado</value>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
+    <value>{0} conectado</value>
+    <comment>Message of tray icon balloon show when another device connects
+{0}: device name</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceConnected_Title" xml:space="preserve">
+    <value>Dispositivo conectado</value>
+    <comment>Title of tray icon balloon when another device connected</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceDisconnected_Message" xml:space="preserve">
+    <value>{0} desconectado</value>
+    <comment>Message of tray icon balloon show when another device disconnects
+{0}: device name</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceDisconnected_Title" xml:space="preserve">
+    <value>Dispositivo desconectado</value>
+    <comment>Title of tray icon balloon when another device disconnected</comment>
+  </data>
+  <data name="ShellView_Menu_Syncthing_Restart" xml:space="preserve">
+    <value>R_einiciar</value>
+  </data>
+  <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
+    <value>R_einiciar Syncthing</value>
+    <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
+  </data>
+  <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
+    <value>Syncthing</value>
+    <comment>'Syncthing' settings tab</comment>
+  </data>
+  <data name="SettingsView_Tab_SyncTrayzor" xml:space="preserve">
+    <value>SyncTrayzor</value>
+    <comment>'SyncTrayzor' settings tab</comment>
+  </data>
+  <data name="SettingsView_SyncthingDenyUpgrade" xml:space="preserve">
+    <value>Parar atualização automática do Syncthing</value>
+  </data>
+  <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
+    <value>Parar a atualização automática do Syncthing. Esta opção é útil se uma nova versão do Syncthing não for compatível com o SyncTrayzor. Você terá de instalar uma versão anterior do arquivo syncthing.exe na pasta de configurações do SyncTrayzor</value>
+  </data>
+  <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
+    <value>Executar Syncthing como processo de baixa prioridade</value>
+  </data>
+  <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
+    <value>_Abrir pasta</value>
+    <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
+  </data>
+  <data name="ViewerView_OpenFolder" xml:space="preserve">
+    <value>Abrir pasta</value>
+    <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
+  </data>
+  <data name="ViewerView_StartSyncthing" xml:space="preserve">
+    <value>Iniciar Syncthing</value>
+    <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
+  </data>
+  <data name="SettingsView_UseComputerCulture" xml:space="preserve">
+    <value>Usar o idioma do seu sistema operacional, onde disponível. Você terá de reiniciar o SyncTrayzor para que isto surta efeito</value>
+  </data>
+  <data name="ShellView_Menu_View" xml:space="preserve">
+    <value>_Vizualizar</value>
+  </data>
+  <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
+    <value>Console Syncthing</value>
+  </data>
+  <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
+    <value>Instalar agora</value>
+  </data>
+  <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
+    <value>Ver histórico de mudanças</value>
+  </data>
+  <data name="ShellView_Menu_Zoom" xml:space="preserve">
+    <value>_Zoom navegador</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
+    <value>Zoom _dentro</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
+    <value>Zoom _fora</value>
+  </data>
+  <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
+    <value>_Ressetar</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
+    <value>Obrigatório estar no format &apos;VAR=valor VAR2=&quot;valor1 valor2&quot;&apos;</value>
+  </data>
+  <data name="NewVersionInstalledView_Message" xml:space="preserve">
+    <value>SyncTrayzor versão {0} foi instalado com sucesso.</value>
+  </data>
+  <data name="NewVersionInstalledView_Title" xml:space="preserve">
+    <value>SyncTrayzor atualizado</value>
+  </data>
+  <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
+    <value>Unable to start Syncthing: {0}. Please see Syncthing&apos;s console output for clues.</value>
+  </data>
+  <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
+    <value>Syncthing didn&apos;t start correctly</value>
+  </data>
+  <data name="Generic_Copy" xml:space="preserve">
+    <value>_Copy</value>
+  </data>
+  <data name="Generic_Cut" xml:space="preserve">
+    <value>Cu_t</value>
+  </data>
+  <data name="Generic_Paste" xml:space="preserve">
+    <value>_Paste</value>
+  </data>
+  <data name="FileTranfersTrayView_Header_Downloading" xml:space="preserve">
+    <value>Downloading</value>
+    <comment>Header for section containing downloading files</comment>
+  </data>
+  <data name="FileTransfersTrayView_Deleted" xml:space="preserve">
+    <value>(deleted)</value>
+    <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
+    <value>Downloading {0}/{1}</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download</comment>
+  </data>
+  <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
+    <value>Recently Updated</value>
+    <comment>Header for section containing files that were recently downloaded or deleted</comment>
+  </data>
+  <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
+    <value>In: {0}/s</value>
+    <comment>{0}: a value such as '1.2kb'</comment>
+  </data>
+  <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
+    <value>No recent file transfers</value>
+  </data>
+  <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
+    <value>Out: {0}/s</value>
+    <comment>{0}: a value such as '1.2kb'</comment>
+  </data>
+  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
+    <value>Starting...</value>
+    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
+  </data>
+  <data name="TimeAgo_Days_Plural" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="TimeAgo_Days_Singular" xml:space="preserve">
+    <value>1 day ago</value>
+  </data>
+  <data name="TimeAgo_Hours_Plural" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="TimeAgo_Hours_Singular" xml:space="preserve">
+    <value>1 hour ago</value>
+  </data>
+  <data name="TimeAgo_JustNow" xml:space="preserve">
+    <value>Just now</value>
+  </data>
+  <data name="TimeAgo_Minutes_Plural" xml:space="preserve">
+    <value>{0} minutes ago</value>
+  </data>
+  <data name="TimeAgo_Minutes_Singular" xml:space="preserve">
+    <value>1 minute ago</value>
+  </data>
+  <data name="TimeAgo_Years_Plural" xml:space="preserve">
+    <value>{0} years ago</value>
+  </data>
+  <data name="TimeAgo_Years_Singular" xml:space="preserve">
+    <value>1 year ago</value>
+  </data>
+  <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
+    <value>Downloading {0}/{1} ({2}/s)</value>
+    <comment>Displayed when a large file is downloaded
+{0}: amount downloaded so far (inserted as e.g. 4KB)
+{1}: The total amount to download
+{2}: The current download rate, e.g. 2.0MB</comment>
+  </data>
+  <data name="FileTransfersTrayView_Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+</root>

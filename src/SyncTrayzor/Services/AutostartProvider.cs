@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,7 +18,6 @@ namespace SyncTrayzor.Services
         bool CanRead { get; }
         bool CanWrite { get; }
 
-        void UpdatePathToSelf();
         AutostartConfiguration GetCurrentSetup();
         void SetAutoStart(AutostartConfiguration config);
     }
@@ -35,8 +35,12 @@ namespace SyncTrayzor.Services
 
     public class AutostartProvider : IAutostartProvider
     {
-        private const string applicationName = "SyncTrayzor";
-        private readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        // Matches 'SyncTrayzor' and 'SyncTrayzor (n)' (where n is a digit)
+        private static readonly Regex keyRegex = new Regex(@"^SyncTrayzor(?: \((\d+)\))?$");
+        private readonly string keyName;
+
+        private readonly IAssemblyProvider assemblyProvider;
 
         public bool IsEnabled { get; set; }
 
@@ -52,12 +56,22 @@ namespace SyncTrayzor.Services
             get { return this.IsEnabled && this._canWrite; }
         }
 
-        public AutostartProvider()
+        public AutostartProvider(IAssemblyProvider assemblyProvider)
         {
+            this.assemblyProvider = assemblyProvider;
+
             // Default
             this.IsEnabled = true;
 
-            // Check our access
+            this.CheckAccess();
+
+            // Find a key, if we can, which points to our current location
+            if (this.CanRead)
+                this.keyName = this.FindKeyName();
+        }
+
+        private void CheckAccess()
+        {
             try
             {
                 this.OpenRegistryKey(true).Dispose();
@@ -80,18 +94,58 @@ namespace SyncTrayzor.Services
             logger.Info("Have no access to the registry");
         }
 
+        private string FindKeyName()
+        {
+            var numbersSeen = new List<int>();
+            string foundKey = null;
+
+            using (var key = this.OpenRegistryKey(false))
+            {
+                foreach (var entry in key.GetValueNames())
+                {
+                    var match = keyRegex.Match(entry);
+                    if (match.Success)
+                    {
+                        // Keep a record of the highest number seen, in case we need to create a new one
+                        var numberValue = match.Groups[1].Value;
+                        if (numberValue == String.Empty)
+                            numbersSeen.Add(1);
+                        else
+                            numbersSeen.Add(Int32.Parse(numberValue));
+
+                        // See if this one points to our application
+                        var keyValue = key.GetValue(entry) as string;
+                        if (keyValue != null && keyValue.StartsWith(String.Format("\"{0}\"", this.assemblyProvider.Location)))
+                        {
+                            foundKey = entry;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // If we've seen a key that points to our application, then that's an easy win
+            // If not, find the first gap in the list of key names, and use that to create our key
+            if (foundKey != null)
+                return foundKey;
+
+            // No numbers seen? "SyncTrayzor". The logic below can't handle an empty list either
+            if (numbersSeen.Count == 0)
+                return "SyncTrayzor";
+
+            numbersSeen.Sort();
+            var firstGap = Enumerable.Range(1, numbersSeen.Count).Except(numbersSeen).FirstOrDefault();
+            // Value of 0 = no gaps
+            var numberToUse = firstGap == 0 ? numbersSeen[numbersSeen.Count - 1] + 1 : firstGap;
+
+            if (numberToUse == 1)
+                return "SyncTrayzor";
+            return String.Format("SyncTrayzor ({0})", numberToUse);
+        }
+
         private RegistryKey OpenRegistryKey(bool writable)
         {
             return Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable);
-        }
-
-        public void UpdatePathToSelf()
-        {
-            if (!this.CanWrite)
-                throw new InvalidOperationException("Don't have permission to write to the registry");
-
-            var config = this.GetCurrentSetup();
-            this.SetAutoStart(config);
         }
 
         public AutostartConfiguration GetCurrentSetup()
@@ -104,7 +158,7 @@ namespace SyncTrayzor.Services
 
             using (var registryKey = this.OpenRegistryKey(false))
             {
-                var value = registryKey.GetValue(applicationName) as string;
+                var value = registryKey.GetValue(this.keyName) as string;
                 if (value != null)
                 {
                     autoStart = true;
@@ -127,18 +181,18 @@ namespace SyncTrayzor.Services
 
             using (var registryKey = this.OpenRegistryKey(true))
             {
-                var keyExists = registryKey.GetValue(applicationName) != null;
+                var keyExists = registryKey.GetValue(this.keyName) != null;
 
                 if (config.AutoStart)
                 {
-                    var path = String.Format("\"{0}\"{1}", Assembly.GetExecutingAssembly().Location, config.StartMinimized ? " -minimized" : "");
+                    var path = String.Format("\"{0}\"{1}", this.assemblyProvider.Location, config.StartMinimized ? " -minimized" : "");
                     logger.Debug("Autostart path: {0}", path);
-                    registryKey.SetValue(applicationName, path);
+                    registryKey.SetValue(this.keyName, path);
                 }
                 else if (keyExists)
                 {
                     logger.Debug("Removing pre-existing registry key");
-                    registryKey.DeleteValue(applicationName);
+                    registryKey.DeleteValue(this.keyName);
                 }
             }
         }
