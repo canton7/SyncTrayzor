@@ -313,6 +313,7 @@
     <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Design\ViewModelLocator.cs" />
+    <Compile Include="Xaml\CultureAwareBinding.cs" />
     <Compile Include="Xaml\GridLengthToAbsoluteConverter.cs" />
     <Compile Include="Xaml\MouseWheelGesture.cs" />
     <Compile Include="Xaml\NoSizeBelowScreenBehaviour.cs" />

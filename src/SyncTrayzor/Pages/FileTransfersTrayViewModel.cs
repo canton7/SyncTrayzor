@@ -25,7 +25,12 @@ namespace SyncTrayzor.Pages
         public Icon Icon { get; private set; }
         public string Error { get; private set; }
         public bool WasDeleted { get; private set; }
-        
+
+        public DateTime Completed
+        {
+            get { return this.FileTransfer.FinishedUtc.GetValueOrDefault().ToLocalTime(); }
+        }
+
         public string CompletedTimeAgo
         {
             get

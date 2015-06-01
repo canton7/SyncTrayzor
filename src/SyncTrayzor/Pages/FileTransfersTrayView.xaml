@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              x:Name="RootObject"
@@ -90,7 +91,11 @@
                                                Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
                                             <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
                                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}"/>
+                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}">
+                                                    <TextBlock.ToolTip>
+                                                        <TextBlock Text="{xaml:CultureAwareBinding Completed, StringFormat={}{0:g}}"/>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
                                                 <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="{l:Loc FileTransfersTrayView_Deleted}"
                                                            Visibility="{Binding WasDeleted, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
                                             </StackPanel>

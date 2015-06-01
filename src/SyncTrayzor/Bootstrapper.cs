@@ -25,6 +25,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Threading;
 
 namespace SyncTrayzor
@@ -92,6 +93,9 @@ namespace SyncTrayzor
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
             else if (!configuration.UseComputerCulture)
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
+            // WPF ignores the current culture by default - so we have to force it
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(Thread.CurrentThread.CurrentCulture.IetfLanguageTag)));
 
             var autostartProvider = this.Container.Get<IAutostartProvider>();
 #if DEBUG
