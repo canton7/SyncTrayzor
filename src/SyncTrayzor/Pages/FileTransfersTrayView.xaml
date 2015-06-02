@@ -75,31 +75,53 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource ItemBorderStyle}">
-                                        <DockPanel Margin="5" Background="Transparent">
+                                        <Grid>
                                             <!-- Use an InvokeCommandAction so we can pass a parameter -->
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="MouseLeftButtonUp">
                                                     <i:InvokeCommandAction s:View.ActionTarget="{Binding DataContext, Source={x:Reference RootObject}}"
-                                                        Command="{s:Action ItemClicked}" CommandParameter="{Binding}"/>
+                                                            Command="{s:Action ItemClicked}" CommandParameter="{Binding}"/>
                                                 </i:EventTrigger>
                                             </i:Interaction.Triggers>
-                                            <TextBlock DockPanel.Dock="Bottom" Margin="5,5,0,0" Foreground="Red" FontWeight="Bold"
-                                                   TextWrapping="Wrap"
-                                                   Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                                                   Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
-                                            <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
-                                               Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
-                                            <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
-                                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                                                <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}">
-                                                    <TextBlock.ToolTip>
-                                                        <TextBlock Text="{xaml:CultureAwareBinding Completed, StringFormat={}{0:g}}"/>
-                                                    </TextBlock.ToolTip>
-                                                </TextBlock>
-                                                <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="{l:Loc FileTransfersTrayView_Deleted}"
-                                                           Visibility="{Binding WasDeleted, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-                                            </StackPanel>
-                                        </DockPanel>
+
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <!-- Needed for the IsMouseOver to be noticed reliably -->
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                                                <Condition Binding="{Binding WasDeleted}" Value="False"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter Property="Background" Value="#F5F9FF"/>
+                                                                <Setter Property="Cursor" Value="Hand"/>
+                                                            </MultiDataTrigger.Setters>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                            
+                                            <DockPanel Margin="5">
+                                                <TextBlock DockPanel.Dock="Bottom" Margin="5,5,0,0" Foreground="Red" FontWeight="Bold"
+                                                       TextWrapping="Wrap"
+                                                       Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                                                       Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
+                                                <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
+                                                   Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                                <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                                                    <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}">
+                                                        <TextBlock.ToolTip>
+                                                            <TextBlock Text="{xaml:CultureAwareBinding Completed, StringFormat={}{0:g}}"/>
+                                                        </TextBlock.ToolTip>
+                                                    </TextBlock>
+                                                    <TextBlock Foreground="DimGray" Margin="5,0,0,0" Text="{l:Loc FileTransfersTrayView_Deleted}"
+                                                               Visibility="{Binding WasDeleted, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
