@@ -174,18 +174,40 @@ namespace SyncTrayzor
             {
                 var windowManager = this.Container.Get<IWindowManager>();
 
-                var configurationException = e.Exception as ConfigurationException;
+                var couldNotFindSyncthingException = e.Exception as CouldNotFindSyncthingException;
+                if (couldNotFindSyncthingException != null)
+                {
+                    var msg = String.Format("Could not find syncthing.exe at {0}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
+                    "antivirus program quarantined it, restore it. If all else fails, download syncthing.exe from https://github.com/syncthing/syncthing/releases the put it " +
+                    "in this location.\n\nSyncTrayzor will now close.", couldNotFindSyncthingException.SyncthingPath);
+                    windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Don't "crash"
+                    e.Handled = true;
+                    this.Application.Shutdown();
+                }
+
+                var configurationException = e.Exception as BadConfigurationException;
                 if (configurationException != null)
                 {
-                    windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var inner = configurationException.InnerException.Message;
+                    if (configurationException.InnerException.InnerException != null)
+                        inner += ": " + configurationException.InnerException.InnerException.Message;
+
+                    var msg = String.Format("Failed to parse the configuration file at {0}.\n\n{1}\n\n" +
+                        "If you manually downgraded SyncTrayzor, note that this is not supported.\n\n" +
+                        "Please attempt to fix {0} by hand. If unsuccessful, please delete {0} and let SyncTrayzor re-create it.\n\n" +
+                        "SyncTrayzor will now close.", configurationException.ConfigurationFilePath, inner);
+                    windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Don't "crash"
                     e.Handled = true;
+                    this.Application.Shutdown();
                 }
-                else
-                {
-                    var vm = this.Container.Get<UnhandledExceptionViewModel>();
-                    vm.Exception = e.Exception;
-                    windowManager.ShowDialog(vm);
-                }
+
+                var vm = this.Container.Get<UnhandledExceptionViewModel>();
+                vm.Exception = e.Exception;
+                windowManager.ShowDialog(vm);
             }
             catch (Exception exception)
             {

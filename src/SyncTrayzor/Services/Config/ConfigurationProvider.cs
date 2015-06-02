@@ -100,21 +100,15 @@ namespace SyncTrayzor.Services.Config
 
             var expandedSyncthingPath = EnvVarTransformer.Transform(this.currentConfig.SyncthingPath);
 
+            if (!File.Exists(this.paths.SyncthingBackupPath))
+                throw new CouldNotFindSyncthingException(this.paths.SyncthingBackupPath);
+
             // They're the same if we're portable, in which case, nothing to do
-            if (expandedSyncthingPath != this.paths.SyncthingBackupPath)
+            if (!File.Exists(expandedSyncthingPath))
             {
-                if (!File.Exists(expandedSyncthingPath))
-                {
-                    if (File.Exists(this.paths.SyncthingBackupPath))
-                    {
-                        logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
-                        File.Copy(this.paths.SyncthingBackupPath, expandedSyncthingPath);
-                    }
-                    else
-                    {
-                        throw new Exception(String.Format("Unable to find Syncthing at {0} or {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath));
-                    }
-                }
+                // We know that this.paths.SyncthingBackupPath exists, because we checked this above
+                logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
+                File.Copy(this.paths.SyncthingBackupPath, expandedSyncthingPath);
             }
 
             if (updateConfigInstallCount)
@@ -152,7 +146,16 @@ namespace SyncTrayzor.Services.Config
                 loadedConfig = defaultConfig;
             }
 
-            var configuration = (Configuration)this.serializer.Deserialize(loadedConfig.CreateReader());
+            Configuration configuration;
+            try
+            {
+                configuration = (Configuration)this.serializer.Deserialize(loadedConfig.CreateReader());
+            }
+            catch (Exception e)
+            {
+                throw new BadConfigurationException(this.paths.ConfigurationFilePath, e);
+            }
+
             if (configuration.SyncthingApiKey == null)
                 configuration.SyncthingApiKey = this.GenerateApiKey();
 
@@ -303,9 +306,25 @@ namespace SyncTrayzor.Services.Config
         }
     }
 
-    public class ConfigurationException : Exception
+    public class CouldNotFindSyncthingException : Exception
     {
-        public ConfigurationException(string message) : base(message)
-        { }
+        public string SyncthingPath { get; private set; }
+
+        public CouldNotFindSyncthingException(string syncthingPath)
+            : base(String.Format("Could not find syncthing.exe at {0}", syncthingPath))
+        {
+            this.SyncthingPath = syncthingPath;
+        }
+    }
+
+    public class BadConfigurationException : Exception
+    {
+        public string ConfigurationFilePath { get; private set; }
+
+        public BadConfigurationException(string configurationFilePath, Exception innerException)
+            : base(String.Format("Error deserializing configuration file at {0}", configurationFilePath), innerException)
+        {
+            this.ConfigurationFilePath = configurationFilePath;
+        }
     }
 }
