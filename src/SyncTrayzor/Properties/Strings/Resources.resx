@@ -679,4 +679,7 @@ Full Path: {1}</value>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Singular" xml:space="preserve">
     <value>Updated 1 file</value>
   </data>
+  <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
+    <value>Show even if no files were downloaded</value>
+  </data>
 </root>

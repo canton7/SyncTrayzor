@@ -637,6 +637,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show even if no files were downloaded.
+        /// </summary>
+        public static string SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred {
+            get {
+                return ResourceManager.GetString("SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start Minimized.
         /// </summary>
         public static string SettingsView_StartMinimized {

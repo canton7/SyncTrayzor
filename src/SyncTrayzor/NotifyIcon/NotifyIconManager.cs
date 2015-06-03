@@ -21,6 +21,7 @@ namespace SyncTrayzor.NotifyIcon
         bool MinimizeToTray { get; set; }
         bool CloseToTray { get; set; }
         bool ShowSynchronizedBalloon { get; set; }
+        bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         bool ShowDeviceConnectivityBalloons { get; set; }
 
         void EnsureIconVisible();
@@ -64,6 +65,7 @@ namespace SyncTrayzor.NotifyIcon
         }
 
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public NotifyIconManager(
@@ -122,13 +124,16 @@ namespace SyncTrayzor.NotifyIcon
 
         private void FolderSynchronizationFinished(object sender, FolderSynchronizationFinishedEventArgs e)
         {
-            if (this.ShowSynchronizedBalloon &&
-                    DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
-                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+            if (this.ShowSynchronizedBalloon)
             {
                 if (e.FileTransfers.Count == 0)
                 {
-                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
+                    if (this.ShowSynchronizedBalloonEvenIfNothingDownloaded &&
+                        DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
+                        DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                    {
+                        this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
+                    }
                 }
                 else if (e.FileTransfers.Count == 1)
                 {

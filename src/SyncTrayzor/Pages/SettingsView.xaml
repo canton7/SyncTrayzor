@@ -57,6 +57,8 @@
                         <DockPanel>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon}" Content="{l:Loc SettingsView_ShowBalloonWhenSynchronized}"/>
+                            <CheckBox DockPanel.Dock="Top" Margin="20,0,0,0" IsEnabled="{Binding ShowSynchronizedBalloon}"
+                                      IsChecked="{Binding ShowSynchronizedBalloonEvenIfNothingDownloaded}" Content="{l:Loc SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                         </DockPanel>
                     </GroupBox>

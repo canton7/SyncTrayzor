@@ -104,6 +104,7 @@ namespace SyncTrayzor.Pages
 
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public bool StartSyncThingAutomatically { get; set; }
@@ -153,6 +154,7 @@ namespace SyncTrayzor.Pages
 
             this.ShowTrayIconOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
+            this.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
@@ -202,6 +204,7 @@ namespace SyncTrayzor.Pages
 
             configuration.ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
+            configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             configuration.ShowDeviceConnectivityBalloons = this.ShowDeviceConnectivityBalloons;
 
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;

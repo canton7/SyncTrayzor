@@ -157,8 +157,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                         this.recentlySynchronized.Remove(e.FolderId);
                 }
 
-                if (transferredList != null)
-                    this.OnFolderSynchronizationFinished(e.FolderId, transferredList);
+                this.OnFolderSynchronizationFinished(e.FolderId, transferredList ?? new List<FileTransfer>());
             }
         }
 
