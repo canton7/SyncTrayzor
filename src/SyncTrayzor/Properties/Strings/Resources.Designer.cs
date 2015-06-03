@@ -294,6 +294,16 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder: {0}
+        ///Full Path: {1}.
+        /// </summary>
+        public static string FileTransfersTrayView_PathDetails {
+            get {
+                return ResourceManager.GetString("FileTransfersTrayView_PathDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Starting....
         /// </summary>
         public static string FileTransfersTrayView_Starting {

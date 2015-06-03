@@ -22,6 +22,8 @@ namespace SyncTrayzor.Pages
         private readonly DispatcherTimer completedTimeAgoUpdateTimer;
 
         public string Path { get; private set; }
+        public string FolderId { get; private set; }
+        public string FullPath { get; private set; }
         public Icon Icon { get; private set; }
         public string Error { get; private set; }
         public bool WasDeleted { get; private set; }
@@ -57,6 +59,8 @@ namespace SyncTrayzor.Pages
 
             this.FileTransfer = fileTransfer;
             this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
+            this.FullPath = this.FileTransfer.Path;
+            this.FolderId = this.FileTransfer.FolderId;
             this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType == SyncThing.EventWatcher.ItemChangedItemType.File);
             this.WasDeleted = this.FileTransfer.ActionType == SyncThing.EventWatcher.ItemChangedActionType.Delete;
 
@@ -83,13 +87,17 @@ namespace SyncTrayzor.Pages
                     }
                     else
                     {
-                            this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading_RateUnknown,
+                        this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading_RateUnknown,
                             FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
                             FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
                     }
                     
                     this.IsStarting = false;
                     this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / (float)this.FileTransfer.TotalBytes) * 100;
+                    break;
+
+                case FileTransferStatus.Completed:
+                    this.IsStarting = false;
                     break;
             }
 

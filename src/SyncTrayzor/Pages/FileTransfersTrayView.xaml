@@ -110,7 +110,21 @@
                                                        Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
                                                 <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
                                                        Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
-                                                <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis">
+                                                    <TextBlock.ToolTip>
+                                                        <TextBlock>
+                                                            <TextBlock.Resources>
+                                                                <l:LocalizeConverter x:Key="converter" Key="FileTransfersTrayView_PathDetails"/>
+                                                            </TextBlock.Resources>
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource converter}">
+                                                                    <Binding Path="FolderId"/>
+                                                                    <Binding Path="FullPath"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
                                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                                     <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}">
                                                         <TextBlock.ToolTip>
