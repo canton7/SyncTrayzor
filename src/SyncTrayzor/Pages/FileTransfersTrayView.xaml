@@ -109,7 +109,7 @@
                                                        Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                                                        Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
                                                 <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
-                                                   Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                                       Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
                                                 <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
                                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                                     <TextBlock Foreground="DimGray" Text="{Binding CompletedTimeAgo}">
