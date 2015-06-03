@@ -1,12 +1,14 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
-using SyncTrayzor.Localization;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.SyncThing.TransferHistory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -97,24 +99,14 @@ namespace SyncTrayzor.NotifyIcon
             };
             this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
-            this.syncThingManager.Folders.SyncStateChanged += (o, e) =>
-            {
-                if (this.ShowSynchronizedBalloon &&
-                    DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
-                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime &&
-                    e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
-                {
-                    Application.Current.Dispatcher.CheckAccess(); // Double-check
-                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Title"), Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Message", e.Folder.FolderId), BalloonIcon.Info);
-                }
-            };
+            this.syncThingManager.TransferHistory.FolderSynchronizationFinished += this.FolderSynchronizationFinished;
 
             this.syncThingManager.DeviceConnected += (o, e) =>
             {
                 if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                 {
-                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_DeviceConnected_Title"), Localizer.Translate("TrayIcon_Balloon_DeviceConnected_Message", e.Device.Name), BalloonIcon.Info);
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
                 }
             };
 
@@ -123,9 +115,54 @@ namespace SyncTrayzor.NotifyIcon
                 if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                 {
-                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_DeviceDisconnected_Title"), Localizer.Translate("TrayIcon_Balloon_DeviceDisconnected_Message", e.Device.Name), BalloonIcon.Info);
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
                 }
             };
+        }
+
+        private void FolderSynchronizationFinished(object sender, FolderSynchronizationFinishedEventArgs e)
+        {
+            if (this.ShowSynchronizedBalloon &&
+                    DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
+                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+            {
+                if (e.FileTransfers.Count == 0)
+                {
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
+                }
+                else if (e.FileTransfers.Count == 1)
+                {
+                    var fileTransfer = e.FileTransfers[0];
+                    string msg;
+                    if (fileTransfer.ActionType == ItemChangedActionType.Update)
+                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                    else
+                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, msg, BalloonIcon.Info);
+                }
+                else
+                {
+                    var updatedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Update).Count();
+                    var deletedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Delete).Count();
+
+                    var messageParts = new List<string>();
+
+                    if (updatedCount == 1)
+                        messageParts.Add(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Singular);
+                    else if (updatedCount > 1)
+                        messageParts.Add(String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Plural, updatedCount));
+
+                    if (deletedCount == 1)
+                        messageParts.Add(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile_Singular);
+                    else if (deletedCount > 1)
+                        messageParts.Add(String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile_Plural, deletedCount));
+
+                    var text = String.Format("{0}: {1}", e.FolderId, String.Join("; ",messageParts));
+
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, text, BalloonIcon.Info);
+                }
+            }
         }
 
         private void SetShutdownMode()
