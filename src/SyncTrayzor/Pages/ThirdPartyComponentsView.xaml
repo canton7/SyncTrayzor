@@ -61,7 +61,8 @@
                         <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" FontWeight="Bold" Text="{l:Loc ThirdPartyComponentsView_ComponentLicenseTextLabel}"/>
                         <TextBox IsReadOnly="True" Text="{Binding LicenseText}"
                                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 TextWrapping="WrapWithOverflow"/>
                     </DockPanel>
                 </DataTemplate>
             </TabControl.ContentTemplate>
