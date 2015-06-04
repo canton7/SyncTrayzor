@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;
@@ -30,7 +31,7 @@ namespace SyncTrayzor.Pages
         public string NewerVersion { get; set; }
         public bool ShowTranslatorAttributation
         {
-            get { return Localizer.T("TranslatorAttributation") == Localizer.OriginalTranslation("TranslatorAttributation"); }
+            get { return Localizer.Translate("TranslatorAttributation") == Localizer.OriginalTranslation("TranslatorAttributation"); }
         }
         private string newerVersionDownloadUrl;
 
@@ -51,10 +52,10 @@ namespace SyncTrayzor.Pages
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = Settings.Default.HomepageUrl;
 
-            this.SyncthingVersion = this.syncThingManager.Version == null ? Localizer.T("AboutView_UnknownVersion") : this.syncThingManager.Version.Version;
+            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
             this.syncThingManager.DataLoaded += (o, e) =>
             {
-                this.SyncthingVersion = this.syncThingManager.Version == null ? Localizer.T("AboutView_UnknownVersion") : this.syncThingManager.Version.Version;
+                this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
             };
 
             this.CheckForNewerVersionAsync();

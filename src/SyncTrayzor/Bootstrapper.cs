@@ -8,6 +8,7 @@ using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;
@@ -128,10 +129,10 @@ namespace SyncTrayzor
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
-                { MessageBoxResult.Cancel, Localizer.T("Generic_Dialog_Cancel") },
-                { MessageBoxResult.No, Localizer.T("Generic_Dialog_No") },
-                { MessageBoxResult.OK, Localizer.T("Generic_Dialog_OK") },
-                { MessageBoxResult.Yes, Localizer.T("Generic_Dialog_Yes") },
+                { MessageBoxResult.Cancel, Resources.Generic_Dialog_Cancel },
+                { MessageBoxResult.No, Resources.Generic_Dialog_No },
+                { MessageBoxResult.OK, Resources.Generic_Dialog_OK },
+                { MessageBoxResult.Yes, Resources.Generic_Dialog_Yes },
             };
         }
 

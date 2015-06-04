@@ -47,7 +47,7 @@ namespace SyncTrayzor.Localization
             if (this.KeyBinding == null && this.ValueBinding == null && this.ValueBindings == null)
             {
                 // Just returning a string!
-                return String.Format(this.StringFormat ?? "{0}", Localizer.T(this.Key));
+                return String.Format(this.StringFormat ?? "{0}", Localizer.Translate(this.Key));
             }
 
             var converter = new LocalizeConverter();

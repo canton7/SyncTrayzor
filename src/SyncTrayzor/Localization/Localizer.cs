@@ -12,7 +12,7 @@ namespace SyncTrayzor.Localization
 {
     public static class Localizer
     {
-        public static string T(string key, params object[] parameters)
+        public static string Translate(string key, params object[] parameters)
         {
             var culture = Thread.CurrentThread.CurrentUICulture;
 

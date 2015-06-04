@@ -17,6 +17,7 @@ using SyncTrayzor.Services.Config;
 using System.Threading;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
+using SyncTrayzor.Properties.Strings;
 
 namespace SyncTrayzor.Pages
 {
@@ -126,7 +127,7 @@ namespace SyncTrayzor.Pages
                     @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id || angular.element(this).folder.ID)"">" +
                     @"<span class=""glyphicon glyphicon-folder-open""></span>" +
                     @"<span style=""margin-left: 12px"">" +
-                    Localizer.T("ViewerView_OpenFolder") +
+                    Resources.ViewerView_OpenFolder +
                     "</span></button>')";
                     webBrowser.ExecuteScriptAsync(script);
                 }
