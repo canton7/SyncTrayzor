@@ -116,12 +116,28 @@ namespace SyncTrayzor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<PathConfiguration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <LogFilePath>%EXEPATH%\logs</LogFilePath>
+  <ConfigurationFilePath>%EXEPATH%\data\config.xml</ConfigurationFilePath>
+  <ConfigurationFileBackupPath>%EXEPATH%\data\config-backups</ConfigurationFileBackupPath>
+  <CefCachePath>%EXEPATH%\data\cef\cache</CefCachePath>
+</PathConfiguration>")]
+        public global::SyncTrayzor.Services.Config.PathConfiguration PathConfiguration {
+            get {
+                return ((global::SyncTrayzor.Services.Config.PathConfiguration)(this["PathConfiguration"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""3"">
   <ShowTrayIconOnlyOnClose>false</ShowTrayIconOnlyOnClose>
   <MinimizeToTray>false</MinimizeToTray>
   <CloseToTray>true</CloseToTray>
   <ShowSynchronizedBalloon>true</ShowSynchronizedBalloon>
   <ShowDeviceConnectivityBalloons>true</ShowDeviceConnectivityBalloons>
+  <ShowSynchronizedBalloonEvenIfNothingDownloaded>false</ShowSynchronizedBalloonEvenIfNothingDownloaded>
   <SyncthingAddress>localhost:8384</SyncthingAddress>
   <StartSyncthingAutomatically>true</StartSyncthingAutomatically>
   <SyncthingEnvironmentalVariables />
@@ -141,21 +157,6 @@ namespace SyncTrayzor.Properties {
         public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
             get {
                 return ((global::SyncTrayzor.Services.Config.Configuration)(this["DefaultUserConfiguration"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<PathConfiguration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <LogFilePath>%EXEPATH%\logs</LogFilePath>
-  <ConfigurationFilePath>%EXEPATH%\data\config.xml</ConfigurationFilePath>
-  <ConfigurationFileBackupPath>%EXEPATH%\data\config-backups</ConfigurationFileBackupPath>
-  <CefCachePath>%EXEPATH%\data\cef\cache</CefCachePath>
-</PathConfiguration>")]
-        public global::SyncTrayzor.Services.Config.PathConfiguration PathConfiguration {
-            get {
-                return ((global::SyncTrayzor.Services.Config.PathConfiguration)(this["PathConfiguration"]));
             }
         }
     }
