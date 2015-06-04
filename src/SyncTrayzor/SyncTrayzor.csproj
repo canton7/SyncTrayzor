@@ -95,8 +95,8 @@
     <Reference Include="Pri.LongPath">
       <HintPath>..\packages\Pri.LongPath.1.3.2.0\lib\net45\Pri.LongPath.dll</HintPath>
     </Reference>
-    <Reference Include="RestEase, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestEase.0.9.3\lib\net45\RestEase.dll</HintPath>
+    <Reference Include="RestEase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestEase.1.0.0\lib\net45\RestEase.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
