@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.22
+-------
+
+ - Improvements to the "File Transfers" view (single-click tray icon)
+ - Better error message handling (#93, #96)
+ - Update translations
+
 v1.0.21
 -------
 
