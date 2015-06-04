@@ -10,13 +10,17 @@ namespace SyncTrayzor.Services
     public interface IFilesystemProvider
     {
         bool Exists(string path);
+        FileStream Open(string path, FileMode mode);
         FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
+        FileStream OpenRead(string path);
+        void Copy(string from, string to);
         void Move(string from, string to);
         void CreateDirectory(string path);
         void Delete(string path);
         void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
         DateTime GetLastAccessTimeUtc(string path);
         string[] GetFiles(string path);
+        string ReadAllText(string path);
     }
 
     public class FilesystemProvider : IFilesystemProvider
@@ -26,9 +30,24 @@ namespace SyncTrayzor.Services
             return File.Exists(path);
         }
 
+        public FileStream Open(string path, FileMode mode)
+        {
+            return File.Open(path, mode);
+        }
+
         public FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
             return new FileStream(path, fileMode, fileAccess, fileShare);
+        }
+
+        public FileStream OpenRead(string path)
+        {
+            return File.OpenRead(path);
+        }
+
+        public void Copy(string from, string to)
+        {
+            File.Copy(from, to);
         }
 
         public void Move(string from, string to)
@@ -59,6 +78,11 @@ namespace SyncTrayzor.Services
         public string[] GetFiles(string path)
         {
             return Directory.GetFiles(path);
+        }
+
+        public string ReadAllText(string path)
+        {
+            return File.ReadAllText(path);
         }
     }
 }

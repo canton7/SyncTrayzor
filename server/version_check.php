@@ -65,20 +65,21 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.21' => [
+   '1.0.22' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.21/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.21/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.22/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.22/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.21',
-      'release_notes' => "- Add Dropbox-style window with current file transfers. Single-click the icon to view (#18)\n- Remember Syncthing langauge selection (#87)\n- Reword 'use custom home for Syncthing' option in Settings to be clearer (#88)\n- Don't show main window outside of desktop on very small screens (#84)\n- Don't crash if watched folder is a symlink (#89)\n- Improve error message if Syncthing cannot start (#90)\n- Fix possible crash if computer locale is changed (#91)\n- Allow custom Syncthing paths (by hand-editing config file, useful for edge case setups) (#86)\n- Add context menu to web browser (cut/copy/paste) (#85)\n- Allow multiple SyncTrayzor installations (portable and installed) to co-exist (#81)\n- Ignore system proxy settings when connecting to Syncthing (#80)\n- Update translations:\n - Updates to all languages\n - New languages: Catalan (Valencian), Portuguese (Brazil)",
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.22',
+      'release_notes' => "- Improvements to the \"File Transfers\" view (single-click tray icon)\n- Better error message handling (#93, #96)\n- Update translations",
    ]
 ];
 
 $upgrades = [
-   '1.0.20' => ['to' => 'latest', 'formatter' => '2', 'overrides' => ['release_notes' => "- Fix issue where SyncTrayzor thought it was older than it was"]],
+   '1.0.21' => ['to' => 'latest', 'formatter' => '2'],
+   '1.0.20' => ['to' => 'latest', 'formatter' => '2'],
    // 1.0.19 was never actually released, so no need to represent it
    '1.0.18' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.17' => ['to' => 'latest', 'formatter' => '2'],

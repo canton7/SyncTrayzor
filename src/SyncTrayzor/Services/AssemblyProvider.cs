@@ -11,6 +11,7 @@ namespace SyncTrayzor.Services
     public interface IAssemblyProvider
     {
         Version Version { get; }
+        Version FullVersion { get; }
         string Location { get; }
         ProcessorArchitecture ProcessorArchitecture { get; }
         Stream GetManifestResourceStream(string path);
@@ -30,6 +31,11 @@ namespace SyncTrayzor.Services
         }
 
         public Version Version { get; private set; }
+
+        public Version FullVersion
+        {
+            get { return this.assembly.GetName().Version; }
+        }
 
         public string Location
         {

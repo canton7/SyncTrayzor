@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.22
+-------
+
+ - Improvements to the "File Transfers" view (single-click tray icon)
+ - Better error message handling (#93, #96)
+ - Update translations
+
 v1.0.21
 -------
 
@@ -17,7 +24,7 @@ v1.0.19
 -------
 
  - Add Dropbox-style window with current file transfers. Single-click the icon to view (#18)
- - Remember Syncthing langauge selection (#87)
+ - Remember Syncthing language selection (#87)
  - Reword 'use custom home for Syncthing' option in Settings to be clearer (#88)
  - Don't show main window outside of desktop on very small screens (#84)
  - Don't crash if watched folder is a symlink (#89)

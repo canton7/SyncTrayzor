@@ -42,7 +42,7 @@ namespace SyncTrayzor.Design
             completedFileTransfer2.SetComplete("Something went very wrong");
 
             //this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer1));
-            //this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer2));
+            this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer2));
 
             var inProgressTransfer1 = new FileTransfer("folder", "path.txt", ItemChangedItemType.File, ItemChangedActionType.Update);
             inProgressTransfer1.SetDownloadProgress(5*1024*1024, 100*1024*1024);

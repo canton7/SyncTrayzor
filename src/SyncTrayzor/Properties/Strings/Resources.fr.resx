@@ -614,32 +614,20 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>Démarrage...</value>
     <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
   </data>
-  <data name="TimeAgo_Days_Plural" xml:space="preserve">
-    <value>Il y a {0} jours</value>
+  <data name="TimeAgo_Days" xml:space="preserve">
+    <value>{0:p:1 day|{} days} ago</value>
   </data>
-  <data name="TimeAgo_Days_Singular" xml:space="preserve">
-    <value>Il y a 1 jour</value>
-  </data>
-  <data name="TimeAgo_Hours_Plural" xml:space="preserve">
-    <value>Il y a {0} heures</value>
-  </data>
-  <data name="TimeAgo_Hours_Singular" xml:space="preserve">
-    <value>Il y a 1 heure</value>
+  <data name="TimeAgo_Hours" xml:space="preserve">
+    <value>{0:p:1 hour|{} hours} hour ago</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
     <value>A l&apos;instant</value>
   </data>
-  <data name="TimeAgo_Minutes_Plural" xml:space="preserve">
-    <value>Il y a {0} minutes</value>
+  <data name="TimeAgo_Minutes" xml:space="preserve">
+    <value>{0:p:1 minute|{} minutes} ago</value>
   </data>
-  <data name="TimeAgo_Minutes_Singular" xml:space="preserve">
-    <value>Il y a 1 minute</value>
-  </data>
-  <data name="TimeAgo_Years_Plural" xml:space="preserve">
-    <value>Il y a {0} ans</value>
-  </data>
-  <data name="TimeAgo_Years_Singular" xml:space="preserve">
-    <value>Il y a 1 an</value>
+  <data name="TimeAgo_Years" xml:space="preserve">
+    <value>{0:p:1 years|{} years} ago</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
     <value>Téléchargement : {0}/{1} ({2}/s)</value>
@@ -650,5 +638,33 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
   </data>
   <data name="FileTransfersTrayView_Error" xml:space="preserve">
     <value>Erreur : {0}</value>
+  </data>
+  <data name="FileTransfersTrayView_PathDetails" xml:space="preserve">
+    <value>Folder: {0}
+Full Path: {1}</value>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
+    <value>Deleted {0:p:1 file|{} files}</value>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
+    <value>{0}: Deleted {1}</value>
+    <comment>{0}: ID of folder which finished synchronizing
+{1}: File that was deleted</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile" xml:space="preserve">
+    <value>{0}: Downloaded {1}</value>
+    <comment>{0}: ID of folder which finished synchronizing
+{1}: File that was downloaded</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
+    <value>Updated {0:p:1 file|{} files}</value>
+  </data>
+  <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
+    <value>Show even if no files were downloaded</value>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
+    <value>{0}: {1:l:{}|; }</value>
+    <comment>{0}: Folder that finished syncing
+{1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
   </data>
 </root>

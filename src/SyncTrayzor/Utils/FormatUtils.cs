@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.Properties.Strings;
+﻿using SyncTrayzor.Localization;
+using SyncTrayzor.Properties.Strings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,25 +30,17 @@ namespace SyncTrayzor.Utils
             if (timeSpan.TotalDays > 365)
             {
                 int years = (int)Math.Ceiling((float)timeSpan.Days / 365);
-                return years == 1 ?
-                    Resources.TimeAgo_Years_Singular :
-                    String.Format(Resources.TimeAgo_Years_Plural, years);
+                return Localizer.F(Resources.TimeAgo_Years, years);
             }
 
             if (timeSpan.TotalDays > 1.0)
-                return (int)timeSpan.TotalDays == 1 ?
-                    Resources.TimeAgo_Days_Singular :
-                    String.Format(Resources.TimeAgo_Days_Plural, (int)timeSpan.TotalDays);
+                return Localizer.F(Resources.TimeAgo_Days, (int)timeSpan.TotalDays);
 
             if (timeSpan.TotalHours > 1.0)
-                return (int)timeSpan.TotalHours == 1 ?
-                    Resources.TimeAgo_Hours_Singular :
-                    String.Format(Resources.TimeAgo_Hours_Plural, (int)timeSpan.TotalHours);
+                return Localizer.F(Resources.TimeAgo_Hours, (int)timeSpan.TotalHours);
 
             if (timeSpan.TotalMinutes > 1.0)
-                return (int)timeSpan.TotalMinutes == 1 ?
-                    Resources.TimeAgo_Minutes_Singular :
-                    String.Format(Resources.TimeAgo_Minutes_Plural, (int)timeSpan.TotalMinutes);
+                return Localizer.F(Resources.TimeAgo_Minutes, (int)timeSpan.TotalMinutes);
 
             return Resources.TimeAgo_JustNow;
         }
