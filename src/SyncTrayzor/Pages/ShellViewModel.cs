@@ -132,8 +132,8 @@ namespace SyncTrayzor.Pages
         public void KillAllSyncthingProcesses()
         {
             if (this.windowManager.ShowMessageBox(
-                    Localizer.Translate("Dialog_ConfirmKillAllProcesses_Message"),
-                    Localizer.Translate("Dialog_ConfirmKillAllProcesses_Title"),
+                    Localizer.T("Dialog_ConfirmKillAllProcesses_Message"),
+                    Localizer.T("Dialog_ConfirmKillAllProcesses_Title"),
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 this.syncThingManager.KillAllSyncthingProcesses();
         }
@@ -173,8 +173,8 @@ namespace SyncTrayzor.Pages
         public void ShowExitedWithError()
         {
             this.windowManager.ShowMessageBox(
-                Localizer.Translate("Dialog_FailedToStartSyncthing_Message"),
-                Localizer.Translate("Dialog_FailedToStartSyncthing_Title"),
+                Localizer.T("Dialog_FailedToStartSyncthing_Message"),
+                Localizer.T("Dialog_FailedToStartSyncthing_Title"),
                 icon: MessageBoxImage.Error);
         }
 

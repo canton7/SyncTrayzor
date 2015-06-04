@@ -128,10 +128,10 @@ namespace SyncTrayzor
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
-                { MessageBoxResult.Cancel, Localizer.Translate("Generic_Dialog_Cancel") },
-                { MessageBoxResult.No, Localizer.Translate("Generic_Dialog_No") },
-                { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
-                { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
+                { MessageBoxResult.Cancel, Localizer.T("Generic_Dialog_Cancel") },
+                { MessageBoxResult.No, Localizer.T("Generic_Dialog_No") },
+                { MessageBoxResult.OK, Localizer.T("Generic_Dialog_OK") },
+                { MessageBoxResult.Yes, Localizer.T("Generic_Dialog_Yes") },
             };
         }
 

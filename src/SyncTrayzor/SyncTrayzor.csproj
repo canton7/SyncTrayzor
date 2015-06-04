@@ -99,6 +99,10 @@
       <HintPath>..\packages\RestEase.0.9.3\lib\net45\RestEase.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SmartFormat.NET.1.6.1.0\lib\net40\SmartFormat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Stylet, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Stylet.1.1.5\lib\net45\Stylet.dll</HintPath>

@@ -1079,38 +1079,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} days ago.
+        ///   Looks up a localized string similar to {0:p:1 day|{} days} ago.
         /// </summary>
-        public static string TimeAgo_Days_Plural {
+        public static string TimeAgo_Days {
             get {
-                return ResourceManager.GetString("TimeAgo_Days_Plural", resourceCulture);
+                return ResourceManager.GetString("TimeAgo_Days", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 day ago.
+        ///   Looks up a localized string similar to {0:p:1 hour|{} hours} hour ago.
         /// </summary>
-        public static string TimeAgo_Days_Singular {
+        public static string TimeAgo_Hours {
             get {
-                return ResourceManager.GetString("TimeAgo_Days_Singular", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} hours ago.
-        /// </summary>
-        public static string TimeAgo_Hours_Plural {
-            get {
-                return ResourceManager.GetString("TimeAgo_Hours_Plural", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 1 hour ago.
-        /// </summary>
-        public static string TimeAgo_Hours_Singular {
-            get {
-                return ResourceManager.GetString("TimeAgo_Hours_Singular", resourceCulture);
+                return ResourceManager.GetString("TimeAgo_Hours", resourceCulture);
             }
         }
         
@@ -1124,38 +1106,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} minutes ago.
+        ///   Looks up a localized string similar to {0:p:1 minute|{} minutes} ago.
         /// </summary>
-        public static string TimeAgo_Minutes_Plural {
+        public static string TimeAgo_Minutes {
             get {
-                return ResourceManager.GetString("TimeAgo_Minutes_Plural", resourceCulture);
+                return ResourceManager.GetString("TimeAgo_Minutes", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 minute ago.
+        ///   Looks up a localized string similar to {0:p:1 years|{} years} ago.
         /// </summary>
-        public static string TimeAgo_Minutes_Singular {
+        public static string TimeAgo_Years {
             get {
-                return ResourceManager.GetString("TimeAgo_Minutes_Singular", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} years ago.
-        /// </summary>
-        public static string TimeAgo_Years_Plural {
-            get {
-                return ResourceManager.GetString("TimeAgo_Years_Plural", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 1 year ago.
-        /// </summary>
-        public static string TimeAgo_Years_Singular {
-            get {
-                return ResourceManager.GetString("TimeAgo_Years_Singular", resourceCulture);
+                return ResourceManager.GetString("TimeAgo_Years", resourceCulture);
             }
         }
         
@@ -1205,20 +1169,11 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleted {0} files.
+        ///   Looks up a localized string similar to Deleted {0:p:1 file|{} files}.
         /// </summary>
-        public static string TrayIcon_Balloon_FinishedSyncing_DeletedFile_Plural {
+        public static string TrayIcon_Balloon_FinishedSyncing_DeletedFile {
             get {
-                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_DeletedFile_Plural", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deleted 1 file.
-        /// </summary>
-        public static string TrayIcon_Balloon_FinishedSyncing_DeletedFile_Singular {
-            get {
-                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_DeletedFile_Singular", resourceCulture);
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_DeletedFile", resourceCulture);
             }
         }
         
@@ -1250,6 +1205,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}: {1:l:{}|; }.
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_Multiple {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_Multiple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Finished Syncing.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_Title {
@@ -1259,20 +1223,11 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updated {0} files.
+        ///   Looks up a localized string similar to Updated {0:p:1 file|{} files}.
         /// </summary>
-        public static string TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Plural {
+        public static string TrayIcon_Balloon_FinishedSyncing_UpdatedFile {
             get {
-                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Plural", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Updated 1 file.
-        /// </summary>
-        public static string TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Singular {
-            get {
-                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Singular", resourceCulture);
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedFile", resourceCulture);
             }
         }
         

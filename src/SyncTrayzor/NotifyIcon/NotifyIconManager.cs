@@ -1,5 +1,6 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
+using SyncTrayzor.Localization;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
@@ -153,17 +154,13 @@ namespace SyncTrayzor.NotifyIcon
 
                     var messageParts = new List<string>();
 
-                    if (updatedCount == 1)
-                        messageParts.Add(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Singular);
-                    else if (updatedCount > 1)
-                        messageParts.Add(String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile_Plural, updatedCount));
+                    if (updatedCount > 0)
+                        messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile, updatedCount));
 
-                    if (deletedCount == 1)
-                        messageParts.Add(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile_Singular);
-                    else if (deletedCount > 1)
-                        messageParts.Add(String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile_Plural, deletedCount));
+                    if (deletedCount > 0)
+                        messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile, deletedCount));
 
-                    var text = String.Format("{0}: {1}", e.FolderId, String.Join("; ",messageParts));
+                    var text = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_Multiple, e.FolderId, messageParts);
 
                     this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, text, BalloonIcon.Info);
                 }

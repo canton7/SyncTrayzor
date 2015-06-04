@@ -59,9 +59,9 @@ namespace SyncTrayzor.Localization
                 value = this.Converter.Convert(value, targetType, parameter, culture);
 
             if (this.Key != null)
-                result = Localizer.Translate(this.Key, value);
+                result = Localizer.T(this.Key, value);
             else if (value is string)
-                result = Localizer.Translate((string)value);
+                result = Localizer.T((string)value);
             else
                 result = null;
 
@@ -88,13 +88,13 @@ namespace SyncTrayzor.Localization
                 if (values.Length < 1)
                     result = null;
                 else if (values[0] is string)
-                    result = Localizer.Translate((string)values[0], values.Skip(1).ToArray());
+                    result = Localizer.T((string)values[0], values.Skip(1).ToArray());
                 else
                     return null;
             }
             else
             {
-                result = Localizer.Translate(this.Key, values);
+                result = Localizer.T(this.Key, values);
             }
 
             return result;

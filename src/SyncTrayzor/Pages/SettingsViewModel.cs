@@ -69,7 +69,7 @@ namespace SyncTrayzor.Pages
 
         public SettingsViewModelValidator()
         {
-            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
+            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Localizer.T("SettingsView_Validation_NotShouldBeEmpty"));
             RuleFor(x => x.SyncThingAddress).Must(str =>
             {
                 // URI seems to think https://http://something is valid...
@@ -79,15 +79,15 @@ namespace SyncTrayzor.Pages
                 str = "https://" + str;
                 Uri uri;
                 return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString();
-            }).WithMessage(Localizer.Translate("SettingsView_Validation_InvalidUrl"));
+            }).WithMessage(Localizer.T("SettingsView_Validation_InvalidUrl"));
 
-            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
+            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.T("SettingsView_Validation_NotShouldBeEmpty"));
 
             RuleFor(x => x.SyncThingEnvironmentalVariables).Must(str =>
             {
                 EnvironmentalVariableCollection result;
                 return EnvironmentalVariablesParser.TryParse(str, out result);
-            }).WithMessage(Localizer.Translate("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat"));
+            }).WithMessage(Localizer.T("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat"));
         }
     }
 
