@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.SyncThing.EventWatcher;
+﻿using NLog;
+using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
     public class SyncThingTransferHistory : ISyncThingTransferHistory
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly SynchronizedEventDispatcher eventDispatcher;
 
@@ -88,6 +91,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                 {
                     created = true;
                     fileTransfer = new FileTransfer(folder, path, itemType, actionType);
+                    logger.Debug("Created file transfer: {0}", fileTransfer);
                     this.inProgressTransfers.Add(key, fileTransfer);
                 }
             }
@@ -99,11 +103,13 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
         private void ItemStarted(object sender, ItemStartedEventArgs e)
         {
+            logger.Debug("Item started. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
             this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item, e.ItemType, e.Action);
         }
 
         private void ItemFinished(object sender, ItemFinishedEventArgs e)
         {
+            logger.Debug("Item finished. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
             // It *should* be in the 'in progress transfers'...
             FileTransfer fileTransfer;
             lock (this.transfersLock)
@@ -112,6 +118,8 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                 fileTransfer = this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item, e.ItemType, e.Action);
                 fileTransfer.SetComplete(e.Error);
                 this.inProgressTransfers.Remove(key);
+
+                logger.Debug("File Transfer set to complete: {0}", fileTransfer);
 
                 this.completedTransfers.Enqueue(fileTransfer);
                 if (this.completedTransfers.Count > maxCompletedTransfers)
@@ -132,6 +140,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
         private void ItemDownloadProgressChanged(object sender, ItemDownloadProgressChangedEventArgs e)
         {
+            logger.Debug("Item progress changed. Folder: {0}, Item: {1}", e.Folder, e.Item);
             // If we didn't see the started event, tough. We don't have enough information to re-create it...
             var key = this.KeyForFileTransfer(e.Folder, e.Item);
             FileTransfer fileTransfer;
@@ -139,8 +148,10 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             {
                 if (!this.inProgressTransfers.TryGetValue(key, out fileTransfer))
                     return; // Nothing we can do...
+
+                fileTransfer.SetDownloadProgress(e.BytesDone, e.BytesTotal);
+                logger.Debug("File transfer progress changed: {0}", fileTransfer);
             }
-            fileTransfer.SetDownloadProgress(e.BytesDone, e.BytesTotal);
 
             this.OnTransferStateChanged(fileTransfer);
         }
