@@ -618,7 +618,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>{0:p:1 day|{} days} ago</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>{0:p:1 hour|{} hours} hour ago</value>
+    <value>{0:p:1 hour|{} hours} ago</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
     <value>Just now</value>
