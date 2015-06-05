@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.SyncThing;
@@ -132,8 +133,8 @@ namespace SyncTrayzor.Pages
         public void KillAllSyncthingProcesses()
         {
             if (this.windowManager.ShowMessageBox(
-                    Localizer.Translate("Dialog_ConfirmKillAllProcesses_Message"),
-                    Localizer.Translate("Dialog_ConfirmKillAllProcesses_Title"),
+                    Resources.Dialog_ConfirmKillAllProcesses_Message,
+                    Resources.Dialog_ConfirmKillAllProcesses_Title,
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 this.syncThingManager.KillAllSyncthingProcesses();
         }
@@ -173,8 +174,8 @@ namespace SyncTrayzor.Pages
         public void ShowExitedWithError()
         {
             this.windowManager.ShowMessageBox(
-                Localizer.Translate("Dialog_FailedToStartSyncthing_Message"),
-                Localizer.Translate("Dialog_FailedToStartSyncthing_Title"),
+                Resources.Dialog_FailedToStartSyncthing_Message,
+                Resources.Dialog_FailedToStartSyncthing_Title,
                 icon: MessageBoxImage.Error);
         }
 

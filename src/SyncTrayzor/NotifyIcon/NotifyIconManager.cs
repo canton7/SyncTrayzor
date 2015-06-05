@@ -1,12 +1,15 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
 using SyncTrayzor.Localization;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.SyncThing.TransferHistory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +22,7 @@ namespace SyncTrayzor.NotifyIcon
         bool MinimizeToTray { get; set; }
         bool CloseToTray { get; set; }
         bool ShowSynchronizedBalloon { get; set; }
+        bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         bool ShowDeviceConnectivityBalloons { get; set; }
 
         void EnsureIconVisible();
@@ -62,6 +66,7 @@ namespace SyncTrayzor.NotifyIcon
         }
 
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public NotifyIconManager(
@@ -97,24 +102,14 @@ namespace SyncTrayzor.NotifyIcon
             };
             this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
-            this.syncThingManager.Folders.SyncStateChanged += (o, e) =>
-            {
-                if (this.ShowSynchronizedBalloon &&
-                    DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
-                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime &&
-                    e.SyncState == FolderSyncState.Idle && e.PrevSyncState == FolderSyncState.Syncing)
-                {
-                    Application.Current.Dispatcher.CheckAccess(); // Double-check
-                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Title"), Localizer.Translate("TrayIcon_Balloon_FinishedSyncing_Message", e.Folder.FolderId), BalloonIcon.Info);
-                }
-            };
+            this.syncThingManager.TransferHistory.FolderSynchronizationFinished += this.FolderSynchronizationFinished;
 
             this.syncThingManager.DeviceConnected += (o, e) =>
             {
                 if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                 {
-                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_DeviceConnected_Title"), Localizer.Translate("TrayIcon_Balloon_DeviceConnected_Message", e.Device.Name), BalloonIcon.Info);
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
                 }
             };
 
@@ -123,9 +118,53 @@ namespace SyncTrayzor.NotifyIcon
                 if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                 {
-                    this.taskbarIcon.ShowBalloonTip(Localizer.Translate("TrayIcon_Balloon_DeviceDisconnected_Title"), Localizer.Translate("TrayIcon_Balloon_DeviceDisconnected_Message", e.Device.Name), BalloonIcon.Info);
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
                 }
             };
+        }
+
+        private void FolderSynchronizationFinished(object sender, FolderSynchronizationFinishedEventArgs e)
+        {
+            if (this.ShowSynchronizedBalloon)
+            {
+                if (e.FileTransfers.Count == 0)
+                {
+                    if (this.ShowSynchronizedBalloonEvenIfNothingDownloaded &&
+                        DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
+                        DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                    {
+                        this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
+                    }
+                }
+                else if (e.FileTransfers.Count == 1)
+                {
+                    var fileTransfer = e.FileTransfers[0];
+                    string msg;
+                    if (fileTransfer.ActionType == ItemChangedActionType.Update)
+                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                    else
+                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, msg, BalloonIcon.Info);
+                }
+                else
+                {
+                    var updatedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Update).Count();
+                    var deletedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Delete).Count();
+
+                    var messageParts = new List<string>();
+
+                    if (updatedCount > 0)
+                        messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile, updatedCount));
+
+                    if (deletedCount > 0)
+                        messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile, deletedCount));
+
+                    var text = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_Multiple, e.FolderId, messageParts);
+
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, text, BalloonIcon.Info);
+                }
+            }
         }
 
         private void SetShutdownMode()

@@ -8,6 +8,7 @@ using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;
@@ -25,6 +26,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Threading;
 
 namespace SyncTrayzor
@@ -93,6 +95,9 @@ namespace SyncTrayzor
             else if (!configuration.UseComputerCulture)
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
+            // WPF ignores the current culture by default - so we have to force it
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(Thread.CurrentThread.CurrentCulture.IetfLanguageTag)));
+
             var autostartProvider = this.Container.Get<IAutostartProvider>();
 #if DEBUG
             autostartProvider.IsEnabled = false;
@@ -124,10 +129,10 @@ namespace SyncTrayzor
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
-                { MessageBoxResult.Cancel, Localizer.Translate("Generic_Dialog_Cancel") },
-                { MessageBoxResult.No, Localizer.Translate("Generic_Dialog_No") },
-                { MessageBoxResult.OK, Localizer.Translate("Generic_Dialog_OK") },
-                { MessageBoxResult.Yes, Localizer.Translate("Generic_Dialog_Yes") },
+                { MessageBoxResult.Cancel, Resources.Generic_Dialog_Cancel },
+                { MessageBoxResult.No, Resources.Generic_Dialog_No },
+                { MessageBoxResult.OK, Resources.Generic_Dialog_OK },
+                { MessageBoxResult.Yes, Resources.Generic_Dialog_Yes },
             };
         }
 
@@ -170,18 +175,40 @@ namespace SyncTrayzor
             {
                 var windowManager = this.Container.Get<IWindowManager>();
 
-                var configurationException = e.Exception as ConfigurationException;
+                var couldNotFindSyncthingException = e.Exception as CouldNotFindSyncthingException;
+                if (couldNotFindSyncthingException != null)
+                {
+                    var msg = String.Format("Could not find syncthing.exe at {0}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
+                    "antivirus program quarantined it, restore it. If all else fails, download syncthing.exe from https://github.com/syncthing/syncthing/releases the put it " +
+                    "in this location.\n\nSyncTrayzor will now close.", couldNotFindSyncthingException.SyncthingPath);
+                    windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Don't "crash"
+                    e.Handled = true;
+                    this.Application.Shutdown();
+                }
+
+                var configurationException = e.Exception as BadConfigurationException;
                 if (configurationException != null)
                 {
-                    windowManager.ShowMessageBox(String.Format("Configuration Error: {0}", configurationException.Message), "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var inner = configurationException.InnerException.Message;
+                    if (configurationException.InnerException.InnerException != null)
+                        inner += ": " + configurationException.InnerException.InnerException.Message;
+
+                    var msg = String.Format("Failed to parse the configuration file at {0}.\n\n{1}\n\n" +
+                        "If you manually downgraded SyncTrayzor, note that this is not supported.\n\n" +
+                        "Please attempt to fix {0} by hand. If unsuccessful, please delete {0} and let SyncTrayzor re-create it.\n\n" +
+                        "SyncTrayzor will now close.", configurationException.ConfigurationFilePath, inner);
+                    windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Don't "crash"
                     e.Handled = true;
+                    this.Application.Shutdown();
                 }
-                else
-                {
-                    var vm = this.Container.Get<UnhandledExceptionViewModel>();
-                    vm.Exception = e.Exception;
-                    windowManager.ShowDialog(vm);
-                }
+
+                var vm = this.Container.Get<UnhandledExceptionViewModel>();
+                vm.Exception = e.Exception;
+                windowManager.ShowDialog(vm);
             }
             catch (Exception exception)
             {

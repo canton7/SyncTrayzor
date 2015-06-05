@@ -1,6 +1,7 @@
 using FluentValidation;
 using Stylet;
 using SyncTrayzor.Localization;
+using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.SyncThing;
@@ -69,7 +70,7 @@ namespace SyncTrayzor.Pages
 
         public SettingsViewModelValidator()
         {
-            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
+            RuleFor(x => x.SyncThingAddress).NotEmpty().WithMessage(Resources.SettingsView_Validation_NotShouldBeEmpty);
             RuleFor(x => x.SyncThingAddress).Must(str =>
             {
                 // URI seems to think https://http://something is valid...
@@ -79,15 +80,15 @@ namespace SyncTrayzor.Pages
                 str = "https://" + str;
                 Uri uri;
                 return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString();
-            }).WithMessage(Localizer.Translate("SettingsView_Validation_InvalidUrl"));
+            }).WithMessage(Resources.SettingsView_Validation_InvalidUrl);
 
-            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Localizer.Translate("SettingsView_Validation_NotShouldBeEmpty"));
+            RuleFor(x => x.SyncThingApiKey).NotEmpty().WithMessage(Resources.SettingsView_Validation_NotShouldBeEmpty);
 
             RuleFor(x => x.SyncThingEnvironmentalVariables).Must(str =>
             {
                 EnvironmentalVariableCollection result;
                 return EnvironmentalVariablesParser.TryParse(str, out result);
-            }).WithMessage(Localizer.Translate("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat"));
+            }).WithMessage(Resources.SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat);
         }
     }
 
@@ -104,6 +105,7 @@ namespace SyncTrayzor.Pages
 
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
+        public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
         public bool StartSyncThingAutomatically { get; set; }
@@ -153,6 +155,7 @@ namespace SyncTrayzor.Pages
 
             this.ShowTrayIconOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
+            this.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
             this.StartSyncThingAutomatically = configuration.StartSyncthingAutomatically;
@@ -202,6 +205,7 @@ namespace SyncTrayzor.Pages
 
             configuration.ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
+            configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             configuration.ShowDeviceConnectivityBalloons = this.ShowDeviceConnectivityBalloons;
 
             configuration.StartSyncthingAutomatically = this.StartSyncThingAutomatically;

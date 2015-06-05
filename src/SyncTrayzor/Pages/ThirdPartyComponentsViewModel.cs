@@ -105,6 +105,15 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "SmartFormat.NET",
+                    Description = "An extensible .NET replacement for String.Format",
+                    Homepage = "https://github.com/scottrippey/SmartFormat.NET",
+                    License = "MIT",
+                    Notes = "Handles fomatting in language strings",
+                    LicenseText = this.LoadLicense("SmartFormat.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "PropertyChanged.Fody",
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",

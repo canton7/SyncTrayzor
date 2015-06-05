@@ -74,14 +74,6 @@ You can turn off auto-updates in the Settings, but in that case you are responsi
 Usage information, details of your computer / network / syncthing setup / etc are not reported.
 
 
-What about Syncthing 0.11 beta?
--------------------------------
-
-The installer gives you the option of installing Syncthing 0.10 or Syncthing 0.11 beta.
-
-The portable version includes Syncthing 0.10. If you want to change this, replace `syncthing.exe` with a 0.11 build downloaded from the [Syncthing releases page](https://github.com/syncthing/syncthing/releases)
-
-
 What will SyncTrayzor do to Syncthing?
 --------------------------------------
 

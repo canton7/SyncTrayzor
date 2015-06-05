@@ -23,7 +23,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
         public async Task<ISyncThingApiClient> CreateCorrectApiClientAsync(Uri baseAddress, string apiKey, TimeSpan timeout, CancellationToken cancellationToken)
         {
             // This is a bit fugly - there's no way to determine which one we're talking to without trying a request and have it fail...
-            ISyncThingApiClient client = new SyncThingApiClientV0p10(baseAddress, apiKey);
+            ISyncThingApiClient client = new SyncThingApiClientV0p11(baseAddress, apiKey);
 
             // We abort because of the CancellationToken or because we take too long, or succeed
             var connectionAttemptsStarted = DateTime.UtcNow;
@@ -31,7 +31,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             {
                 try
                 {
-                    logger.Debug("Attempting to request API using version 0.10.x API client");
+                    logger.Debug("Attempting to request API using version 0.11.x API client");
                     await client.FetchVersionAsync();
                     logger.Debug("Success!");
                     break;
@@ -49,8 +49,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
                         throw;
 
                     // If we got a 404, then it's definitely communicating
-                    logger.Debug("404 with 0.10.x API client - defaulting to 0.11.x");
-                    client = new SyncThingApiClientV0p11(baseAddress, apiKey);
+                    logger.Debug("404 with 0.11.x API client - defaulting to 0.10.x");
+                    client = new SyncThingApiClientV0p10(baseAddress, apiKey);
                     break;
                 }
 

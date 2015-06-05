@@ -32,6 +32,15 @@
     <Setting Name="SyncthingConnectTimeoutSeconds" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">600</Value>
     </Setting>
+    <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;LogFilePath&gt;%EXEPATH%\logs&lt;/LogFilePath&gt;
+  &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
+  &lt;ConfigurationFileBackupPath&gt;%EXEPATH%\data\config-backups&lt;/ConfigurationFileBackupPath&gt;
+  &lt;CefCachePath&gt;%EXEPATH%\data\cef\cache&lt;/CefCachePath&gt;
+&lt;/PathConfiguration&gt;</Value>
+    </Setting>
     <Setting Name="DefaultUserConfiguration" Type="SyncTrayzor.Services.Config.Configuration" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="3"&gt;
@@ -40,6 +49,7 @@
   &lt;CloseToTray&gt;true&lt;/CloseToTray&gt;
   &lt;ShowSynchronizedBalloon&gt;true&lt;/ShowSynchronizedBalloon&gt;
   &lt;ShowDeviceConnectivityBalloons&gt;true&lt;/ShowDeviceConnectivityBalloons&gt;
+  &lt;ShowSynchronizedBalloonEvenIfNothingDownloaded&gt;false&lt;/ShowSynchronizedBalloonEvenIfNothingDownloaded&gt;
   &lt;SyncthingAddress&gt;localhost:8384&lt;/SyncthingAddress&gt;
   &lt;StartSyncthingAutomatically&gt;true&lt;/StartSyncthingAutomatically&gt;
   &lt;SyncthingEnvironmentalVariables /&gt;
@@ -56,15 +66,6 @@
   &lt;SyncthingPath&gt;%EXEPATH%\syncthing.exe&lt;/SyncthingPath&gt;
   &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
 &lt;/Configuration&gt;</Value>
-    </Setting>
-    <Setting Name="PathConfiguration" Type="SyncTrayzor.Services.Config.PathConfiguration" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PathConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;LogFilePath&gt;%EXEPATH%\logs&lt;/LogFilePath&gt;
-  &lt;ConfigurationFilePath&gt;%EXEPATH%\data\config.xml&lt;/ConfigurationFilePath&gt;
-  &lt;ConfigurationFileBackupPath&gt;%EXEPATH%\data\config-backups&lt;/ConfigurationFileBackupPath&gt;
-  &lt;CefCachePath&gt;%EXEPATH%\data\cef\cache&lt;/CefCachePath&gt;
-&lt;/PathConfiguration&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>
