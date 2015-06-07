@@ -208,6 +208,7 @@
     <Compile Include="SyncThing\EventWatcher\ItemChangedItemType.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="SyncThing\FreePortFinder.cs" />
     <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingDidNotStartCorrectlyException.cs" />

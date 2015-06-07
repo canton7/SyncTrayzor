@@ -32,6 +32,7 @@ namespace SyncTrayzor.SyncThing
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
+        Uri PreferredAddress { get; set; }
         Uri Address { get; set; }
         IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
         string SyncthingCustomHomeDir { get; set; }
@@ -71,6 +72,7 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly ISyncThingConnectionsWatcher connectionsWatcher;
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
+        private readonly IFreePortFinder freePortFinder;
         private CancellationTokenSource apiAbortCts;
 
         private DateTime _startedTime;
@@ -117,6 +119,7 @@ namespace SyncTrayzor.SyncThing
 
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
+        public Uri PreferredAddress { get; set; }
         public Uri Address { get; set; }
         public string SyncthingCustomHomeDir { get; set; }
         public IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
@@ -151,7 +154,8 @@ namespace SyncTrayzor.SyncThing
             ISyncThingProcessRunner processRunner,
             ISyncThingApiClientFactory apiClientFactory,
             ISyncThingEventWatcherFactory eventWatcherFactory,
-            ISyncThingConnectionsWatcherFactory connectionsWatcherFactory)
+            ISyncThingConnectionsWatcherFactory connectionsWatcherFactory,
+            IFreePortFinder freePortFinder)
         {
             this.StartedTime = DateTime.MinValue;
             this.LastConnectivityEventTime = DateTime.MinValue;
@@ -159,6 +163,7 @@ namespace SyncTrayzor.SyncThing
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
             this.apiClientFactory = apiClientFactory;
+            this.freePortFinder = freePortFinder;
 
             this.apiClient = new SynchronizedTransientWrapper<ISyncThingApiClient>(this.apiClientsLock);
 
@@ -340,6 +345,11 @@ namespace SyncTrayzor.SyncThing
 
         private async void ProcessStarting()
         {
+            var port = this.freePortFinder.FindFreePort(this.PreferredAddress.Port);
+            var uriBuilder = new UriBuilder(this.PreferredAddress);
+            uriBuilder.Port = port;
+            this.Address = uriBuilder.Uri;
+
             this.processRunner.ApiKey = this.ApiKey;
             this.processRunner.HostAddress = this.Address.ToString();
             this.processRunner.ExecutablePath = this.ExecutablePath;
