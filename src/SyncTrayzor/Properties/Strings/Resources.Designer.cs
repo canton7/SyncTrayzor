@@ -529,6 +529,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable hardware rendering. You will need to restart SyncTayzor for this to take effect.
+        /// </summary>
+        public static string SettingsView_DisableHardwareRendering {
+            get {
+                return ResourceManager.GetString("SettingsView_DisableHardwareRendering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimize to tray.
         /// </summary>
         public static string SettingsView_MinimizeToTray {

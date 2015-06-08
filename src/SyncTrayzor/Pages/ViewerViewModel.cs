@@ -87,14 +87,23 @@ namespace SyncTrayzor.Pages
 
         protected override void OnInitialActivate()
         {
+            var configuration = this.configurationProvider.Load();
+
             var settings = new CefSettings()
             {
                 RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
                 // We really only want to set the LocalStorage path, but we don't have that level of control....
                 CachePath = this.pathsProvider.CefCachePath,
             };
+            
             // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
             settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+
+            if (configuration.DisableHardwareRendering)
+            {
+                settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
+            }
 
             Cef.Initialize(settings);
         }

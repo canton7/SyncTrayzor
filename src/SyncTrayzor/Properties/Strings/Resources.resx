@@ -667,4 +667,7 @@ Full Path: {1}</value>
     <comment>{0}: Folder that finished syncing
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
   </data>
+  <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
+    <value>Disable hardware rendering. You will need to restart SyncTayzor for this to take effect</value>
+  </data>
 </root>

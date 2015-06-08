@@ -44,12 +44,17 @@
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions}" Content="{l:Loc SettingsView_AlertOnNewVersion}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ObfuscateDeviceIDs}" Content="{l:Loc SettingsView_ObfuscateDeviceIds}"/>
                             <Grid DockPanel.Dock="Top">
-                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding UseComputerCulture}"
+                                <CheckBox IsChecked="{Binding UseComputerCulture}"
                                           Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
                                     <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_UseComputerCulture}"/>
                                 </CheckBox>
                             </Grid>
-                            
+                            <Grid DockPanel.Dock="Top">
+                                <CheckBox IsChecked="{Binding DisableHardwareRendering}"
+                                          Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
+                                    <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_DisableHardwareRendering}"/>
+                                </CheckBox>
+                            </Grid>
                         </DockPanel>
                     </GroupBox>
                           

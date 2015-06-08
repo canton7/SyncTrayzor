@@ -102,6 +102,7 @@ namespace SyncTrayzor.Pages
         public bool NotifyOfNewVersions { get; set; }
         public bool ObfuscateDeviceIDs { get; set; }
         public bool UseComputerCulture { get; set; }
+        public bool DisableHardwareRendering { get; set; }
 
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool ShowSynchronizedBalloon { get; set; }
@@ -152,6 +153,7 @@ namespace SyncTrayzor.Pages
             this.NotifyOfNewVersions = configuration.NotifyOfNewVersions;
             this.ObfuscateDeviceIDs = configuration.ObfuscateDeviceIDs;
             this.UseComputerCulture = configuration.UseComputerCulture;
+            this.DisableHardwareRendering = configuration.DisableHardwareRendering;
 
             this.ShowTrayIconOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
             this.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
@@ -202,6 +204,7 @@ namespace SyncTrayzor.Pages
             configuration.NotifyOfNewVersions = this.NotifyOfNewVersions;
             configuration.ObfuscateDeviceIDs = this.ObfuscateDeviceIDs;
             configuration.UseComputerCulture = this.UseComputerCulture;
+            configuration.DisableHardwareRendering = this.DisableHardwareRendering;
 
             configuration.ShowTrayIconOnlyOnClose = this.ShowTrayIconOnlyOnClose;
             configuration.ShowSynchronizedBalloon = this.ShowSynchronizedBalloon;
