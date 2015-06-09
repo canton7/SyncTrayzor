@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
+using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;

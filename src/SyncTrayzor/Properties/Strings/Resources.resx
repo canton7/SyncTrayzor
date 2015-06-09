@@ -238,9 +238,6 @@
     <value>Minimize to tray</value>
     <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
   </data>
-  <data name="SettingsView_MustRestartSyncthingWarning" xml:space="preserve">
-    <value>You must restart Syncthing for changes in these settings to take effect</value>
-  </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
     <value>Obfuscate device IDs in the log view</value>
   </data>
@@ -531,7 +528,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Use my computer's language, where available. You will need to restart SyncTrayzor for this to take effect</value>
+    <value>Use my computer's language, where available</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
     <value>_View</value>
@@ -668,6 +665,21 @@ Full Path: {1}</value>
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
   </data>
   <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
-    <value>Disable hardware rendering. You will need to restart SyncTayzor for this to take effect</value>
+    <value>Disable hardware rendering</value>
+  </data>
+  <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
+    <value>API key should contain only a-z A-Z 0-9 and -</value>
+  </data>
+  <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
+    <value>You must restart Syncthing for these settings to take affect.\n\nDo you want to restart Syncthing now?</value>
+  </data>
+  <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
+    <value>Restart Syncthing?</value>
+  </data>
+  <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
+    <value>You must restart SyncTrayzor for these settings to take effect.\n\nDo you want to restart SyncTrayzor now?</value>
+  </data>
+  <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
+    <value>Restart SyncTrayzor?</value>
   </data>
 </root>

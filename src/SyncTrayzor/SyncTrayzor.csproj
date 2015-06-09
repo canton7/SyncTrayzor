@@ -135,6 +135,11 @@
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
+    <Compile Include="Pages\Settings\EnvironmentalVariableParser.cs" />
+    <Compile Include="Pages\Settings\SettingItem.cs" />
+    <Compile Include="Pages\Settings\SyncThingAddressValidator.cs" />
+    <Compile Include="Pages\Settings\SyncThingApiKeyValidator.cs" />
+    <Compile Include="Pages\Settings\SyncThingEnvironmentalVariablesValidator.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -220,7 +225,7 @@
     <Compile Include="Pages\NewVersionAlertToastViewModel.cs" />
     <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
-    <Compile Include="Pages\SettingsViewModel.cs" />
+    <Compile Include="Pages\Settings\SettingsViewModel.cs" />
     <Compile Include="Pages\ThirdPartyComponentsViewModel.cs" />
     <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
     <Compile Include="Properties\Strings\Resources.de.Designer.cs">
@@ -418,7 +423,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\SettingsView.xaml">
+    <Page Include="Pages\Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -529,7 +529,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Disable hardware rendering. You will need to restart SyncTayzor for this to take effect.
+        ///   Looks up a localized string similar to Disable hardware rendering.
         /// </summary>
         public static string SettingsView_DisableHardwareRendering {
             get {
@@ -543,15 +543,6 @@ namespace SyncTrayzor.Properties.Strings {
         public static string SettingsView_MinimizeToTray {
             get {
                 return ResourceManager.GetString("SettingsView_MinimizeToTray", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You must restart Syncthing for changes in these settings to take effect.
-        /// </summary>
-        public static string SettingsView_MustRestartSyncthingWarning {
-            get {
-                return ResourceManager.GetString("SettingsView_MustRestartSyncthingWarning", resourceCulture);
             }
         }
         
@@ -570,6 +561,42 @@ namespace SyncTrayzor.Properties.Strings {
         public static string SettingsView_OnlyShowTrayIconOnClose {
             get {
                 return ResourceManager.GetString("SettingsView_OnlyShowTrayIconOnClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must restart Syncthing for these settings to take affect.\n\nDo you want to restart Syncthing now?.
+        /// </summary>
+        public static string SettingsView_RestartSyncthing_Message {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncthing_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart Syncthing?.
+        /// </summary>
+        public static string SettingsView_RestartSyncthing_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncthing_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must restart SyncTrayzor for these settings to take effect.\n\nDo you want to restart SyncTrayzor now?.
+        /// </summary>
+        public static string SettingsView_RestartSyncTrayzor_Message {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncTrayzor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart SyncTrayzor?.
+        /// </summary>
+        public static string SettingsView_RestartSyncTrayzor_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncTrayzor_Title", resourceCulture);
             }
         }
         
@@ -790,11 +817,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect.
+        ///   Looks up a localized string similar to Use my computer&apos;s language, where available.
         /// </summary>
         public static string SettingsView_UseComputerCulture {
             get {
                 return ResourceManager.GetString("SettingsView_UseComputerCulture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to API key should contain only a-z A-Z 0-9 and -.
+        /// </summary>
+        public static string SettingsView_Validation_ApiKeyInvalidChars {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_ApiKeyInvalidChars", resourceCulture);
             }
         }
         

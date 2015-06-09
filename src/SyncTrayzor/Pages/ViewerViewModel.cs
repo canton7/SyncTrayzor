@@ -91,7 +91,7 @@ namespace SyncTrayzor.Pages
 
             var settings = new CefSettings()
             {
-                RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
+                RemoteDebuggingPort = Properties.Settings.Default.CefRemoteDebuggingPort,
                 // We really only want to set the LocalStorage path, but we don't have that level of control....
                 CachePath = this.pathsProvider.CefCachePath,
             };
