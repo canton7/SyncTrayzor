@@ -167,6 +167,13 @@ namespace SyncTrayzor
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("An unhandled exception occurred", e.Exception);
 
+            // It's nicer if we try killing the syncthing process, but if we can't, carry on
+            try
+            {
+                this.Container.Get<ISyncThingManager>().Kill();
+            }
+            catch { }
+
             // If we're shutting down, we're not going to be able to display an error dialog....
             // We've logged it. Nothing else we can do.
             if (this.exiting)
