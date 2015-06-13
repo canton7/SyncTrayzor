@@ -160,6 +160,10 @@ namespace SyncTrayzor
                 updatedVm.Version = this.Container.Get<IAssemblyProvider>().Version;
                 this.Container.Get<INotifyIconManager>().ShowBalloonAsync(updatedVm, timeout: 5000); 
             }
+
+            var logger = LogManager.GetCurrentClassLogger();
+            var assembly = this.Container.Get<IAssemblyProvider>();
+            logger.Debug("SyncTrazor version {0} ({1}) started at {2}", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location);
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
