@@ -220,7 +220,10 @@ namespace SyncTrayzor.Pages
         bool IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, IResponse response)
         {
             var uri = new Uri(request.Url);
-            if ((uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
+            // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
+            // the new address (Which we do when Syncthing hits the 'running' State).
+            // Therefore only open external browsers if Syncthing is actually running
+            if (this.syncThingManager.State == SyncThingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
             {
                 this.processStartProvider.StartDetached(request.Url);
                 return true;
