@@ -97,5 +97,12 @@ namespace SyncTrayzor.SyncThing.ApiClient
             logger.Debug("Restarting Syncthing");
             return this.api.RestartAsync();
         }
+
+        public async Task<FolderStatus> FetchFolderStatusAsync(string folderId, CancellationToken cancellationToken)
+        {
+            var folderStatus = await this.api.FetchFolderStatusAsync(folderId, cancellationToken);
+            logger.Debug("Fetched folder status for folder {0}: {1}", folderId, folderStatus);
+            return folderStatus;
+        }
     }
 }

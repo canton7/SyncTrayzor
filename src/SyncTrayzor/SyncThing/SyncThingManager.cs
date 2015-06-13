@@ -175,7 +175,7 @@ namespace SyncTrayzor.SyncThing
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
             this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
-            this._transferHistory = new SyncThingTransferHistory(this.eventWatcher);
+            this._transferHistory = new SyncThingTransferHistory(this.eventWatcher, this._folders);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);

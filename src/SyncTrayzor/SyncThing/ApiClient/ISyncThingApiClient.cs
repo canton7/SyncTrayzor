@@ -19,5 +19,6 @@ namespace SyncTrayzor.SyncThing.ApiClient
         Task<SyncthingVersion> FetchVersionAsync();
         Task<Ignores> FetchIgnoresAsync(string folderId);
         Task RestartAsync();
+        Task<FolderStatus> FetchFolderStatusAsync(string folderId, CancellationToken cancellationToken);
     }
 }

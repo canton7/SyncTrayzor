@@ -42,5 +42,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         [Post("/rest/system/restart")]
         Task RestartAsync();
+
+        [Get("/rest/db/status")]
+        Task<FolderStatus> FetchFolderStatusAsync(string folder, CancellationToken cancellationToken);
     }
 }

@@ -20,6 +20,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        event EventHandler EventsSkipped;
     }
 
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
@@ -47,6 +48,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        public event EventHandler EventsSkipped;
 
         public SyncThingEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
             : base(TimeSpan.Zero, TimeSpan.FromSeconds(10))
@@ -79,11 +81,22 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
             logger.Debug("Received {0} events", events.Count);
 
+            bool eventsSkipped = false;
+
+            // We receive events in ascending ID order
             foreach (var evt in events)
             {
-                this.lastEventId = Math.Max(this.lastEventId, evt.Id);
+                if (this.lastEventId > 0 && (evt.Id - this.lastEventId) != 1)
+                    eventsSkipped = true;
+                this.lastEventId = evt.Id;
                 logger.Debug(evt);
                 evt.Visit(this);
+            }
+
+            if (eventsSkipped)
+            {
+                logger.Debug("Events were skipped");
+                this.OnEventsSkipped();
             }
         }
 
@@ -136,6 +149,13 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             var handler = this.DeviceDisconnected;
             if (handler != null)
                 handler(this, new DeviceDisconnectedEventArgs(deviceId, error));
+        }
+
+        private void OnEventsSkipped()
+        {
+            var handler = this.EventsSkipped;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
         #region IEventVisitor

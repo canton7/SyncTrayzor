@@ -25,6 +25,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly ISyncThingEventWatcher eventWatcher;
+        private readonly ISyncThingFolderManager folderManager;
         private readonly SynchronizedEventDispatcher eventDispatcher;
 
         private const int maxCompletedTransfers = 100;
@@ -67,16 +68,20 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             }
         }
 
-        public SyncThingTransferHistory(ISyncThingEventWatcher eventWatcher)
+        public SyncThingTransferHistory(ISyncThingEventWatcher eventWatcher, ISyncThingFolderManager folderManager)
         {
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
 
             this.eventWatcher = eventWatcher;
+            this.folderManager = folderManager;
 
             this.eventWatcher.ItemStarted += this.ItemStarted;
             this.eventWatcher.ItemFinished += this.ItemFinished;
             this.eventWatcher.ItemDownloadProgressChanged += this.ItemDownloadProgressChanged;
-            this.eventWatcher.SyncStateChanged += this.SyncStateChanged;
+
+            // We can't use the EventWatcher to watch for folder sync state change events: events could be skipped.
+            // The folder manager knows how to listen to skipped event notifications, and refresh the folder states appropriately
+            this.folderManager.SyncStateChanged += this.SyncStateChanged;
         }
 
         private FileTransfer FetchOrInsertInProgressFileTransfer(string folder, string path, ItemChangedItemType itemType, ItemChangedActionType actionType)
@@ -164,8 +169,10 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             this.OnTransferStateChanged(fileTransfer);
         }
 
-        private void SyncStateChanged(object sender, SyncStateChangedEventArgs e)
+        private void SyncStateChanged(object sender, FolderSyncStateChangeEventArgs e)
         {
+            var folderId = e.Folder.FolderId;
+
             if (e.PrevSyncState == FolderSyncState.Syncing)
             {
                 List<FileTransfer> transferredList = null;
@@ -175,14 +182,14 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                 {
                     // Syncthing may not have told us that a file has completed, because it can forget events.
                     // Therefore mark everything in this folder as having completed
-                    completedFileTransfers = this.inProgressTransfers.Where(x => x.Key.Folder == e.FolderId).Select(x => x.Value).ToList();
+                    completedFileTransfers = this.inProgressTransfers.Where(x => x.Key.Folder == folderId).Select(x => x.Value).ToList();
                     foreach (var completedFileTransfer in completedFileTransfers)
                     {
                         this.CompleteFileTransfer(completedFileTransfer, error: null);
                     }
 
-                    if (this.recentlySynchronized.TryGetValue(e.FolderId, out transferredList))
-                        this.recentlySynchronized.Remove(e.FolderId);
+                    if (this.recentlySynchronized.TryGetValue(folderId, out transferredList))
+                        this.recentlySynchronized.Remove(folderId);
                 }
 
                 foreach (var fileTransfer in completedFileTransfers)
@@ -190,7 +197,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                     this.OnTransferStateChanged(fileTransfer);
                     this.OnTransferCompleted(fileTransfer);
                 }
-                this.OnFolderSynchronizationFinished(e.FolderId, transferredList ?? new List<FileTransfer>());
+                this.OnFolderSynchronizationFinished(folderId, transferredList ?? new List<FileTransfer>());
             }
         }
 
