@@ -671,13 +671,17 @@ Full Path: {1}</value>
     <value>API key should contain only a-z A-Z 0-9 and -</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
-    <value>You must restart Syncthing for these settings to take affect.\n\nDo you want to restart Syncthing now?</value>
+    <value>You must restart Syncthing for these settings to take effect.
+
+Do you want to restart Syncthing now?</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
     <value>Restart Syncthing?</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
-    <value>You must restart SyncTrayzor for these settings to take effect.\n\nDo you want to restart SyncTrayzor now?</value>
+    <value>You must restart SyncTrayzor for these settings to take effect.
+
+Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
     <value>Restart SyncTrayzor?</value>
