@@ -184,8 +184,13 @@ namespace SyncTrayzor.Pages
 
         private void TransferCompleted(object sender, FileTransferChangedEventArgs e)
         {
-            var transferVm = this.InProgressTransfers.First(x => x.FileTransfer == e.FileTransfer);
-            this.InProgressTransfers.Remove(transferVm);
+            var transferVm = this.InProgressTransfers.FirstOrDefault(x => x.FileTransfer == e.FileTransfer);
+            // Apparently we can get a completed event without a started event? 
+            if (transferVm != null)
+                this.InProgressTransfers.Remove(transferVm);
+            else
+                transferVm = new FileTransferViewModel(e.FileTransfer);
+
             this.CompletedTransfers.Insert(0, transferVm);
             transferVm.UpdateState();
         }
