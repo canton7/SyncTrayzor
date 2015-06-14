@@ -648,10 +648,10 @@ Full Path: {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was deleted</comment>
   </data>
-  <data name="TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile" xml:space="preserve">
-    <value>{0}: Downloaded {1}</value>
+  <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile" xml:space="preserve">
+    <value>{0}: Updated {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
-{1}: File that was downloaded</comment>
+{1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
     <value>Updated {0:p:1 file|{} files}</value>

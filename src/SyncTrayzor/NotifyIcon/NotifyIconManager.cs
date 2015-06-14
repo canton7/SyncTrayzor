@@ -141,7 +141,7 @@ namespace SyncTrayzor.NotifyIcon
                     var fileTransfer = e.FileTransfers[0];
                     string msg;
                     if (fileTransfer.ActionType == ItemChangedActionType.Update)
-                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
                     else
                         msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
 
