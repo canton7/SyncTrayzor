@@ -1,5 +1,6 @@
 ﻿using NLog;
 using SyncTrayzor.SyncThing.ApiClient;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +28,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
+        private readonly TaskFactory taskFactory = new TaskFactory(new LimitedConcurrencyTaskScheduler(1));
         private ISyncThingApiClient apiClient;
         private static readonly Dictionary<string, ItemChangedActionType> actionTypeMapping = new Dictionary<string, ItemChangedActionType>()
         {
@@ -81,23 +83,39 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
             logger.Debug("Received {0} events", events.Count);
 
-            bool eventsSkipped = false;
+            // Need to synchronously update the lastEventId
+            var oldLastEventId = this.lastEventId;
+            this.lastEventId = events[events.Count - 1].Id;
 
-            // We receive events in ascending ID order
-            foreach (var evt in events)
-            {
-                if (this.lastEventId > 0 && (evt.Id - this.lastEventId) != 1)
-                    eventsSkipped = true;
-                this.lastEventId = evt.Id;
-                logger.Debug(evt);
-                evt.Visit(this);
-            }
+            this.ProcessEvents(oldLastEventId, events);
+        }
 
-            if (eventsSkipped)
+        private async void ProcessEvents(int startingEventId, List<Event> events)
+        {
+            // Shove off the processing to another thread - means we can get back to polling quicker
+            // However the task factory we use has a limited concurrency level of 1, so we won't process events out-of-order
+
+            // Await needed to re-throw any exceptions (which will hit the dispatcher)
+            await this.taskFactory.StartNew(() =>
             {
-                logger.Debug("Events were skipped");
-                this.OnEventsSkipped();
-            }
+                bool eventsSkipped = false;
+
+                // We receive events in ascending ID order
+                foreach (var evt in events)
+                {
+                    if (startingEventId > 0 && (evt.Id - startingEventId) != 1)
+                        eventsSkipped = true;
+                    startingEventId = evt.Id;
+                    logger.Debug(evt);
+                    evt.Visit(this);
+                }
+
+                if (eventsSkipped)
+                {
+                    logger.Debug("Events were skipped");
+                    this.OnEventsSkipped();
+                }
+            });
         }
 
         private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)

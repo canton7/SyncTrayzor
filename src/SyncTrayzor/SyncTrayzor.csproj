@@ -317,6 +317,7 @@
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\FormatUtils.cs" />
+    <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\PathEx.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
