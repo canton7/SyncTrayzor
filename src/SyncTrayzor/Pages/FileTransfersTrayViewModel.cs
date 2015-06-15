@@ -45,7 +45,6 @@ namespace SyncTrayzor.Pages
         }
 
         public string ProgressString { get; private set; }
-        public bool IsStarting { get; private set; }
         public float ProgressPercent { get; private set; }
 
         public FileTransferViewModel(FileTransfer fileTransfer)
@@ -73,7 +72,6 @@ namespace SyncTrayzor.Pages
             {
                 case FileTransferStatus.Started:
                     this.ProgressString = Resources.FileTransfersTrayView_Starting;
-                    this.IsStarting = true;
                     this.ProgressPercent = 0;
                     break;
 
@@ -92,12 +90,12 @@ namespace SyncTrayzor.Pages
                             FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
                     }
                     
-                    this.IsStarting = false;
                     this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / (float)this.FileTransfer.TotalBytes) * 100;
                     break;
 
                 case FileTransferStatus.Completed:
-                    this.IsStarting = false;
+                    this.ProgressPercent = 100;
+                    this.ProgressString = null;
                     break;
             }
 
@@ -156,8 +154,7 @@ namespace SyncTrayzor.Pages
                 this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTranser));
             }
 
-            this.syncThingManager.TransferHistory.TransferStarted += this.TransferStarted;
-            this.syncThingManager.TransferHistory.TransferCompleted += this.TransferCompleted;
+            // We start caring about samples when they're either finished, or have a progress update
             this.syncThingManager.TransferHistory.TransferStateChanged += this.TransferStateChanged;
 
             this.UpdateConnectionStats(this.syncThingManager.TotalConnectionStats);
@@ -167,8 +164,6 @@ namespace SyncTrayzor.Pages
 
         protected override void OnDeactivate()
         {
-            this.syncThingManager.TransferHistory.TransferStarted -= this.TransferStarted;
-            this.syncThingManager.TransferHistory.TransferCompleted -= this.TransferCompleted;
             this.syncThingManager.TransferHistory.TransferStateChanged -= this.TransferStateChanged;
 
             this.syncThingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
@@ -177,29 +172,28 @@ namespace SyncTrayzor.Pages
             this.InProgressTransfers.Clear();
         }
 
-        private void TransferStarted(object sender, FileTransferChangedEventArgs e)
-        {
-            this.InProgressTransfers.Insert(0, new FileTransferViewModel(e.FileTransfer));
-        }
-
-        private void TransferCompleted(object sender, FileTransferChangedEventArgs e)
-        {
-            var transferVm = this.InProgressTransfers.FirstOrDefault(x => x.FileTransfer == e.FileTransfer);
-            // Apparently we can get a completed event without a started event? 
-            if (transferVm != null)
-                this.InProgressTransfers.Remove(transferVm);
-            else
-                transferVm = new FileTransferViewModel(e.FileTransfer);
-
-            this.CompletedTransfers.Insert(0, transferVm);
-            transferVm.UpdateState();
-        }
-
         private void TransferStateChanged(object sender, FileTransferChangedEventArgs e)
         {
             var transferVm = this.InProgressTransfers.FirstOrDefault(x => x.FileTransfer == e.FileTransfer);
-            if (transferVm != null)
+            if (transferVm == null)
+            {
+                transferVm = new FileTransferViewModel(e.FileTransfer);
+
+                if (e.FileTransfer.Status == FileTransferStatus.Completed)
+                    this.CompletedTransfers.Insert(0, transferVm);
+                else
+                    this.InProgressTransfers.Insert(0, transferVm);
+            }
+            else
+            {
                 transferVm.UpdateState();
+
+                if (e.FileTransfer.Status == FileTransferStatus.Completed)
+                {
+                    this.InProgressTransfers.Remove(transferVm);
+                    this.CompletedTransfers.Insert(0, transferVm);
+                }
+            }
         }
 
         private void TotalConnectionStatsChanged(object sender, ConnectionStatsChangedEventArgs e)
