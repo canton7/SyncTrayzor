@@ -41,7 +41,7 @@ namespace SyncTrayzor.Utils
                 if (this.delegatesQueuedOrRunning < this.maxDegreeOfParallelism)
                 {
                     ++this.delegatesQueuedOrRunning;
-                    NotifyThreadPoolOfPendingWork();
+                    this.NotifyThreadPoolOfPendingWork();
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace SyncTrayzor.Utils
             if (taskWasPreviouslyQueued)
             {
                 // Try to run the task.  
-                if (TryDequeue(task))
+                if (this.TryDequeue(task))
                     return base.TryExecuteTask(task);
                 else
                     return false;
