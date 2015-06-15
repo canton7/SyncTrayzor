@@ -42,7 +42,6 @@ syncthing.exe
 *.gjq
 *.tmp
 Coverage
-RefitStubs.cs
 SyncTrayzorPortable
 *.pfx
 *.pvk
