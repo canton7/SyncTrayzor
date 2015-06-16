@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ namespace SyncTrayzor.SyncThing.ApiClient
 {
     public class StartupCompleteEvent : Event
     {
+        [JsonProperty("myID")]
+        public string MyID { get; set; }
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);
