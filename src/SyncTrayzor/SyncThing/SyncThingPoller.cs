@@ -76,39 +76,14 @@ namespace SyncTrayzor.SyncThing
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    bool errored = false;
-
-                    try
+                    bool errored = await this.DoWithErrorHandlingAsync(async () =>
                     {
                         await this.PollAsync(cancellationToken);
                         cancellationToken.ThrowIfCancellationRequested();
 
                         if (this.pollingInterval.Ticks > 0)
                             await Task.Delay(this.pollingInterval, cancellationToken);
-                    }
-                    catch (HttpRequestException)
-                    {
-                        errored = true;
-                    }
-                    catch (IOException)
-                    {
-                        // Socket forcibly closed. Could be a restart, could be a termination. We'll have to continue and quit if we're stopped
-                        errored = true;
-                    }
-                    catch (OperationCanceledException e)
-                    {
-                        // We can get cancels from tokens other than ours...
-                        // If it was ours, then the while loop will abort shortly
-                        if (e.CancellationToken != cancellationToken)
-                            errored = true;
-                    }
-                    catch (Exception e)
-                    {
-                        // Anything else?
-                        // We can't abort, as then the exception will be lost. So log it, and keep going
-                        logger.Error("Unexpected exception while polling", e);
-                        errored = true;
-                    }
+                    }, cancellationToken);
 
                     if (errored)
                     {
@@ -125,6 +100,41 @@ namespace SyncTrayzor.SyncThing
             {
                 this.OnStop();
             }
+        }
+
+        protected async Task<bool> DoWithErrorHandlingAsync(Func<Task> action, CancellationToken cancellationToken)
+        {
+            bool errored = false;
+
+            try
+            {
+                await action();
+            }
+            catch (HttpRequestException)
+            {
+                errored = true;
+            }
+            catch (IOException)
+            {
+                // Socket forcibly closed. Could be a restart, could be a termination. We'll have to continue and quit if we're stopped
+                errored = true;
+            }
+            catch (OperationCanceledException e)
+            {
+                // We can get cancels from tokens other than ours...
+                // If it was ours, then the while loop will abort shortly
+                if (e.CancellationToken != cancellationToken)
+                    errored = true;
+            }
+            catch (Exception e)
+            {
+                // Anything else?
+                // We can't abort, as then the exception will be lost. So log it, and keep going
+                logger.Error("Unexpected exception while polling", e);
+                errored = true;
+            }
+
+            return errored;
         }
 
         protected virtual void OnStart() { }

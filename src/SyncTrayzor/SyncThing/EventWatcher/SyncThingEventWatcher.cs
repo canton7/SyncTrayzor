@@ -87,35 +87,38 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             var oldLastEventId = this.lastEventId;
             this.lastEventId = events[events.Count - 1].Id;
 
-            this.ProcessEvents(oldLastEventId, events);
+            this.ProcessEvents(oldLastEventId, events, cancellationToken);
         }
 
-        private async void ProcessEvents(int startingEventId, List<Event> events)
+        private async void ProcessEvents(int startingEventId, List<Event> events, CancellationToken cancellationToken)
         {
             // Shove off the processing to another thread - means we can get back to polling quicker
             // However the task factory we use has a limited concurrency level of 1, so we won't process events out-of-order
 
-            // Await needed to re-throw any exceptions (which will hit the dispatcher)
-            await this.taskFactory.StartNew(() =>
+            // Await needed to throw unhandled exceptions (if there do happen to be any) back to the dispatcher
+            await this.DoWithErrorHandlingAsync(() =>
             {
-                bool eventsSkipped = false;
-
-                // We receive events in ascending ID order
-                foreach (var evt in events)
+                return this.taskFactory.StartNew(() =>
                 {
-                    if (startingEventId > 0 && (evt.Id - startingEventId) != 1)
-                        eventsSkipped = true;
-                    startingEventId = evt.Id;
-                    logger.Debug(evt);
-                    evt.Visit(this);
-                }
+                    bool eventsSkipped = false;
 
-                if (eventsSkipped)
-                {
-                    logger.Debug("Events were skipped");
-                    this.OnEventsSkipped();
-                }
-            });
+                    // We receive events in ascending ID order
+                    foreach (var evt in events)
+                    {
+                        if (startingEventId > 0 && (evt.Id - startingEventId) != 1)
+                            eventsSkipped = true;
+                        startingEventId = evt.Id;
+                        logger.Debug(evt);
+                        evt.Visit(this);
+                    }
+
+                    if (eventsSkipped)
+                    {
+                        logger.Debug("Events were skipped");
+                        this.OnEventsSkipped();
+                    }
+                });
+            }, cancellationToken);
         }
 
         private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)
