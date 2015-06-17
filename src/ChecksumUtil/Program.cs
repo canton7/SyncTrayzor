@@ -40,6 +40,7 @@ namespace ChecksumUtil
             catch (Exception e)
             {
                 Console.WriteLine("Error: {0}", e.Message);
+                Console.Write(e.StackTrace);
                 Environment.Exit(1);
             }
         }

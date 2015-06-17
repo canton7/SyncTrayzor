@@ -44,7 +44,11 @@ namespace SyncTrayzor.Utils
             {
                 while (checksum == null)
                 {
-                    var line = checksumFileReader.ReadLine().Trim();
+                    var line = checksumFileReader.ReadLine();
+                    if (line == null)
+                        break;
+
+                    line = line.Trim();
                     var parts = line.Split(new[] { ' ', '\t' }, 2, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length != 2)
                         throw new ArgumentException("Invalid format of input file");

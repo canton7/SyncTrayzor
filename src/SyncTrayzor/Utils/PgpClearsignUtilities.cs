@@ -86,9 +86,13 @@ namespace SyncTrayzor.Utils
             }
 
             // Strip the trailing newline if set...
-            cleartextStream.Seek(-1, SeekOrigin.End);
+            cleartextStream.Seek(-2, SeekOrigin.End);
+            int count = 0;
+            if (cleartextStream.ReadByte() == '\r')
+                count++;
             if (cleartextStream.ReadByte() == '\n')
-                cleartextStream.SetLength(cleartextStream.Length - 1);
+                count++;
+            cleartextStream.SetLength(cleartextStream.Length - count);
 
             cleartextStream.Position = 0;
 

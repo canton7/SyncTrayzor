@@ -16,6 +16,10 @@ PORTABLE_DIR = 'portable'
 
 SLN = 'src/SyncTrayzor.sln'
 
+CHECKSUM_UTIL_CSPROJ = 'src/ChecksumUtil/ChecksumUtil.csproj'
+CHECKSUM_UTIL_EXE = 'bin/ChecksumUtil/Release/ChecksumUtil.exe'
+SYNCTHING_RELEASES_CERT = 'security/syncthing_releases_cert.asc'
+
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
 PORTABLE_SYNCTHING_VERSION = '0.11'
@@ -42,8 +46,12 @@ class ArchDirConfig
     @syncthing_binaries = { '0.11' => 'syncthing.exe' }
   end
 
+  def sha1sum_download_uri(version)
+    "https://github.com/syncthing/syncthing/releases/download/v#{version}/sha1sum.txt.asc"
+  end
+
   def download_uri(version)
-  	return "https://github.com/syncthing/syncthing/releases/download/v#{version}/syncthing-windows-#{@github_arch}-v#{version}.zip"
+  	"https://github.com/syncthing/syncthing/releases/download/v#{version}/syncthing-windows-#{@github_arch}-v#{version}.zip"
   end
 end
 
@@ -59,24 +67,32 @@ def ensure_7zip
   end
 end
 
+def build(sln, platform)
+  cmd = "\"#{MSBUILD}\" \"#{sln}\" /t:Clean;Rebuild /p:Configuration=#{CONFIG};Platform=#{platform}"
+  if MSBUILD_LOGGER
+    cmd << " /logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
+  else
+    cmd << " /verbosity:quiet"
+  end
+  
+  sh cmd
+end
+
 namespace :build do
   ARCH_CONFIG.each do |arch_config|
     desc "Build the project (#{arch_config.arch})"
     task arch_config.arch do
-      cmd = "\"#{MSBUILD}\" \"#{SLN}\" /t:Clean;Rebuild /p:Configuration=#{CONFIG};Platform=#{arch_config.arch}"
-      if MSBUILD_LOGGER
-        cmd << " /logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
-      else
-        cmd << " /verbosity:quiet"
-      end
-      
-      sh cmd
+      build(SLN, arch_config.arch)
     end
   end
 end
 
 desc 'Build both 64-bit and 32-bit binaries'
 task :build => ARCH_CONFIG.map{ |x| :"build:#{x.arch}" }
+
+task :"build-checksum-util" do
+  build(CHECKSUM_UTIL_CSPROJ, 'AnyCPU')
+end
 
 namespace :installer do
   ARCH_CONFIG.each do |arch_config|
@@ -233,18 +249,27 @@ end
 namespace :"download-syncthing" do
   ARCH_CONFIG.each do |arch_config|
     desc "Download syncthing (#{arch_config.arch})"
-    task arch_config.arch, [:version] do |t, args|
+    task arch_config.arch, [:version]  => [:"build-checksum-util"] do |t, args|
       ensure_7zip
 
       Dir.mktmpdir do |tmp|
-        File.open(File.join(tmp, 'syncthing.zip'), 'wb') do |outfile|
+        download_file = File.join(tmp, File.basename(arch_config.download_uri(args[:version])))
+        File.open(download_file, 'wb') do |outfile|
           open(arch_config.download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
             outfile.write(infile.read)
           end
         end
 
+        File.open(File.join(tmp, 'sha1sum.txt.asc.'), 'w') do |outfile|
+          open(arch_config.sha1sum_download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
+            outfile.write(infile.read)
+          end
+        end
+
+        sh CHECKSUM_UTIL_EXE, 'verify', File.join(tmp, 'sha1sum.txt.asc'), SYNCTHING_RELEASES_CERT, download_file
+
         Dir.chdir(tmp) do
-          sh %Q{"#{SZIP}" e syncthing.zip}
+          sh %Q{"#{SZIP}" e #{File.basename(download_file)}}
         end
 
         cp File.join(tmp, 'syncthing.exe'), File.join(arch_config.installer_dir, 'syncthing.exe')
