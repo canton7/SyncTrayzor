@@ -314,7 +314,6 @@
     <Compile Include="SyncThing\TransferHistory\FolderSynchronizationFinishedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\SyncThingTransferHistory.cs" />
     <Compile Include="SyncThing\TransientWrapper.cs" />
-    <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
     <Compile Include="Utils\ChromiumWebBrowserExtensions.cs" />
@@ -353,6 +352,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="..\..\security\synctrayzor_releases_cert.asc">
+      <Link>Resources\synctrayzor_releases_cert.asc</Link>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -391,7 +393,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.sk.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SyncTrayzorCA.cer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

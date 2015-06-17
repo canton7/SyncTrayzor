@@ -3,6 +3,7 @@ using SyncTrayzor.Services.Config;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -21,7 +22,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private static readonly TimeSpan fileMaxAge = TimeSpan.FromDays(3); // Arbitrary, but long
-        private const string downloadFileName = "SyncTrayzorUpdate-{0}.exe";
+        private const string updateDownloadFileName = "SyncTrayzorUpdate-{0}.exe";
+        private const string sham1sumDownloadFileName = "sha1sum-{0}.txt.asc";
 
         private readonly string downloadsDir;
         private readonly IFilesystemProvider filesystemProvider;
@@ -36,24 +38,55 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<string> DownloadUpdateAsync(string url, Version version)
         {
+            var sha1sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sham1sumDownloadFileName, version.ToString(3)));
+            var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(updateDownloadFileName, version.ToString(3)));
+
+            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(url, version, sha1sumDownloadPath, () =>
+                {
+                    var sha1sumContents = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath);
+                    return Tuple.Create(sha1sumContents != null, sha1sumContents);
+                });
+
+            // Might be null, but if it's not make sure we dispose it (it's actually a MemoryStream, but let's be proper)
+            bool updateSucceeded = false;
+            using (var sha1sumContents = sha1sumOutcome.Item2)
+            {
+                if (sha1sumOutcome.Item1)
+                {
+                    updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(url, version, updateDownloadPath, () =>
+                    {
+                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha1sumOutcome.Item2);
+                        return Tuple.Create(updatePassed, (object)null);
+                    })).Item1;
+                }
+            }
+
+            this.CleanUpUnusedFiles();
+
+            return updateSucceeded ? updateDownloadPath : null;
+        }
+
+        private async Task<Tuple<bool, T>> DownloadAndVerifyFileAsync<T>(string url, Version version, string downloadPath, Func<Tuple<bool, T>> verifier)
+        {
+            // This really needs refactoring to not be multiple-return...
+
             try
             {
-                var downloadPath = Path.Combine(this.downloadsDir, String.Format(downloadFileName, version.ToString(3)));
-
                 // Just in case...
                 this.filesystemProvider.CreateDirectory(this.downloadsDir);
-
-                bool download = true;
 
                 // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
                 if (this.filesystemProvider.Exists(downloadPath))
                 {
                     logger.Info("Skipping download as file {0} already exists", downloadPath);
-                    if (this.installerVerifier.Verify(downloadPath))
+                    var initialValidationResult = verifier();
+                    if (initialValidationResult.Item1)
                     {
-                        download = false;
                         // Touch the file, so we (or someone else!) doesn't delete when cleaning up
                         this.filesystemProvider.SetLastAccessTimeUtc(downloadPath, DateTime.UtcNow);
+
+                        // EXIT POINT
+                        return initialValidationResult;
                     }
                     else
                     {
@@ -62,31 +95,34 @@ namespace SyncTrayzor.Services.UpdateManagement
                     }
                 }
 
-                // House-keeping. Do this now, after SetLastAccessTimeUTc has been called, but before we start hitting the early-exits
-                this.CleanUpUnusedFiles();
-
-                if (download)
+                bool downloaded = await this.TryDownloadToFileAsync(downloadPath, url);
+                if (!downloaded)
                 {
-                    bool downloaded = await this.TryDownloadToFileAsync(downloadPath, url);
-                    if (!downloaded)
-                        return null;
-
-                    logger.Info("Verifying...");
-
-                    if (!this.installerVerifier.Verify(downloadPath))
-                    {
-                        logger.Warn("Download verification failed. Deleting {0}", downloadPath);
-                        this.filesystemProvider.Delete(downloadPath);
-                        return null;
-                    }
+                    // EXIT POINT
+                    return Tuple.Create(false, default(T));
                 }
 
-                return downloadPath;
+                logger.Info("Verifying...");
+
+                var downloadedValidationResult = verifier();
+                if (!downloadedValidationResult.Item1)
+                {
+                    logger.Warn("Download verification failed. Deleting {0}", downloadPath);
+                    this.filesystemProvider.Delete(downloadPath);
+
+                    // EXIT POINT
+                    return Tuple.Create(false, default(T));
+                }
+
+                // EXIT POINT
+                return downloadedValidationResult;
             }
             catch (Exception e)
             {
                 logger.Error("Error in DownloadUpdateAsync", e);
-                return null;
+
+                // EXIT POINT
+                return Tuple.Create(false, default(T));
             }
         }
 

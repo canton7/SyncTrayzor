@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,48 +13,43 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IInstallerCertificateVerifier
     {
-        bool Verify(string filePath);
+        Stream VerifySha1sum(string filePath);
+        bool VerifyUpdate(string filePath, Stream sha1sumFile);
     }
 
     public class InstallerCertificateVerifier : IInstallerCertificateVerifier
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const string certificateName = "SyncTrayzor.Resources.synctrayzor_releases_cert.asc";
 
-        private string certThumbprint;
+        private readonly IAssemblyProvider assemblyProvider;
 
         public InstallerCertificateVerifier(IAssemblyProvider assemblyProvider)
         {
-            using (var certStream = assemblyProvider.GetManifestResourceStream("SyncTrayzor.Resources.SyncTrayzorCA.cer"))
+            this.assemblyProvider = assemblyProvider;
+        }
+
+        private Stream LoadCertificate()
+        {
+            return this.assemblyProvider.GetManifestResourceStream(certificateName);
+        }
+
+        public Stream VerifySha1sum(string filePath)
+        {
+            using (var file = File.OpenRead(filePath))
+            using (var certificate = this.LoadCertificate())
             {
-                this.certThumbprint = this.LoadCertificate(certStream).Thumbprint;
+                return PgpClearsignUtilities.ReadAndVerifyFile(file, certificate);
             }
         }
 
-        private X509Certificate2 LoadCertificate(Stream stream)
+        public bool VerifyUpdate(string filePath, Stream sha1sumFile)
         {
-            using (var ms = new MemoryStream())
+            using (var hashAlgorithm = new SHA1Managed())
+            using (var file = File.OpenRead(filePath))
             {
-                stream.CopyTo(ms);
-                return new X509Certificate2(ms.ToArray(), "");
+                return ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, sha1sumFile, Path.GetFileName(filePath), file);
             }
-        }
-
-        public bool Verify(string filePath)
-        {
-            if (!AuthenticodeTools.VerifyEmbeddedSignature(filePath, true))
-            {
-                logger.Warn("Signature of {0} not valid", filePath);
-                return false;
-            }
-
-            var cert = new X509Certificate2(filePath);
-            if (cert.Thumbprint != this.certThumbprint)
-            {
-                logger.Warn("Thumbprint of download file {0} {1} does not match expected value of {2}", filePath, cert.Thumbprint, this.certThumbprint);
-                return false;
-            }
-
-            return true;
         }
     }
 }
