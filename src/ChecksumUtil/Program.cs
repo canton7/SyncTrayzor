@@ -47,20 +47,21 @@ namespace ChecksumUtil
 
         private static void Create(string[] args)
         {
-            if (args.Length < 5)
+            if (args.Length < 6)
             {
                 ShowHelp();
                 return;
             }
 
             var checksumFileName = args[1];
-            var privateKeyName = args[2];
-            var passphrase = args[3];
-            var inputFileNames = args.Skip(4).ToArray();
+            var algorithmName = args[2];
+            var privateKeyName = args[3];
+            var passphrase = args[4];
+            var inputFileNames = args.Skip(5).ToArray();
 
             using (var checksumFileTemp = new MemoryStream())
             {
-                using (var hashAlgorithm = new SHA1Managed())
+                using (var hashAlgorithm = HashAlgorithm.Create(algorithmName))
                 {
                     foreach (var inputFileName in inputFileNames)
                     {
@@ -85,15 +86,16 @@ namespace ChecksumUtil
 
         private static void Verify(string[] args)
         {
-            if (args.Length < 4)
+            if (args.Length < 5)
             {
                 ShowHelp();
                 return;
             }
 
             var checksumFileName = args[1];
-            var certificateFileName = args[2];
-            var inputFileNames = args.Skip(3).ToArray();
+            var algorithmName = args[2];
+            var certificateFileName = args[3];
+            var inputFileNames = args.Skip(4).ToArray();
 
             // Signature first, then hash
             using (var checksumFile = File.OpenRead(checksumFileName))
@@ -103,7 +105,7 @@ namespace ChecksumUtil
                 if (cleartext == null)
                     throw new Exception("Signature verification failed");
 
-                using (var hashAlgorithm = new SHA1Managed())
+                using (var hashAlgorithm = HashAlgorithm.Create(algorithmName))
                 {
                     foreach (var inputFileName in inputFileNames)
                     {
@@ -122,8 +124,8 @@ namespace ChecksumUtil
 
         private static void ShowHelp()
         {
-            Console.WriteLine("Usage : ChecksumUtil.exe create checksumfile privatekey passphrase inputfile [inputfile ...]");
-            Console.WriteLine("        ChecksumUtil.exe verify checksumfile certificate inputfile [inputfile ...]");
+            Console.WriteLine("Usage : ChecksumUtil.exe create checksumfile algorithm privatekey passphrase inputfile [inputfile ...]");
+            Console.WriteLine("        ChecksumUtil.exe verify checksumfile algorithm certificate inputfile [inputfile ...]");
         }
     }
 }

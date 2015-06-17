@@ -222,7 +222,7 @@ task :"create-sha1sums" => [:"build-checksum-util"] do
   checksum_file = File.join(DEPLOY_DIR, 'sha1sum.txt.asc')
   rm checksum_file if File.exist?(checksum_file)
 
-  args = %Q{create "#{checksum_file}" "#{CHECKSUM_FILE_PRIV_KEY}" "#{password}" } + Dir["#{DEPLOY_DIR}/**"].map{ |x| "\"#{x}\"" }.join(' ')
+  args = %Q{create "#{checksum_file}" sha1 "#{CHECKSUM_FILE_PRIV_KEY}" "#{password}" } + Dir["#{DEPLOY_DIR}/**"].map{ |x| "\"#{x}\"" }.join(' ')
 
   # Don't want to print out the pasword!
   puts "Invoking #{CHECKSUM_UTIL_EXE}"
@@ -284,7 +284,7 @@ namespace :"download-syncthing" do
           end
         end
 
-        sh CHECKSUM_UTIL_EXE, 'verify', File.join(tmp, 'sha1sum.txt.asc'), SYNCTHING_RELEASES_CERT, download_file
+        sh CHECKSUM_UTIL_EXE, 'verify', 'sha1', File.join(tmp, 'sha1sum.txt.asc'), SYNCTHING_RELEASES_CERT, download_file
 
         Dir.chdir(tmp) do
           sh %Q{"#{SZIP}" e #{File.basename(download_file)}}
