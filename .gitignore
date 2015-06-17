@@ -43,6 +43,7 @@ syncthing.exe
 *.tmp
 Coverage
 SyncTrayzorPortable
+deploy
 *.pfx
 *.pvk
 /src/SyncTrayzor/Icons/*.png

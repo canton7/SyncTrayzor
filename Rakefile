@@ -12,13 +12,15 @@ MSBUILD_LOGGER = ENV['MSBUILD_LOGGER']
 
 SRC_DIR = 'src/SyncTrayzor'
 INSTALLER_DIR = 'installer'
-PORTABLE_DIR = 'portable'
+DEPLOY_DIR = 'deploy'
 
 SLN = 'src/SyncTrayzor.sln'
 
 CHECKSUM_UTIL_CSPROJ = 'src/ChecksumUtil/ChecksumUtil.csproj'
 CHECKSUM_UTIL_EXE = 'bin/ChecksumUtil/Release/ChecksumUtil.exe'
 SYNCTHING_RELEASES_CERT = 'security/syncthing_releases_cert.asc'
+
+CHECKSUM_FILE_PRIV_KEY = 'security/private_key.asc'
 
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
@@ -42,7 +44,7 @@ class ArchDirConfig
     @installer_output = File.join(@installer_dir, "SyncTrayzorSetup-#{@arch}.exe")
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
-    @portable_output_file = File.join(PORTABLE_DIR, "SyncTrayzorPortable-#{@arch}.zip")
+    @portable_output_file = File.join(DEPLOY_DIR, "SyncTrayzorPortable-#{@arch}.zip")
     @syncthing_binaries = { '0.11' => 'syncthing.exe' }
   end
 
@@ -67,8 +69,9 @@ def ensure_7zip
   end
 end
 
-def build(sln, platform)
-  cmd = "\"#{MSBUILD}\" \"#{sln}\" /t:Clean;Rebuild /p:Configuration=#{CONFIG};Platform=#{platform}"
+def build(sln, platform, rebuild = true)
+  tasks = rebuild ? 'Clean;Rebuild' : 'Build'
+  cmd = "\"#{MSBUILD}\" \"#{sln}\" /t:#{tasks} /p:Configuration=#{CONFIG};Platform=#{platform}"
   if MSBUILD_LOGGER
     cmd << " /logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
   else
@@ -91,7 +94,7 @@ desc 'Build both 64-bit and 32-bit binaries'
 task :build => ARCH_CONFIG.map{ |x| :"build:#{x.arch}" }
 
 task :"build-checksum-util" do
-  build(CHECKSUM_UTIL_CSPROJ, 'AnyCPU')
+  build(CHECKSUM_UTIL_CSPROJ, 'AnyCPU', false)
 end
 
 namespace :installer do
@@ -105,6 +108,9 @@ namespace :installer do
 
       rm arch_config.installer_output if File.exist?(arch_config.installer_output)
       sh %Q{"#{ISCC}" #{arch_config.installer_iss}}
+
+      mkdir_p DEPLOY_DIR
+      mv arch_config.installer_output, DEPLOY_DIR
     end
   end
 end
@@ -125,7 +131,7 @@ namespace :"sign-installer" do
 
       args = "sign /f #{PFX} /t http://timestamp.verisign.com/scripts/timstamp.dll"
       args << " /p #{ENV['PASSWORD']}" if ENV['PASSWORD']
-      args << " /v #{arch_config.installer_output}"
+      args << " /v #{File.join(DEPLOY_DIR, File.basename(arch_config.installer_output))}"
 
       # Don't want to print out the pasword!
       puts "Invoking signtool"
@@ -210,28 +216,40 @@ end
 desc 'Update syncthing binaries, all architectures'
 task :"update-syncthing" => ARCH_CONFIG.map{ |x| :"update-syncthing:#{x.arch}" }
 
-namespace :clean do
-  ARCH_CONFIG.each do |arch_config|
-    desc "Clean everything (#{arch_config.arch})"
-    task arch_config.arch do
-      rm_rf arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
-      rm arch_config.installer_output if File.exist?(arch_config.installer_output)
-    end
-  end
+desc 'Create sha1sums file' 
+task :"create-sha1sums" => [:"build-checksum-util"] do
+  password = ENV['PASSWORD'] || '""'
+  checksum_file = File.join(DEPLOY_DIR, 'sha1sum.txt.asc')
+  rm checksum_file if File.exist?(checksum_file)
+
+  args = %Q{create "#{checksum_file}" "#{CHECKSUM_FILE_PRIV_KEY}" "#{password}" } + Dir["#{DEPLOY_DIR}/**"].map{ |x| "\"#{x}\"" }.join(' ')
+
+  # Don't want to print out the pasword!
+  puts "Invoking #{CHECKSUM_UTIL_EXE}"
+  system %Q{"#{CHECKSUM_UTIL_EXE}" #{args}}
 end
 
 desc 'Clean portable and installer, all architectures'
-task :clean => ARCH_CONFIG.map{ |x| :"clean:#{x.arch}" }
+task :clean do
+  rm_rf DEPLOY_DIR if File.exist?(DEPLOY_DIR)
+end
 
 namespace :package do
   ARCH_CONFIG.each do |arch_config|
     desc "Build installer and portable (#{arch_config.arch})"
-    task arch_config.arch => [:"clean:#{arch_config.arch}", :"update-syncthing:#{arch_config.arch}", :"build:#{arch_config.arch}", :"installer:#{arch_config.arch}", :"sign-installer:#{arch_config.arch}", :"portable:#{arch_config.arch}"]
+    task arch_config.arch => 
+      [
+        :"update-syncthing:#{arch_config.arch}",
+        :"build:#{arch_config.arch}",
+        :"installer:#{arch_config.arch}",
+        :"sign-installer:#{arch_config.arch}",
+        :"portable:#{arch_config.arch}"
+      ]
   end
 end
 
 desc 'Build installer and portable for all architectures'
-task :package => ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }
+task :package => [:clean, *ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }, :"create-sha1sums"]
 
 desc "Bump version number"
 task :version, [:version] do |t, args|
