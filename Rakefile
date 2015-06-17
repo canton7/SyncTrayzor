@@ -218,17 +218,24 @@ end
 desc 'Update syncthing binaries, all architectures'
 task :"update-syncthing" => ARCH_CONFIG.map{ |x| :"update-syncthing:#{x.arch}" }
 
-desc 'Create sha1sums file' 
-task :"create-sha1sums" => [:"build-checksum-util"] do
-  password = ENV['PASSWORD'] || '""'
-  checksum_file = File.join(DEPLOY_DIR, 'sha1sum.txt.asc')
+def create_checksums(checksum_file, password, algorithm, files)
   rm checksum_file if File.exist?(checksum_file)
 
-  args = %Q{create "#{checksum_file}" sha1 "#{CHECKSUM_FILE_PRIV_KEY}" "#{password}" } + Dir["#{DEPLOY_DIR}/**"].map{ |x| "\"#{x}\"" }.join(' ')
+  args = %Q{create "#{checksum_file}" #{algorithm} "#{CHECKSUM_FILE_PRIV_KEY}" "#{password}" } + files.map{ |x| "\"#{x}\"" }.join(' ')
 
   # Don't want to print out the pasword!
-  puts "Invoking #{CHECKSUM_UTIL_EXE}"
+  puts "Invoking #{CHECKSUM_UTIL_EXE} for #{checksum_file}"
   system %Q{"#{CHECKSUM_UTIL_EXE}" #{args}}
+end
+
+desc 'Create checksums files' 
+task :"create-checksums" => [:"build-checksum-util"] do
+  password = ENV['PASSWORD'] || '""'
+  checksum_file = File.join(DEPLOY_DIR, 'sha1sum.txt.asc')
+  files = Dir["#{DEPLOY_DIR}/*.{zip,exe}"]
+
+  create_checksums(File.join(DEPLOY_DIR, 'sha1sum.txt.asc'), password, 'sha1', files)
+  create_checksums(File.join(DEPLOY_DIR, 'md5sum.txt.asc'), password, 'md5', files)
 end
 
 desc 'Clean portable and installer, all architectures'
