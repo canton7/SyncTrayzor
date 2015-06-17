@@ -205,7 +205,7 @@ namespace :"update-syncthing" do
         path = File.join(arch_config.installer_dir, bin)
         raise "Could not find #{path}" unless File.exist?(path)
         Dir.mktmpdir do |tmp|
-          sh path, '-upgrade', "-home=\"#{tmp}\"" do; end
+          sh path, '-upgrade', "-home=#{tmp}" do; end
         end
 
         old_bin = "#{path}.old"
@@ -258,7 +258,7 @@ namespace :package do
 end
 
 desc 'Build installer and portable for all architectures'
-task :package => [:clean, *ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }, :"create-sha1sums"]
+task :package => [:clean, *ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }, :"create-checksums"]
 
 desc "Bump version number"
 task :version, [:version] do |t, args|
