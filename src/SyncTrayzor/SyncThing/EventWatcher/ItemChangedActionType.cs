@@ -10,5 +10,6 @@ namespace SyncTrayzor.SyncThing.EventWatcher
     {
         Update,
         Delete,
+        Metadata,
     }
 }

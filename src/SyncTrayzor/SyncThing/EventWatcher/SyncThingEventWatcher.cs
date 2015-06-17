@@ -34,6 +34,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         {
             { "update", ItemChangedActionType.Update },
             { "delete", ItemChangedActionType.Delete },
+            { "metadata", ItemChangedActionType.Metadata }
         };
         private static readonly Dictionary<string, ItemChangedItemType> itemTypeMapping = new Dictionary<string, ItemChangedItemType>()
         {
