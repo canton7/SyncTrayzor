@@ -204,7 +204,9 @@ namespace :"update-syncthing" do
       arch_config.syncthing_binaries.values_at(*SYNCTHING_VERSIONS_TO_UPDATE).each do |bin|
         path = File.join(arch_config.installer_dir, bin)
         raise "Could not find #{path}" unless File.exist?(path)
-        sh path, '-upgrade' do; end
+        Dir.mktmpdir do |tmp|
+          sh path, '-upgrade', "-home=\"#{tmp}\"" do; end
+        end
 
         old_bin = "#{path}.old"
         rm old_bin if File.exist?(old_bin)
