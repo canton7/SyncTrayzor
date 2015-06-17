@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CFD4B44A-328E-4294-89A0-6A2962DEFB33}</ProjectGuid>
+    <ProjectGuid>{58EFC3AF-A52F-4492-A26A-D006890BE508}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ChecksumCreator</RootNamespace>
-    <AssemblyName>ChecksumCreator</AssemblyName>
+    <RootNamespace>ChecksumUtil</RootNamespace>
+    <AssemblyName>ChecksumUtil</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\ChecksumUtil\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\ChecksumUtil\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SyncTrayzor\Utils\ChecksumFileUtilities.cs">
+      <Link>ChecksumFileUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\SyncTrayzor\Utils\PgpClearsignUtilities.cs">
+      <Link>PgpClearsignUtilities.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
