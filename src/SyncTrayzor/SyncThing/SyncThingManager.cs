@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -303,9 +304,17 @@ namespace SyncTrayzor.SyncThing
             }
             catch (ApiException e)
             {
-                logger.Error(String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase), e);
+                var msg = String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase);
+                logger.Error(msg, e);
                 this.Kill();
-                throw e;
+                throw new SyncThingDidNotStartCorrectlyException(msg, e);
+            }
+            catch (HttpRequestException e)
+            {
+                var msg = String.Format("HttpRequestException while starting Syncthing", e);
+                logger.Error(msg, e);
+                this.Kill();
+                throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
             catch (Exception e)
             {
