@@ -133,7 +133,9 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?.
+        ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
+        ///
+        ///This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running..
         /// </summary>
         public static string Dialog_ConfirmKillAllProcesses_Message {
             get {
@@ -529,20 +531,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable hardware rendering.
+        /// </summary>
+        public static string SettingsView_DisableHardwareRendering {
+            get {
+                return ResourceManager.GetString("SettingsView_DisableHardwareRendering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimize to tray.
         /// </summary>
         public static string SettingsView_MinimizeToTray {
             get {
                 return ResourceManager.GetString("SettingsView_MinimizeToTray", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You must restart Syncthing for changes in these settings to take effect.
-        /// </summary>
-        public static string SettingsView_MustRestartSyncthingWarning {
-            get {
-                return ResourceManager.GetString("SettingsView_MustRestartSyncthingWarning", resourceCulture);
             }
         }
         
@@ -561,6 +563,46 @@ namespace SyncTrayzor.Properties.Strings {
         public static string SettingsView_OnlyShowTrayIconOnClose {
             get {
                 return ResourceManager.GetString("SettingsView_OnlyShowTrayIconOnClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must restart Syncthing for these settings to take effect.
+        ///
+        ///Do you want to restart Syncthing now?.
+        /// </summary>
+        public static string SettingsView_RestartSyncthing_Message {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncthing_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart Syncthing?.
+        /// </summary>
+        public static string SettingsView_RestartSyncthing_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncthing_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must restart SyncTrayzor for these settings to take effect.
+        ///
+        ///Do you want to restart SyncTrayzor now?.
+        /// </summary>
+        public static string SettingsView_RestartSyncTrayzor_Message {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncTrayzor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart SyncTrayzor?.
+        /// </summary>
+        public static string SettingsView_RestartSyncTrayzor_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_RestartSyncTrayzor_Title", resourceCulture);
             }
         }
         
@@ -781,11 +823,20 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use my computer&apos;s language, where available. You will need to restart SyncTrayzor for this to take effect.
+        ///   Looks up a localized string similar to Use my computer&apos;s language, where available.
         /// </summary>
         public static string SettingsView_UseComputerCulture {
             get {
                 return ResourceManager.GetString("SettingsView_UseComputerCulture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to API key should contain only a-z A-Z 0-9 and -.
+        /// </summary>
+        public static string SettingsView_Validation_ApiKeyInvalidChars {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_ApiKeyInvalidChars", resourceCulture);
             }
         }
         
@@ -885,15 +936,6 @@ namespace SyncTrayzor.Properties.Strings {
         public static string ShellView_Menu_Syncthing {
             get {
                 return ResourceManager.GetString("ShellView_Menu_Syncthing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Kill.
-        /// </summary>
-        public static string ShellView_Menu_Syncthing_Kill {
-            get {
-                return ResourceManager.GetString("ShellView_Menu_Syncthing_Kill", resourceCulture);
             }
         }
         
@@ -1088,7 +1130,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0:p:1 hour|{} hours} hour ago.
+        ///   Looks up a localized string similar to {0:p:1 hour|{} hours} ago.
         /// </summary>
         public static string TimeAgo_Hours {
             get {
@@ -1187,15 +1229,6 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: Downloaded {1}.
-        /// </summary>
-        public static string TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile {
-            get {
-                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0}: Finished Syncing.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_Message {
@@ -1228,6 +1261,15 @@ namespace SyncTrayzor.Properties.Strings {
         public static string TrayIcon_Balloon_FinishedSyncing_UpdatedFile {
             get {
                 return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: Updated {1}.
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile", resourceCulture);
             }
         }
         

@@ -10,7 +10,7 @@ namespace SyncTrayzor.Utils
 {
     public static class FormatUtils
     {
-        private static readonly string[] sizes = { "B", "KB", "MB", "GB" };
+        private static readonly string[] sizes = { "B", "KiB", "MiB", "GiB" };
 
         public static string BytesToHuman(double bytes, int decimalPlaces = 0)
         {

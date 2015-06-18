@@ -55,6 +55,7 @@ namespace SyncTrayzor
             builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
             builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
             builder.Bind<ISyncThingConnectionsWatcherFactory>().To<SyncThingConnectionsWatcherFactory>();
+            builder.Bind<IFreePortFinder>().To<FreePortFinder>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
             builder.Bind<IUpdateManager>().To<UpdateManager>().InSingletonScope();
@@ -119,9 +120,9 @@ namespace SyncTrayzor
             // Also handles Restart Manager requests - sent by the installer. We need to shutdown syncthing and Cef in this case
             this.Application.SessionEnding += (o, e) =>
             {
+                LogManager.GetCurrentClassLogger().Info("Shutting down: {0}", e.ReasonSessionEnding);
                 var manager = this.Container.Get<ISyncThingManager>();
-                manager.StopAsync().Wait(250);
-                Task.Delay(250).Wait();
+                manager.StopAndWaitAsync().Wait(2000);
                 manager.Kill();
 
                 Process.GetCurrentProcess().Kill();
@@ -159,12 +160,23 @@ namespace SyncTrayzor
                 updatedVm.Version = this.Container.Get<IAssemblyProvider>().Version;
                 this.Container.Get<INotifyIconManager>().ShowBalloonAsync(updatedVm, timeout: 5000); 
             }
+
+            var logger = LogManager.GetCurrentClassLogger();
+            var assembly = this.Container.Get<IAssemblyProvider>();
+            logger.Debug("SyncTrazor version {0} ({1}) started at {2}", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location);
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("An unhandled exception occurred", e.Exception);
+
+            // It's nicer if we try stopping the syncthing process, but if we can't, carry on
+            try
+            {
+                this.Container.Get<ISyncThingManager>().StopAsync();
+            }
+            catch { }
 
             // If we're shutting down, we're not going to be able to display an error dialog....
             // We've logged it. Nothing else we can do.

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace SyncTrayzor.SyncThing
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
+        Uri PreferredAddress { get; set; }
         Uri Address { get; set; }
         IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
         string SyncthingCustomHomeDir { get; set; }
@@ -47,6 +49,7 @@ namespace SyncTrayzor.SyncThing
 
         Task StartAsync();
         Task StopAsync();
+        Task StopAndWaitAsync();
         Task RestartAsync();
         void Kill();
         void KillAllSyncthingProcesses();
@@ -71,6 +74,7 @@ namespace SyncTrayzor.SyncThing
         private readonly ISyncThingEventWatcher eventWatcher;
         private readonly ISyncThingConnectionsWatcher connectionsWatcher;
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
+        private readonly IFreePortFinder freePortFinder;
         private CancellationTokenSource apiAbortCts;
 
         private DateTime _startedTime;
@@ -117,6 +121,7 @@ namespace SyncTrayzor.SyncThing
 
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
+        public Uri PreferredAddress { get; set; }
         public Uri Address { get; set; }
         public string SyncthingCustomHomeDir { get; set; }
         public IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
@@ -151,7 +156,8 @@ namespace SyncTrayzor.SyncThing
             ISyncThingProcessRunner processRunner,
             ISyncThingApiClientFactory apiClientFactory,
             ISyncThingEventWatcherFactory eventWatcherFactory,
-            ISyncThingConnectionsWatcherFactory connectionsWatcherFactory)
+            ISyncThingConnectionsWatcherFactory connectionsWatcherFactory,
+            IFreePortFinder freePortFinder)
         {
             this.StartedTime = DateTime.MinValue;
             this.LastConnectivityEventTime = DateTime.MinValue;
@@ -159,6 +165,7 @@ namespace SyncTrayzor.SyncThing
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
             this.apiClientFactory = apiClientFactory;
+            this.freePortFinder = freePortFinder;
 
             this.apiClient = new SynchronizedTransientWrapper<ISyncThingApiClient>(this.apiClientsLock);
 
@@ -170,7 +177,7 @@ namespace SyncTrayzor.SyncThing
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
             this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
-            this._transferHistory = new SyncThingTransferHistory(this.eventWatcher);
+            this._transferHistory = new SyncThingTransferHistory(this.eventWatcher, this._folders);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
@@ -191,6 +198,25 @@ namespace SyncTrayzor.SyncThing
 
             await this.apiClient.Value.ShutdownAsync();
             this.SetState(SyncThingState.Stopping);
+        }
+
+        public async Task StopAndWaitAsync()
+        {
+            var tcs = new TaskCompletionSource<object>();
+            EventHandler<SyncThingStateChangedEventArgs> stateChangedHandler = (o, e) =>
+            {
+                if (e.NewState == SyncThingState.Stopped)
+                    tcs.TrySetResult(null);
+                else if (e.NewState != SyncThingState.Stopping)
+                    tcs.TrySetException(new Exception(String.Format("Failed to stop Syncthing: Went to state {0} instead", e.NewState)));
+            };
+            this.StateChanged += stateChangedHandler;
+
+            await this.apiClient.Value.ShutdownAsync();
+            this.SetState(SyncThingState.Stopping);
+
+            await tcs.Task;
+            this.StateChanged -= stateChangedHandler;
         }
 
         public Task RestartAsync()
@@ -298,14 +324,19 @@ namespace SyncTrayzor.SyncThing
             }
             catch (ApiException e)
             {
-                logger.Error(String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase), e);
-                this.Kill();
-                throw e;
+                var msg = String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase);
+                logger.Error(msg, e);
+                throw new SyncThingDidNotStartCorrectlyException(msg, e);
+            }
+            catch (HttpRequestException e)
+            {
+                var msg = String.Format("HttpRequestException while starting Syncthing", e);
+                logger.Error(msg, e);
+                throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
             catch (Exception e)
             {
                 logger.Error("Error starting Syncthing API", e);
-                this.Kill();
                 throw e;
             }
         }
@@ -340,6 +371,11 @@ namespace SyncTrayzor.SyncThing
 
         private async void ProcessStarting()
         {
+            var port = this.freePortFinder.FindFreePort(this.PreferredAddress.Port);
+            var uriBuilder = new UriBuilder(this.PreferredAddress);
+            uriBuilder.Port = port;
+            this.Address = uriBuilder.Uri;
+
             this.processRunner.ApiKey = this.ApiKey;
             this.processRunner.HostAddress = this.Address.ToString();
             this.processRunner.ExecutablePath = this.ExecutablePath;

@@ -1,5 +1,6 @@
 ﻿using NLog;
 using SyncTrayzor.SyncThing.ApiClient;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,12 +21,14 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        event EventHandler EventsSkipped;
     }
 
     public class SyncThingEventWatcher : SyncThingPoller, ISyncThingEventWatcher, IEventVisitor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
+        private readonly TaskFactory taskFactory = new TaskFactory(new LimitedConcurrencyTaskScheduler(1));
         private ISyncThingApiClient apiClient;
         private static readonly Dictionary<string, ItemChangedActionType> actionTypeMapping = new Dictionary<string, ItemChangedActionType>()
         {
@@ -47,6 +50,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        public event EventHandler EventsSkipped;
 
         public SyncThingEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
             : base(TimeSpan.Zero, TimeSpan.FromSeconds(10))
@@ -79,12 +83,42 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
             logger.Debug("Received {0} events", events.Count);
 
-            foreach (var evt in events)
+            // Need to synchronously update the lastEventId
+            var oldLastEventId = this.lastEventId;
+            this.lastEventId = events[events.Count - 1].Id;
+
+            this.ProcessEvents(oldLastEventId, events, cancellationToken);
+        }
+
+        private async void ProcessEvents(int startingEventId, List<Event> events, CancellationToken cancellationToken)
+        {
+            // Shove off the processing to another thread - means we can get back to polling quicker
+            // However the task factory we use has a limited concurrency level of 1, so we won't process events out-of-order
+
+            // Await needed to throw unhandled exceptions (if there do happen to be any) back to the dispatcher
+            await this.DoWithErrorHandlingAsync(() =>
             {
-                this.lastEventId = Math.Max(this.lastEventId, evt.Id);
-                logger.Debug(evt);
-                evt.Visit(this);
-            }
+                return this.taskFactory.StartNew(() =>
+                {
+                    bool eventsSkipped = false;
+
+                    // We receive events in ascending ID order
+                    foreach (var evt in events)
+                    {
+                        if (startingEventId > 0 && (evt.Id - startingEventId) != 1)
+                            eventsSkipped = true;
+                        startingEventId = evt.Id;
+                        logger.Debug(evt);
+                        evt.Visit(this);
+                    }
+
+                    if (eventsSkipped)
+                    {
+                        logger.Debug("Events were skipped");
+                        this.OnEventsSkipped();
+                    }
+                });
+            }, cancellationToken);
         }
 
         private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)
@@ -138,6 +172,13 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                 handler(this, new DeviceDisconnectedEventArgs(deviceId, error));
         }
 
+        private void OnEventsSkipped()
+        {
+            var handler = this.EventsSkipped;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         #region IEventVisitor
 
         public void Accept(GenericEvent evt)
@@ -161,15 +202,39 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(ItemStartedEvent evt)
         {
-            var actionType = actionTypeMapping[evt.Data.Action];
-            var itemType = itemTypeMapping[evt.Data.Type];
+            ItemChangedActionType actionType;
+            if (!actionTypeMapping.TryGetValue(evt.Data.Action, out actionType))
+            {
+                logger.Warn("Unknown item changed action type: {0}", evt.Data.Action);
+                return;
+            }
+
+            ItemChangedItemType itemType;
+            if (!itemTypeMapping.TryGetValue(evt.Data.Type, out itemType))
+            {
+                logger.Warn("Unknown item changed item type: {0}", evt.Data.Type);
+                return;
+            }
+
             this.OnItemStarted(evt.Data.Folder, evt.Data.Item, actionType, itemType);
         }
 
         public void Accept(ItemFinishedEvent evt)
         {
-            var actionType = actionTypeMapping[evt.Data.Action];
-            var itemType = itemTypeMapping[evt.Data.Type];
+            ItemChangedActionType actionType;
+            if (!actionTypeMapping.TryGetValue(evt.Data.Action, out actionType))
+            {
+                logger.Warn("Unknown item changed action type: {0}", evt.Data.Action);
+                return;
+            }
+
+            ItemChangedItemType itemType;
+            if (!itemTypeMapping.TryGetValue(evt.Data.Type, out itemType))
+            {
+                logger.Warn("Unknown item changed item type: {0}", evt.Data.Type);
+                return;
+            }
+
             this.OnItemFinished(evt.Data.Folder, evt.Data.Item, actionType, itemType, evt.Data.Error);
         }
 

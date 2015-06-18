@@ -78,6 +78,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
@@ -135,6 +139,11 @@
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
+    <Compile Include="Pages\Settings\EnvironmentalVariableParser.cs" />
+    <Compile Include="Pages\Settings\SettingItem.cs" />
+    <Compile Include="Pages\Settings\SyncThingAddressValidator.cs" />
+    <Compile Include="Pages\Settings\SyncThingApiKeyValidator.cs" />
+    <Compile Include="Pages\Settings\SyncThingEnvironmentalVariablesValidator.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -160,25 +169,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.fr.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Strings\Resources.it_IT.Designer.cs">
+    <Compile Include="Properties\Strings\Resources.hu-HU.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.it_IT.resx</DependentUpon>
+      <DependentUpon>Resources.hu-HU.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Strings\Resources.pt_BR.Designer.cs">
+    <Compile Include="Properties\Strings\Resources.it-IT.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.pt_BR.resx</DependentUpon>
+      <DependentUpon>Resources.it-IT.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings\Resources.pt-BR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.pt-BR.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Strings\Resources.ru.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.ru.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.sk.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.sk.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
@@ -200,6 +209,7 @@
     <Compile Include="Services\UpdateManagement\UpdateNotificationResponse.cs" />
     <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
     <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
@@ -208,6 +218,7 @@
     <Compile Include="SyncThing\EventWatcher\ItemChangedItemType.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="SyncThing\FreePortFinder.cs" />
     <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingDidNotStartCorrectlyException.cs" />
@@ -219,7 +230,7 @@
     <Compile Include="Pages\NewVersionAlertToastViewModel.cs" />
     <Compile Include="Pages\AboutViewModel.cs" />
     <Compile Include="Pages\NewVersionAlertViewModel.cs" />
-    <Compile Include="Pages\SettingsViewModel.cs" />
+    <Compile Include="Pages\Settings\SettingsViewModel.cs" />
     <Compile Include="Pages\ThirdPartyComponentsViewModel.cs" />
     <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
     <Compile Include="Properties\Strings\Resources.de.Designer.cs">
@@ -236,11 +247,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.es.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.nl.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.nl.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Config\Configuration.cs" />
@@ -303,15 +309,17 @@
     <Compile Include="SyncThing\TransferHistory\FolderSynchronizationFinishedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\SyncThingTransferHistory.cs" />
     <Compile Include="SyncThing\TransientWrapper.cs" />
-    <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
+    <Compile Include="Utils\ChecksumFileUtilities.cs" />
     <Compile Include="Utils\ChromiumWebBrowserExtensions.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\FormatUtils.cs" />
+    <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\PathEx.cs" />
+    <Compile Include="Utils\PgpClearsignUtilities.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
@@ -339,6 +347,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="..\..\security\synctrayzor_releases_cert.asc">
+      <Link>Resources\synctrayzor_releases_cert.asc</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -361,23 +372,22 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.fr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.it_IT.resx">
+    <EmbeddedResource Include="Properties\Strings\Resources.hu-HU.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.it_IT.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.hu-HU.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.pt_BR.resx">
+    <EmbeddedResource Include="Properties\Strings\Resources.it-IT.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.pt_BR.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.it-IT.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.pt-BR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.pt-BR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings\Resources.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.ru.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.sk.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.sk.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SyncTrayzorCA.cer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -417,7 +427,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\SettingsView.xaml">
+    <Page Include="Pages\Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -479,10 +489,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.es.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.nl.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.nl.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -525,6 +531,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Licenses\SmartFormat.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\BouncyCastle.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />

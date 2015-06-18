@@ -138,7 +138,25 @@ namespace SyncTrayzor.Services
             // So, construct it from e.FullPath and e.OldName
             // Note that we're using Pri.LongPath to get a Path.GetDirectoryName implementation that can handle
             // long paths
-            var oldFullPath = Path.Combine(Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.OldName));
+
+            // Apparently Path.GetDirectoryName(e.FullPath) or Path.GetFileName(e.OldName) can return null, see #112
+            // Not sure why this might be, but let's work around it...
+            var oldFullPathDirectory = Path.GetDirectoryName(e.FullPath);
+            var oldFileName = Path.GetFileName(e.OldName);
+
+            if (oldFullPathDirectory == null)
+            {
+                logger.Warn("OldFullPathDirectory is null. Not sure why... e.FullPath: {0}", e.FullPath);
+                return;
+            }
+            
+            if (oldFileName == null)
+            {
+                logger.Warn("OldFileName is null. Not sure why... e.OldName: {0}", e.OldName);
+                return;
+            }
+
+            var oldFullPath = Path.Combine(oldFullPathDirectory, oldFileName);
 
             this.PathChanged(oldFullPath, fileExists: false);
         }

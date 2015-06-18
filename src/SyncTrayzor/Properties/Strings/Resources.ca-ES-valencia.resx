@@ -175,9 +175,6 @@
   <data name="ShellView_Menu_Syncthing" xml:space="preserve">
     <value>_Syncthing</value>
   </data>
-  <data name="ShellView_Menu_Syncthing_Kill" xml:space="preserve">
-    <value>_Matar</value>
-  </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
     <value>Matar _tots els processos de Syncthing</value>
   </data>
@@ -237,9 +234,6 @@
   <data name="SettingsView_MinimizeToTray" xml:space="preserve">
     <value>Minimitzar a l&apos;àrea de notificacions</value>
     <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
-  </data>
-  <data name="SettingsView_MustRestartSyncthingWarning" xml:space="preserve">
-    <value>És necessari reiniciar Syncthing per a que els canvis en aquestos ajustos es facen efectius.</value>
   </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
     <value>Ofuscar la ID del dispositiu en la vista del registre</value>
@@ -319,7 +313,9 @@
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Està segur de que vol matar tots el procesos de Syncthing, inclús els que no són gestionats per SyncTrayzor?</value>
+    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
+
+This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running.</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
@@ -531,7 +527,7 @@ SyncTrayzor va a tindre que tancar-se. Disculpe les molèsties.</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Utilitzar el llenguatge de l&apos;ordinador, quant siga possible. Serà necessari reiniciar SyncTrayzor per a que aquest canvi es faça efectiu.</value>
+    <value>Use my computer&apos;s language, where available</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
     <value>_Vista</value>
@@ -618,7 +614,7 @@ SyncTrayzor va a tindre que tancar-se. Disculpe les molèsties.</value>
     <value>{0:p:1 day|{} days} ago</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>{0:p:1 hour|{} hours} hour ago</value>
+    <value>{0:p:1 hour|{} hours} ago</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
     <value>Just now</value>
@@ -651,10 +647,10 @@ Full Path: {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was deleted</comment>
   </data>
-  <data name="TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile" xml:space="preserve">
-    <value>{0}: Downloaded {1}</value>
+  <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile" xml:space="preserve">
+    <value>{0}: Updated {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
-{1}: File that was downloaded</comment>
+{1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
     <value>Updated {0:p:1 file|{} files}</value>
@@ -666,5 +662,27 @@ Full Path: {1}</value>
     <value>{0}: {1:l:{}|; }</value>
     <comment>{0}: Folder that finished syncing
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
+  </data>
+  <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
+    <value>Disable hardware rendering</value>
+  </data>
+  <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
+    <value>API key should contain only a-z A-Z 0-9 and -</value>
+  </data>
+  <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
+    <value>You must restart Syncthing for these settings to take effect.
+
+Do you want to restart Syncthing now?</value>
+  </data>
+  <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
+    <value>Restart Syncthing?</value>
+  </data>
+  <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
+    <value>You must restart SyncTrayzor for these settings to take effect.
+
+Do you want to restart SyncTrayzor now?</value>
+  </data>
+  <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
+    <value>Restart SyncTrayzor?</value>
   </data>
 </root>

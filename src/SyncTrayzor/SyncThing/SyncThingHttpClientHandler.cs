@@ -21,16 +21,13 @@ namespace SyncTrayzor.SyncThing
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (logger.IsTraceEnabled)
-            {
-                var response = await base.SendAsync(request, cancellationToken);
-                logger.Trace((await response.Content.ReadAsStringAsync()).Trim());
-                return response;
-            }
+            var response = await base.SendAsync(request, cancellationToken);
+            if (response.IsSuccessStatusCode)
+                logger.Trace(() => response.Content.ReadAsStringAsync().Result.Trim());
             else
-            {
-                return await base.SendAsync(request, cancellationToken);
-            }
+                logger.Warn("Non-successful status code. {0} {1}", response, (await response.Content.ReadAsStringAsync()).Trim());
+
+            return response;
         }
     }
 }

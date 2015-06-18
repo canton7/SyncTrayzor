@@ -87,14 +87,23 @@ namespace SyncTrayzor.Pages
 
         protected override void OnInitialActivate()
         {
+            var configuration = this.configurationProvider.Load();
+
             var settings = new CefSettings()
             {
-                RemoteDebuggingPort = Settings.Default.CefRemoteDebuggingPort,
+                RemoteDebuggingPort = Properties.Settings.Default.CefRemoteDebuggingPort,
                 // We really only want to set the LocalStorage path, but we don't have that level of control....
                 CachePath = this.pathsProvider.CefCachePath,
             };
+            
             // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
             settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+
+            if (configuration.DisableHardwareRendering)
+            {
+                settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
+            }
 
             Cef.Initialize(settings);
         }
@@ -211,7 +220,10 @@ namespace SyncTrayzor.Pages
         bool IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, IResponse response)
         {
             var uri = new Uri(request.Url);
-            if ((uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
+            // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
+            // the new address (Which we do when Syncthing hits the 'running' State).
+            // Therefore only open external browsers if Syncthing is actually running
+            if (this.syncThingManager.State == SyncThingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
             {
                 this.processStartProvider.StartDetached(request.Url);
                 return true;

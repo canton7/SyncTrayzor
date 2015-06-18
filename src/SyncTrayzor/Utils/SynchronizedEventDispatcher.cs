@@ -14,7 +14,10 @@ namespace SyncTrayzor.Utils
 
         public SynchronizedEventDispatcher(object sender)
             : this(sender, SynchronizationContext.Current)
-        { }
+        {
+            if (SynchronizationContext.Current == null)
+                throw new ArgumentNullException("Implicit SynchronizationContext.Current cannot be null");
+        }
 
         public SynchronizedEventDispatcher(object sender, SynchronizationContext synchronizationContext)
         {

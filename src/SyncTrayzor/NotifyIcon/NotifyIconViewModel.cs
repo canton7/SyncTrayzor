@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
+using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;

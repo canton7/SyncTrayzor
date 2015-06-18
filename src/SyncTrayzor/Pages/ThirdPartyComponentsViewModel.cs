@@ -114,6 +114,15 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "BouncyCastle",
+                    Description = "BouncyCastle.Crypto is a cryptography API",
+                    Homepage = "http://www.bouncycastle.org/csharp/",
+                    License = "MIT",
+                    Notes = "Used to sign and verify sha1sum / md5sum files",
+                    LicenseText = this.LoadLicense("BouncyCastle.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "PropertyChanged.Fody",
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",

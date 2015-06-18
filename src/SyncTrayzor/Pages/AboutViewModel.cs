@@ -50,7 +50,7 @@ namespace SyncTrayzor.Pages
             this.processStartProvider = processStartProvider;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-            this.HomepageUrl = Settings.Default.HomepageUrl;
+            this.HomepageUrl = Properties.Settings.Default.HomepageUrl;
 
             this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
             this.syncThingManager.DataLoaded += (o, e) =>

@@ -59,9 +59,10 @@ namespace SyncTrayzor.SyncThing
             this.ignoresFetchTimeout = ignoresFetchTimeout;
 
             this.eventWatcher = eventWatcher;
-            this.eventWatcher.SyncStateChanged += (o2, e2) => this.OnSyncStateChanged(e2);
-            this.eventWatcher.ItemStarted += (o2, e2) => this.ItemStarted(e2.Folder, e2.Item);
-            this.eventWatcher.ItemFinished += (o2, e2) => this.ItemFinished(e2.Folder, e2.Item);
+            this.eventWatcher.SyncStateChanged += (o, e) => this.FolderSyncStateChanged(e);
+            this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
+            this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
+            this.eventWatcher.EventsSkipped += (o, e) => this.EventsSkipped();
         }
 
         public bool TryFetchById(string folderId, out Folder folder)
@@ -95,10 +96,12 @@ namespace SyncTrayzor.SyncThing
                 .Select(async folder =>
                 {
                     var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
+                    var syncState = await this.FetchFolderSyncStateAsync(folder.ID, cancellationToken);
                     var path = folder.Path;
                     if (path.StartsWith("~"))
                         path = Path.Combine(systemInfo.Tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-                    return new Folder(folder.ID, path, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
+
+                    return new Folder(folder.ID, path, syncState, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
                 });
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -151,6 +154,12 @@ namespace SyncTrayzor.SyncThing
             return ignores;
         }
 
+        private async Task<FolderSyncState> FetchFolderSyncStateAsync(string folderId, CancellationToken cancellationToken)
+        {
+            var status = await this.apiClient.Value.FetchFolderStatusAsync(folderId, cancellationToken);
+            return status.State == "syncing" ? FolderSyncState.Syncing : FolderSyncState.Idle;
+        }
+
         private void ItemStarted(string folderId, string item)
         {
             Folder folder;
@@ -169,12 +178,7 @@ namespace SyncTrayzor.SyncThing
             folder.RemoveSyncingPath(item);
         }
 
-        private void OnFoldersChanged()
-        {
-            this.eventDispatcher.Raise(this.FoldersChanged);
-        }
-
-        private void OnSyncStateChanged(SyncStateChangedEventArgs e)
+        private void FolderSyncStateChanged(SyncStateChangedEventArgs e)
         {
             Folder folder;
             if (!this.folders.TryGetValue(e.FolderId, out folder))
@@ -182,7 +186,36 @@ namespace SyncTrayzor.SyncThing
 
             folder.SyncState = e.SyncState;
 
-            this.eventDispatcher.Raise(this.SyncStateChanged, new FolderSyncStateChangeEventArgs(folder, e.PrevSyncState, e.SyncState));
+            this.OnSyncStateChanged(folder, e.PrevSyncState, e.SyncState);
+        }
+
+        private async void EventsSkipped()
+        {
+            // Shit. We don't know what state any of our folders are in. We'll have to poll them all....
+            var folders = this.FetchAll();
+            var updateTasks = folders.Select(async folder =>
+            {
+                var newState = await this.FetchFolderSyncStateAsync(folder.FolderId, CancellationToken.None);
+                var oldState = folder.SyncState;
+
+                if (oldState != newState)
+                {
+                    folder.SyncState = newState;
+                    this.OnSyncStateChanged(folder, oldState, newState);
+                }
+            });
+
+            await Task.WhenAll(updateTasks);
+        }
+
+        private void OnFoldersChanged()
+        {
+            this.eventDispatcher.Raise(this.FoldersChanged);
+        }
+
+        private void OnSyncStateChanged(Folder folder, FolderSyncState prevSyncState, FolderSyncState newSyncState)
+        {
+            this.eventDispatcher.Raise(this.SyncStateChanged, new FolderSyncStateChangeEventArgs(folder, prevSyncState, newSyncState));
         }
     }
 }

@@ -32,9 +32,11 @@ Compression=lzma2/max
 ;Compression=None
 SolidCompression=yes
 PrivilegesRequired=admin
-; Unintuitive - but we forcefully close SyncTrayzor ourselves (because the CEF subprocess doesn't exit when asked to)
-; If we allow this, then the user gets a 'stopped programs?' prompt. If they hit 'no', then SyncTrayzor is still stopped, by us.
-CloseApplications=no
+CloseApplications=yes
+RestartApplications=no
+; If we try and close CefSharp.BrowserSubprocess.exe we'll fail - it doesn't respond well
+; However if we close *just* SyncTrayzor, that will take care of shutting down CefSharp and syncthing
+CloseApplicationsFilter=SyncTrayzor.exe
 TouchDate=current
 
 [Languages]
@@ -95,8 +97,6 @@ begin
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
-var
-  ResultCode: integer;
 begin
   if CurStep = ssInstall then
   begin
@@ -105,20 +105,6 @@ begin
     { We might be being run from ProcessRunner.exe, *and* we might be trying to update it. Funsies. Let's rename it (which Windows lets us do) }
     DeleteFile(ExpandConstant('{app}\ProcessRunner.exe.old'));
     RenameFile(ExpandConstant('{app}\ProcessRunner.exe'), ExpandConstant('{app}\ProcessRunner.exe.old'));
-
-    { This is really evil, but CefSharp.BrowserSubprocess.exe doesn't like to exit if we ask it nicely, so we have to kill it }
-    ShellExec('open', 'taskkill.exe', '/f /t /im SyncTrayzor.exe', '', SW_HIDE, ewNoWait, ResultCode);
-  end
-end;
-
-procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
-var
-  ResultCode: integer;
-begin
-  if CurUninstallStep = usUninstall then
-  begin
-    { This is really evil, but CefSharp.BrowserSubprocess.exe doesn't like to exit if we ask it nicely, so we have to kill it }
-    ShellExec('open', 'taskkill.exe', '/f /t /im SyncTrayzor.exe', '', SW_HIDE, ewNoWait, ResultCode);
   end
 end;
 

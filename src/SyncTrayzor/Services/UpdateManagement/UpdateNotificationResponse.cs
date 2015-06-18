@@ -21,6 +21,9 @@ namespace SyncTrayzor.Services.UpdateManagement
         [JsonProperty("direct_download_url")]
         public string DirectDownloadUrl { get; set; }
 
+        [JsonProperty("sha1sum_download_url")]
+        public string Sha1sumDownloadUrl { get; set; }
+
         [JsonProperty("release_page_url")]
         public string ReleasePageUrl { get; set; }
 
@@ -29,8 +32,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public override string ToString()
         {
-            return String.Format("<UpdateNotificationData version={0} direct_download_url={1} release_page_url={2} release_notes={3}>",
-                this.Version.ToString(3), this.DirectDownloadUrl, this.ReleasePageUrl, this.ReleaseNotes);
+            return String.Format("<UpdateNotificationData version={0} direct_download_url={1} sha1sum_download_url={2} release_page_url={3} release_notes={4}>",
+                this.Version.ToString(3), this.DirectDownloadUrl, this.Sha1sumDownloadUrl, this.ReleasePageUrl, this.ReleaseNotes);
         }
     }
 

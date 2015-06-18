@@ -65,19 +65,22 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.22' => [
+   '1.0.23' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.22/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.22/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.23/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.23/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.22',
-      'release_notes' => "- Improvements to the \"File Transfers\" view (single-click tray icon)\n- Better error message handling (#93, #96)\n- Update translations",
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.23/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.23',
+      'release_notes' => "MANDATORY UPGRADE! Adds support for Syncthing 0.11.10.\nIf you do not upgrade, you may see crashes!\n\n- Support for Syncthing v0.11.10\n- Fix and improve file transfers window (#101, #106)\n- Fix various crashes (#108, #112, #114, #155)\n- Add option to disable hardware rendering (#104)",
    ]
 ];
 
 $upgrades = [
+   // 1.0.23 will use formatter 3
+   '1.0.22' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.21' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.20' => ['to' => 'latest', 'formatter' => '2'],
    // 1.0.19 was never actually released, so no need to represent it
@@ -103,7 +106,7 @@ $response_formatters = [
 
       return $data;
    },
-   // For when everything's working....
+   // Prior to sha1sum_download_url
    '2' => function($arch, $variant, $to_version, $to_version_info, $overrides)
    {
       $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
@@ -111,6 +114,20 @@ $response_formatters = [
       $data = [
          'version' => $to_version,
          'direct_download_url' => get_with_wildcard($variant_info['direct_download_url'], $arch),
+         'release_page_url' => $to_version_info['release_page_url'],
+         'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
+      ];
+
+      return $data;
+   },
+   '3' => function($arch, $variant, $to_version, $to_version_info, $overrides)
+   {
+      $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
+
+      $data = [
+         'version' => $to_version,
+         'direct_download_url' => get_with_wildcard($variant_info['direct_download_url'], $arch),
+         'sha1sum_download_url' => $to_version_info['sha1sum_download_url'],
          'release_page_url' => $to_version_info['release_page_url'],
          'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
       ];

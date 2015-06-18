@@ -9,20 +9,14 @@ namespace SyncTrayzor.SyncThing.ApiClient
 {
     public class LocalIndexUpdatedEventData
     {
-        [JsonProperty("flags")]
-        public string Flags { get; set; }
-
-        [JsonProperty("modified")]
-        public DateTime Modified { get; set; }
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
         [JsonProperty("folder")]
         public string Folder { get; set; }
 
-        [JsonProperty("size")]
-        public long Size { get; set; }
+        [JsonProperty("items")]
+        public int Items { get; set; }
+
+        [JsonProperty("version")]
+        public long Version { get; set; }
     }
 
     public class LocalIndexUpdatedEvent : Event
@@ -37,7 +31,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<LocalIndexUpdated ID={0} Time={1} Flags={2} Modified={3} Name={4} Folder={5} Size={6}>", this.Id, this.Time, this.Data.Flags, this.Data.Modified, this.Data.Name, this.Data.Folder, this.Data.Size);
+            return String.Format("<LocalIndexUpdated ID={0} Time={1} Folder={2} Items={3} Version={4}>", this.Id, this.Time, this.Data.Folder, this.Data.Items, this.Data.Version);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
+using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
@@ -101,15 +102,6 @@ namespace SyncTrayzor.Pages
         public void Restart()
         {
             this.syncThingManager.RestartAsync();
-        }
-
-        public bool CanKill
-        {
-            get { return this.SyncThingState != SyncThingState.Stopped; }
-        }
-        public void Kill()
-        {
-            this.syncThingManager.Kill();
         }
 
         public bool CanRefreshBrowser

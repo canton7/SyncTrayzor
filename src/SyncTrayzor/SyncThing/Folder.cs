@@ -62,11 +62,11 @@ namespace SyncTrayzor.SyncThing
             set { lock (this.ignoresLock) { this._ignores = value; } }
         }
 
-        public Folder(string folderId, string path, FolderIgnores ignores)
+        public Folder(string folderId, string path, FolderSyncState syncState, FolderIgnores ignores)
         {
             this.FolderId = folderId;
             this.Path = path;
-            this.SyncState = FolderSyncState.Idle;
+            this.SyncState = syncState;
             this.syncingPaths = new HashSet<string>();
             this._ignores = ignores;
         }
