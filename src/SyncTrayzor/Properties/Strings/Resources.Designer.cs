@@ -135,7 +135,7 @@ namespace SyncTrayzor.Properties.Strings {
         /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
         ///
-        ///This risks correupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running..
+        ///This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running..
         /// </summary>
         public static string Dialog_ConfirmKillAllProcesses_Message {
             get {
