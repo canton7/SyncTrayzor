@@ -14,7 +14,7 @@ namespace SyncTrayzor.Services.UpdateManagement
     public interface IInstallerCertificateVerifier
     {
         bool VerifySha1sum(string filePath, out Stream cleartext);
-        bool VerifyUpdate(string filePath, Stream sha1sumFile);
+        bool VerifyUpdate(string filePath, Stream sha1sumFile, string originalFileName);
     }
 
     public class InstallerCertificateVerifier : IInstallerCertificateVerifier
@@ -45,12 +45,20 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
-        public bool VerifyUpdate(string filePath, Stream sha1sumFile)
+        public bool VerifyUpdate(string filePath, Stream sha1sumFile, string originalFileName)
         {
             using (var hashAlgorithm = new SHA1Managed())
             using (var file = this.filesystemProvider.OpenRead(filePath))
             {
-                return ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, sha1sumFile, Path.GetFileName(filePath), file);
+                try
+                {
+                    return ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, sha1sumFile, originalFileName, file);
+                }
+                catch (ArgumentException)
+                {
+                    logger.Warn("Could not find checksum for file {0}", originalFileName);
+                    return false;
+                }
             }
         }
     }

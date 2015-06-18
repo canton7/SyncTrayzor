@@ -352,9 +352,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="..\..\security\synctrayzor_releases_cert.asc">
+    <EmbeddedResource Include="..\..\security\synctrayzor_releases_cert.asc">
       <Link>Resources\synctrayzor_releases_cert.asc</Link>
-    </None>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

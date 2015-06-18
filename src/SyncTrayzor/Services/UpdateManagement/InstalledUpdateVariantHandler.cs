@@ -32,9 +32,9 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<bool> TryHandleUpdateAvailableAsync(VersionCheckResults checkResult)
         {
-            if (!String.IsNullOrWhiteSpace(checkResult.DownloadUrl))
+            if (!String.IsNullOrWhiteSpace(checkResult.DownloadUrl) && !String.IsNullOrWhiteSpace(checkResult.Sha1sumDownloadUrl))
             {
-                this.installerPath = await this.updateDownloader.DownloadUpdateAsync(checkResult.DownloadUrl, checkResult.NewVersion);
+                this.installerPath = await this.updateDownloader.DownloadUpdateAsync(checkResult.DownloadUrl, checkResult.Sha1sumDownloadUrl, checkResult.NewVersion);
                 this.CanAutoInstall = true;
 
                 // If we return false, the upgrade will be aborted

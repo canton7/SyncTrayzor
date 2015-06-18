@@ -14,7 +14,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IUpdateDownloader
     {
-        Task<string> DownloadUpdateAsync(string url, Version version);
+        Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version);
     }
 
     public class UpdateDownloader : IUpdateDownloader
@@ -36,12 +36,12 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.installerVerifier = installerVerifier;
         }
 
-        public async Task<string> DownloadUpdateAsync(string url, Version version)
+        public async Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version)
         {
             var sha1sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sham1sumDownloadFileName, version.ToString(3)));
             var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(updateDownloadFileName, version.ToString(3)));
 
-            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(url, version, sha1sumDownloadPath, () =>
+            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, () =>
                 {
                     Stream sha1sumContents;
                     var passed = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath, out sha1sumContents);
@@ -54,9 +54,12 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 if (sha1sumOutcome.Item1)
                 {
-                    updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(url, version, updateDownloadPath, () =>
+                    updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(updateUrl, version, updateDownloadPath, () =>
                     {
-                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha1sumOutcome.Item2);
+                        var updateUri = new Uri(updateUrl);
+                        // Make sure this is rewound - we might read from it multiple times
+                        sha1sumOutcome.Item2.Position = 0;
+                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha1sumOutcome.Item2, updateUri.Segments.Last());
                         return Tuple.Create(updatePassed, (object)null);
                     })).Item1;
                 }

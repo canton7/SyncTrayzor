@@ -72,52 +72,62 @@ namespace SyncTrayzor.Utils
 
         public static bool ReadAndVerifyFile(Stream inputStream, Stream keyIn, out Stream cleartextOut)
         {
-            // Disposing this will close the underlying stream, which we don't want to do
-            var armouredInputStream = new ArmoredInputStream(inputStream);
-
-            // This stream is returned, so is not disposed
-            var cleartextStream = new MemoryStream();
-
-            int chr;
-
-            while ((chr = armouredInputStream.ReadByte()) >= 0 && armouredInputStream.IsClearText())
+            // Count any exception as BouncyCastle failing to parse something, because of corruption maybe?
+            try
             {
-                cleartextStream.WriteByte((byte)chr);
+
+                // Disposing this will close the underlying stream, which we don't want to do
+                var armouredInputStream = new ArmoredInputStream(inputStream);
+
+                // This stream is returned, so is not disposed
+                var cleartextStream = new MemoryStream();
+
+                int chr;
+
+                while ((chr = armouredInputStream.ReadByte()) >= 0 && armouredInputStream.IsClearText())
+                {
+                    cleartextStream.WriteByte((byte)chr);
+                }
+
+                // Strip the trailing newline if set...
+                cleartextStream.Position = Math.Max(0, cleartextStream.Position - 2);
+                int count = 0;
+                if (cleartextStream.ReadByte() == '\r')
+                    count++;
+                if (cleartextStream.ReadByte() == '\n')
+                    count++;
+                cleartextStream.SetLength(cleartextStream.Length - count);
+
+                cleartextStream.Position = 0;
+
+                // This will either return inputStream, or a new ArmouredStream(inputStream)
+                // Either way, disposing it will close the underlying stream, which we don't want to do
+                var decoderStream = PgpUtilities.GetDecoderStream(inputStream);
+
+                var pgpObjectFactory = new PgpObjectFactory(decoderStream);
+
+                var signatureList = (PgpSignatureList)pgpObjectFactory.NextPgpObject();
+                var signature = signatureList[0];
+
+                var publicKeyRing = new PgpPublicKeyRingBundle(PgpUtilities.GetDecoderStream(keyIn));
+                var publicKey = publicKeyRing.GetPublicKey(signature.KeyId);
+
+                signature.InitVerify(publicKey);
+
+                while ((chr = cleartextStream.ReadByte()) > 0)
+                {
+                    signature.Update((byte)chr);
+                }
+                cleartextStream.Position = 0;
+
+                cleartextOut = cleartextStream;
+                return signature.Verify();
             }
-
-            // Strip the trailing newline if set...
-            cleartextStream.Seek(-2, SeekOrigin.End);
-            int count = 0;
-            if (cleartextStream.ReadByte() == '\r')
-                count++;
-            if (cleartextStream.ReadByte() == '\n')
-                count++;
-            cleartextStream.SetLength(cleartextStream.Length - count);
-
-            cleartextStream.Position = 0;
-
-            // This will either return inputStream, or a new ArmouredStream(inputStream)
-            // Either way, disposing it will close the underlying stream, which we don't want to do
-            var decoderStream = PgpUtilities.GetDecoderStream(inputStream);
-
-            var pgpObjectFactory = new PgpObjectFactory(decoderStream);
-
-            var signatureList = (PgpSignatureList)pgpObjectFactory.NextPgpObject();
-            var signature = signatureList[0];
-
-            var publicKeyRing = new PgpPublicKeyRingBundle(PgpUtilities.GetDecoderStream(keyIn));
-            var publicKey = publicKeyRing.GetPublicKey(signature.KeyId);
-
-            signature.InitVerify(publicKey);
-
-            while ((chr = cleartextStream.ReadByte()) > 0)
+            catch
             {
-                signature.Update((byte)chr);
+                cleartextOut = null;
+                return false;
             }
-            cleartextStream.Position = 0;
-
-            cleartextOut = cleartextStream;
-            return signature.Verify();
         }
     }
 }
