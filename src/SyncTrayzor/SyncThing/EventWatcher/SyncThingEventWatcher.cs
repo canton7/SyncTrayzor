@@ -202,15 +202,39 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(ItemStartedEvent evt)
         {
-            var actionType = actionTypeMapping[evt.Data.Action];
-            var itemType = itemTypeMapping[evt.Data.Type];
+            ItemChangedActionType actionType;
+            if (!actionTypeMapping.TryGetValue(evt.Data.Action, out actionType))
+            {
+                logger.Warn("Unknown item changed action type: {0}", evt.Data.Action);
+                return;
+            }
+
+            ItemChangedItemType itemType;
+            if (!itemTypeMapping.TryGetValue(evt.Data.Type, out itemType))
+            {
+                logger.Warn("Unknown item changed item type: {0}", evt.Data.Type);
+                return;
+            }
+
             this.OnItemStarted(evt.Data.Folder, evt.Data.Item, actionType, itemType);
         }
 
         public void Accept(ItemFinishedEvent evt)
         {
-            var actionType = actionTypeMapping[evt.Data.Action];
-            var itemType = itemTypeMapping[evt.Data.Type];
+            ItemChangedActionType actionType;
+            if (!actionTypeMapping.TryGetValue(evt.Data.Action, out actionType))
+            {
+                logger.Warn("Unknown item changed action type: {0}", evt.Data.Action);
+                return;
+            }
+
+            ItemChangedItemType itemType;
+            if (!itemTypeMapping.TryGetValue(evt.Data.Type, out itemType))
+            {
+                logger.Warn("Unknown item changed item type: {0}", evt.Data.Type);
+                return;
+            }
+
             this.OnItemFinished(evt.Data.Folder, evt.Data.Item, actionType, itemType, evt.Data.Error);
         }
 
