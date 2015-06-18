@@ -13,7 +13,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IInstallerCertificateVerifier
     {
-        Stream VerifySha1sum(string filePath);
+        bool VerifySha1sum(string filePath, out Stream cleartext);
         bool VerifyUpdate(string filePath, Stream sha1sumFile);
     }
 
@@ -23,10 +23,12 @@ namespace SyncTrayzor.Services.UpdateManagement
         private const string certificateName = "SyncTrayzor.Resources.synctrayzor_releases_cert.asc";
 
         private readonly IAssemblyProvider assemblyProvider;
+        private readonly IFilesystemProvider filesystemProvider;
 
-        public InstallerCertificateVerifier(IAssemblyProvider assemblyProvider)
+        public InstallerCertificateVerifier(IAssemblyProvider assemblyProvider, IFilesystemProvider filesystemProvider)
         {
             this.assemblyProvider = assemblyProvider;
+            this.filesystemProvider = filesystemProvider;
         }
 
         private Stream LoadCertificate()
@@ -34,19 +36,19 @@ namespace SyncTrayzor.Services.UpdateManagement
             return this.assemblyProvider.GetManifestResourceStream(certificateName);
         }
 
-        public Stream VerifySha1sum(string filePath)
+        public bool VerifySha1sum(string filePath, out Stream cleartext)
         {
-            using (var file = File.OpenRead(filePath))
+            using (var file = this.filesystemProvider.OpenRead(filePath))
             using (var certificate = this.LoadCertificate())
             {
-                return PgpClearsignUtilities.ReadAndVerifyFile(file, certificate);
+                return PgpClearsignUtilities.ReadAndVerifyFile(file, certificate, out cleartext);
             }
         }
 
         public bool VerifyUpdate(string filePath, Stream sha1sumFile)
         {
             using (var hashAlgorithm = new SHA1Managed())
-            using (var file = File.OpenRead(filePath))
+            using (var file = this.filesystemProvider.OpenRead(filePath))
             {
                 return ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, sha1sumFile, Path.GetFileName(filePath), file);
             }

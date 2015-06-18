@@ -70,7 +70,7 @@ namespace SyncTrayzor.Utils
             }
         }
 
-        public static Stream ReadAndVerifyFile(Stream inputStream, Stream keyIn)
+        public static bool ReadAndVerifyFile(Stream inputStream, Stream keyIn, out Stream cleartextOut)
         {
             // Disposing this will close the underlying stream, which we don't want to do
             var armouredInputStream = new ArmoredInputStream(inputStream);
@@ -116,10 +116,8 @@ namespace SyncTrayzor.Utils
             }
             cleartextStream.Position = 0;
 
-            if (signature.Verify())
-                return cleartextStream;
-            else
-                return null;
+            cleartextOut = cleartextStream;
+            return signature.Verify();
         }
     }
 }

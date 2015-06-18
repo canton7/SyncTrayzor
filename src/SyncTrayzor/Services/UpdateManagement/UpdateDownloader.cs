@@ -43,8 +43,9 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(url, version, sha1sumDownloadPath, () =>
                 {
-                    var sha1sumContents = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath);
-                    return Tuple.Create(sha1sumContents != null, sha1sumContents);
+                    Stream sha1sumContents;
+                    var passed = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath, out sha1sumContents);
+                    return Tuple.Create(passed, sha1sumContents);
                 });
 
             // Might be null, but if it's not make sure we dispose it (it's actually a MemoryStream, but let's be proper)

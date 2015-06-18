@@ -100,20 +100,24 @@ namespace ChecksumUtil
             // Signature first, then hash
             using (var checksumFile = File.OpenRead(checksumFileName))
             using (var certificate = File.OpenRead(certificateFileName))
-            using (var cleartext = PgpClearsignUtilities.ReadAndVerifyFile(checksumFile, certificate))
             {
-                if (cleartext == null)
-                    throw new Exception("Signature verification failed");
-
-                using (var hashAlgorithm = HashAlgorithm.Create(algorithmName))
+                Stream cleartext;
+                var passed = PgpClearsignUtilities.ReadAndVerifyFile(checksumFile, certificate, out cleartext);
+                using (cleartext)
                 {
-                    foreach (var inputFileName in inputFileNames)
+                    if (!passed)
+                        throw new Exception("Signature verification failed");
+
+                    using (var hashAlgorithm = HashAlgorithm.Create(algorithmName))
                     {
-                        using (var inputFile = File.OpenRead(inputFileName))
+                        foreach (var inputFileName in inputFileNames)
                         {
-                            var valid = ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, cleartext, Path.GetFileName(inputFileName), inputFile);
-                            if (!valid)
-                                throw new Exception(String.Format("File {0} failed checksum", inputFileName));
+                            using (var inputFile = File.OpenRead(inputFileName))
+                            {
+                                var valid = ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, cleartext, Path.GetFileName(inputFileName), inputFile);
+                                if (!valid)
+                                    throw new Exception(String.Format("File {0} failed checksum", inputFileName));
+                            }
                         }
                     }
                 }
