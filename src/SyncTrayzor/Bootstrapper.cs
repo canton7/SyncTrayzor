@@ -120,6 +120,7 @@ namespace SyncTrayzor
             // Also handles Restart Manager requests - sent by the installer. We need to shutdown syncthing and Cef in this case
             this.Application.SessionEnding += (o, e) =>
             {
+                LogManager.GetCurrentClassLogger().Info("Shutting down: {0}", e.ReasonSessionEnding);
                 var manager = this.Container.Get<ISyncThingManager>();
                 manager.StopAsync().Wait(250);
                 Task.Delay(250).Wait();
