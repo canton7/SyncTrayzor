@@ -47,3 +47,4 @@ deploy
 *.pfx
 *.pvk
 /src/SyncTrayzor/Icons/*.png
+security/private_key.asc
