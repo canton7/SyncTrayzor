@@ -21,6 +21,11 @@ namespace SyncTrayzor.SyncThing.ApiClient
         LocalIndexUpdated,
         ItemStarted,
         ItemFinished,
+
+        // Not quite sure which it's going to be, so play it safe...
+        MetadataChanged,
+        ItemMetadataChanged,
+
         StateChanged,
         FolderRejected,
         DeviceRejected,
