@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.0.23
+-------
+
+ - Support for Syncthing v0.11.10
+ - Fix and improve file transfers window (#101, #106)
+ - Fix various crashes (#108, #112, #114, #155)
+ - Add option to disable hardware rendering (#104)
+
 v1.0.22
 -------
 
