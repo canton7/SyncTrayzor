@@ -293,7 +293,7 @@ namespace :"download-syncthing" do
           end
         end
 
-        sh CHECKSUM_UTIL_EXE, 'verify', 'sha1', File.join(tmp, 'sha1sum.txt.asc'), SYNCTHING_RELEASES_CERT, download_file
+        sh CHECKSUM_UTIL_EXE, 'verify', File.join(tmp, 'sha1sum.txt.asc'), 'sha1', SYNCTHING_RELEASES_CERT, download_file
 
         Dir.chdir(tmp) do
           sh %Q{"#{SZIP}" e #{File.basename(download_file)}}
