@@ -104,15 +104,6 @@ namespace SyncTrayzor.Pages
             this.syncThingManager.RestartAsync();
         }
 
-        public bool CanKill
-        {
-            get { return this.SyncThingState != SyncThingState.Stopped; }
-        }
-        public void Kill()
-        {
-            this.syncThingManager.Kill();
-        }
-
         public bool CanRefreshBrowser
         {
             get { return this.SyncThingState == SyncThingState.Running; }

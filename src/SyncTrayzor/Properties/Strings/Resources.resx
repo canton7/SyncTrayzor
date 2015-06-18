@@ -175,9 +175,6 @@
   <data name="ShellView_Menu_Syncthing" xml:space="preserve">
     <value>_Syncthing</value>
   </data>
-  <data name="ShellView_Menu_Syncthing_Kill" xml:space="preserve">
-    <value>_Kill</value>
-  </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
     <value>Kill _all Syncthing processes</value>
   </data>
@@ -316,7 +313,9 @@
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?</value>
+    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
+
+This risks correupting Syncthing's database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running.</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">

@@ -49,6 +49,7 @@ namespace SyncTrayzor.SyncThing
 
         Task StartAsync();
         Task StopAsync();
+        Task StopAndWaitAsync();
         Task RestartAsync();
         void Kill();
         void KillAllSyncthingProcesses();
@@ -199,6 +200,25 @@ namespace SyncTrayzor.SyncThing
             this.SetState(SyncThingState.Stopping);
         }
 
+        public async Task StopAndWaitAsync()
+        {
+            var tcs = new TaskCompletionSource<object>();
+            EventHandler<SyncThingStateChangedEventArgs> stateChangedHandler = (o, e) =>
+            {
+                if (e.NewState == SyncThingState.Stopped)
+                    tcs.TrySetResult(null);
+                else if (e.NewState != SyncThingState.Stopping)
+                    tcs.TrySetException(new Exception(String.Format("Failed to stop Syncthing: Went to state {0} instead", e.NewState)));
+            };
+            this.StateChanged += stateChangedHandler;
+
+            await this.apiClient.Value.ShutdownAsync();
+            this.SetState(SyncThingState.Stopping);
+
+            await tcs.Task;
+            this.StateChanged -= stateChangedHandler;
+        }
+
         public Task RestartAsync()
         {
             if (this.State != SyncThingState.Running)
@@ -306,20 +326,17 @@ namespace SyncTrayzor.SyncThing
             {
                 var msg = String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase);
                 logger.Error(msg, e);
-                this.Kill();
                 throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
             catch (HttpRequestException e)
             {
                 var msg = String.Format("HttpRequestException while starting Syncthing", e);
                 logger.Error(msg, e);
-                this.Kill();
                 throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
             catch (Exception e)
             {
                 logger.Error("Error starting Syncthing API", e);
-                this.Kill();
                 throw e;
             }
         }

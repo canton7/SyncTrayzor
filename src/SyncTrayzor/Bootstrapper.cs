@@ -122,8 +122,7 @@ namespace SyncTrayzor
             {
                 LogManager.GetCurrentClassLogger().Info("Shutting down: {0}", e.ReasonSessionEnding);
                 var manager = this.Container.Get<ISyncThingManager>();
-                manager.StopAsync().Wait(250);
-                Task.Delay(250).Wait();
+                manager.StopAndWaitAsync().Wait(2000);
                 manager.Kill();
 
                 Process.GetCurrentProcess().Kill();
@@ -172,10 +171,10 @@ namespace SyncTrayzor
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("An unhandled exception occurred", e.Exception);
 
-            // It's nicer if we try killing the syncthing process, but if we can't, carry on
+            // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try
             {
-                this.Container.Get<ISyncThingManager>().Kill();
+                this.Container.Get<ISyncThingManager>().StopAsync();
             }
             catch { }
 
