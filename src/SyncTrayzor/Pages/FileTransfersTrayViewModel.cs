@@ -144,12 +144,12 @@ namespace SyncTrayzor.Pages
 
         protected override void OnActivate()
         {
-            foreach (var completedTransfer in this.syncThingManager.TransferHistory.CompletedTransfers.Where(x => x.ActionType != ItemChangedActionType.Metadata).Take(initialCompletedTransfersToDisplay).Reverse())
+            foreach (var completedTransfer in this.syncThingManager.TransferHistory.CompletedTransfers.Take(initialCompletedTransfersToDisplay).Reverse())
             {
                 this.CompletedTransfers.Add(new FileTransferViewModel(completedTransfer));
             }
 
-            foreach (var inProgressTranser in this.syncThingManager.TransferHistory.InProgressTransfers.Where(x => x.ActionType != ItemChangedActionType.Metadata).Reverse())
+            foreach (var inProgressTranser in this.syncThingManager.TransferHistory.InProgressTransfers.Reverse())
             {
                 this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTranser));
             }
@@ -174,9 +174,6 @@ namespace SyncTrayzor.Pages
 
         private void TransferStateChanged(object sender, FileTransferChangedEventArgs e)
         {
-            if (e.FileTransfer.ActionType == ItemChangedActionType.Metadata)
-                return;
-
             var transferVm = this.InProgressTransfers.FirstOrDefault(x => x.FileTransfer == e.FileTransfer);
             if (transferVm == null)
             {

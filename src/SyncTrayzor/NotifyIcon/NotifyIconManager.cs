@@ -127,8 +127,7 @@ namespace SyncTrayzor.NotifyIcon
         {
             if (this.ShowSynchronizedBalloon)
             {
-                var relevantFileTransfers = e.FileTransfers.Where(x => x.ActionType != ItemChangedActionType.Metadata).ToList();
-                if (relevantFileTransfers.Count == 0)
+                if (e.FileTransfers.Count == 0)
                 {
                     if (this.ShowSynchronizedBalloonEvenIfNothingDownloaded &&
                         DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
@@ -137,9 +136,9 @@ namespace SyncTrayzor.NotifyIcon
                         this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
                     }
                 }
-                else if (relevantFileTransfers.Count == 1)
+                else if (e.FileTransfers.Count == 1)
                 {
-                    var fileTransfer = relevantFileTransfers[0];
+                    var fileTransfer = e.FileTransfers[0];
                     string msg;
                     if (fileTransfer.ActionType == ItemChangedActionType.Update)
                         msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
@@ -150,8 +149,8 @@ namespace SyncTrayzor.NotifyIcon
                 }
                 else
                 {
-                    var updatedCount = relevantFileTransfers.Where(x => x.ActionType == ItemChangedActionType.Update).Count();
-                    var deletedCount = relevantFileTransfers.Where(x => x.ActionType == ItemChangedActionType.Delete).Count();
+                    var updatedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Update).Count();
+                    var deletedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Delete).Count();
 
                     var messageParts = new List<string>();
 
