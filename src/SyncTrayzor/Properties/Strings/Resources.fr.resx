@@ -175,9 +175,6 @@
   <data name="ShellView_Menu_Syncthing" xml:space="preserve">
     <value>_Syncthing</value>
   </data>
-  <data name="ShellView_Menu_Syncthing_Kill" xml:space="preserve">
-    <value>_Forcer l&apos;arrêt</value>
-  </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
     <value>Arrêter _tous les processus Syncthing</value>
   </data>
@@ -238,9 +235,6 @@
     <value>Réduire vers la zone de notification</value>
     <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
   </data>
-  <data name="SettingsView_MustRestartSyncthingWarning" xml:space="preserve">
-    <value>Vous devez redémarrer Syncthing pour que ces paramètres prennent effet</value>
-  </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
     <value>Masquer l&apos;ID des appareils dans le journal</value>
   </data>
@@ -295,7 +289,7 @@
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
-    <value>Use Syncthing&apos;s default database location</value>
+    <value>Utiliser l&apos;emplacement par défaut de Syncthing pour la base de données</value>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
     <value>If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
@@ -319,7 +313,9 @@
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Voulez-vous vraiment arrêter tous les processus Syncthing, y compris ceux non gérés par SyncTrayzor ?</value>
+    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
+
+This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running.</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
@@ -531,7 +527,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Utiliser la langue de mon ordinateur, si disponible. Vous devrez redémarrer SyncTrayzor.</value>
+    <value>Use my computer&apos;s language, where available</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
     <value>_Vue</value>
@@ -564,10 +560,10 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>La version {0} de SyncTrayzor a bien été installée.</value>
   </data>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
-    <value>SyncTrayzor Updated</value>
+    <value>SyncTrayzor a été mis à jour</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
-    <value>Unable to start Syncthing: {0}. Please see Syncthing&apos;s console output for clues.</value>
+    <value>Impossible de démarrer Syncthing : {0}. Veuillez regarder le log de Syncthing pour des indices sur la raison de l&apos;échec du démarrage.</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
     <value>Syncthing n&apos;a pas démarré correctement</value>
@@ -596,7 +592,7 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
 {1}: The total amount to download</comment>
   </data>
   <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
-    <value>Recently Updated</value>
+    <value>Dernièrement mis à jour</value>
     <comment>Header for section containing files that were recently downloaded or deleted</comment>
   </data>
   <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
@@ -615,19 +611,19 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
-    <value>{0:p:1 day|{} days} ago</value>
+    <value>il y a {0:p:1 jour|{} jours}</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>{0:p:1 hour|{} hours} hour ago</value>
+    <value>{0:p:1 hour|{} hours} ago</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
     <value>A l&apos;instant</value>
   </data>
   <data name="TimeAgo_Minutes" xml:space="preserve">
-    <value>{0:p:1 minute|{} minutes} ago</value>
+    <value>il y a {0:p:1 minute|{} minutes}</value>
   </data>
   <data name="TimeAgo_Years" xml:space="preserve">
-    <value>{0:p:1 years|{} years} ago</value>
+    <value>il y a {0:p:1 an|{} ans}</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
     <value>Téléchargement : {0}/{1} ({2}/s)</value>
@@ -640,31 +636,53 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>Erreur : {0}</value>
   </data>
   <data name="FileTransfersTrayView_PathDetails" xml:space="preserve">
-    <value>Folder: {0}
-Full Path: {1}</value>
+    <value>Dossier : {0}
+Chemin complet : {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
-    <value>Deleted {0:p:1 file|{} files}</value>
+    <value>Supprimé {0:p:1 fichier|{} fichiers}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
-    <value>{0}: Deleted {1}</value>
+    <value>{0} : Supprimé{1}</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was deleted</comment>
   </data>
-  <data name="TrayIcon_Balloon_FinishedSyncing_DownloadedSingleFile" xml:space="preserve">
-    <value>{0}: Downloaded {1}</value>
+  <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile" xml:space="preserve">
+    <value>{0}: Updated {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
-{1}: File that was downloaded</comment>
+{1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
-    <value>Updated {0:p:1 file|{} files}</value>
+    <value>Mis à jour {0:p:1 fichier|{} fichiers}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show even if no files were downloaded</value>
+    <value>Montrer même si aucun fichier n&apos;a été téléchargé</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
     <comment>{0}: Folder that finished syncing
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
+  </data>
+  <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
+    <value>Disable hardware rendering</value>
+  </data>
+  <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
+    <value>API key should contain only a-z A-Z 0-9 and -</value>
+  </data>
+  <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
+    <value>You must restart Syncthing for these settings to take effect.
+
+Do you want to restart Syncthing now?</value>
+  </data>
+  <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
+    <value>Restart Syncthing?</value>
+  </data>
+  <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
+    <value>You must restart SyncTrayzor for these settings to take effect.
+
+Do you want to restart SyncTrayzor now?</value>
+  </data>
+  <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
+    <value>Restart SyncTrayzor?</value>
   </data>
 </root>
