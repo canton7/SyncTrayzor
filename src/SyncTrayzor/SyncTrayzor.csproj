@@ -78,6 +78,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
@@ -310,8 +314,8 @@
     <Compile Include="SyncThing\TransferHistory\FolderSynchronizationFinishedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\SyncThingTransferHistory.cs" />
     <Compile Include="SyncThing\TransientWrapper.cs" />
-    <Compile Include="Utils\AuthenticodeTools.cs" />
     <Compile Include="Utils\Buffer.cs" />
+    <Compile Include="Utils\ChecksumFileUtilities.cs" />
     <Compile Include="Utils\ChromiumWebBrowserExtensions.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
@@ -320,6 +324,7 @@
     <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\PathEx.cs" />
+    <Compile Include="Utils\PgpClearsignUtilities.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
@@ -347,6 +352,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="..\..\security\synctrayzor_releases_cert.asc">
+      <Link>Resources\synctrayzor_releases_cert.asc</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -385,7 +393,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.sk.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SyncTrayzorCA.cer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

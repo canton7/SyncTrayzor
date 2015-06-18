@@ -16,25 +16,28 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         public Version NewVersion { get; private set; }
         public string DownloadUrl { get; private set; }
+        public string Sha1sumDownloadUrl { get; private set; }
         public string ReleaseNotes { get; private set; }
         public string ReleasePageUrl { get; private set; }
 
         public VersionCheckResults(
             Version newVersion,
             string downloadUrl,
+            string sha1sumDownloadUrl,
             string releaseNotes,
             string releasePageUrl)
         {
             this.NewVersion = newVersion;
             this.DownloadUrl = downloadUrl;
+            this.Sha1sumDownloadUrl = sha1sumDownloadUrl;
             this.ReleaseNotes = releaseNotes;
             this.ReleasePageUrl = releasePageUrl;
         }
 
         public override string ToString()
         {
-            return String.Format("<VersionCheckResults NewVersion={0} DownloadUrl={1} ReleaseNotes={2} ReleasePageUrl={3}>",
-                this.NewVersion, this.DownloadUrl, this.ReleaseNotes, this.ReleasePageUrl);
+            return String.Format("<VersionCheckResults NewVersion={0} DownloadUrl={1} Sha1sumDownloadUrl={2} ReleaseNotes={3} ReleasePageUrl={4}>",
+                this.NewVersion, this.DownloadUrl, this.Sha1sumDownloadUrl, this.ReleaseNotes, this.ReleasePageUrl);
         }
     }
 
@@ -103,7 +106,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     return null;
                 }
 
-                var results = new VersionCheckResults(updateData.Version, updateData.DirectDownloadUrl, updateData.ReleaseNotes, updateData.ReleasePageUrl);
+                var results = new VersionCheckResults(updateData.Version, updateData.DirectDownloadUrl, update.Data.Sha1sumDownloadUrl, updateData.ReleaseNotes, updateData.ReleasePageUrl);
                 logger.Info("Found new version: {0}", results);
                 return results;
             }

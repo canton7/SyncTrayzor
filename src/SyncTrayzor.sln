@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncTrayzor", "SyncTrayzor\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessRunner", "ProcessRunner\ProcessRunner.csproj", "{692BB2F9-CD24-482F-B13A-4335F27F6EC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChecksumUtil", "ChecksumUtil\ChecksumUtil.csproj", "{58EFC3AF-A52F-4492-A26A-D006890BE508}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +36,11 @@ Global
 		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x64.Build.0 = Release|x64
 		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x86.ActiveCfg = Release|x86
 		{692BB2F9-CD24-482F-B13A-4335F27F6EC2}.Release|x86.Build.0 = Release|x86
+		{58EFC3AF-A52F-4492-A26A-D006890BE508}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{58EFC3AF-A52F-4492-A26A-D006890BE508}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{58EFC3AF-A52F-4492-A26A-D006890BE508}.Debug|x86.Build.0 = Debug|Any CPU
+		{58EFC3AF-A52F-4492-A26A-D006890BE508}.Release|x64.ActiveCfg = Release|Any CPU
+		{58EFC3AF-A52F-4492-A26A-D006890BE508}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
