@@ -74,12 +74,13 @@ $versions = [
       ],
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.23/sha1sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.23',
-      'release_notes' => "- Improvements to the \"File Transfers\" view (single-click tray icon)\n- Better error message handling (#93, #96)\n- Update translations",
+      'release_notes' => "MANDATORY UPGRADE! Adds support for Syncthing 0.11.10.\nIf you do not upgrade, you may see crashes!\n\n- Support for Syncthing v0.11.10\n- Fix and improve file transfers window (#101, #106)\n- Fix various crashes (#108, #112, #114, #155)\n- Add option to disable hardware rendering (#104)",
    ]
 ];
 
 $upgrades = [
-   '1.0.22' => ['to' => 'latest', 'formatter' => '3'],
+   // 1.0.23 will use formatter 3
+   '1.0.22' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.21' => ['to' => 'latest', 'formatter' => '2'],
    '1.0.20' => ['to' => 'latest', 'formatter' => '2'],
    // 1.0.19 was never actually released, so no need to represent it
