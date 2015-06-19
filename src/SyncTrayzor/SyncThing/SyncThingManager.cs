@@ -204,7 +204,7 @@ namespace SyncTrayzor.SyncThing
         {
             var apiClient = this.apiClient.Value;
             if (apiClient != null)
-                return Task.FromResult(false);
+                return;
 
             var tcs = new TaskCompletionSource<object>();
             EventHandler<SyncThingStateChangedEventArgs> stateChangedHandler = (o, e) =>
