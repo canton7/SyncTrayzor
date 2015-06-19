@@ -189,6 +189,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.ru.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Strings\Resources.zh-CN.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
@@ -493,6 +498,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings\Resources.zh-CN.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Licenses\Syncthing.txt" />
   </ItemGroup>
