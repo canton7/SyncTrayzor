@@ -128,6 +128,8 @@ namespace SyncTrayzor
                 Process.GetCurrentProcess().Kill();
             };
 
+            AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
+
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {
                 { MessageBoxResult.Cancel, Resources.Generic_Dialog_Cancel },
@@ -164,6 +166,13 @@ namespace SyncTrayzor
             var logger = LogManager.GetCurrentClassLogger();
             var assembly = this.Container.Get<IAssemblyProvider>();
             logger.Debug("SyncTrazor version {0} ({1}) started at {2}", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location);
+        }
+
+        private void OnAppDomainUnhandledException(UnhandledExceptionEventArgs e)
+        {
+            // Testing has indicated that this and OnUnhandledException won't be called at the same time
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Error(String.Format("An unhandled AppDomain exception occurred. Terminating: {0}", e.IsTerminating), e.ExceptionObject as Exception);
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
