@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -192,6 +193,25 @@ namespace SyncTrayzor.SyncThing
         private async void EventsSkipped()
         {
             // Shit. We don't know what state any of our folders are in. We'll have to poll them all....
+            // Note that we're executing on the ThreadPool here: we don't have a Task route back to the main thread.
+            // Any exceptions are ours to manage....
+
+            // HttpRequestException, ApiException, and  OperationCanceledException are more or less expected: Syncthing could shut down
+            // at any point
+            try
+            {
+                await this.RefreshFoldersAsync();
+            }
+            catch (HttpRequestException)
+            { }
+            catch (OperationCanceledException)
+            { }
+            catch (ApiException)
+            { }
+        }
+
+        private async Task RefreshFoldersAsync()
+        {
             var folders = this.FetchAll();
             var updateTasks = folders.Select(async folder =>
             {
