@@ -118,135 +118,135 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutView_CreatedByAuthor" xml:space="preserve">
-    <value>Szerző: Antony Male.</value>
+    <value>由Antony Male编写</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Letöltési weblap megnyitása</value>
+    <value>打开下载页面</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
-    <value>Van új verzió: {0}</value>
+    <value>新版已可用: {0}</value>
     <comment>Prompt showing the user that a new version of SynTrayzor is available
 {0}: Latest version of SyncTrayzor </comment>
   </data>
   <data name="AboutView_ReleasedLicense" xml:space="preserve">
-    <value>Kiadás a MIT licensz szerint.</value>
+    <value>以MIT许可证授权</value>
   </data>
   <data name="AboutView_ShowOtherLicenses" xml:space="preserve">
-    <value>Nyílt forráskódú licenszek megtekintése</value>
+    <value>显示开源许可证</value>
   </data>
   <data name="AboutView_SyncthingVersion" xml:space="preserve">
-    <value>Syncthing verzió: {0}</value>
+    <value>Syncthing版本: {0}</value>
     <comment>Information showing the user the current version of Syncthing
 {0}: Current Syncthing version</comment>
   </data>
   <data name="AboutView_Version" xml:space="preserve">
-    <value>Verzió: {0}</value>
+    <value>版本: {0}</value>
     <comment>Information showing the user the current version of SyncTrayzor
 {0}: Current SyncTrayzor version</comment>
   </data>
   <data name="Generic_Dialog_Cancel" xml:space="preserve">
-    <value>Mégsem</value>
+    <value>取消</value>
     <comment>'Cancel' button shown in various dialogs</comment>
   </data>
   <data name="Generic_Dialog_Close" xml:space="preserve">
-    <value>Bezárás</value>
+    <value>关闭</value>
     <comment>'Close' button shown on various dialogs</comment>
   </data>
   <data name="Generic_Dialog_Save" xml:space="preserve">
-    <value>Mentés</value>
+    <value>保存</value>
     <comment>'Save' button shown on various dialogs</comment>
   </data>
   <data name="ShellView_Menu_File" xml:space="preserve">
-    <value>_Fájl</value>
+    <value>_文件</value>
   </data>
   <data name="ShellView_Menu_File_Exit" xml:space="preserve">
-    <value>_Kilépés</value>
+    <value>_退出</value>
   </data>
   <data name="ShellView_Menu_File_Settings" xml:space="preserve">
-    <value>_Beállítások</value>
+    <value>_设置</value>
   </data>
   <data name="ShellView_Menu_Help" xml:space="preserve">
-    <value>Sú_gó</value>
+    <value>_帮助</value>
   </data>
   <data name="ShellView_Menu_Help_About" xml:space="preserve">
-    <value>_Névjegy</value>
+    <value>_关于</value>
   </data>
   <data name="ShellView_Menu_Syncthing" xml:space="preserve">
     <value>_Syncthing</value>
   </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
-    <value>_Minden Syncthing folyamat bezárása</value>
+    <value>结束_全部Syncthing进程</value>
   </data>
   <data name="ShellView_Menu_Syncthing_OpenExternal" xml:space="preserve">
-    <value>Megnyitás _külső böngészőben</value>
+    <value>_使用外部浏览器打开</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Refresh" xml:space="preserve">
-    <value>Böngésző _frissítése</value>
+    <value>_刷新浏览器</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Start" xml:space="preserve">
-    <value>_Indítás</value>
+    <value>_开始</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Stop" xml:space="preserve">
-    <value>_Leállítás</value>
+    <value>停_止</value>
   </data>
   <data name="NewVersionAlertView_Button_DontRemind" xml:space="preserve">
-    <value>Ne figyelmeztessen többé</value>
+    <value>不要再提醒我</value>
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Letöltési weblap megnyitása</value>
+    <value>打开下载页面</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
-    <value>Figyelmeztessen később</value>
+    <value>稍后提醒</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to say they want to be prompted the next time they start SyncTrayzor</comment>
   </data>
   <data name="NewVersionAlertView_Changelog" xml:space="preserve">
-    <value>Változás napló:</value>
+    <value>更新日志：</value>
   </data>
   <data name="NewVersionAlertView_DontRemindMeExplanation" xml:space="preserve">
-    <value>Erre a változatra nem figyelmeztet többet. Az új változatokra vonatkozó figyelmeztetés letiltható a Beállítások lapon. A Súgó -&gt; Névjegy lapon kérhető verzió ellenőrzés.</value>
+    <value>”不要再提醒我“将只对该版本有效。你也可以在设置页面永久关闭更新提示。使用 帮助-&gt;关于 来手动检查更新。</value>
     <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
-    <value>SyncTrayzor {0} verzió elérhető!</value>
+    <value>SyncTrayzor版本 {0} 现已可用！</value>
     <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
   </data>
   <data name="NewVersionAlertView_Title" xml:space="preserve">
-    <value>SyncTrayzor frissítés elérhető</value>
+    <value>SyncTrayzor有可用更新</value>
     <comment>When a new version is available, the user receives a prompt. This is the title of that prompt.</comment>
   </data>
   <data name="SettingsView_AlertOnNewVersion" xml:space="preserve">
-    <value>Tájékoztatást kérek, ha van elérhető SyncTrayzor frissítés</value>
+    <value>当SyncTrayzor有新版本时提示</value>
   </data>
   <data name="SettingsView_ApiKey" xml:space="preserve">
-    <value>API kulcs:</value>
+    <value>API密钥:</value>
   </data>
   <data name="SettingsView_ApiKey_ToolTip" xml:space="preserve">
-    <value>A SyncTrayzor felülbírálja a Syncthing beállításaiban szereplő API kulcsot. Itt viszont bármilyen érték megadható.</value>
+    <value>SyncTrayzor将覆盖Syncthing设置里的API密钥。然而你可以在这里设它为任意你喜欢的值。</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_ApiKey text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_CloseToTray" xml:space="preserve">
-    <value>Bezárás a tálcára</value>
+    <value>关闭到通知栏</value>
     <comment>Setting allowing the user to indicate that the 'close' button on the top right of the window should put Syncthing down into the tray, rather than closing the application</comment>
   </data>
   <data name="SettingsView_MinimizeToTray" xml:space="preserve">
-    <value>Kicsinyítés a tálcára</value>
+    <value>最小化到通知栏</value>
     <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
   </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
-    <value>Eszközazonosítók rejtése a naplónézetben</value>
+    <value>在日志列表混淆设备ID</value>
   </data>
   <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
-    <value>Tálcaikon mutatása csak kilépéskor</value>
+    <value>只在关闭时显示通知栏图标</value>
   </data>
   <data name="SettingsView_Section_Advanced" xml:space="preserve">
-    <value>Bővített</value>
+    <value>高级</value>
     <comment>Section header for advanced settings</comment>
   </data>
   <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
-    <value>Indítás a rendszer indításakor</value>
+    <value>随开机启动</value>
     <comment>Section header for settings to do with automatically starting SyncTrayzor when the user logs in</comment>
   </data>
   <data name="SettingsView_Section_Syncthing" xml:space="preserve">
@@ -258,76 +258,76 @@
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
   <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
-    <value>Figyelt mappák</value>
+    <value>监视文件夹</value>
     <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
   </data>
   <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>&apos;Szinkronizálva&apos; értesítések mutatása</value>
+    <value>显示 已同步 气球提示</value>
     <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
   </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
-    <value>Indítás ikon méretben</value>
+    <value>启动时最小化</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
   </data>
   <data name="SettingsView_StartOnLogin" xml:space="preserve">
-    <value>Indítás a rendszer indításakor</value>
+    <value>随开机自动启动</value>
     <comment>Setting allowing the user to specify that SyncTrayzor should be started when the user logs in</comment>
   </data>
   <data name="SettingsView_StartOnLogin_PermissionDenied" xml:space="preserve">
-    <value>Engedély megtagadva. Ezen beállítások megváltoztatásához a SyncTrayzort rendszergazdaként kell futtatni.</value>
+    <value>权限不足。请以管理员用户运行SyncTrayzor以改变这些设置。</value>
     <comment>Message displayed instead of SettingsView_StartOnLogin SettingsView_StartMinimized when the user doesn't have permission to edit the registry</comment>
   </data>
   <data name="SettingsView_StartSyncthingAutomatically" xml:space="preserve">
-    <value>Syncthing indítása a SyncTrayzor indításakor</value>
+    <value>启动SyncTrayzor时一起启动Syncthing</value>
     <comment>Setting allowing the user to specify that Syncthing should be start automatically when SyncTrayzor starts</comment>
   </data>
   <data name="SettingsView_SyncthingAddress" xml:space="preserve">
-    <value>GUI figyelési cím</value>
+    <value>图形界面监听地址：</value>
   </data>
   <data name="SettingsView_SyncthingAddress_ToolTip" xml:space="preserve">
-    <value>A SyncTrayzor felülbírálja a Syncthing beállításaiban megadott &quot;GUI figyelési cím&quot;-et. Itt viszont bármilyen érték megadható.</value>
+    <value>SyncTrayzor将覆盖在Syncthing设置里的图形界面监听地址。然而你可以在这里设它为任意你喜欢的值。</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
-    <value>Használja a Syncthing adatbázis útvonalát</value>
+    <value>使用Syncthing的默认数据路径</value>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
-    <value>Ha nincs bepipálva, a SyncTrayzor minden Syncthing példány esetén más mappákat lát.</value>
+    <value>未勾选状态下SyncTrayzor将会管理一组与本机其他Syncthing实例不同的文件夹。</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_Title" xml:space="preserve">
-    <value>Beállítások</value>
+    <value>设置</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
   <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
-    <value>Syncthing környezeti változók:</value>
+    <value>Syncthing环境变量：</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Az alábbi mappák változásait figyeljük, így hosszabb lekérdezési időtáv is megadható.</value>
+    <value>以下文件夹将会被监视变动，这意味着你可以设置更长的轮询时间间隔。</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
-    <value>Nincsenek mappák. Kérjük, indítsa a Syncthinget</value>
+    <value>文件夹不可用。请启动Syncthing</value>
   </data>
   <data name="AboutView_UnknownVersion" xml:space="preserve">
-    <value>Ismeretlen</value>
+    <value>未知</value>
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Biztosan bezárjuk az összes Syncthing folyamatot, beleértve a nem SyncTrayzor által kezelteket is?
+    <value>你确定你想杀死所有（包括那些未由SyncTrayzor管理的）Syncthing进程吗？
 
-Ez elronthatja a Syncthing adatbázisait. CSAK akkor használjuk, ha a Syncthing másik Syncthing folyamat miatt nem képes elindulni.</value>
+这将带来损坏Syncthing数据库的风险。请只在有另外一个Syncthing进程阻碍你启动Syncthing时使用。</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
-    <value>Valóban?</value>
+    <value>真的吗？</value>
     <comment>Title for the dialog shown when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_FailedToStartSyncthing_Message" xml:space="preserve">
-    <value>A Syncthing indítása sikertelen.
+    <value>启动Syncthing失败。
 
-Az okok kiderítése érdekében, kérjük, olvassa el a naplófájlt.
+请检查日志以找出原因。
 
-Ha a &quot;FATAL: Cannot open database&quot; üzenet jelenik meg, zárja be a Syncthing minden példányát. Ha korábban a SyncTrayzor összeomlott, még lehetnek tetszhalott Syncthing példányok. Használja a &quot;Syncthing&quot; menü &quot;Minden Syncthing folyamat bezárása&quot; menüpontját, majd &quot;Syncthing&quot; -&gt; &quot;Indítás&quot; menüponttal indítsa újra a Syncthing-et.</value>
+如果出现&quot;FATAL: Cannot open database&quot;，请关闭其他正在运行的Syncthing实例。如果SyncTrayzor在之前非正常关闭，则可能出现僵尸Syncthing进程。请使用菜单栏中的&quot;Syncthing -&gt; 结束所有Syncthing进程&quot;来杀死它们，然后使用&quot;Syncthing -&gt; 启动&quot;再次启动Syncthing。</value>
     <comment>Content of the dialog shown when Syncthing couldn't be started (and exited with an error). Instructs the user on how to proceed.
 
 "FATAL: Cannot Open Database" should remain in English
@@ -335,166 +335,166 @@ Ha a &quot;FATAL: Cannot open database&quot; üzenet jelenik meg, zárja be a Sy
 The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to ShellView_Menu_Syncthing_KillAll, while "Syncthing -&gt;Start" corresponds to ShellView_Menu_Syncthing_Start</comment>
   </data>
   <data name="Dialog_FailedToStartSyncthing_Title" xml:space="preserve">
-    <value>A Syncthing nem tudott elindulni</value>
+    <value>Syncthing启动失败</value>
     <comment>Title of the dialog shown when Syncthing couldn't be started (and exited with an error)</comment>
   </data>
   <data name="Dialog_SyncthingBlockedByGroupPolicy_Message" xml:space="preserve">
-    <value>A Syncthing nem képes elindulni: {0}
+    <value>无法启动Syncthing： {0}
 
-Ennek oka lehet, hogy a Windows beállításai tiltják az AppData mappában lévő fájlok indítását, vagy valamelyik rosszindulatú programok eltávolítására készült alkalmazás (pl. CryptoPrevent) akadályozza meg.
+这可能是由于当前Windows设置或您的防病毒软件(如CryptoPrevent)阻止运行AppData文件夹内的程序。
 
-Kérjük, állítsa be a rendszert úgy, hogy &apos;{1}&apos; futtatható legyen</value>
+请更改您的设置或把&apos;{1}&apos;加入白名单。</value>
     <comment>Content of dialog shown when Syncthing couldn't start because of group policy settings (probably)
 {0}: Exact exception message
 {1}: Path to Syncthing executable</comment>
   </data>
   <data name="Dialog_SyncthingBlockedByGroupPolicy_Title" xml:space="preserve">
-    <value>Hiba a Syncthing indításakor</value>
+    <value>启动Syncthing时出现错误</value>
     <comment>Title of dialog shown when Syncthing couldn't start because of group policy settings (probably)</comment>
   </data>
   <data name="SettingsView_Validation_InvalidUrl" xml:space="preserve">
-    <value>Érvényes URL szükséges</value>
+    <value>必须是有效的URL</value>
     <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress field when the user enters a value which is not a value URL</comment>
   </data>
   <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">
-    <value>Nem lehet üres</value>
+    <value>不可为空</value>
     <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress or SettingsView_ApiKey fields when the user makes this field empty</comment>
   </data>
   <data name="ThirdPartyComponentsView_ComponentDescriptionLabel" xml:space="preserve">
-    <value>Leírás:</value>
+    <value>描述:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentHomepageLabel" xml:space="preserve">
-    <value>Honlap:</value>
+    <value>主页:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentLicenseLabel" xml:space="preserve">
-    <value>Licensz:</value>
+    <value>许可证：</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentLicenseTextLabel" xml:space="preserve">
-    <value>Licensz szövege:</value>
+    <value>许可证内容:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentNameLabel" xml:space="preserve">
-    <value>Név:</value>
+    <value>名称:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentNotesLabel" xml:space="preserve">
-    <value>Megjegyzések:</value>
+    <value>注释:</value>
   </data>
   <data name="ThirdPartyComponentsView_Intro" xml:space="preserve">
-    <value>A SyncTrayzor több, nyílt forráskódú összetevőt tartalmaz, nélkülük nem is létezne..
-Alább ezeknek az összetevőknek a részletei, licensz szövegei láthatók.</value>
+    <value>SyncTrayzor基于许多开源组件开发而成，没有它们SyncTrayzor将不会存在。
+下面展示的是各组件的详情以及他们的许可证内容。</value>
   </data>
   <data name="ThirdPartyComponentsView_Title" xml:space="preserve">
-    <value>Külső gyártók termékei</value>
+    <value>第三方组件</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Message" xml:space="preserve">
-    <value>{0}: szinkronizálás kész</value>
+    <value>{0}: 同步已完成</value>
     <comment>Content of the balloon message shown when a folder finished synchronization
 
 {0}:The name of the folder which finished synchronizing</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Title" xml:space="preserve">
-    <value>Szinkronizálás kész</value>
+    <value>同步已完成</value>
   </data>
   <data name="TrayIcon_Menu_CloseToTray" xml:space="preserve">
-    <value>Bezárás a _tálcára</value>
+    <value>关闭到通知栏</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to minimize itself to the tray</comment>
   </data>
   <data name="TrayIcon_Menu_Exit" xml:space="preserve">
-    <value>_Kilépés</value>
+    <value>_退出</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to exit</comment>
   </data>
   <data name="TrayIcon_Menu_Restore" xml:space="preserve">
-    <value>_Helyreállítás</value>
+    <value>_还原</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restore itself from the tray, and be visible to the user</comment>
   </data>
   <data name="TrayIcon_Menu_Settings" xml:space="preserve">
-    <value>_Beállítások</value>
+    <value>设_置</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>Syncthing _indítása</value>
+    <value>_启动Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>Syncthing _leállítása</value>
+    <value>停_止Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
-    <value>Hoppá! Valami nagyon nem oké.
-A SyncTrayzor ki fog lépni. Bocsánat</value>
+    <value>糟糕！出现严重错误。
+对不起，SyncTrayzor必须要关闭了。</value>
   </data>
   <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
     <value/>
     <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately after the log path</comment>
   </data>
   <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
-    <value>Meg kell adni egy naplófájlt. Itt található:</value>
+    <value>您可能会被要求提供日志文件。您可在这个位置找到它:</value>
     <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately before the log path</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
-    <value>és az alábbi adatokat tartalmazza:</value>
+    <value>并包括以下信息:</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately after the link to github, and also prompts the user to include the stack trace shown directly below this text</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Pre" xml:space="preserve">
-    <value>Kérjük, indítson új témát: </value>
+    <value>请把新issue开在</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately before the link to github</comment>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
-    <value>Hiba!</value>
+    <value>错误！</value>
     <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
-    <value>A Syncthing indul...</value>
+    <value>Syncthing正在启动…</value>
     <comment>Text shown in the centre of the screen when Syncthing is starting, but there's no UI to display yet</comment>
   </data>
   <data name="ViewerView_SyncthingStopped" xml:space="preserve">
-    <value>A Syncthing leállt</value>
+    <value>Syncthing已停止</value>
     <comment>Text shown in the centre of the screen when Syncthing is stopped</comment>
   </data>
   <data name="Generic_Dialog_No" xml:space="preserve">
-    <value>Nem</value>
+    <value>否</value>
     <comment>'No' button shown on various dialogs</comment>
   </data>
   <data name="Generic_Dialog_OK" xml:space="preserve">
-    <value>OK</value>
+    <value>好的</value>
     <comment>'OK' button shown on various dialogs</comment>
   </data>
   <data name="Generic_Dialog_Yes" xml:space="preserve">
-    <value>Igen.</value>
+    <value>是</value>
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>Magyar fordítás: DirektX</value>
+    <value>简体中文 翻译由 Honpan Lung 制作</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
-    <value>Tálcaikon</value>
+    <value>通知栏图标</value>
   </data>
   <data name="SettingsView_ShowDeviceConnectivityBalloons" xml:space="preserve">
-    <value>Kapcsolódott/szétkapcsolódott eszközök értesítésének mutatása</value>
+    <value>显示设备已连接/已断开的气球提示</value>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
-    <value>{0} kapcsolódva</value>
+    <value>{0} 已连接</value>
     <comment>Message of tray icon balloon show when another device connects
 {0}: device name</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Title" xml:space="preserve">
-    <value>Eszköz kapcsolódott</value>
+    <value>设备已连接</value>
     <comment>Title of tray icon balloon when another device connected</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceDisconnected_Message" xml:space="preserve">
-    <value>{0} lekapcsolódott</value>
+    <value>{0} 已断开</value>
     <comment>Message of tray icon balloon show when another device disconnects
 {0}: device name</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceDisconnected_Title" xml:space="preserve">
-    <value>Eszköz lekapcsolódott</value>
+    <value>设备已断开</value>
     <comment>Title of tray icon balloon when another device disconnected</comment>
   </data>
   <data name="ShellView_Menu_Syncthing_Restart" xml:space="preserve">
-    <value>_Újraindítás</value>
+    <value>重_启</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>Syncthing _újraindítása</value>
+    <value>重_启 Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -506,157 +506,157 @@ A SyncTrayzor ki fog lépni. Bocsánat</value>
     <comment>'SyncTrayzor' settings tab</comment>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade" xml:space="preserve">
-    <value>Syncthing automatikus frissítésének tiltása</value>
+    <value>停止Syncthing自动更新</value>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
-    <value>Ez akkor lehet hasznos, ha egy új Syncthing frissítés nem fér össze a SyncTrayzorral. Ekkor vissza kell térni a SyncTrayzor mappában lévő Syncthing korábbi változatához.</value>
+    <value>停止Syncthing自动更新。这在当新版Syncthing与SyncTrayzor出现兼容性问题时尤其有用。你将需要给SyncTrayzor的配置文件夹中的syncthing.exe降级。</value>
   </data>
   <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
-    <value>A Syncthing futtatása alacsony prioritással</value>
+    <value>以低进程优先级运行Syncthing</value>
   </data>
   <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
-    <value>Mappa _megnyitása</value>
+    <value>_打开文件夹</value>
     <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
   </data>
   <data name="ViewerView_OpenFolder" xml:space="preserve">
-    <value>Mappa megnyitása</value>
+    <value>打开文件夹</value>
     <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
   </data>
   <data name="ViewerView_StartSyncthing" xml:space="preserve">
-    <value>Syncthing indítása</value>
+    <value>启动Syncthing</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Használja a számítógépen beállított nyelvet, ha elérhető.</value>
+    <value>跟随系统语言，如果可用</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
-    <value>_Nézet</value>
+    <value>_查看</value>
   </data>
   <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
-    <value>Syncthing _parancssor</value>
+    <value>Syncthing控制台</value>
   </data>
   <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
-    <value>Telepítés most</value>
+    <value>现在安装</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
-    <value>Változások megtekintése</value>
+    <value>查看更新日志</value>
   </data>
   <data name="ShellView_Menu_Zoom" xml:space="preserve">
-    <value>Böngésző _nagyítása</value>
+    <value>_缩放浏览器</value>
   </data>
   <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
-    <value>_Nagyítás</value>
+    <value>放_大</value>
   </data>
   <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
-    <value>_Kicsinyítés</value>
+    <value>缩_小</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
-    <value>_Alapméret</value>
+    <value>_重设</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
-    <value>Kötelező formátum: &apos;VAR=érték VAR2=&quot;val1 val2&quot;&apos;</value>
+    <value>必须使用以下格式 &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;</value>
   </data>
   <data name="NewVersionInstalledView_Message" xml:space="preserve">
-    <value>A SyncTrayzor {0} verziója sikeresen települt.</value>
+    <value>SyncTrayzor版本 {0} 已成功安装。</value>
   </data>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
-    <value>SyncTrayzor frissítve</value>
+    <value>SyncTrayzor已更新</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
-    <value>A Syncthing indítása sikertelen: {0}. Lehetséges okok a Syncthing parancsorban találhatók..</value>
+    <value>无法启动Syncthing: {0}。请查看Syncthing的控制台输出以找出问题。</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
-    <value>A Syncthing indítása sikertelen</value>
+    <value>Syncthing无法正常启动。</value>
   </data>
   <data name="Generic_Copy" xml:space="preserve">
-    <value>_Másolás</value>
+    <value>_复制</value>
   </data>
   <data name="Generic_Cut" xml:space="preserve">
-    <value>_Kivágás</value>
+    <value>剪_切</value>
   </data>
   <data name="Generic_Paste" xml:space="preserve">
-    <value>_Beillesztés</value>
+    <value>_粘贴</value>
   </data>
   <data name="FileTranfersTrayView_Header_Downloading" xml:space="preserve">
-    <value>Letöltés</value>
+    <value>下载中</value>
     <comment>Header for section containing downloading files</comment>
   </data>
   <data name="FileTransfersTrayView_Deleted" xml:space="preserve">
-    <value>(törölve)</value>
+    <value>(已删除)</value>
     <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
-    <value>Letöültés {0}/{1}</value>
+    <value>下载中 {0}/{1}</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
 {1}: The total amount to download</comment>
   </data>
   <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
-    <value>Mostanában frissítve</value>
+    <value>最近更新</value>
     <comment>Header for section containing files that were recently downloaded or deleted</comment>
   </data>
   <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
-    <value>Be: {0}/s</value>
+    <value>进: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
-    <value>Mostanában nem volt fájlátvitel</value>
+    <value>最近无文件传输</value>
   </data>
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
-    <value>Ki: {0}/s</value>
+    <value>出: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="FileTransfersTrayView_Starting" xml:space="preserve">
-    <value>Indulás...</value>
+    <value>启动中…</value>
     <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
-    <value>{0:1{} napja}</value>
+    <value>{0:p:1 天|{} 天}前</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>{0:1{} órája}</value>
+    <value>{0:p:1 小时|{} 小时}前</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
-    <value>Épp most</value>
+    <value>刚才</value>
   </data>
   <data name="TimeAgo_Minutes" xml:space="preserve">
-    <value>{0:1{} perce}</value>
+    <value>{0:p:1 分钟|{} 分钟}前</value>
   </data>
   <data name="TimeAgo_Years" xml:space="preserve">
-    <value>{0:1{} éve}</value>
+    <value>{0:p:1 年|{} 年}前</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
-    <value>Letöltés {0}/{1} ({2}/s)</value>
+    <value>正在下载 {0}/{1} ({2}/s)</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
 {1}: The total amount to download
 {2}: The current download rate, e.g. 2.0MB</comment>
   </data>
   <data name="FileTransfersTrayView_Error" xml:space="preserve">
-    <value>Hiba: {0}</value>
+    <value>错误: {0}</value>
   </data>
   <data name="FileTransfersTrayView_PathDetails" xml:space="preserve">
-    <value>Mappa: {0}
-Útvonal: {1}</value>
+    <value>文件夹: {0}
+路径: {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
-    <value>Törölve {0:p:1{} fájl}</value>
+    <value>已删除{0:p:1 文件|{} 文件}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
-    <value>{0}: {1} törölve</value>
+    <value>{0}: 已删除 {1} </value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was deleted</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile" xml:space="preserve">
-    <value>{0}: frissítve {1}</value>
+    <value>{0}: 已更新 {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
-    <value>Frissítve {0:p:1{} fájl}</value>
+    <value>已更新 {0:p:1 文件|{} 文件}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Mutassa akkor is, ha egy fájlt sem töltött le</value>
+    <value>即使没有文件在下载也显示</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -664,25 +664,25 @@ A SyncTrayzor ki fog lépni. Bocsánat</value>
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
   </data>
   <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
-    <value>Hardveres gyorsítás tiltása</value>
+    <value>关闭硬件渲染</value>
   </data>
   <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
-    <value>Az API kulcs csak a-z, A-Z, 0-9 és - karaktereket tartalmazhat</value>
+    <value>API密钥应只包含a-z A-Z 0-9 和 -</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
-    <value>A változtatások életbe lépéséhez újra kell indítani a Syncthinget.
+    <value>您必须重启Syncthing以使设置生效。
 
-Indítsuk újra a Syncthinget most?</value>
+你想现在重启吗？</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
-    <value>Syncthing újraindítása?</value>
+    <value>重启Syncthing？</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
-    <value>A változtatások életbe lépéséhez újra kell indítani a SyncTrayzort.
+    <value>您必须重启SyncTrayzor以使设置生效。
 
-Indítsuk újra a SyncTrayzort most?</value>
+你想现在重启吗？</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
-    <value>SyncTrayzor újraindítása?</value>
+    <value>重启SyncTrayzor？</value>
   </data>
 </root>
