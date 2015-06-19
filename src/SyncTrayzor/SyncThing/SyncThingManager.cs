@@ -202,6 +202,10 @@ namespace SyncTrayzor.SyncThing
 
         public async Task StopAndWaitAsync()
         {
+            var apiClient = this.apiClient.Value;
+            if (apiClient != null)
+                return Task.FromResult(false);
+
             var tcs = new TaskCompletionSource<object>();
             EventHandler<SyncThingStateChangedEventArgs> stateChangedHandler = (o, e) =>
             {
@@ -212,7 +216,7 @@ namespace SyncTrayzor.SyncThing
             };
             this.StateChanged += stateChangedHandler;
 
-            await this.apiClient.Value.ShutdownAsync();
+            await apiClient.ShutdownAsync();
             this.SetState(SyncThingState.Stopping);
 
             await tcs.Task;
