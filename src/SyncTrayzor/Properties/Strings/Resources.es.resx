@@ -313,9 +313,9 @@
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
+    <value>¿Estás seguro de que quieres parar todos los procesos de Syncthing, incluso aquellos no gestionados por SyncTrayzor?
 
-This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running.</value>
+Esto conlleva el riesgo de corromper la base de datos de Syncthing. Haz esto SOLAMENTE si no es posible inciar Syncthing porque hay otro proceso de Syncthing ejecutándose.</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
@@ -605,10 +605,6 @@ SyncTrayzor se va a cerrar. Lo sentimos.</value>
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
     <value>Salida: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
-  </data>
-  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
-    <value>Iniciando...</value>
-    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
     <value>Hace {0:p:1 día|{} días}</value>
