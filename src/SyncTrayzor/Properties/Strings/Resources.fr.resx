@@ -606,10 +606,6 @@ SyncTrayzor doit se fermer. Veuillez nous excuser.</value>
     <value>Sortie : {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
-  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
-    <value>Démarrage...</value>
-    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
-  </data>
   <data name="TimeAgo_Days" xml:space="preserve">
     <value>il y a {0:p:1 jour|{} jours}</value>
   </data>

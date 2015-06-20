@@ -606,10 +606,6 @@ SyncTrayzor закрывается. Извините.</value>
     <value>Исх: {0}/сек</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
-  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
-    <value>Запускаю...</value>
-    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
-  </data>
   <data name="TimeAgo_Days" xml:space="preserve">
     <value>{0:p:1 день|{} дней} назад</value>
   </data>

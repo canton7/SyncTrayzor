@@ -70,11 +70,6 @@ namespace SyncTrayzor.Pages
         {
             switch (this.FileTransfer.Status)
             {
-                case FileTransferStatus.Started:
-                    this.ProgressString = Resources.FileTransfersTrayView_Starting;
-                    this.ProgressPercent = 0;
-                    break;
-
                 case FileTransferStatus.InProgress:
                     if (this.FileTransfer.DownloadBytesPerSecond.HasValue)
                     {
@@ -149,7 +144,7 @@ namespace SyncTrayzor.Pages
                 this.CompletedTransfers.Add(new FileTransferViewModel(completedTransfer));
             }
 
-            foreach (var inProgressTranser in this.syncThingManager.TransferHistory.InProgressTransfers.Reverse())
+            foreach (var inProgressTranser in this.syncThingManager.TransferHistory.InProgressTransfers.Where(x => x.Status == FileTransferStatus.InProgress).Reverse())
             {
                 this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTranser));
             }
@@ -177,12 +172,11 @@ namespace SyncTrayzor.Pages
             var transferVm = this.InProgressTransfers.FirstOrDefault(x => x.FileTransfer == e.FileTransfer);
             if (transferVm == null)
             {
-                transferVm = new FileTransferViewModel(e.FileTransfer);
-
                 if (e.FileTransfer.Status == FileTransferStatus.Completed)
-                    this.CompletedTransfers.Insert(0, transferVm);
-                else
-                    this.InProgressTransfers.Insert(0, transferVm);
+                    this.CompletedTransfers.Insert(0, new FileTransferViewModel(e.FileTransfer));
+                else if (e.FileTransfer.Status == FileTransferStatus.InProgress)
+                    this.InProgressTransfers.Insert(0, new FileTransferViewModel(e.FileTransfer));
+                // We don't care about 'starting' transfers
             }
             else
             {

@@ -463,7 +463,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>简体中文 翻译由 Honpan Lung 制作</value>
+    <value>简体中文翻译由 Honpan Lung 制作</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
@@ -605,10 +605,6 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
     <value>出: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
-  </data>
-  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
-    <value>启动中…</value>
-    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
     <value>{0:p:1 天|{} 天}前</value>

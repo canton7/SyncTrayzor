@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.25
+-------
+
+ - Fix crash on shutdown (#117)
+ - Don't show file tranfers that are 'starting'
+ - Be smarter about network timeouts when resuming from sleep
+
 v1.0.24
 -------
 

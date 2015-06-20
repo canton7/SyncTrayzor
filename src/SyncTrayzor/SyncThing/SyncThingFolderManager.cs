@@ -128,9 +128,11 @@ namespace SyncTrayzor.SyncThing
                     throw new InvalidOperationException("ApiClient must not be null");
             }
 
-            Ignores ignores;
-            var startedTime = DateTime.UtcNow;
-            while (true)
+            Ignores ignores = null;
+            // We used to time out after an absolute time here. However, there's the possiblity of going to sleep
+            // halfway through polling, which throws things off. Therefore use a number of iterations
+            var numRetries = this.ignoresFetchTimeout.TotalSeconds; // Each iteration is a second
+            for (var retriesCount = 0; retriesCount < numRetries; retriesCount++)
             {
                 try
                 {
@@ -145,12 +147,12 @@ namespace SyncTrayzor.SyncThing
                         throw;
                 }
 
-                if (DateTime.UtcNow - startedTime > this.ignoresFetchTimeout)
-                    throw new SyncThingDidNotStartCorrectlyException(String.Format("Unable to fetch ignores for folder {0}. Syncthing returned 500 after {1}", folderId, DateTime.UtcNow - startedTime));
-
                 await Task.Delay(1000, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
             }
+
+            if (ignores == null)
+                throw new SyncThingDidNotStartCorrectlyException(String.Format("Unable to fetch ignores for folder {0}. Syncthing returned 500 after {1}", folderId, this.ignoresFetchTimeout));
 
             return ignores;
         }

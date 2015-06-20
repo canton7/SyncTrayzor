@@ -606,10 +606,6 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Out: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
-  <data name="FileTransfersTrayView_Starting" xml:space="preserve">
-    <value>Starting...</value>
-    <comment>Displayed when an item is downloading, but we don't yet any any progress information for it</comment>
-  </data>
   <data name="TimeAgo_Days" xml:space="preserve">
     <value>{0:p:1 day|{} days} ago</value>
   </data>
