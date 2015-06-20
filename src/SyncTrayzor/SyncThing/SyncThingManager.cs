@@ -203,7 +203,7 @@ namespace SyncTrayzor.SyncThing
         public async Task StopAndWaitAsync()
         {
             var apiClient = this.apiClient.Value;
-            if (apiClient != null)
+            if (apiClient == null)
                 return;
 
             var tcs = new TaskCompletionSource<object>();
