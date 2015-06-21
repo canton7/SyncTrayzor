@@ -45,6 +45,7 @@ namespace SyncTrayzor
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
             builder.Bind<IApplicationWindowState>().To<ApplicationWindowState>().InSingletonScope();
+            builder.Bind<IUserActivityMonitor>().To<UserActivityMonitor>().InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<IApplicationPathsProvider>().To<ApplicationPathsProvider>().InSingletonScope();
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
