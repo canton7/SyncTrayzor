@@ -13,6 +13,12 @@ using System.Windows;
 
 namespace SyncTrayzor.Pages.Settings
 {
+    public class FolderSettings
+    {
+        public string FolderName { get; set; }
+        public bool IsWatched { get; set; }
+    }
+
     public class WatchedFolder
     {
         public string Folder { get; set; }
@@ -69,6 +75,8 @@ namespace SyncTrayzor.Pages.Settings
 
         public SettingItem<string> SyncThingEnvironmentalVariables { get; set; }
         public SettingItem<bool> SyncthingDenyUpgrade { get; set; }
+
+        public BindableCollection<FolderSettings> FolderSettings { get; set; }
 
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
@@ -145,6 +153,11 @@ namespace SyncTrayzor.Pages.Settings
                 Folder = x.ID,
                 IsSelected = x.IsWatched
             }));
+
+            this.FolderSettings = new BindableCollection<FolderSettings>()
+            {
+                new FolderSettings() { FolderName = "Folder Name" },
+            };
         }
 
         private SettingItem<T> CreateBasicSettingItem<T>(Expression<Func<Configuration, T>> accessExpression, IValidator<SettingItem<T>> validator = null)

@@ -148,10 +148,25 @@
             </TabItem>
             
             <TabItem Header="Folders">
-                <DataGrid IsReadOnly="True" HorizontalAlignment="Stretch" ColumnWidth="Auto">
+                <DataGrid ItemsSource="{Binding FolderSettings}"
+                          HorizontalAlignment="Stretch" Width="400"
+                          HeadersVisibility="Column"
+                          SelectionUnit="FullRow"
+                          AutoGenerateColumns="False"
+                          CanUserResizeColumns="False" CanUserSortColumns="False"
+                          CanUserReorderColumns="False" CanUserAddRows="False"
+                          CanUserDeleteRows="False">
+                    <DataGrid.Resources>
+                        <!--<Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                        </Style>-->
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Folder Name" Binding="{Binding FolderName}"/>
-                        <DataGridCheckBoxColumn Header="Watched"/>
+                        <DataGridTextColumn Header="Folder Name" Width="*" Binding="{Binding FolderName}" IsReadOnly="True"/>
+                        <DataGridCheckBoxColumn Header="Watched" Binding="{Binding IsWatched}"/>
                         <DataGridCheckBoxColumn Header="Notifications"/>
                     </DataGrid.Columns>
                 </DataGrid>
