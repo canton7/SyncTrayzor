@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:pages="clr-namespace:SyncTrayzor.Pages"
+        xmlns:settings="clr-namespace:SyncTrayzor.Pages.Settings"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         mc:Ignorable="d" 
-        d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
+        d:DataContext="{d:DesignInstance settings:SettingsViewModel}"
         Title="{l:Loc SettingsView_Title}"
         MinWidth="420"
         ResizeMode="NoResize" SizeToContent="WidthAndHeight">
@@ -145,6 +145,16 @@
                         </DockPanel>
                     </GroupBox>
                 </DockPanel>
+            </TabItem>
+            
+            <TabItem Header="Folders">
+                <DataGrid IsReadOnly="True" HorizontalAlignment="Stretch" ColumnWidth="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Folder Name" Binding="{Binding FolderName}"/>
+                        <DataGridCheckBoxColumn Header="Watched"/>
+                        <DataGridCheckBoxColumn Header="Notifications"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </TabItem>
         </TabControl>
     </DockPanel>
