@@ -8,6 +8,7 @@
         xmlns:settings="clr-namespace:SyncTrayzor.Pages.Settings"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        xmlns:lvlm="clr-namespace:Itenso.Windows.Controls.ListViewLayout;assembly=Itenso.Windows.Controls.ListViewLayout"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance settings:SettingsViewModel}"
         Title="{l:Loc SettingsView_Title}"
@@ -146,33 +147,37 @@
                     </GroupBox>
                 </DockPanel>
             </TabItem>
-            
+
             <TabItem Header="Folders">
-                <ListView ItemsSource="{Binding FolderSettings}">
+                <ListView Width="410"
+                          ItemsSource="{Binding FolderSettings}"
+                          Style="{StaticResource PassiveListViewStyle}"
+                          lvlm:ListViewLayoutManager.Enabled="True">
                     <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Folder" DisplayMemberBinding="{Binding FolderName}"/>
-                            <GridViewColumn Header="Watched">
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn Header="Folder" DisplayMemberBinding="{Binding FolderName}" lvlm:RangeColumn.IsFillColumn="True"/>
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <CheckBox Content="Watched" Margin="0,0,5,0"/>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding IsWatched}"/>
+                                        <CheckBox IsChecked="{Binding IsWatched}" HorizontalAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Notifications">
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <CheckBox Content="Notifications" Margin="0,0,5,0"/>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding IsWatched}"/>
+                                        <CheckBox IsChecked="{Binding IsWatched}" HorizontalAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListViewItem}">
-                            <Setter Property="Focusable" Value="False"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
                 </ListView>
             </TabItem>
         </TabControl>
