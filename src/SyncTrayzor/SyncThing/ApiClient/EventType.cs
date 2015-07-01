@@ -33,5 +33,6 @@ namespace SyncTrayzor.SyncThing.ApiClient
         DownloadProgress,
         FolderSummary,
         FolderCompletion,
+        FolderErrors,
     }
 }
