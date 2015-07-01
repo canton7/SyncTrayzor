@@ -185,6 +185,11 @@ namespace SyncTrayzor.Pages
         {
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
+
+            // This is ugly, but hey...
+            var window = this.View as Window;
+            if (window != null)
+                window.Activate();
         }
     }
 }

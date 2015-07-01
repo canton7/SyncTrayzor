@@ -201,7 +201,10 @@
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
+    <Compile Include="Services\IpcCommsClient.cs" />
+    <Compile Include="Services\IpcCommsServer.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
+    <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
