@@ -133,27 +133,27 @@ namespace SyncTrayzor.Services.Config
                 defaultConfig = XDocument.Load(ms);
             }
 
-            XDocument loadedConfig;
-            if (this.filesystem.Exists(this.paths.ConfigurationFilePath))
-            {
-                logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
-                using (var stream = this.filesystem.OpenRead(this.paths.ConfigurationFilePath))
-                {
-                    loadedConfig = XDocument.Load(stream);
-                }
-                loadedConfig = this.MigrateConfiguration(loadedConfig);
-
-                var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
-                loadedConfig.Root.ReplaceNodes(merged);
-            }
-            else
-            {
-                loadedConfig = defaultConfig;
-            }
-
             Configuration configuration;
             try
             {
+                XDocument loadedConfig;
+                if (this.filesystem.Exists(this.paths.ConfigurationFilePath))
+                {
+                    logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
+                    using (var stream = this.filesystem.OpenRead(this.paths.ConfigurationFilePath))
+                    {
+                        loadedConfig = XDocument.Load(stream);
+                    }
+                    loadedConfig = this.MigrateConfiguration(loadedConfig);
+
+                    var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
+                    loadedConfig.Root.ReplaceNodes(merged);
+                }
+                else
+                {
+                    loadedConfig = defaultConfig;
+                }
+
                 configuration = (Configuration)serializer.Deserialize(loadedConfig.CreateReader());
             }
             catch (Exception e)
