@@ -193,17 +193,25 @@ namespace SyncTrayzor.SyncThing
 
         public async Task StopAsync()
         {
-            if (this.State != SyncThingState.Running)
+            var apiClient = this.apiClient.Value;
+            if (this.State != SyncThingState.Running || apiClient == null)
                 return;
 
-            await this.apiClient.Value.ShutdownAsync();
+            // Syncthing can stop so quickly that it doesn't finish sending the response to us
+            try
+            {
+                await apiClient.ShutdownAsync();
+            }
+            catch (HttpRequestException)
+            { }
+
             this.SetState(SyncThingState.Stopping);
         }
 
         public async Task StopAndWaitAsync()
         {
             var apiClient = this.apiClient.Value;
-            if (apiClient == null)
+            if (this.State != SyncThingState.Running || apiClient == null)
                 return;
 
             var tcs = new TaskCompletionSource<object>();
@@ -216,19 +224,33 @@ namespace SyncTrayzor.SyncThing
             };
             this.StateChanged += stateChangedHandler;
 
-            await apiClient.ShutdownAsync();
+            // Syncthing can stop so quickly that it doesn't finish sending the response to us
+            try
+            {
+                await apiClient.ShutdownAsync();
+            }
+            catch (HttpRequestException)
+            { }
+
             this.SetState(SyncThingState.Stopping);
 
             await tcs.Task;
             this.StateChanged -= stateChangedHandler;
         }
 
-        public Task RestartAsync()
+        public async Task RestartAsync()
         {
             if (this.State != SyncThingState.Running)
-                return Task.FromResult(false);
+                return;
 
-            return this.apiClient.Value.RestartAsync();
+            // Syncthing can stop so quickly that it doesn't finish sending the response to us
+            try
+            {
+                await this.apiClient.Value.RestartAsync();
+            }
+            catch (HttpRequestException)
+            {
+            }
         }
 
         public void Kill()
