@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(DefaultingStringEnumConverter))]
     public enum EventType
     {
+        Unknown,
+
         Starting,
         StartupComplete,
         Ping,
