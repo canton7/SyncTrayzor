@@ -652,7 +652,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages even if no files were downloaded.
+        ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages even if no files were updated.
         /// </summary>
         public static string SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred {
             get {

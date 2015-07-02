@@ -646,7 +646,7 @@ Full Path: {1}</value>
     <value>Updated {0:p:1 file|{} files}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show 'Synchronized' balloon messages even if no files were downloaded</value>
+    <value>Show 'Synchronized' balloon messages even if no files were updated</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
