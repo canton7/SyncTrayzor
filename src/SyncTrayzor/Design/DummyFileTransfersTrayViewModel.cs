@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using System;

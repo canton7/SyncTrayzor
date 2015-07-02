@@ -37,10 +37,10 @@ namespace SyncTrayzor.SyncThing.ApiClient
         }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        public ItemChangedItemType Type { get; set; }
 
         [JsonProperty("action")]
-        public string Action { get; set; }
+        public ItemChangedActionType Action { get; set; }
     }
 
     public class ItemFinishedEvent : Event

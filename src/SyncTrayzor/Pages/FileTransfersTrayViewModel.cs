@@ -3,6 +3,7 @@ using Stylet;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
@@ -60,8 +61,8 @@ namespace SyncTrayzor.Pages
             this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
             this.FullPath = this.FileTransfer.Path;
             this.FolderId = this.FileTransfer.FolderId;
-            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType == SyncThing.EventWatcher.ItemChangedItemType.File);
-            this.WasDeleted = this.FileTransfer.ActionType == SyncThing.EventWatcher.ItemChangedActionType.Delete;
+            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Folder);
+            this.WasDeleted = this.FileTransfer.ActionType == ItemChangedActionType.Delete;
 
             this.UpdateState();
         }
@@ -221,7 +222,7 @@ namespace SyncTrayzor.Pages
             {
                 if (fileTransfer.ItemType == ItemChangedItemType.File)
                     this.processStartProvider.StartDetached("explorer.exe", String.Format("/select, \"{0}\"", Path.Combine(folder.Path, fileTransfer.Path)));
-                else
+                else if (fileTransfer.ItemType == ItemChangedItemType.Folder)
                     this.processStartProvider.StartDetached("explorer.exe", Path.Combine(folder.Path, fileTransfer.Path));
             }
         }

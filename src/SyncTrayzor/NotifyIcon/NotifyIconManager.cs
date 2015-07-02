@@ -4,6 +4,7 @@ using SyncTrayzor.Localization;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using System;
@@ -139,13 +140,14 @@ namespace SyncTrayzor.NotifyIcon
                 else if (e.FileTransfers.Count == 1)
                 {
                     var fileTransfer = e.FileTransfers[0];
-                    string msg;
+                    string msg = null;
                     if (fileTransfer.ActionType == ItemChangedActionType.Update)
                         msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
-                    else
+                    else if (fileTransfer.ActionType == ItemChangedActionType.Delete)
                         msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
 
-                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, msg, BalloonIcon.Info);
+                    if (msg != null)
+                        this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, msg, BalloonIcon.Info);
                 }
                 else
                 {

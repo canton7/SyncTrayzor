@@ -30,16 +30,6 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClientWrapper;
         private readonly TaskFactory taskFactory = new TaskFactory(new LimitedConcurrencyTaskScheduler(1));
         private ISyncThingApiClient apiClient;
-        private static readonly Dictionary<string, ItemChangedActionType> actionTypeMapping = new Dictionary<string, ItemChangedActionType>()
-        {
-            { "update", ItemChangedActionType.Update },
-            { "delete", ItemChangedActionType.Delete },
-        };
-        private static readonly Dictionary<string, ItemChangedItemType> itemTypeMapping = new Dictionary<string, ItemChangedItemType>()
-        {
-            { "file", ItemChangedItemType.File },
-            { "dir", ItemChangedItemType.Folder },
-        };
 
         private int lastEventId;
 
@@ -202,40 +192,12 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(ItemStartedEvent evt)
         {
-            ItemChangedActionType actionType;
-            if (!actionTypeMapping.TryGetValue(evt.Data.Action, out actionType))
-            {
-                logger.Warn("Unknown item changed action type: {0}", evt.Data.Action);
-                return;
-            }
-
-            ItemChangedItemType itemType;
-            if (!itemTypeMapping.TryGetValue(evt.Data.Type, out itemType))
-            {
-                logger.Warn("Unknown item changed item type: {0}", evt.Data.Type);
-                return;
-            }
-
-            this.OnItemStarted(evt.Data.Folder, evt.Data.Item, actionType, itemType);
+            this.OnItemStarted(evt.Data.Folder, evt.Data.Item, evt.Data.Action, evt.Data.Type);
         }
 
         public void Accept(ItemFinishedEvent evt)
         {
-            ItemChangedActionType actionType;
-            if (!actionTypeMapping.TryGetValue(evt.Data.Action, out actionType))
-            {
-                logger.Warn("Unknown item changed action type: {0}", evt.Data.Action);
-                return;
-            }
-
-            ItemChangedItemType itemType;
-            if (!itemTypeMapping.TryGetValue(evt.Data.Type, out itemType))
-            {
-                logger.Warn("Unknown item changed item type: {0}", evt.Data.Type);
-                return;
-            }
-
-            this.OnItemFinished(evt.Data.Folder, evt.Data.Item, actionType, itemType, evt.Data.Error);
+            this.OnItemFinished(evt.Data.Folder, evt.Data.Item, evt.Data.Action, evt.Data.Type, evt.Data.Error);
         }
 
         public void Accept(StartupCompleteEvent evt)
