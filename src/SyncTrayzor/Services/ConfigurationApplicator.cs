@@ -92,7 +92,7 @@ namespace SyncTrayzor.Services
 
             foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
             {
-                configuration.Folders.Add(new FolderConfiguration(newKey, true));
+                configuration.Folders.Add(new FolderConfiguration(newKey, true, true));
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();

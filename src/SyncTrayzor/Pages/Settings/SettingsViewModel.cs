@@ -13,10 +13,11 @@ using System.Windows;
 
 namespace SyncTrayzor.Pages.Settings
 {
-    public class FolderSettings
+    public class FolderSettings : PropertyChangedBase
     {
         public string FolderName { get; set; }
         public bool IsWatched { get; set; }
+        public bool IsNotified { get; set; }
     }
 
     public class WatchedFolder
@@ -71,11 +72,12 @@ namespace SyncTrayzor.Pages.Settings
             get { return this.CanReadAndWriteAutostart && this.StartOnLogon; }
         }
 
-        public BindableCollection<WatchedFolder> WatchedFolders { get; set; }
-
         public SettingItem<string> SyncThingEnvironmentalVariables { get; set; }
         public SettingItem<bool> SyncthingDenyUpgrade { get; set; }
 
+        private bool updatingFolderSettings;
+        public bool? AreAllFoldersWatched { get; set; }
+        public bool? AreAllFoldersNotified { get; set; }
         public BindableCollection<FolderSettings> FolderSettings { get; set; }
 
         public SettingsViewModel(
@@ -148,16 +150,55 @@ namespace SyncTrayzor.Pages.Settings
                 settingItem.LoadValue(configuration);
             }
 
-            this.WatchedFolders = new BindableCollection<WatchedFolder>(configuration.Folders.Select(x => new WatchedFolder()
+            this.FolderSettings = new BindableCollection<FolderSettings>();
+            if (syncThingManager.State == SyncThingState.Running)
             {
-                Folder = x.ID,
-                IsSelected = x.IsWatched
-            }));
+                this.FolderSettings.AddRange(configuration.Folders.Select(x => new FolderSettings()
+                {
+                    FolderName = x.ID,
+                    IsWatched = x.IsWatched,
+                    IsNotified = x.NotificationsEnabled,
+                }));
+            }
 
-            this.FolderSettings = new BindableCollection<FolderSettings>()
+            foreach (var folderSetting in this.FolderSettings)
             {
-                new FolderSettings() { FolderName = "Folder Name" },
-            };
+                folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
+                folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
+            }
+
+            this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
+            {
+                if (this.updatingFolderSettings)
+                    return;
+
+                this.updatingFolderSettings = true;
+
+                foreach (var folderSetting in this.FolderSettings)
+                {
+                    folderSetting.IsNotified = e.NewValue.GetValueOrDefault(false);
+                }
+
+                this.updatingFolderSettings = false;
+            });
+
+            this.Bind(s => s.AreAllFoldersWatched, (o, e) =>
+            {
+                if (this.updatingFolderSettings)
+                    return;
+
+                this.updatingFolderSettings = true;
+
+                foreach (var folderSetting in this.FolderSettings)
+                {
+                    folderSetting.IsWatched = e.NewValue.GetValueOrDefault(false);
+                }
+
+                this.updatingFolderSettings = false;
+            });
+
+            this.UpdateAreAllFoldersWatched();
+            this.UpdateAreAllFoldersNotified();
         }
 
         private SettingItem<T> CreateBasicSettingItem<T>(Expression<Func<Configuration, T>> accessExpression, IValidator<SettingItem<T>> validator = null)
@@ -179,6 +220,40 @@ namespace SyncTrayzor.Pages.Settings
             return settingItem;
         }
 
+        private void UpdateAreAllFoldersWatched()
+        {
+            if (this.updatingFolderSettings)
+                return;
+
+            this.updatingFolderSettings = true;
+
+            if (this.FolderSettings.All(x => x.IsWatched))
+                this.AreAllFoldersWatched = true;
+            else if (this.FolderSettings.All(x => !x.IsWatched))
+                this.AreAllFoldersWatched = false;
+            else
+                this.AreAllFoldersWatched = null;
+
+            this.updatingFolderSettings = false;
+        }
+
+        private void UpdateAreAllFoldersNotified()
+        {
+            if (this.updatingFolderSettings)
+                return;
+
+            this.updatingFolderSettings = true;
+
+            if (this.FolderSettings.All(x => x.IsNotified))
+                this.AreAllFoldersNotified = true;
+            else if (this.FolderSettings.All(x => !x.IsNotified))
+                this.AreAllFoldersNotified = false;
+            else
+                this.AreAllFoldersNotified = null;
+
+            this.updatingFolderSettings = false;
+        }
+
         public bool CanSave
         {
             get { return this.settings.All(x => !x.HasErrors); }
@@ -192,7 +267,7 @@ namespace SyncTrayzor.Pages.Settings
                     settingItem.SaveValue(configuration);
                 }
 
-                configuration.Folders = this.WatchedFolders.Select(x => new FolderConfiguration(x.Folder, x.IsSelected)).ToList();
+                configuration.Folders = this.FolderSettings.Select(x => new FolderConfiguration(x.FolderName, x.IsWatched, x.IsNotified)).ToList();
             });
 
             if (this.autostartProvider.CanWrite)

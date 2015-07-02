@@ -15,25 +15,30 @@ namespace SyncTrayzor.Services.Config
     {
         public string ID { get; set; }
         public bool IsWatched { get; set; }
+        public bool NotificationsEnabled { get; set; }
 
         public FolderConfiguration()
-        { }
+        {
+            this.NotificationsEnabled = true; // Default for migration
+        }
 
-        public FolderConfiguration(string id, bool isWatched)
+        public FolderConfiguration(string id, bool isWatched, bool notificationsEnabled)
         {
             this.ID = id;
             this.IsWatched = isWatched;
+            this.NotificationsEnabled = notificationsEnabled;
         }
 
         public FolderConfiguration(FolderConfiguration other)
         {
             this.ID = other.ID;
             this.IsWatched = other.IsWatched;
+            this.NotificationsEnabled = other.NotificationsEnabled;
         }
 
         public override string ToString()
         {
-            return String.Format("<Folder ID={0} IsWatched={1}>", this.ID, this.IsWatched);
+            return String.Format("<Folder ID={0} IsWatched={1} NotificationsEnabled={2}>", this.ID, this.IsWatched, this.NotificationsEnabled);
         }
     }
 
