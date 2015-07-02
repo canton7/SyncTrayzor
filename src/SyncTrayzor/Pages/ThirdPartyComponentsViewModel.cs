@@ -132,6 +132,15 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "ListView Layout Manager",
+                    Description = "WPF: Customizing ListView/GridView Column-Layout",
+                    Homepage = "http://www.codeproject.com/Articles/25058/ListView-Layout-Manager",
+                    License = "The Code Project Open License (CPOL) 1.02",
+                    Notes = "Used for layout",
+                    LicenseText = this.LoadLicense("ListViewLayoutManager.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "PropertyChanged.Fody",
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",

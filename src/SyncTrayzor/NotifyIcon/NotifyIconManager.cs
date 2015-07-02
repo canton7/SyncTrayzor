@@ -22,7 +22,7 @@ namespace SyncTrayzor.NotifyIcon
         bool ShowOnlyOnClose { get; set; }
         bool MinimizeToTray { get; set; }
         bool CloseToTray { get; set; }
-        bool ShowSynchronizedBalloon { get; set; }
+        Dictionary<string, bool> FolderNotificationsEnabled { get; set; }
         bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         bool ShowDeviceConnectivityBalloons { get; set; }
 
@@ -66,7 +66,7 @@ namespace SyncTrayzor.NotifyIcon
             set { this._closeToTray = value; this.SetShutdownMode(); }
         }
 
-        public bool ShowSynchronizedBalloon { get; set; }
+        public Dictionary<string, bool> FolderNotificationsEnabled { get; set; }
         public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
 
@@ -126,7 +126,8 @@ namespace SyncTrayzor.NotifyIcon
 
         private void FolderSynchronizationFinished(object sender, FolderSynchronizationFinishedEventArgs e)
         {
-            if (this.ShowSynchronizedBalloon)
+            bool notificationsEnabled;
+            if (this.FolderNotificationsEnabled != null && this.FolderNotificationsEnabled.TryGetValue(e.FolderId, out notificationsEnabled) && notificationsEnabled)
             {
                 if (e.FileTransfers.Count == 0)
                 {

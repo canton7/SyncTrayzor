@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:pages="clr-namespace:SyncTrayzor.Pages"
+        xmlns:settings="clr-namespace:SyncTrayzor.Pages.Settings"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        xmlns:lvlm="clr-namespace:Itenso.Windows.Controls.ListViewLayout;assembly=Itenso.Windows.Controls.ListViewLayout"
         mc:Ignorable="d" 
-        d:DataContext="{d:DesignInstance pages:SettingsViewModel}"
+        d:DataContext="{d:DesignInstance settings:SettingsViewModel}"
         Title="{l:Loc SettingsView_Title}"
         MinWidth="420"
         ResizeMode="NoResize" SizeToContent="WidthAndHeight">
@@ -53,9 +54,12 @@
                     <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_TrayIcon}">
                         <DockPanel>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose.Value}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
-                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowSynchronizedBalloon.Value}" Content="{l:Loc SettingsView_ShowBalloonWhenSynchronized}"/>
-                            <CheckBox DockPanel.Dock="Top" Margin="20,0,0,0" IsEnabled="{Binding ShowSynchronizedBalloon.Value}"
-                                      IsChecked="{Binding ShowSynchronizedBalloonEvenIfNothingDownloaded.Value}" Content="{l:Loc SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred}"/>
+                            <Grid DockPanel.Dock="Top">
+                                <CheckBox IsChecked="{Binding ShowSynchronizedBalloonEvenIfNothingDownloaded.Value}"
+                                          Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
+                                    <TextBlock Text="{l:Loc SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred}" TextWrapping="WrapWithOverflow"/>
+                                </CheckBox>
+                            </Grid>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                         </DockPanel>
                     </GroupBox>
@@ -83,7 +87,7 @@
             </TabItem>
         
             <TabItem Header="{l:Loc SettingsView_Tab_Syncthing}">
-                <DockPanel>
+                <DockPanel LastChildFill="False">
                     <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Syncthing}">
                         <DockPanel>
                             <DockPanel.Resources>
@@ -116,34 +120,53 @@
                             </DockPanel>
                         </GroupBox>
                     </Expander>
+                </DockPanel>
+            </TabItem>
 
-                    <!-- In case the window exceeds the screen height, something needs to give, and it's this. Therefore place it as the fill child -->
-                    <GroupBox Header="{l:Loc SettingsView_Section_WatchedFolders}">
-                        <DockPanel>
-                            <Grid DockPanel.Dock="Top">
-                                <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_WatchedFolders_Unavailable}"
-                                   Visibility="{Binding WatchedFolders, Converter={StaticResource InverseVisibilityConverter}}"
+            <TabItem Header="Folders">
+                <!-- If we don't give this a width, then the 'folders' column expands to fill all available space -->
+                <!-- Width carefully chosen to given 10px margin on both sides -->
+                <DockPanel Margin="10" Width="386">
+                    <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_WatchedFolders_Unavailable}"
+                                   Visibility="{Binding FolderSettings, Converter={StaticResource InverseVisibilityConverter}}"
                                    Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
 
-                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{l:Loc SettingsView_WatchedFolders_Explanation}"
-                                   Visibility="{Binding WatchedFolders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{l:Loc SettingsView_WatchedFolders_Explanation}"
+                                   Visibility="{Binding FolderSettings, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                                    Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
-                            </Grid>
+                    </Grid>
 
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding WatchedFolders}">
-                                    <ItemsControl.ItemTemplate>
+                    <ListView Visibility="{Binding FolderSettings, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"  
+                              ItemsSource="{Binding FolderSettings}"
+                              Style="{StaticResource PassiveListViewStyle}"
+                              lvlm:ListViewLayoutManager.Enabled="True">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn Header="{l:Loc SettingsView_WatchedFolders_Header_Folder}" DisplayMemberBinding="{Binding FolderName}" lvlm:RangeColumn.IsFillColumn="True"/>
+                                <GridViewColumn>
+                                    <GridViewColumn.Header>
+                                        <CheckBox IsChecked="{Binding AreAllFoldersWatched}" Content="{l:Loc SettingsView_WatchedFolders_Header_Watched}" Margin="4,0,5,0"/>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsSelected}">
-                                                <!-- TextBlock needed so that underscores aren't turned into mnemonics -->
-                                                <TextBlock Text="{Binding Folder}"/>
-                                            </CheckBox>
+                                            <CheckBox IsChecked="{Binding IsWatched}" HorizontalAlignment="Left"/>
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </DockPanel>
-                    </GroupBox>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn>
+                                    <GridViewColumn.Header>
+                                        <CheckBox IsChecked="{Binding AreAllFoldersNotified}" Content="{l:Loc SettingsView_WatchedFolders_Header_Notifications}" Margin="4,0,5,0"/>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsNotified}" HorizontalAlignment="Left"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </DockPanel>
             </TabItem>
         </TabControl>

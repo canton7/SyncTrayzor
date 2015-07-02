@@ -64,7 +64,7 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.MinimizeToTray = configuration.MinimizeToTray;
             this.notifyIconManager.CloseToTray = configuration.CloseToTray;
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
-            this.notifyIconManager.ShowSynchronizedBalloon = configuration.ShowSynchronizedBalloon;
+            this.notifyIconManager.FolderNotificationsEnabled = configuration.Folders.ToDictionary(x => x.ID, x => x.NotificationsEnabled);
             this.notifyIconManager.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
@@ -92,7 +92,7 @@ namespace SyncTrayzor.Services
 
             foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
             {
-                configuration.Folders.Add(new FolderConfiguration(newKey, true));
+                configuration.Folders.Add(new FolderConfiguration(newKey, true, true));
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();

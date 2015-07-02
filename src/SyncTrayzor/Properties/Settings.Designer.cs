@@ -131,11 +131,10 @@ namespace SyncTrayzor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""3"">
+<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""4"">
   <ShowTrayIconOnlyOnClose>false</ShowTrayIconOnlyOnClose>
   <MinimizeToTray>false</MinimizeToTray>
   <CloseToTray>true</CloseToTray>
-  <ShowSynchronizedBalloon>true</ShowSynchronizedBalloon>
   <ShowDeviceConnectivityBalloons>true</ShowDeviceConnectivityBalloons>
   <ShowSynchronizedBalloonEvenIfNothingDownloaded>false</ShowSynchronizedBalloonEvenIfNothingDownloaded>
   <SyncthingAddress>localhost:8384</SyncthingAddress>
@@ -153,6 +152,7 @@ namespace SyncTrayzor.Properties {
   <LastSeenInstallCount>0</LastSeenInstallCount>
   <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
   <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
+  <DisableHardwareRendering>false</DisableHardwareRendering>
 </Configuration>")]
         public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
             get {
