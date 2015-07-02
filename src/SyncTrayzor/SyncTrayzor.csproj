@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props')" />
-  <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,7 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <NuGetPackageImportStamp>651159a1</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>22ba2875</NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -321,7 +321,6 @@
     <Compile Include="SyncThing\TransientWrapper.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
-    <Compile Include="Utils\ChromiumWebBrowserExtensions.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
@@ -562,15 +561,12 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Fody.1.26.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.26.4\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props'))" />
   </Target>
-  <Import Project="..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" />
-  <Import Project="..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" />
-  <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" />
   <Target Name="Configs">
     <XslTransformation XmlInputPaths="App.config" XslInputPath="App.Installer.config.xslt" OutputPaths="$(OutputPath)$(RootNamespace).exe.Installer.config" />
   </Target>
@@ -581,4 +577,7 @@
   <Target Name="AfterBuild">
     <CallTarget Targets="Configs" />
   </Target>
+  <Import Project="..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets')" />
+  <Import Project="..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets')" />
+  <Import Project="..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets')" />
 </Project>
