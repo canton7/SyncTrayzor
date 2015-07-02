@@ -45,7 +45,6 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> DisableHardwareRendering { get; set; }
 
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; set; }
-        public SettingItem<bool> ShowSynchronizedBalloon { get; set; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; set; }
 
@@ -107,7 +106,6 @@ namespace SyncTrayzor.Pages.Settings
             this.DisableHardwareRendering.RequiresSyncTrayzorRestart = true;
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
-            this.ShowSynchronizedBalloon = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloon);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
 

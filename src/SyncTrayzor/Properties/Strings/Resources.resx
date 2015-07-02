@@ -257,10 +257,6 @@
     <value>SyncTrayzor</value>
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
-  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>Show 'Synchronized' balloon messages</value>
-    <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
-  </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
     <value>Start Minimized</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
@@ -299,9 +295,9 @@
     <value>Syncthing Environmental Variables:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval.
+    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
 
-Notifications: You will receive system tray notifications when files in this folder are updated.</value>
+Notifications: You will receive 'Synchronized' balloon messages when files in this folder are updated.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Folders unavailable. Please start Syncthing</value>
@@ -650,7 +646,7 @@ Full Path: {1}</value>
     <value>Updated {0:p:1 file|{} files}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show even if no files were downloaded</value>
+    <value>Show 'Synchronized' balloon messages even if no files were downloaded</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>

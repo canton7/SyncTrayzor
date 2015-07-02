@@ -19,7 +19,6 @@ namespace SyncTrayzor.Services.Config
 
         public FolderConfiguration()
         {
-            this.NotificationsEnabled = true; // Default for migration
         }
 
         public FolderConfiguration(string id, bool isWatched, bool notificationsEnabled)
@@ -79,7 +78,7 @@ namespace SyncTrayzor.Services.Config
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public const int CurrentVersion = 3;
+        public const int CurrentVersion = 4;
         public const double DefaultSyncthingConsoleHeight = 100;
 
         [XmlAttribute("Version")]
@@ -96,7 +95,6 @@ namespace SyncTrayzor.Services.Config
         public bool ShowTrayIconOnlyOnClose { get; set; }
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
-        public bool ShowSynchronizedBalloon { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
         public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public string SyncthingAddress { get; set; }
@@ -138,7 +136,6 @@ namespace SyncTrayzor.Services.Config
             this.ShowTrayIconOnlyOnClose = false;
             this.MinimizeToTray = false;
             this.CloseToTray = true;
-            this.ShowSynchronizedBalloon = true;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = false;
             this.ShowDeviceConnectivityBalloons = true;
             this.SyncthingAddress = "localhost:8384";
@@ -167,7 +164,6 @@ namespace SyncTrayzor.Services.Config
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
             this.MinimizeToTray = other.MinimizeToTray;
             this.CloseToTray = other.CloseToTray;
-            this.ShowSynchronizedBalloon = other.ShowSynchronizedBalloon;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = other.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.ShowDeviceConnectivityBalloons = other.ShowDeviceConnectivityBalloons;
             this.SyncthingAddress = other.SyncthingAddress;
@@ -193,13 +189,13 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} ShowSynchronizedBalloon={3} " +
-                "ShowDeviceConnectivityBalloons={4} SyncthingAddress={5} StartSyncthingAutomatically={6} SyncthingApiKey={7} SyncthingEnvironmentalVariables=[{8}] " +
-                "SyncthingUseCustomHome={9} SyncthingDenyUpgrade={10} SyncthingRunLowPriority={11} Folders=[{12}] NotifyOfNewVersions={13} " +
-                "LastNotifiedVersion={14} ObfuscateDeviceIDs={15} UseComputerCulture={16} SyncthingConsoleHeight={17} WindowPlacement={18} " +
-                "SyncthingWebBrowserZoomLevel={19} LastSeenInstallCount={20} SyncthingPath={21} SyncthingCustomHomePath={22} ShowSynchronizedBalloonEvenIfNothingDownloaded={23} " +
-                "DisableHardwareRendering={24}>",
-                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowSynchronizedBalloon, this.ShowDeviceConnectivityBalloons,
+            return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} " +
+                "ShowDeviceConnectivityBalloons={3} SyncthingAddress={4} StartSyncthingAutomatically={5} SyncthingApiKey={6} SyncthingEnvironmentalVariables=[{7}] " +
+                "SyncthingUseCustomHome={8} SyncthingDenyUpgrade={9} SyncthingRunLowPriority={10} Folders=[{11}] NotifyOfNewVersions={12} " +
+                "LastNotifiedVersion={13} ObfuscateDeviceIDs={14} UseComputerCulture={15} SyncthingConsoleHeight={16} WindowPlacement={17} " +
+                "SyncthingWebBrowserZoomLevel={18} LastSeenInstallCount={19} SyncthingPath={20} SyncthingCustomHomePath={21} ShowSynchronizedBalloonEvenIfNothingDownloaded={22} " +
+                "DisableHardwareRendering={23}>",
+                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowDeviceConnectivityBalloons,
                 this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, String.Join(" ", this.SyncthingEnvironmentalVariables.Select(x => String.Format("{0}={1}", x.Key, x.Value))),
                 this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders), this.NotifyOfNewVersions,
                 this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.SyncthingConsoleHeight, this.WindowPlacement,

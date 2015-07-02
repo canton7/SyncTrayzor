@@ -643,15 +643,6 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages.
-        /// </summary>
-        public static string SettingsView_ShowBalloonWhenSynchronized {
-            get {
-                return ResourceManager.GetString("SettingsView_ShowBalloonWhenSynchronized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Show device Connected/Disconnected balloon messages.
         /// </summary>
         public static string SettingsView_ShowDeviceConnectivityBalloons {
@@ -661,7 +652,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show even if no files were downloaded.
+        ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages even if no files were downloaded.
         /// </summary>
         public static string SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred {
             get {
@@ -850,9 +841,9 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Watched: The folder will be watched for changes, which means you can set a longer polling interval.
+        ///   Looks up a localized string similar to Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
         ///
-        ///Notifications: You will receive system tray notifications when files in this folder are updated..
+        ///Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated..
         /// </summary>
         public static string SettingsView_WatchedFolders_Explanation {
             get {
