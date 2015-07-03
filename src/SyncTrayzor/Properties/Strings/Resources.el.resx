@@ -257,14 +257,6 @@
     <value>SyncTrayzor</value>
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
-  <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
-    <value>Παρακολουθούμενοι Φάκελοι</value>
-    <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
-  </data>
-  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>Εμφάνιση «Συγχρονισμένα» μηνυμάτα</value>
-    <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
-  </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
     <value>Έναρξη σε ελαχιστοποιημένη μορφή</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
@@ -289,10 +281,10 @@
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
-    <value>Use Syncthing&apos;s default database location</value>
+    <value>Χρησιμοποίησε την προεπιλεγμένη θέση βάσης δεδομένων του Syncthing</value>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
-    <value>If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
+    <value>Αν δεν είναι τσεκαρισμένο, σημαίνει πως το SyncTrayzor θα βλέπει διαφορετικό σύνολο φακέλων σε οποιοδήποτε άλλο instance του Syncthing που εκτελείται σε αυτόν τον υπολογιστή.</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_Title" xml:space="preserve">
@@ -303,7 +295,9 @@
     <value>Syncthing περιβαλλοντικές μεταβλητές:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Οι ακόλουθοι φάκελοι θα παρακολουθούνται για αλλαγές, πράγμα που σημαίνει ότι μπορείτε να ορίσετε ένα μεγαλύτερο χρονικό διάστημα των δημοσκοπήσεων.</value>
+    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
+
+Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Φάκελοι μη διαθέσιμη. Παρακαλούμε ξεκινήστε το Syncthing</value>
@@ -313,9 +307,9 @@
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
+    <value>Σίγουρα θέλεις να σταματήσουν όλες οι διεργασίες του Syncthing, ακόμα και αυτές που δε διαχειρίζονται από το SyncTrayzor?
 
-This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running.</value>
+Αυτό έχει τον κίνδυνο να καταστρέψει τη βάση δεδομένων του Syncthing. Κάντο ΜΟΝΟ όταν είναι αδύνατο να εκκινήσεις το Syncthing, επειδή μια άλλη διεργασία του Syncthing εκτελείται.</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
@@ -463,7 +457,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>&lt;Ελληνικη&gt; μετάφραση από τον &lt;Βασιλης Μανδρατζης-Βαλτς&gt;</value>
+    <value>&lt;Ελληνικά&gt; μετάφραση από τους &lt;Βασιλης Μανδρατζης-Βαλτς, alexxtasi&gt;</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
@@ -473,7 +467,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Εμφάνιση της συσκευής σύνδεσης/αποσύνδεσης μηνυμάτων μπαλονιού</value>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
-    <value>{0} συνδεθηκε</value>
+    <value>{0} συνδέθηκε</value>
     <comment>Message of tray icon balloon show when another device connects
 {0}: device name</comment>
   </data>
@@ -527,7 +521,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Use my computer&apos;s language, where available</value>
+    <value>Χρησιμοποίησε την εγκατεστημένη γλώσσα του υπολογιστή μου, αν είναι διαθέσιμη</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
     <value>_Εμφάνιση</value>
@@ -542,7 +536,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Εμφάνιση αρχείου καταγραφής αλλαγών</value>
   </data>
   <data name="ShellView_Menu_Zoom" xml:space="preserve">
-    <value>_Zoom Browser</value>
+    <value>_Μεγέθυνση Browser</value>
   </data>
   <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
     <value>Μεγέθυνση</value>
@@ -563,96 +557,96 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>Το SyncTrayzor ενημερώθηκε</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
-    <value>Unable to start Syncthing: {0}. Please see Syncthing&apos;s console output for clues.</value>
+    <value>Ενημέρωσε για να εκκινήσει το Syncthing: {0}. Παρακαλώ δες στην κονσόλα του Syncthing για πληροφορίες.</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
-    <value>Syncthing didn&apos;t start correctly</value>
+    <value>Το Syncthing δεν έχει εκκινήσει σωστά</value>
   </data>
   <data name="Generic_Copy" xml:space="preserve">
-    <value>_Copy</value>
+    <value>_Αντιγραφή</value>
   </data>
   <data name="Generic_Cut" xml:space="preserve">
-    <value>Cu_t</value>
+    <value>Απο_κοπή</value>
   </data>
   <data name="Generic_Paste" xml:space="preserve">
-    <value>_Paste</value>
+    <value>_Επικόλληση</value>
   </data>
   <data name="FileTranfersTrayView_Header_Downloading" xml:space="preserve">
-    <value>Downloading</value>
+    <value>Λήψη</value>
     <comment>Header for section containing downloading files</comment>
   </data>
   <data name="FileTransfersTrayView_Deleted" xml:space="preserve">
-    <value>(deleted)</value>
+    <value>(διαγραμμένο)</value>
     <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
-    <value>Downloading {0}/{1}</value>
+    <value>Λήψη {0}/{1}</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
 {1}: The total amount to download</comment>
   </data>
   <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
-    <value>Recently Updated</value>
+    <value>Πρόσφατα ενημερωμένο</value>
     <comment>Header for section containing files that were recently downloaded or deleted</comment>
   </data>
   <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
-    <value>In: {0}/s</value>
+    <value>Είσοδος: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
-    <value>No recent file transfers</value>
+    <value>Δεν υπάρχουν πρόσφατες μεταφορές αρχείων</value>
   </data>
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
-    <value>Out: {0}/s</value>
+    <value>Έξοδος: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
-    <value>{0:p:1 day|{} days} ago</value>
+    <value>πριν από {0:p:1 ημέρα|{} ημέρες}</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>{0:p:1 hour|{} hours} ago</value>
+    <value>πριν από {0:p:1 ώρα|{} ώρες}</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
-    <value>Just now</value>
+    <value>Μόλις τώρα</value>
   </data>
   <data name="TimeAgo_Minutes" xml:space="preserve">
-    <value>{0:p:1 minute|{} minutes} ago</value>
+    <value>πριν από {0:p:1 λεπτό|{} λεπτά}</value>
   </data>
   <data name="TimeAgo_Years" xml:space="preserve">
-    <value>{0:p:1 years|{} years} ago</value>
+    <value>πριν από {0:p:1 έτος|{} έτη}</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
-    <value>Downloading {0}/{1} ({2}/s)</value>
+    <value>Λήψη {0}/{1} ({2}/s)</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
 {1}: The total amount to download
 {2}: The current download rate, e.g. 2.0MB</comment>
   </data>
   <data name="FileTransfersTrayView_Error" xml:space="preserve">
-    <value>Error: {0}</value>
+    <value>Σφάλμα: {0}</value>
   </data>
   <data name="FileTransfersTrayView_PathDetails" xml:space="preserve">
-    <value>Folder: {0}
-Full Path: {1}</value>
+    <value>Φάκελος: {0}
+Μονοπάτι: {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
-    <value>Deleted {0:p:1 file|{} files}</value>
+    <value>Διαγραμμένα {0:p:1 αρχείο|{} αρχεία}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
-    <value>{0}: Deleted {1}</value>
+    <value>{0}: Διαγραμμένα {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was deleted</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile" xml:space="preserve">
-    <value>{0}: Updated {1}</value>
+    <value>{0}: Ενημερωμένα {1}</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
-    <value>Updated {0:p:1 file|{} files}</value>
+    <value>Ενημερωμένα {0:p:1 αρχείο|{} αρχεία}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show even if no files were downloaded</value>
+    <value>Show &apos;Synchronized&apos; balloon messages even if no files were updated</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -660,25 +654,34 @@ Full Path: {1}</value>
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
   </data>
   <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
-    <value>Disable hardware rendering</value>
+    <value>Απενεργοποίηση hardware rendering</value>
   </data>
   <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
-    <value>API key should contain only a-z A-Z 0-9 and -</value>
+    <value>Το κλειδί  API πρέπει να περιέχει μόνο χαρακτήρες a-z A-Z 0-9 και -</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
-    <value>You must restart Syncthing for these settings to take effect.
+    <value>Πρέπει να επανεκκινήσεις το Syncthing για να ισχύσουν οι αλλαγές.
 
-Do you want to restart Syncthing now?</value>
+Θέλεις να επανεκκινήσεις το Syncthing τώρα?</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
-    <value>Restart Syncthing?</value>
+    <value>Επανεκκίνηση του Syncthing?</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
-    <value>You must restart SyncTrayzor for these settings to take effect.
+    <value>Πρέπει να επανεκκινήσεις το SyncTrayzor για να ισχύσουν οι αλλαγές.
 
-Do you want to restart SyncTrayzor now?</value>
+Θέλεις να επανεκκινήσεις το SyncTrayzor τώρα?</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
-    <value>Restart SyncTrayzor?</value>
+    <value>Επανεκκίνηση του SyncTrayzor?</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
+    <value>Watched</value>
   </data>
 </root>

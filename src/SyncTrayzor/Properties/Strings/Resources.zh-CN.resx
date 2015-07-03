@@ -239,7 +239,7 @@
     <value>在日志列表混淆设备ID</value>
   </data>
   <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
-    <value>只在关闭时显示通知栏图标</value>
+    <value>只在关闭窗口时显示通知栏图标</value>
   </data>
   <data name="SettingsView_Section_Advanced" xml:space="preserve">
     <value>高级</value>
@@ -256,14 +256,6 @@
   <data name="SettingsView_Section_SyncTrayzor" xml:space="preserve">
     <value>SyncTrayzor</value>
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
-  </data>
-  <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
-    <value>监视文件夹</value>
-    <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
-  </data>
-  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>显示 已同步 气球提示</value>
-    <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
   </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
     <value>启动时最小化</value>
@@ -303,7 +295,9 @@
     <value>Syncthing环境变量：</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>以下文件夹将会被监视变动，这意味着你可以设置更长的轮询时间间隔。</value>
+    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
+
+Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>文件夹不可用。请启动Syncthing</value>
@@ -494,7 +488,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>重_启</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>重_启 Syncthing</value>
+    <value>重_启Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -652,7 +646,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>已更新 {0:p:1 文件|{} 文件}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>即使没有文件在下载也显示</value>
+    <value>Show &apos;Synchronized&apos; balloon messages even if no files were updated</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -680,5 +674,14 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
     <value>重启SyncTrayzor？</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
+    <value>Watched</value>
   </data>
 </root>
