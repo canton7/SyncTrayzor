@@ -45,6 +45,7 @@ namespace SyncTrayzor
         {
             builder.Bind<IApplicationState>().ToInstance(new ApplicationState(this.Application));
             builder.Bind<IApplicationWindowState>().To<ApplicationWindowState>().InSingletonScope();
+            builder.Bind<IUserActivityMonitor>().To<UserActivityMonitor>().InSingletonScope();
             builder.Bind<IConfigurationProvider>().To<ConfigurationProvider>().InSingletonScope();
             builder.Bind<IApplicationPathsProvider>().To<ApplicationPathsProvider>().InSingletonScope();
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
@@ -66,6 +67,9 @@ namespace SyncTrayzor
             builder.Bind<IInstallerCertificateVerifier>().To<InstallerCertificateVerifier>().InSingletonScope();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
+            builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
+            builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
+            builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
 
             if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
@@ -80,14 +84,23 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            // Have to set the log path before anything else
             var pathConfiguration = Settings.Default.PathConfiguration;
             GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
+
+            AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
+
+            var singleApplicationInstanceManager = this.Container.Get<ISingleApplicationInstanceManager>();
+            if (singleApplicationInstanceManager.ShouldExit())
+                Environment.Exit(0);
 
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
             configurationProvider.Initialize(Settings.Default.DefaultUserConfiguration);
             var configuration = this.Container.Get<IConfigurationProvider>().Load();
+
+            singleApplicationInstanceManager.StartServer();
 
             // Has to be done before the VMs are fetched from the container
             var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
@@ -127,8 +140,6 @@ namespace SyncTrayzor
 
                 Process.GetCurrentProcess().Kill();
             };
-
-            AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()
             {

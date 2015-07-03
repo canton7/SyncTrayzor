@@ -123,6 +123,24 @@ namespace SyncTrayzor.Pages
                 },
                 new ThirdPartyComponent()
                 {
+                    Name = "Mono.Options",
+                    Description = "A Getopt::Long-inspired option parsing library for C#",
+                    Homepage = "http://tirania.org/blog/archive/2008/Oct-14.html",
+                    License = "MIT",
+                    Notes = "Used to parse command-line options",
+                    LicenseText = this.LoadLicense("Mono.Options.txt")
+                },
+                new ThirdPartyComponent()
+                {
+                    Name = "ListView Layout Manager",
+                    Description = "WPF: Customizing ListView/GridView Column-Layout",
+                    Homepage = "http://www.codeproject.com/Articles/25058/ListView-Layout-Manager",
+                    License = "The Code Project Open License (CPOL) 1.02",
+                    Notes = "Used for layout",
+                    LicenseText = this.LoadLicense("ListViewLayoutManager.txt")
+                },
+                new ThirdPartyComponent()
+                {
                     Name = "PropertyChanged.Fody",
                     Description = "Injects INotifyPropertyChanged code into properties at compile time",
                     Homepage = "https://github.com/Fody/PropertyChanged",

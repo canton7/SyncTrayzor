@@ -74,6 +74,15 @@ You can turn off auto-updates in the Settings, but in that case you are responsi
 Usage information, details of your computer / network / syncthing setup / etc are not reported.
 
 
+How can I be sure that I'm not downloading a virus?
+---------------------------------------------------
+
+You can be paranoid and build everything from source (after auditing the source), or you can trust that I'm a good person who's trusted by the Syncthing developers.
+
+You can verify that this GitHub account hasn't been compromised and is releasing malicious downloads by following the steps in the [Security README](https://github.com/canton7/SyncTrayzor/tree/master/security).
+This process also lets you verify that Syncthing's developers trust me to release non-malicious software.
+
+
 What will SyncTrayzor do to Syncthing?
 --------------------------------------
 

@@ -1,4 +1,5 @@
 ﻿using NLog;
+using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
@@ -108,12 +109,26 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private void ItemStarted(object sender, ItemStartedEventArgs e)
         {
             logger.Debug("Item started. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
+            // We only care about files or folders - no metadata please!
+            if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Folder) ||
+                (e.Action != ItemChangedActionType.Update && e.Action != ItemChangedActionType.Delete))
+            {
+                return;
+            }
+
             this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item, e.ItemType, e.Action);
         }
 
         private void ItemFinished(object sender, ItemFinishedEventArgs e)
         {
             logger.Debug("Item finished. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
+
+            if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Folder) ||
+                (e.Action != ItemChangedActionType.Update && e.Action != ItemChangedActionType.Delete))
+            {
+                return;
+            }
+
             // It *should* be in the 'in progress transfers'...
             FileTransfer fileTransfer;
             lock (this.transfersLock)
@@ -154,6 +169,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private void ItemDownloadProgressChanged(object sender, ItemDownloadProgressChangedEventArgs e)
         {
             logger.Debug("Item progress changed. Folder: {0}, Item: {1}", e.Folder, e.Item);
+
             // If we didn't see the started event, tough. We don't have enough information to re-create it...
             var key = new FolderPathKey(e.Folder, e.Item);
             FileTransfer fileTransfer;

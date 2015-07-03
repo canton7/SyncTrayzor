@@ -73,6 +73,7 @@ namespace SyncTrayzor.Services.Config
             {
                 this.MigrateV1ToV2,
                 this.MigrateV2ToV3,
+                this.MigrateV3ToV4,
             };
         }
 
@@ -133,27 +134,27 @@ namespace SyncTrayzor.Services.Config
                 defaultConfig = XDocument.Load(ms);
             }
 
-            XDocument loadedConfig;
-            if (this.filesystem.Exists(this.paths.ConfigurationFilePath))
-            {
-                logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
-                using (var stream = this.filesystem.OpenRead(this.paths.ConfigurationFilePath))
-                {
-                    loadedConfig = XDocument.Load(stream);
-                }
-                loadedConfig = this.MigrateConfiguration(loadedConfig);
-
-                var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
-                loadedConfig.Root.ReplaceNodes(merged);
-            }
-            else
-            {
-                loadedConfig = defaultConfig;
-            }
-
             Configuration configuration;
             try
             {
+                XDocument loadedConfig;
+                if (this.filesystem.Exists(this.paths.ConfigurationFilePath))
+                {
+                    logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
+                    using (var stream = this.filesystem.OpenRead(this.paths.ConfigurationFilePath))
+                    {
+                        loadedConfig = XDocument.Load(stream);
+                    }
+                    loadedConfig = this.MigrateConfiguration(loadedConfig);
+
+                    var merged = loadedConfig.Root.Elements().Union(defaultConfig.Root.Elements(), new XmlNodeComparer());
+                    loadedConfig.Root.ReplaceNodes(merged);
+                }
+                else
+                {
+                    loadedConfig = defaultConfig;
+                }
+
                 configuration = (Configuration)serializer.Deserialize(loadedConfig.CreateReader());
             }
             catch (Exception e)
@@ -225,6 +226,18 @@ namespace SyncTrayzor.Services.Config
         {
             bool? visible = (bool?)configuration.Root.Element("ShowSyncthingConsole");
             configuration.Root.Add(new XElement("SyncthingConsoleHeight", visible == true ? Configuration.DefaultSyncthingConsoleHeight : 0.0));
+            return configuration;
+        }
+
+        private XDocument MigrateV3ToV4(XDocument configuration)
+        {
+            // No need to remove - it'll be ignored when we deserialize into Configuration, and not written back to file
+            bool? showNotifications = (bool?)configuration.Root.Element("ShowSynchronizedBalloon");
+            var folders = configuration.Root.Element("Folders").Elements("Folder");
+            foreach (var folder in folders)
+            {
+                folder.Add(new XElement("ShowSynchronizedBalloon", showNotifications.GetValueOrDefault(true)));
+            }
             return configuration;
         }
 

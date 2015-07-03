@@ -13,6 +13,7 @@
             <s:ApplicationLoader.MergedDictionaries>
                 <ResourceDictionary Source="NotifyIcon/TaskbarIconResources.xaml"/>
                 <ResourceDictionary Source="Xaml/Resources.xaml"/>
+                <ResourceDictionary Source="Xaml/PassiveListView.xaml"/>
                 
                 <ResourceDictionary>
                     <design:ViewModelLocator x:Key="ViewModelLocator"/>

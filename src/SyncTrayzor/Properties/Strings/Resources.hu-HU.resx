@@ -257,14 +257,6 @@
     <value>SyncTrayzor</value>
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
-  <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
-    <value>Figyelt mappák</value>
-    <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
-  </data>
-  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>&apos;Szinkronizálva&apos; értesítések mutatása</value>
-    <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
-  </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
     <value>Indítás ikon méretben</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
@@ -303,7 +295,9 @@
     <value>Syncthing környezeti változók:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Az alábbi mappák változásait figyeljük, így hosszabb lekérdezési időtáv is megadható.</value>
+    <value>Figyelt: A mappa változásainak követése, ezáltal hosszabb lekérdezési időtartam is megadható a Syncthingben.
+
+Értesítések: &quot;Szinkronizált értesítés mutatása, amikor a mappa fájljai frissültek.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Nincsenek mappák. Kérjük, indítsa a Syncthinget</value>
@@ -652,7 +646,7 @@ A SyncTrayzor ki fog lépni. Bocsánat</value>
     <value>Frissítve {0:p:1{} fájl}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Mutassa akkor is, ha egy fájlt sem töltött le</value>
+    <value>Mutassa a &quot;Szinkronizált&quot; értesítést akkor is, ha nem történt fájlfrissítés</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -680,5 +674,14 @@ Indítsuk újra a SyncTrayzort most?</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
     <value>SyncTrayzor újraindítása?</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
+    <value>Értesítések</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
+    <value>Figyelt</value>
   </data>
 </root>

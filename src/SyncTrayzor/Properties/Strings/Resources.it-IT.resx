@@ -257,14 +257,6 @@
     <value>SyncTrayzor</value>
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
-  <data name="SettingsView_Section_WatchedFolders" xml:space="preserve">
-    <value>Cartelle Monitorate</value>
-    <comment>Section header for settings to do with configuring SyncTrayzor's ability to watch folders for changes</comment>
-  </data>
-  <data name="SettingsView_ShowBalloonWhenSynchronized" xml:space="preserve">
-    <value>Mostra i messaggi informativi &apos;Sincronizzato&apos;</value>
-    <comment>Setting allowing the user to specify that a balloon message (white area down by the tray icon, linked to the tray icon) should be shown whenever a folder finishes synchronizing</comment>
-  </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
     <value>Avvia Minimizzato</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
@@ -303,7 +295,9 @@
     <value>Variabili Di Ambiente Synchting:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Le seguenti cartelle saranno controllate per eventuali cambiamenti, significa che puoi impostare un lungo intervallo di polling.</value>
+    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
+
+Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Cartelle non disponibili. Prego avviare Synchting.</value>
@@ -652,7 +646,7 @@ Percorso Completo: {1}</value>
     <value>Aggiornato {0:p:1 file|{} files}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Mostra anche se nessun file è stato scaricato</value>
+    <value>Show &apos;Synchronized&apos; balloon messages even if no files were updated</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -680,5 +674,14 @@ Vuoi riavviare SyncTrayzorora?</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
     <value>Riavviare SyncTrayzor?</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
+    <value>Watched</value>
   </data>
 </root>

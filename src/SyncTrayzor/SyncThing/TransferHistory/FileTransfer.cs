@@ -1,4 +1,5 @@
-﻿using SyncTrayzor.SyncThing.EventWatcher;
+﻿using SyncTrayzor.SyncThing.ApiClient;
+using SyncTrayzor.SyncThing.EventWatcher;
 using System;
 using System.Collections.Generic;
 using System.Linq;

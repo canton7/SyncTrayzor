@@ -41,6 +41,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private readonly IApplicationState applicationState;
         private readonly IApplicationWindowState applicationWindowState;
+        private readonly IUserActivityMonitor userActivityMonitor;
         private readonly IUpdateCheckerFactory updateCheckerFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
@@ -73,6 +74,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         public UpdateManager(
             IApplicationState applicationState,
             IApplicationWindowState applicationWindowState,
+            IUserActivityMonitor userActivityMonitor,
             IUpdateCheckerFactory updateCheckerFactory,
             IProcessStartProvider processStartProvider,
             IUpdatePromptProvider updatePromptProvider,
@@ -80,6 +82,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         {
             this.applicationState = applicationState;
             this.applicationWindowState = applicationWindowState;
+            this.userActivityMonitor = userActivityMonitor;
             this.updateCheckerFactory = updateCheckerFactory;
             this.processStartProvider = processStartProvider;
             this.updatePromptProvider = updatePromptProvider;
@@ -191,6 +194,10 @@ namespace SyncTrayzor.Services.UpdateManagement
                 }
                 else
                 {
+                    // If another application is fullscreen, don't bother
+                    if (this.userActivityMonitor.IsWindowFullscreen())
+                        return;
+
                     try
                     {
                         this.toastCts = new CancellationTokenSource();

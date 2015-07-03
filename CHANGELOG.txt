@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.0.26
+-------
+
+ - Add support for Syncthing v0.11.12
+ - Allow 'synced' notifications to be controlled per-folder (#99)
+ - Don't show upgrade prompt if another application is fullscreen (#118)
+ - Launching an already-running SyncTrayzor exe won't launch two instances (#119)
+
 v1.0.25
 -------
 
