@@ -613,7 +613,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>{0:p:1 minute|{} minutes} ago</value>
   </data>
   <data name="TimeAgo_Years" xml:space="preserve">
-    <value>{0:p:1 years|{} years} ago</value>
+    <value>{0:p:1 year|{} years} ago</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
     <value>Downloading {0}/{1} ({2}/s)</value>
