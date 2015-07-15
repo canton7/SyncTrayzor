@@ -110,6 +110,7 @@ namespace SyncTrayzor.NotifyIcon
                 if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                 {
+                    this.taskbarIcon.HideBalloonTip();
                     this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
                 }
             };
@@ -119,6 +120,7 @@ namespace SyncTrayzor.NotifyIcon
                 if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                 {
+                    this.taskbarIcon.HideBalloonTip();
                     this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
                 }
             };
@@ -135,6 +137,7 @@ namespace SyncTrayzor.NotifyIcon
                         DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
                         DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
                     {
+                        this.taskbarIcon.HideBalloonTip();
                         this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
                     }
                 }
@@ -148,7 +151,10 @@ namespace SyncTrayzor.NotifyIcon
                         msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
 
                     if (msg != null)
+                    {
+                        this.taskbarIcon.HideBalloonTip();
                         this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, msg, BalloonIcon.Info);
+                    }
                 }
                 else
                 {
@@ -165,6 +171,7 @@ namespace SyncTrayzor.NotifyIcon
 
                     var text = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_Multiple, e.FolderId, messageParts);
 
+                    this.taskbarIcon.HideBalloonTip();
                     this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, text, BalloonIcon.Info);
                 }
             }
