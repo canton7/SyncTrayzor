@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyncTrayzor.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace SyncTrayzor.Services
         bool Exists(string path);
         FileStream Open(string path, FileMode mode);
         FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
+        FileStream OpenAtomic(string path, FileMode mode);
         FileStream OpenRead(string path);
         void Copy(string from, string to);
         void Move(string from, string to);
@@ -38,6 +40,11 @@ namespace SyncTrayzor.Services
         public FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
             return new FileStream(path, fileMode, fileAccess, fileShare);
+        }
+
+        public FileStream OpenAtomic(string path, FileMode mode)
+        {
+            return AtomicFileStream.New(path, mode);
         }
 
         public FileStream OpenRead(string path)

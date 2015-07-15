@@ -324,6 +324,7 @@
     <Compile Include="SyncThing\TransferHistory\FolderSynchronizationFinishedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\SyncThingTransferHistory.cs" />
     <Compile Include="SyncThing\TransientWrapper.cs" />
+    <Compile Include="Utils\AtomicFileStream.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
