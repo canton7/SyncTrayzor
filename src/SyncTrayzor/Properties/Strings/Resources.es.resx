@@ -295,9 +295,9 @@
     <value>Variables de Entorno de Syncthing:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
+    <value>Monitorizada: La carpeta será monitorizada para detectar cambios, por lo que se puede aumentar el intervalo de muestreo en Syncthing.
 
-Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated.</value>
+Notificaciones: Se mostraran globos con el mensaje &apos;Sincronizado&apos; cuando los archivos de esta carpeta sean actualizados.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Carpetas no disponibles. Por favor inicia Syncthing</value>
@@ -646,7 +646,7 @@ Path completo: {1}</value>
     <value>{0:p:1 archivo|{} archivos} actualizados</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show &apos;Synchronized&apos; balloon messages even if no files were updated</value>
+    <value>Mostrar el globo con el mensaje &quot;Sincronizado&quot; incluso si no se actualizó ningún archivo.</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -676,12 +676,12 @@ Path completo: {1}</value>
     <value>¿Reiniciar SyncTrayzor?</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Carpeta</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Notificaciones</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
-    <value>Watched</value>
+    <value>Monitorizada</value>
   </data>
 </root>
