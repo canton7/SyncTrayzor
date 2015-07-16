@@ -128,17 +128,13 @@ namespace SyncTrayzor
 
             this.Container.Get<MemoryUsageLogger>().Enabled = true;
 
-            // Horrible workaround for a CefSharp crash on logout/shutdown
-            // https://github.com/cefsharp/CefSharp/issues/800#issuecomment-75058534
-            // Also handles Restart Manager requests - sent by the installer. We need to shutdown syncthing and Cef in this case
+            // Handles Restart Manager requests - sent by the installer. We need to shutdown syncthing in this case
             this.Application.SessionEnding += (o, e) =>
             {
                 LogManager.GetCurrentClassLogger().Info("Shutting down: {0}", e.ReasonSessionEnding);
                 var manager = this.Container.Get<ISyncThingManager>();
                 manager.StopAndWaitAsync().Wait(2000);
                 manager.Kill();
-
-                Process.GetCurrentProcess().Kill();
             };
 
             MessageBoxViewModel.ButtonLabels = new Dictionary<MessageBoxResult, string>()

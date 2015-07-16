@@ -297,7 +297,7 @@
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
     <value>Figyelt: A mappa változásainak követése, ezáltal hosszabb lekérdezési időtartam is megadható a Syncthingben.
 
-Értesítések: &quot;Szinkronizált értesítés mutatása, amikor a mappa fájljai frissültek.</value>
+Értesítések: &quot;Szinkronizált&quot; értesítés mutatása, amikor a mappa fájljai frissültek.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Nincsenek mappák. Kérjük, indítsa a Syncthinget</value>
@@ -601,19 +601,19 @@ A SyncTrayzor ki fog lépni. Bocsánat</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
-    <value>{0:1{} napja}</value>
+    <value>{0:p:1 napja|{} napja}</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>{0:1{} órája}</value>
+    <value>{0:p:1 órája|{} órája}</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
     <value>Épp most</value>
   </data>
   <data name="TimeAgo_Minutes" xml:space="preserve">
-    <value>{0:1{} perce}</value>
+    <value>{0:p:1 perce|{} perce}</value>
   </data>
   <data name="TimeAgo_Years" xml:space="preserve">
-    <value>{0:1{} éve}</value>
+    <value>{0:p:1 éve|{} éve}</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
     <value>Letöltés {0}/{1} ({2}/s)</value>
@@ -630,7 +630,7 @@ A SyncTrayzor ki fog lépni. Bocsánat</value>
 Útvonal: {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
-    <value>Törölve {0:p:1{} fájl}</value>
+    <value>Törölve {0:p:1 fájl|{} fájl}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
     <value>{0}: {1} törölve</value>
@@ -643,7 +643,7 @@ A SyncTrayzor ki fog lépni. Bocsánat</value>
 {1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
-    <value>Frissítve {0:p:1{} fájl}</value>
+    <value>Frissítve {0:p:1 fájl|{} fájl}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
     <value>Mutassa a &quot;Szinkronizált&quot; értesítést akkor is, ha nem történt fájlfrissítés</value>

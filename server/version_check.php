@@ -65,20 +65,21 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.26' => [
+   '1.0.27' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.26/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.26/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.27/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.27/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.26/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.26',
-      'release_notes' => "- Add support for Syncthing v0.11.12\n- Allow 'synced' notifications to be controlled per-folder (#99)\n- Don't show upgrade prompt if another application is fullscreen (#118)\n- Launching an already-running SyncTrayzor exe won't launch two instances (#119)",
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.27/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.27',
+      'release_notes' => "- Fix issues with corrupted config file\n- Don't queue notification messages\n- Update translations",
    ]
 ];
 
 $upgrades = [
+   '1.0.26' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.25' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.24' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.23' => ['to' => 'latest', 'formatter' => '3'],

@@ -94,6 +94,7 @@ namespace SyncTrayzor.Pages
                 RemoteDebuggingPort = Properties.Settings.Default.CefRemoteDebuggingPort,
                 // We really only want to set the LocalStorage path, but we don't have that level of control....
                 CachePath = this.pathsProvider.CefCachePath,
+                IgnoreCertificateErrors = true,
             };
             
             // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
@@ -207,17 +208,17 @@ namespace SyncTrayzor.Pages
             return false;
         }
 
-        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browser, IRequest request, bool isRedirect)
+        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browser, IRequest request, bool isRedirect, bool isMainFrame)
         {
             return false;
         }
 
-        bool IRequestHandler.OnBeforePluginLoad(IWebBrowser browser, string url, string policyUrl, IWebPluginInfo info)
+        bool IRequestHandler.OnBeforePluginLoad(IWebBrowser browser, string url, string policyUrl, WebPluginInfo info)
         {
             return false;
         }
 
-        bool IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, IResponse response)
+        CefReturnValue IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, bool isMainFrame)
         {
             var uri = new Uri(request.Url);
             // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
@@ -226,7 +227,7 @@ namespace SyncTrayzor.Pages
             if (this.syncThingManager.State == SyncThingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
             {
                 this.processStartProvider.StartDetached(request.Url);
-                return true;
+                return CefReturnValue.Cancel;
             }
 
             // See https://github.com/canton7/SyncTrayzor/issues/13
@@ -240,12 +241,12 @@ namespace SyncTrayzor.Pages
             }
             request.Headers = headers;
 
-            return false;
+            return CefReturnValue.Continue;
         }
 
         bool IRequestHandler.OnCertificateError(IWebBrowser browser, CefErrorCode errorCode, string requestUrl)
         {
-            // We expect cert errors from Syncthing
+            // We shouldn't hit this, since IgnoreCertificateErrors is true
             return true;
         }
 
@@ -261,9 +262,9 @@ namespace SyncTrayzor.Pages
         {
         }
 
-        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browser, string url, ref int x, ref int y, ref int width, ref int height)
+        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browser, string sourceUrl, string targetUrl, ref int x, ref int y, ref int width, ref int height)
         {
-            this.processStartProvider.StartDetached(url);
+            this.processStartProvider.StartDetached(targetUrl);
             return true;
         }
 

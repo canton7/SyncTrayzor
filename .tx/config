@@ -9,4 +9,4 @@ type = RESX
 
 ; Irritatingly, Transifex likes xx_XX, .NET likes xx-XX and there's no way
 ; (that I can find) to map between them
-lang_map = nl_NL:nl,es_ES:es,ca@valencia:ca-ES-valencia,hu_HU:hu-HU,pt_BR:pt-BR,it_IT:it-IT,zh_CN:zh-CN
+lang_map = nl_NL:nl-NL,es_ES:es,ca@valencia:ca-ES-valencia,hu_HU:hu-HU,pt_BR:pt-BR,it_IT:it-IT,zh_CN:zh-CN

@@ -19,6 +19,7 @@ Features include:
     - Folder watching respects the ignores configured in Syncthing.
  - Tray icon indicates when synchronization is occurring.
  - Optional tray messages when folders have finished syncing.
+ - Contains translations for 13 languages.
 
 
 ![Screenshot](readme/screenshot.png)
