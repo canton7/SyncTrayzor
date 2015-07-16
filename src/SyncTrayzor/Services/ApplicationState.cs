@@ -42,7 +42,15 @@ namespace SyncTrayzor.Services
         public ShutdownMode ShutdownMode
         {
             get { return this.application.ShutdownMode; }
-            set { this.application.ShutdownMode = value; }
+            set
+            {
+                // This will fail if we're shutting down
+                try
+                {
+                    this.application.ShutdownMode = value;
+                }
+                catch (InvalidOperationException) { }
+            }
         }
 
         public bool HasMainWindow
