@@ -303,6 +303,10 @@ namespace SyncTrayzor.SyncThing
                 if (this._state == SyncThingState.Stopped && state == SyncThingState.Running)
                     return;
 
+                // Not entirely sure where this condition comes from...
+                if (this._state == SyncThingState.Stopped && state == SyncThingState.Stopping)
+                    return;
+
                 if (this._state == SyncThingState.Running ||
                     (this._state == SyncThingState.Starting && state == SyncThingState.Stopped))
                     abortApi = true;
