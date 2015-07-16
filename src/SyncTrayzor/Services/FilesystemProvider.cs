@@ -44,7 +44,7 @@ namespace SyncTrayzor.Services
 
         public FileStream OpenAtomic(string path, FileMode mode)
         {
-            return AtomicFileStream.New(path, mode);
+            return AtomicFileStream.Open(path, mode);
         }
 
         public FileStream OpenRead(string path)
