@@ -295,9 +295,9 @@
     <value>Syncthing环境变量：</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
+    <value>已监视：该文件夹将会被监视改动，这意味着你可以在Syncthing设置更长的轮询时间间隔。
 
-Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated.</value>
+通知：你将会在该文件夹同步完成后收到”已同步“气球提示。</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>文件夹不可用。请启动Syncthing</value>
@@ -646,7 +646,7 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>已更新 {0:p:1 文件|{} 文件}</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show &apos;Synchronized&apos; balloon messages even if no files were updated</value>
+    <value>显示”已同步“气球提示即使没有文件同步活动</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -676,12 +676,12 @@ The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to She
     <value>重启SyncTrayzor？</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>文件夹</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>通知</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
-    <value>Watched</value>
+    <value>已监视</value>
   </data>
 </root>

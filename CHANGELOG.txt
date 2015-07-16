@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.27
+-------
+
+ - Fix issues with corrupted config file
+ - Don't queue notification messages
+ - Update translations
+
 v1.0.26
 -------
 

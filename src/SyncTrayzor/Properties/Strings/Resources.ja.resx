@@ -118,135 +118,135 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutView_CreatedByAuthor" xml:space="preserve">
-    <value>Vytvořil Antony Male.</value>
+    <value>Antony Male により作成されました。</value>
   </data>
   <data name="AboutView_DownloadNewVersion" xml:space="preserve">
-    <value>Otevřít stránku pro stažení</value>
+    <value>ダウンロード ページを開く</value>
     <comment>Clickable link allowing the user to download the latest version of SyncTrayzor</comment>
   </data>
   <data name="AboutView_NewAppVersionAvailable" xml:space="preserve">
-    <value>Je dostupná nová verze: {0}</value>
+    <value>新しいバージョンが利用可能: {0}</value>
     <comment>Prompt showing the user that a new version of SynTrayzor is available
 {0}: Latest version of SyncTrayzor </comment>
   </data>
   <data name="AboutView_ReleasedLicense" xml:space="preserve">
-    <value>Vydáno pod MIT licencí.</value>
+    <value>MIT ライセンスの下で公開されています。</value>
   </data>
   <data name="AboutView_ShowOtherLicenses" xml:space="preserve">
-    <value>Zobrazit Open Source licence</value>
+    <value>オープンソース ライセンスを表示</value>
   </data>
   <data name="AboutView_SyncthingVersion" xml:space="preserve">
-    <value>Verze Syncthing: {0}</value>
+    <value>Syncthing バージョン: {0}</value>
     <comment>Information showing the user the current version of Syncthing
 {0}: Current Syncthing version</comment>
   </data>
   <data name="AboutView_Version" xml:space="preserve">
-    <value>Verze: {0}</value>
+    <value>バージョン: {0}</value>
     <comment>Information showing the user the current version of SyncTrayzor
 {0}: Current SyncTrayzor version</comment>
   </data>
   <data name="Generic_Dialog_Cancel" xml:space="preserve">
-    <value>Zrušit</value>
+    <value>キャンセル</value>
     <comment>'Cancel' button shown in various dialogs</comment>
   </data>
   <data name="Generic_Dialog_Close" xml:space="preserve">
-    <value>Zavřít</value>
+    <value>閉じる</value>
     <comment>'Close' button shown on various dialogs</comment>
   </data>
   <data name="Generic_Dialog_Save" xml:space="preserve">
-    <value>Uložit</value>
+    <value>保存</value>
     <comment>'Save' button shown on various dialogs</comment>
   </data>
   <data name="ShellView_Menu_File" xml:space="preserve">
-    <value>_Soubor</value>
+    <value>ファイル(_F)</value>
   </data>
   <data name="ShellView_Menu_File_Exit" xml:space="preserve">
-    <value>_Ukončit</value>
+    <value>終了(_E)</value>
   </data>
   <data name="ShellView_Menu_File_Settings" xml:space="preserve">
-    <value>_Nastavení</value>
+    <value>設定(_S)</value>
   </data>
   <data name="ShellView_Menu_Help" xml:space="preserve">
-    <value>_Pomoc</value>
+    <value>ヘルプ(_H)</value>
   </data>
   <data name="ShellView_Menu_Help_About" xml:space="preserve">
-    <value>_O programu</value>
+    <value>バージョン情報(_A)</value>
   </data>
   <data name="ShellView_Menu_Syncthing" xml:space="preserve">
-    <value>Sync_thing</value>
+    <value>_Syncthing</value>
   </data>
   <data name="ShellView_Menu_Syncthing_KillAll" xml:space="preserve">
-    <value>Zabít _všechny procesy Syncthing</value>
+    <value>すべての Syncthing プロセスの強制終了(_A)</value>
   </data>
   <data name="ShellView_Menu_Syncthing_OpenExternal" xml:space="preserve">
-    <value>_Otevřít v externím prohlížeči</value>
+    <value>外部のブラウザーで開く(_O)</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Refresh" xml:space="preserve">
-    <value>_Aktualizovat prohlížeč</value>
+    <value>ブラウザーを最新の情報に更新(_R)</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Start" xml:space="preserve">
-    <value>_Spustit</value>
+    <value>起動(_S)</value>
   </data>
   <data name="ShellView_Menu_Syncthing_Stop" xml:space="preserve">
-    <value>_Ukončit</value>
+    <value>停止(_T)</value>
   </data>
   <data name="NewVersionAlertView_Button_DontRemind" xml:space="preserve">
-    <value>Znovu nepřipomínat</value>
+    <value>再度通知しない</value>
     <comment>When a new version is available, the user receives a prompt. This button allows the user to say they want want to be prompted to upgrade to this particular version again</comment>
   </data>
   <data name="NewVersionAlertView_Button_Download" xml:space="preserve">
-    <value>Otevřít stránku pro stažení</value>
+    <value>ダウンロード ページを開く</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to download the new version</comment>
   </data>
   <data name="NewVersionAlertView_Button_RemindLater" xml:space="preserve">
-    <value>Připomenout později</value>
+    <value>後で通知する</value>
     <comment>When a new version is available, the user receives a prompt. This button allows them to say they want to be prompted the next time they start SyncTrayzor</comment>
   </data>
   <data name="NewVersionAlertView_Changelog" xml:space="preserve">
-    <value>Changelog:</value>
+    <value>更新履歴:</value>
   </data>
   <data name="NewVersionAlertView_DontRemindMeExplanation" xml:space="preserve">
-    <value>&apos;Znovu nepřipomínat&apos; zruší upozornění na tuto verzi. Úplně zrušit upozornění na nové verze můžete v Nastavení. Pro zkontrolování dostupnosti nové verze navštivte Pomoc -&gt; O programu.</value>
+    <value>「再度通知しない」を選択すると、このバージョンについての通知を無視します。設定画面で新しいバージョンの通知を恒久的に無効にできます。手動で新しいバージョンの確認を行うには、ヘルプ → バージョン情報を見てください。</value>
     <comment>When a new version is available, the user receives a prompt. This message tells the user how to permanently disable new version prompts. 'The Settings page' corresponds to ShellView_Menu_File. 'Help -&gt;About' corresponds to ShellView_Menu_Help_About.</comment>
   </data>
   <data name="NewVersionAlertView_NewVersionAvailable" xml:space="preserve">
-    <value>SyncTrazor verze {0} je dostupný!</value>
+    <value>SyncTrayzor バージョン {0} が利用できます！</value>
     <comment>When a new version is available, the user receives a prompt. This text appears at the top of that prompt</comment>
   </data>
   <data name="NewVersionAlertView_Title" xml:space="preserve">
-    <value>Je dostupná aktualizace SyncTrayzor</value>
+    <value>SyncTrayzor の更新が利用できます</value>
     <comment>When a new version is available, the user receives a prompt. This is the title of that prompt.</comment>
   </data>
   <data name="SettingsView_AlertOnNewVersion" xml:space="preserve">
-    <value>Upozorňovat na nové verze SyncTrayzor</value>
+    <value>SyncTrayzor の新しいバージョンが利用可能なとき通知する</value>
   </data>
   <data name="SettingsView_ApiKey" xml:space="preserve">
-    <value>API klíč:</value>
+    <value>API キー:</value>
   </data>
   <data name="SettingsView_ApiKey_ToolTip" xml:space="preserve">
-    <value>SyncTrayzor přepíše API klíč uvedený v nastavení Syncthing. Můžete jej však nastavit na jakoukoliv hodnotu, jako je uvedeno zde.</value>
+    <value>Syncthing の設定で指定した API キーは SyncTrayzor によってオーバーライドされます。しかしながら、ここで好きな値を設定できます。</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_ApiKey text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_CloseToTray" xml:space="preserve">
-    <value>Zavírat do tray</value>
+    <value>閉じるときトレイへ格納する</value>
     <comment>Setting allowing the user to indicate that the 'close' button on the top right of the window should put Syncthing down into the tray, rather than closing the application</comment>
   </data>
   <data name="SettingsView_MinimizeToTray" xml:space="preserve">
-    <value>Minimalizovat do tray</value>
+    <value>最小化するときトレイへ格納する</value>
     <comment>Setting allowing the user to indicate that the 'minimize' button on the top right of the window should put Syncthing down into the tray, rather than minimizing the application</comment>
   </data>
   <data name="SettingsView_ObfuscateDeviceIds" xml:space="preserve">
-    <value>Zkracovat ID zařízení v náhledu logu</value>
+    <value>ログ ビューに表示されるデバイス ID をぼかす</value>
   </data>
   <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
-    <value>Zobrazovat ikonu v tray pouze při zavření</value>
+    <value>閉じたときのみトレイ アイコンを表示する</value>
   </data>
   <data name="SettingsView_Section_Advanced" xml:space="preserve">
-    <value>Pokročilé</value>
+    <value>高度な設定</value>
     <comment>Section header for advanced settings</comment>
   </data>
   <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
-    <value>Spouštění po přihlášení</value>
+    <value>ログイン時の起動</value>
     <comment>Section header for settings to do with automatically starting SyncTrayzor when the user logs in</comment>
   </data>
   <data name="SettingsView_Section_Syncthing" xml:space="preserve">
@@ -258,70 +258,71 @@
     <comment>Section header for settings to do with configuring SyncTrayzor</comment>
   </data>
   <data name="SettingsView_StartMinimized" xml:space="preserve">
-    <value>Spouštět minimalizováno</value>
+    <value>起動時に最小化する</value>
     <comment>Setting allowing the user to specify that, when SyncTrayzor is started automatically on login, it should start in the tray, rather than being visible to the user</comment>
   </data>
   <data name="SettingsView_StartOnLogin" xml:space="preserve">
-    <value>Spouštět po přihlášení</value>
+    <value>ログインしたときに自動的に起動する</value>
     <comment>Setting allowing the user to specify that SyncTrayzor should be started when the user logs in</comment>
   </data>
   <data name="SettingsView_StartOnLogin_PermissionDenied" xml:space="preserve">
-    <value>Nedostatek oprávnění. Pro změnu těchto nastavení spusťte SyncTrayzor jako administrátor.</value>
+    <value>アクセスが拒否されました。これらの設定を変更するには、SyncTrayzor を管理者として実行してください。</value>
     <comment>Message displayed instead of SettingsView_StartOnLogin SettingsView_StartMinimized when the user doesn't have permission to edit the registry</comment>
   </data>
   <data name="SettingsView_StartSyncthingAutomatically" xml:space="preserve">
-    <value>Spouštět Syncthing při spuštění SyncTrayzor</value>
+    <value>SyncTrayzor の起動時に Syncthing を起動する</value>
     <comment>Setting allowing the user to specify that Syncthing should be start automatically when SyncTrayzor starts</comment>
   </data>
   <data name="SettingsView_SyncthingAddress" xml:space="preserve">
-    <value>Adresa naslouchání GUI:</value>
+    <value>GUI 待ち受けアドレス:</value>
   </data>
   <data name="SettingsView_SyncthingAddress_ToolTip" xml:space="preserve">
-    <value>SyncTrayzor přepíše adresu naslouchání GUI uvedenou v nastavení Syncthing. Můžete ji však nastavit na jakoukoliv hodnotu, jako je uvedeno zde.</value>
+    <value>Syncthing の設定で指定した「GUI 待ち受けアドレス」は SyncTrayzor によってオーバーライドされます。しかしながら、ここで好きな値を設定できます。</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
-    <value>Používat standardní umístění Syncthing databáze</value>
+    <value>Syncthing デフォルトのデータベース保存場所を使用する</value>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
-    <value>Nezaškrtnutí znamená, že SyncTrayzor bude používat jinou sadu nakonfigurovaných složek než všechny ostatní instance Syncthing běžící na tomto počítači.</value>
+    <value>チェックを外した場合、コンピュータ上の他の Syncthing インスタンス向けに設定されたフォルダー群が SyncTrayzor から見えるようになります。</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_Title" xml:space="preserve">
-    <value>Nastavení</value>
+    <value>設定</value>
     <comment>Title of the 'settings' dialog</comment>
   </data>
   <data name="SettingsView_SyncthingEnvironmentalVariables" xml:space="preserve">
-    <value>Proměnné prostředí Syncthing:</value>
+    <value>Syncthing 環境変数:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Sledování: V adresáři budou sledovány změny, což znamená, že můžete nastavit delší interval opakování skenování v Syncthing.
+    <value>監視: フォルダー内の変更は監視されます。より長いポーリング間隔を Syncthing にて設定できます。
 
-Upozornění: Pokud budou soubory v adresáři aktualizovány, budete dostávat bublinová upozornění &quot;Synchronizován&quot;.</value>
+通知: フォルダー内のファイルが更新されたとき、「同期完了」バルーン メッセージが表示されます。</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
-    <value>Adresáře nejsou dostupné. Spusťte prosím Syncthing</value>
+    <value>フォルダーを利用できません。Syncthing を起動してください。</value>
   </data>
   <data name="AboutView_UnknownVersion" xml:space="preserve">
-    <value>Neznámý</value>
+    <value>不明</value>
     <comment>Shown within AboutView_SyncthingVersion if Syncthing's version couldn't be determined</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Message" xml:space="preserve">
-    <value>Opravdu chcete zabít všechny procesy Syncthing včetně těch, které nejsou spravovány programem SyncTrayzor?
+    <value>すべての Syncthing プロセスを強制終了してもよろしいですか？
+これには SyncTrayzor によって管理されていないものも含まれます。
 
-Riskujete tím poškození databáze Syncthing. Použijte toto POUZE v případě, že není možné spustit Syncthing kvůli tomu, že právě běží jiný proces Syncthing.</value>
+この操作は Syncthing のデータベースを破壊する恐れがあります。別の Syncthing プロセスが現在実行されているために Syncthing が起動できない時のみに行ってください。</value>
     <comment>Body for the dialog show when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_ConfirmKillAllProcesses_Title" xml:space="preserve">
-    <value>Opravdu?</value>
+    <value>本当によろしいですか？</value>
     <comment>Title for the dialog shown when the user clicks on ShellView_Menu_Syncthing_KillAll</comment>
   </data>
   <data name="Dialog_FailedToStartSyncthing_Message" xml:space="preserve">
-    <value>Spuštění Syncthing selhalo.
+    <value>Syncthing の起動に失敗しました。
 
-Pro určení příčiny prosím zkontrolujte log.
+原因を究明するには、ログを確認してください。
 
-Pokud je příčinou chyba &quot;FATAL: Cannot open database&quot;, zavřete prosím všechny instance Syncthing. Pokud předtím selhal SyncTrayzor, mohou se stále vyskytovat zombie procesy Syncthing. Pro jejich zastavení použijte prosím &quot;Syncthing -&gt; Zabít všechny procesy Syncthing&quot; a &quot;Syncthing -&gt; Spustit&quot; pro opětovné spuštění Syncthing.</value>
+もし「FATAL: Cannot open database」が出現している場合は、開いている他の Syncthing インスタンスを閉じてください。前回 SyncTrayzor がクラッシュしていた場合、ゾンビ状態の Syncthing プロセスがまだ残っているかもしれません。それらをメニュー オプション「Syncthing → すべての Syncthing プロセスを強制終了」を使用して停止し、その後「Syncthing → 起動」を使用して Syncthing を再度起動してください。</value>
     <comment>Content of the dialog shown when Syncthing couldn't be started (and exited with an error). Instructs the user on how to proceed.
 
 "FATAL: Cannot Open Database" should remain in English
@@ -329,123 +330,123 @@ Pokud je příčinou chyba &quot;FATAL: Cannot open database&quot;, zavřete pro
 The menu option "Syncthing -&gt;Kill all Syncthing processes" corresponds to ShellView_Menu_Syncthing_KillAll, while "Syncthing -&gt;Start" corresponds to ShellView_Menu_Syncthing_Start</comment>
   </data>
   <data name="Dialog_FailedToStartSyncthing_Title" xml:space="preserve">
-    <value>Spuštění Syncthing selhalo</value>
+    <value>Syncthing 起動失敗</value>
     <comment>Title of the dialog shown when Syncthing couldn't be started (and exited with an error)</comment>
   </data>
   <data name="Dialog_SyncthingBlockedByGroupPolicy_Message" xml:space="preserve">
-    <value>Nebylo možné spustit Syncthing: {0}
+    <value>Syncthing を起動できませんでした: {0}
 
-Toto může být způsobeno nastavením Windows tak, aby odmítal spustit soubory ze složky AppData nebo máte nainstalovaný anti-malware program (např. CryptoPrevent), který zabraňuje spuštění souborů ze složky AppData.
+これは、 AppData フォルダ内のファイルの実行を禁止するようにセットアップされた Windows や、 AppData フォルダ内のファイルの実行を拒むマルウェア対策ソフトウェア (例えば CryptoPrevent) がインストールされていることが原因の可能性があります。
 
-Upravte prosím Vaše nastavení / whitelist tak, aby povoloval spustit &apos;{1}&apos;</value>
+&apos;{1}&apos; を実行できるように、設定またはホワイトリストを調整してください。</value>
     <comment>Content of dialog shown when Syncthing couldn't start because of group policy settings (probably)
 {0}: Exact exception message
 {1}: Path to Syncthing executable</comment>
   </data>
   <data name="Dialog_SyncthingBlockedByGroupPolicy_Title" xml:space="preserve">
-    <value>Chyba při spouštění Syncthing</value>
+    <value>Syncthing 起動エラー</value>
     <comment>Title of dialog shown when Syncthing couldn't start because of group policy settings (probably)</comment>
   </data>
   <data name="SettingsView_Validation_InvalidUrl" xml:space="preserve">
-    <value>Musí být platná URL adresa</value>
+    <value>有効な URL である必要があります</value>
     <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress field when the user enters a value which is not a value URL</comment>
   </data>
   <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">
-    <value>Nemělo by být prázdné</value>
+    <value>空にすべきではありません</value>
     <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress or SettingsView_ApiKey fields when the user makes this field empty</comment>
   </data>
   <data name="ThirdPartyComponentsView_ComponentDescriptionLabel" xml:space="preserve">
-    <value>Popis:</value>
+    <value>説明:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentHomepageLabel" xml:space="preserve">
-    <value>Domovská adresa:</value>
+    <value>ホーム ページ:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentLicenseLabel" xml:space="preserve">
-    <value>Licence:</value>
+    <value>ライセンス:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentLicenseTextLabel" xml:space="preserve">
-    <value>Text licence:</value>
+    <value>ライセンス文書:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentNameLabel" xml:space="preserve">
-    <value>Jméno:</value>
+    <value>名称:</value>
   </data>
   <data name="ThirdPartyComponentsView_ComponentNotesLabel" xml:space="preserve">
-    <value>Poznámky:</value>
+    <value>注記:</value>
   </data>
   <data name="ThirdPartyComponentsView_Intro" xml:space="preserve">
-    <value>SyncTrayzor je vytvořen pomocí mnoha open-source komponent, bez kterých by nemohl existovat.
-Detaily a licence každé komponenty jsou zobrazeny níže.</value>
+    <value>SyncTrayzor は、多くのオープンソース コンポーネントを用いて作られており、これらなくしては存在しなかったでしょう。
+各コンポーネントの詳細とライセンス文書を以下に示します。</value>
   </data>
   <data name="ThirdPartyComponentsView_Title" xml:space="preserve">
-    <value>Komponenty třetích stran</value>
+    <value>サード パーティー コンポーネント</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Message" xml:space="preserve">
-    <value>{0}: Synchronizace dokončena</value>
+    <value>{0}: 同期完了</value>
     <comment>Content of the balloon message shown when a folder finished synchronization
 
 {0}:The name of the folder which finished synchronizing</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Title" xml:space="preserve">
-    <value>Synchronizace dokončena</value>
+    <value>同期完了</value>
   </data>
   <data name="TrayIcon_Menu_CloseToTray" xml:space="preserve">
-    <value>Zavřít do tray</value>
+    <value>トレイへ格納する</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to minimize itself to the tray</comment>
   </data>
   <data name="TrayIcon_Menu_Exit" xml:space="preserve">
-    <value>_Ukončit</value>
+    <value>終了(_E)</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to exit</comment>
   </data>
   <data name="TrayIcon_Menu_Restore" xml:space="preserve">
-    <value>O_bnovit</value>
+    <value>復元(_R)</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restore itself from the tray, and be visible to the user</comment>
   </data>
   <data name="TrayIcon_Menu_Settings" xml:space="preserve">
-    <value>_Nastavení</value>
+    <value>設定(_I)</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to show the Settings dialog</comment>
   </data>
   <data name="TrayIcon_Menu_StartSyncthing" xml:space="preserve">
-    <value>_Spustit Syncthing</value>
+    <value>Syncthing を起動(_S)</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to start Syncthing. Only available if Syncthing isn't running</comment>
   </data>
   <data name="TrayIcon_Menu_StopSyncthing" xml:space="preserve">
-    <value>U_končit Syncthing</value>
+    <value>Syncthing を停止(_T)</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to stop Syncthing. Only available if Syncthing is running</comment>
   </data>
   <data name="UnhandledExceptionView_IntroMessage" xml:space="preserve">
-    <value>Ups! Něco je špatně.
-Je nám líto, ale SyncTrayzor se musí ukončit.</value>
+    <value>ああっ！何だか良くないことが起こりました。
+SyncTrayzor は閉じられなければならなくなりました。申し訳ありません</value>
   </data>
   <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
     <value/>
     <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately after the log path</comment>
   </data>
   <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
-    <value>Můžete být požádán o poskytnutí souboru logu. Ten můžete najít v:</value>
+    <value>ログ ファイルを提供するように求められた場合、次の場所で見つかります:</value>
     <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately before the log path</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
-    <value>a vložte následující informace:</value>
+    <value>次の情報が含まれます:</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately after the link to github, and also prompts the user to include the stack trace shown directly below this text</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Pre" xml:space="preserve">
-    <value>Prosím upozorněte na problém (Open an issue) na</value>
+    <value>次の場所で issue をオープンしてください</value>
     <comment>When an unhandled exception occurs, the user is prompted to visit the Github issues page. This text appears immediately before the link to github</comment>
   </data>
   <data name="UnhandledExceptionView_Title" xml:space="preserve">
-    <value>Chyba!</value>
+    <value>エラー！</value>
     <comment>Title of the dialog shown when an unhandled exception occurs</comment>
   </data>
   <data name="ViewerView_SyncthingStarting" xml:space="preserve">
-    <value>Syncthing se spouští...</value>
+    <value>Syncthing 起動中...</value>
     <comment>Text shown in the centre of the screen when Syncthing is starting, but there's no UI to display yet</comment>
   </data>
   <data name="ViewerView_SyncthingStopped" xml:space="preserve">
-    <value>Syncthing zastaven</value>
+    <value>Syncthing 停止</value>
     <comment>Text shown in the centre of the screen when Syncthing is stopped</comment>
   </data>
   <data name="Generic_Dialog_No" xml:space="preserve">
-    <value>Ne</value>
+    <value>いいえ</value>
     <comment>'No' button shown on various dialogs</comment>
   </data>
   <data name="Generic_Dialog_OK" xml:space="preserve">
@@ -453,42 +454,42 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <comment>'OK' button shown on various dialogs</comment>
   </data>
   <data name="Generic_Dialog_Yes" xml:space="preserve">
-    <value>Ano</value>
+    <value>はい</value>
     <comment>'Yes' button shown on various dialogs</comment>
   </data>
   <data name="TranslatorAttributation" xml:space="preserve">
-    <value>Do češtiny přeložil chucic</value>
+    <value>Japanese translation by n13i</value>
     <comment>Shown on the 'about' page, this is space for you to attribute yourself. E.g. your local language equivalent of "Kingon translation by My Name". Add yourself to this field if you contribute to the translation for this language.</comment>
   </data>
   <data name="SettingsView_Section_TrayIcon" xml:space="preserve">
-    <value>Ikona v tray</value>
+    <value>トレイ アイコン</value>
   </data>
   <data name="SettingsView_ShowDeviceConnectivityBalloons" xml:space="preserve">
-    <value>Zobrazovat bublinová upozornění &apos;Zařízení připojeno/odpojeno&apos;</value>
+    <value>デバイスが接続/切断したときにバルーン メッセージを表示</value>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
-    <value>{0} připojeno</value>
+    <value>{0} が接続されました</value>
     <comment>Message of tray icon balloon show when another device connects
 {0}: device name</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Title" xml:space="preserve">
-    <value>Zařízení připojeno</value>
+    <value>デバイスが接続されました</value>
     <comment>Title of tray icon balloon when another device connected</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceDisconnected_Message" xml:space="preserve">
-    <value>{0} odpojeno</value>
+    <value>{0} が切断されました</value>
     <comment>Message of tray icon balloon show when another device disconnects
 {0}: device name</comment>
   </data>
   <data name="TrayIcon_Balloon_DeviceDisconnected_Title" xml:space="preserve">
-    <value>Zařízení odpojeno</value>
+    <value>デバイスが切断されました</value>
     <comment>Title of tray icon balloon when another device disconnected</comment>
   </data>
   <data name="ShellView_Menu_Syncthing_Restart" xml:space="preserve">
-    <value>_Restartovat</value>
+    <value>再起動(_E)</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>_Restartovat Syncthing</value>
+    <value>Syncthing を再起動(_E)</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -500,153 +501,153 @@ Je nám líto, ale SyncTrayzor se musí ukončit.</value>
     <comment>'SyncTrayzor' settings tab</comment>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade" xml:space="preserve">
-    <value>Zakázat automatickou aktualizaci Syncthing</value>
+    <value>Syncthing を自動アップグレードしない</value>
   </data>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
-    <value>Zakázat automatickou aktualizaci Syncthing. Užitečné, pokud je nová verze Syncthing nekompatibilní s programem SyncTrayzor. Budete muset vrátit aktualizaci syncthing.exe souboru v konfigurační složce SyncTrayzor</value>
+    <value>Syncthing が自動アップグレードされないようにします。SyncTrayzor と新しいバージョンの Syncthing の間の互換性が失われたときに有益です。SyncTrayzor の設定フォルダー内の syncthing.exe をダウングレードする必要があります。</value>
   </data>
   <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
-    <value>Spouštět Syncthing jako proces s nízkou prioritou</value>
+    <value>Syncthing を低優先度のプロセスとして実行</value>
   </data>
   <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
-    <value>_Otevřít adresář</value>
+    <value>フォルダーを開く(_O)</value>
     <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
   </data>
   <data name="ViewerView_OpenFolder" xml:space="preserve">
-    <value>Otevřít adresář</value>
+    <value>フォルダーを開く</value>
     <comment>Button shown in the web interface, alongside the native 'rescan' and 'edit' buttons. Allows the folder to be opened in Explorer</comment>
   </data>
   <data name="ViewerView_StartSyncthing" xml:space="preserve">
-    <value>Spustit Syncthing</value>
+    <value>Syncthing を起動</value>
     <comment>Link show in the centre of the screen when Syncthing is stopped, allowing the user to start syncthing</comment>
   </data>
   <data name="SettingsView_UseComputerCulture" xml:space="preserve">
-    <value>Používat jazyk mého počítače všude, kde je to možné</value>
+    <value>利用できる場合は、このコンピュータの言語を使用する</value>
   </data>
   <data name="ShellView_Menu_View" xml:space="preserve">
-    <value>_Zobrazení</value>
+    <value>表示(_V)</value>
   </data>
   <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
-    <value>Příkazový řádek Syncthing</value>
+    <value>Syncthing コンソール</value>
   </data>
   <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
-    <value>Instalovat nyní</value>
+    <value>今すぐインストール</value>
   </data>
   <data name="NewVersionAlertView_ViewChangelog" xml:space="preserve">
-    <value>Zobrazit changelog</value>
+    <value>更新履歴を表示</value>
   </data>
   <data name="ShellView_Menu_Zoom" xml:space="preserve">
-    <value>_Přiblížení</value>
+    <value>ブラウザーを拡大(_Z)</value>
   </data>
   <data name="ShellView_Menu_Zoom_In" xml:space="preserve">
-    <value>_Přiblížit</value>
+    <value>拡大(_I)</value>
   </data>
   <data name="ShellView_Menu_Zoom_Out" xml:space="preserve">
-    <value>_Oddálit</value>
+    <value>縮小(_O)</value>
   </data>
   <data name="ShellView_Menu_Zoom_Reset" xml:space="preserve">
-    <value>_Resetovat</value>
+    <value>元に戻す(_R)</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
-    <value>Musí být ve formátu &apos;PROM=hodnota PROM2=&quot;hodnota1 hodnota2&quot;&apos;</value>
+    <value>&apos;VAR=value VAR2=&quot;val1 val2&quot;&apos; の形式である必要があります</value>
   </data>
   <data name="NewVersionInstalledView_Message" xml:space="preserve">
-    <value>Instalace SyncTrayzor verze {0} proběhla úspěšně.</value>
+    <value>SyncTrayzor バージョン {0} は正常にインストールされました。</value>
   </data>
   <data name="NewVersionInstalledView_Title" xml:space="preserve">
-    <value>SyncTrayzor aktualizován</value>
+    <value>SyncTrayzor が更新されました</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Message" xml:space="preserve">
-    <value>Nebylo možno spustit Syncthing: {0}. Pro možné příčiny zkontrolujte prosím výstup Syncthing do konzole.</value>
+    <value>Syncthing を起動できません: {0} 手掛かりを探すには Syncthing のコンソール出力を確認してください。</value>
   </data>
   <data name="Dialog_SyncthingDidNotStart_Title" xml:space="preserve">
-    <value>Syncthing nebyl správně spuštěn</value>
+    <value>Syncthing は正しく起動しませんでした</value>
   </data>
   <data name="Generic_Copy" xml:space="preserve">
-    <value>_Kopírovat</value>
+    <value>コピー(_C)</value>
   </data>
   <data name="Generic_Cut" xml:space="preserve">
-    <value>_Vyjmout</value>
+    <value>切り取り(_T)</value>
   </data>
   <data name="Generic_Paste" xml:space="preserve">
-    <value>V_ložit</value>
+    <value>貼り付け(_P)</value>
   </data>
   <data name="FileTranfersTrayView_Header_Downloading" xml:space="preserve">
-    <value>Stahování</value>
+    <value>ダウンロード中</value>
     <comment>Header for section containing downloading files</comment>
   </data>
   <data name="FileTransfersTrayView_Deleted" xml:space="preserve">
-    <value>(smazán)</value>
+    <value>(削除済)</value>
     <comment>Show after the 'x minutes ago' text if the update was a deletion</comment>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateUnknown" xml:space="preserve">
-    <value>Stahování {0}/{1}</value>
+    <value>ダウンロード中 {0}/{1}</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
 {1}: The total amount to download</comment>
   </data>
   <data name="FileTransfersTrayView_Header_RecentlyUpdated" xml:space="preserve">
-    <value>Nedávno aktualizováno</value>
+    <value>最近の更新</value>
     <comment>Header for section containing files that were recently downloaded or deleted</comment>
   </data>
   <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
-    <value>Sem: {0}/s</value>
+    <value>受信: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
-    <value>Žádné nedávné přenosy souborů</value>
+    <value>最近のファイル転送はありません</value>
   </data>
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
-    <value>Odtud: {0}/s</value>
+    <value>送信: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
-    <value>Před {0:p:1 dnem|{} dny}</value>
+    <value>{0:p:1|{}} 日前</value>
   </data>
   <data name="TimeAgo_Hours" xml:space="preserve">
-    <value>Před {0:p:1 hodinou|{} hodinami}</value>
+    <value>{0:p:1|{}} 時間前</value>
   </data>
   <data name="TimeAgo_JustNow" xml:space="preserve">
-    <value>Právě teď</value>
+    <value>たった今</value>
   </data>
   <data name="TimeAgo_Minutes" xml:space="preserve">
-    <value>Před {0:p:1 minutou|{} minutami}</value>
+    <value>{0:p:1|{}} 分前</value>
   </data>
   <data name="TimeAgo_Years" xml:space="preserve">
-    <value>Před {0:p:1 rokem|{} lety}</value>
+    <value>{0:p:1|{}} 年前</value>
   </data>
   <data name="FileTransfersTrayView_Downloading_RateKnown" xml:space="preserve">
-    <value>Stahování {0}/{1} ({2}/s)</value>
+    <value>ダウンロード中 {0}/{1} ({2}/s)</value>
     <comment>Displayed when a large file is downloaded
 {0}: amount downloaded so far (inserted as e.g. 4KB)
 {1}: The total amount to download
 {2}: The current download rate, e.g. 2.0MB</comment>
   </data>
   <data name="FileTransfersTrayView_Error" xml:space="preserve">
-    <value>Chyba: {0}</value>
+    <value>エラー: {0}</value>
   </data>
   <data name="FileTransfersTrayView_PathDetails" xml:space="preserve">
-    <value>Adresář: {0}
-Cesta v adresáři: {1}</value>
+    <value>フォルダー: {0}
+完全なパス: {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
-    <value>{0:p:1 soubor smazán|{} soubory smazány}</value>
+    <value>{0:p:1|{}} 個のファイルを削除しました</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
-    <value>{0}: Smazán {1}</value>
+    <value>{0}: {1} を削除しました</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was deleted</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile" xml:space="preserve">
-    <value>{0}: Aktualizován {1}</value>
+    <value>{0}: {1} を更新しました</value>
     <comment>{0}: ID of folder which finished synchronizing
 {1}: File that was updated</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
-    <value>{0:p:1 soubor aktualizován|{} soubory aktualizovány}</value>
+    <value>{0:p:1|{}} 個のファイルを更新しました</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Zobrazovat bublinové upozornění &quot;Synchronizován&quot; i když nebyly staženy žádné soubory</value>
+    <value>更新されたファイルがない時でも「同期完了」バルーン メッセージを表示する</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -654,34 +655,34 @@ Cesta v adresáři: {1}</value>
 {1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
   </data>
   <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
-    <value>Vypnout hardwarové vykreslování</value>
+    <value>ハードウェア レンダリングを無効化</value>
   </data>
   <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
-    <value>Klíč API by měl obsahovat pouze a-z A-Z 0-9 a -</value>
+    <value>API キーには a-z A-Z 0-9 と - 以外を含めることはできません。</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
-    <value>Pro uplatnění změn nastavení musíte restartovat Syncthing.
+    <value>これらの設定を反映するには、Syncthing を再起動する必要があります。
 
-Chcete nyní restartovat Syncthing?</value>
+今すぐ Syncthing を再起動しますか？</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Title" xml:space="preserve">
-    <value>Restartovat Syncthing?</value>
+    <value>Syncthing を再起動しますか？</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Message" xml:space="preserve">
-    <value>Pro uplatnění změn nastavení musíte restartovat SyncTrayzor.
+    <value>これらの設定を反映するには、SyncTrayzor を再起動する必要があります。
 
-Chcete nyní restartovat SyncTrayzor?</value>
+今すぐ SyncTrayzor を再起動しますか？</value>
   </data>
   <data name="SettingsView_RestartSyncTrayzor_Title" xml:space="preserve">
-    <value>Restartovat SyncTrayzor?</value>
+    <value>SyncTrayzor を再起動しますか？</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
-    <value>Adresář</value>
+    <value>フォルダー</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
-    <value>Upozornění</value>
+    <value>通知</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
-    <value>Sledování</value>
+    <value>監視</value>
   </data>
 </root>

@@ -281,10 +281,10 @@
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
-    <value>Use Syncthing&apos;s default database location</value>
+    <value>Syncthing&apos;s voreingestellten Datenbank Ordner verwenden</value>
   </data>
   <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
-    <value>If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
+    <value>Dies bedeutet das SyncTrayzor eine unterschiedliche Sammlung von eingestellten Ordnern sehen wird.</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
   </data>
   <data name="SettingsView_Title" xml:space="preserve">
@@ -295,9 +295,9 @@
     <value>Umgebungsvariablen von Syncthing:</value>
   </data>
   <data name="SettingsView_WatchedFolders_Explanation" xml:space="preserve">
-    <value>Watched: The folder will be watched for changes, which means you can set a longer polling interval in Syncthing.
+    <value>Beobachten: Dieser Ordner wird von SyncTrayzor auf Veränderungen überwacht. Dies ermöglicht einen höheren Syncthing Abfrageintervall um unnötige Abfragen zu verhindern.
 
-Notifications: You will receive &apos;Synchronized&apos; balloon messages when files in this folder are updated.</value>
+Benachrichtigungen: Sie werden Windows Benachrichtigungen erhalten wenn Dateien in diesem Ordner verändert werden.</value>
   </data>
   <data name="SettingsView_WatchedFolders_Unavailable" xml:space="preserve">
     <value>Ordner nicht verfügbar. Bitte Syncthing starten!</value>
@@ -566,7 +566,7 @@ SyncTrayzor wird nun geschlossen.</value>
     <value>_Kopieren</value>
   </data>
   <data name="Generic_Cut" xml:space="preserve">
-    <value>Cu_t</value>
+    <value>Au_sschneiden</value>
   </data>
   <data name="Generic_Paste" xml:space="preserve">
     <value>_Einfügen</value>
@@ -590,14 +590,14 @@ SyncTrayzor wird nun geschlossen.</value>
     <comment>Header for section containing files that were recently downloaded or deleted</comment>
   </data>
   <data name="FileTransfersTrayView_InConnectionRate" xml:space="preserve">
-    <value>In: {0}/s</value>
+    <value>Rein: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
     <value>Keine aktuellen Dateiübertragungen</value>
   </data>
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
-    <value>Out: {0}/s</value>
+    <value>Raus: {0}/s</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="TimeAgo_Days" xml:space="preserve">
@@ -646,7 +646,7 @@ Pfad: {1}</value>
     <value>{0:p:1 Datei|{} Dateien} aktualisiert</value>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show &apos;Synchronized&apos; balloon messages even if no files were updated</value>
+    <value>Synchronisierungs Benachrichtigungen anzeigen, selbst wenn keine Dateien verändert wurden.</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -676,12 +676,12 @@ Wollen Sie jetzt SyncTrayzor neu starten?</value>
     <value>SyncTrayzor neu starten?</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Ordner</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Benachrichtigungen</value>
   </data>
   <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
-    <value>Watched</value>
+    <value>Überwacht</value>
   </data>
 </root>
