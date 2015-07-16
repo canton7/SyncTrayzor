@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 
 namespace SyncTrayzor.Services.Config
 {
-    public class WindowPlacement : IXmlSerializable
+    public class WindowPlacement : IEquatable<WindowPlacement>, IXmlSerializable
     {
         private static readonly TypeConverter pointConverter = TypeDescriptor.GetConverter(typeof(Point));
         private static readonly TypeConverter rectangleConverter = TypeDescriptor.GetConverter(typeof(Rectangle));
@@ -71,6 +71,14 @@ namespace SyncTrayzor.Services.Config
             {
                 element.WriteTo(writer);
             }
+        }
+
+        public bool Equals(WindowPlacement other)
+        {
+            return this.IsMaximised == other.IsMaximised &&
+                this.MaxPosition == other.MaxPosition &&
+                this.MinPosition == other.MinPosition &&
+                this.NormalPosition == other.NormalPosition;
         }
     }
 }

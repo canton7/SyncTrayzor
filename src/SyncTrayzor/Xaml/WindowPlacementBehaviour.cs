@@ -93,7 +93,8 @@ namespace SyncTrayzor.Xaml
                 };
             }
 
-            this.Placement = placement;
+            if (!this.Placement.Equals(placement))
+                this.Placement = placement;
         }
 
         [DllImport("user32.dll")]
