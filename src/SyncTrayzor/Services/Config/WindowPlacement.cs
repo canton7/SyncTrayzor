@@ -24,8 +24,7 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            return String.Format("<WindowPlacement IsMaximized={0} MinPosition={1} MaxPosition={2} Normalposition={3}>",
-                this.IsMaximised, this.MinPosition, this.MaxPosition, this.NormalPosition);
+            return $"<WindowPlacement IsMaximized={this.IsMaximised} MinPosition={this.MinPosition} MaxPosition={this.MaxPosition} Normalposition={this.NormalPosition}>";
         }
 
         public XmlSchema GetSchema()

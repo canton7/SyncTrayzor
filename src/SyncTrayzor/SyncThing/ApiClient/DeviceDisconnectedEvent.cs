@@ -28,7 +28,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<Disconnected ID={0} Time={1} Error={2} Id={3}>", this.Id, this.Time, this.Data.Error, this.Data.Id);
+            return $"<Disconnected ID={this.Id} Time={this.Time} Error={this.Data.Error} Id={this.Data.Id}>";
         }
     }
 }

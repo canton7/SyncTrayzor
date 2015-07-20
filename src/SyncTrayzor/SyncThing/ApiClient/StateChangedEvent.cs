@@ -40,7 +40,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<StateChangedEvent ID={0} Time={1} Folder={2} From={3} To={4} Duration={5}>", this.Id, this.Time, this.Data.Folder, this.Data.From, this.Data.To, this.Data.Duration);
+            return $"<StateChangedEvent ID={this.Id} Time={this.Time} Folder={this.Data.Folder} From={this.Data.From} To={this.Data.To} Duration={this.Data.Duration}>";
         }
     }
 }

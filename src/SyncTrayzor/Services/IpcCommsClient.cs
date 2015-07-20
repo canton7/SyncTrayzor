@@ -24,7 +24,7 @@ namespace SyncTrayzor.Services
     {
         private string PipeNameForPid(int pid)
         {
-            return String.Format("SyncTrayzor-{0}", pid);
+            return $"SyncTrayzor-{pid}";
         }
 
         public void RequestShowMainWindow(int pid)
@@ -60,7 +60,7 @@ namespace SyncTrayzor.Services
             if (response == "OK")
                 return;
 
-            throw new UnknownIpcCommandException(String.Format("Remote side replied with {0}", response));
+            throw new UnknownIpcCommandException($"Remote side replied with {response}");
         }
     }
 }

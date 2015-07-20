@@ -36,8 +36,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public override string ToString()
         {
-            return String.Format("<VersionCheckResults NewVersion={0} DownloadUrl={1} Sha1sumDownloadUrl={2} ReleaseNotes={3} ReleasePageUrl={4}>",
-                this.NewVersion, this.DownloadUrl, this.Sha1sumDownloadUrl, this.ReleaseNotes, this.ReleasePageUrl);
+            return $"<VersionCheckResults NewVersion={this.NewVersion} DownloadUrl={this.DownloadUrl} Sha1sumDownloadUrl={this.Sha1sumDownloadUrl} " +
+                $"ReleaseNotes={this.ReleaseNotes} ReleasePageUrl={this.ReleasePageUrl}>";
         }
     }
 

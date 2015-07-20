@@ -221,7 +221,7 @@ namespace SyncTrayzor.Pages
             if (fileTransfer.ActionType == ItemChangedActionType.Update)
             {
                 if (fileTransfer.ItemType == ItemChangedItemType.File)
-                    this.processStartProvider.StartDetached("explorer.exe", String.Format("/select, \"{0}\"", Path.Combine(folder.Path, fileTransfer.Path)));
+                    this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{ Path.Combine(folder.Path, fileTransfer.Path)}\"");
                 else if (fileTransfer.ItemType == ItemChangedItemType.Folder)
                     this.processStartProvider.StartDetached("explorer.exe", Path.Combine(folder.Path, fileTransfer.Path));
             }

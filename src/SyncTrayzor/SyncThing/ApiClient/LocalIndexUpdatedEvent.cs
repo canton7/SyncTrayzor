@@ -31,7 +31,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<LocalIndexUpdated ID={0} Time={1} Folder={2} Items={3} Version={4}>", this.Id, this.Time, this.Data.Folder, this.Data.Items, this.Data.Version);
+            return $"<LocalIndexUpdated ID={this.Id} Time={this.Time} Folder={this.Data.Folder} Items={this.Data.Items} Version={this.Data.Version}>";
         }
     }
 }

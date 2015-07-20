@@ -237,7 +237,7 @@ namespace SyncTrayzor.Pages
             lock (this.cultureLock)
             {
                 if (this.culture != null)
-                    headers["Accept-Language"] = String.Format("{0};q=0.8,en;q=0.6", this.culture.Name);
+                    headers["Accept-Language"] = $"{this.culture.Name};q=0.8,en;q=0.6";
             }
             request.Headers = headers;
 

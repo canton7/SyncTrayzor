@@ -62,7 +62,7 @@ namespace SyncTrayzor.Services
                 }
                 catch (Exception e)
                 {
-                    logger.Error(String.Format("Error accessing information for process with PID {0}", process.Id), e);
+                    logger.Error($"Error accessing information for process with PID { process.Id}", e);
                 }
             }
 

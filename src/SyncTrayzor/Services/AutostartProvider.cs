@@ -29,7 +29,7 @@ namespace SyncTrayzor.Services
 
         public override string ToString()
         {
-            return String.Format("<AutostartConfiguration AutoStart={0} StartMinimized={1}>", this.AutoStart, this.StartMinimized);
+            return $"<AutostartConfiguration AutoStart={this.AutoStart} StartMinimized={this.StartMinimized}>";
         }
     }
 
@@ -115,7 +115,7 @@ namespace SyncTrayzor.Services
 
                         // See if this one points to our application
                         var keyValue = key.GetValue(entry) as string;
-                        if (keyValue != null && keyValue.StartsWith(String.Format("\"{0}\"", this.assemblyProvider.Location)))
+                        if (keyValue != null && keyValue.StartsWith($"\"{this.assemblyProvider.Location}\""))
                         {
                             foundKey = entry;
                             break;
@@ -140,7 +140,7 @@ namespace SyncTrayzor.Services
 
             if (numberToUse == 1)
                 return "SyncTrayzor";
-            return String.Format("SyncTrayzor ({0})", numberToUse);
+            return $"SyncTrayzor ({numberToUse})";
         }
 
         private RegistryKey OpenRegistryKey(bool writable)

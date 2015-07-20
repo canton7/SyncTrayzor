@@ -38,7 +38,7 @@ namespace SyncTrayzor.Utils
                 }
                 else
                 {
-                    throw new FileNotFoundException(String.Format("File {0} not found", shortPath));
+                    throw new FileNotFoundException($"File {shortPath} not found");
                 }
             }
         }

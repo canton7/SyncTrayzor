@@ -188,7 +188,7 @@ namespace SyncTrayzor.Services.Config
                 {
                     if (!this.filesystem.Exists(this.paths.ConfigurationFileBackupPath))
                         this.filesystem.CreateDirectory(this.paths.ConfigurationFileBackupPath);
-                    var backupPath = Path.Combine(this.paths.ConfigurationFileBackupPath, String.Format("config-v{0}.xml", i));
+                    var backupPath = Path.Combine(this.paths.ConfigurationFileBackupPath, $"config-v{i}.xml");
                     logger.Debug("Backing up configuration to {0}", backupPath);
                     configuration.Save(backupPath);
                 }
@@ -329,7 +329,7 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingPath { get; private set; }
 
         public CouldNotFindSyncthingException(string syncthingPath)
-            : base(String.Format("Could not find syncthing.exe at {0}", syncthingPath))
+            : base($"Could not find syncthing.exe at {syncthingPath}")
         {
             this.SyncthingPath = syncthingPath;
         }
@@ -340,7 +340,7 @@ namespace SyncTrayzor.Services.Config
         public string ConfigurationFilePath { get; private set; }
 
         public BadConfigurationException(string configurationFilePath, Exception innerException)
-            : base(String.Format("Error deserializing configuration file at {0}", configurationFilePath), innerException)
+            : base($"Error deserializing configuration file at {configurationFilePath}", innerException)
         {
             this.ConfigurationFilePath = configurationFilePath;
         }

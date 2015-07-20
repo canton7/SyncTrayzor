@@ -64,8 +64,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
         public override string ToString()
         {
-            return String.Format("<FileTransfer Folder={0} Path={1} Status={2} ItemType={3} ActionType={4} Started={5} Finished={6}>",
-                this.FolderId, this.Path, this.Status, this.ItemType, this.ActionType, this.StartedUtc, this.FinishedUtc);
+            return $"<FileTransfer Folder={this.FolderId} Path={this.Path} Status={this.Status} ItemType={this.ItemType} ActionType={this.ActionType} Started={this.StartedUtc} Finished={this.FinishedUtc}>";
         }
     }
 }

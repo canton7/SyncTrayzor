@@ -51,7 +51,7 @@ namespace ProcessRunner
 
         public static string JoinCommandLine(IEnumerable<string> input)
         {
-            return String.Join(" ", input.Select(x => x.Contains(' ') ? String.Format("\"{0}\"", x.Replace("\"", "\\\"")) : x));
+            return String.Join(" ", input.Select(x => x.Contains(' ') ? $"\"{x.Replace("\"", "\\\"")}\"" : x));
         }
     }
 }

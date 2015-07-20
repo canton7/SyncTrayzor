@@ -65,7 +65,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             }
 
             if (!success)
-                throw new SyncThingDidNotStartCorrectlyException(String.Format("Syncthing didn't connect after {0}", timeout), lastException);
+                throw new SyncThingDidNotStartCorrectlyException($"Syncthing didn't connect after {timeout}", lastException);
 
             return client;
         }

@@ -26,7 +26,7 @@ namespace SyncTrayzor.Services
 
         public string PipeName
         {
-            get { return String.Format("SyncTrayzor-{0}", Process.GetCurrentProcess().Id); }
+            get { return $"SyncTrayzor-{Process.GetCurrentProcess().Id}"; }
         }
 
         public void StartServer()

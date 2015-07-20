@@ -152,7 +152,7 @@ namespace SyncTrayzor.SyncThing
             }
 
             if (ignores == null)
-                throw new SyncThingDidNotStartCorrectlyException(String.Format("Unable to fetch ignores for folder {0}. Syncthing returned 500 after {1}", folderId, this.ignoresFetchTimeout));
+                throw new SyncThingDidNotStartCorrectlyException($"Unable to fetch ignores for folder {folderId}. Syncthing returned 500 after {this.ignoresFetchTimeout}");
 
             return ignores;
         }

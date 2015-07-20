@@ -91,7 +91,7 @@ namespace SyncTrayzor.SyncThing
             logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
-                throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
+                throw new Exception($"Unable to find Syncthing at path {this.ExecutablePath}");
 
             var processStartInfo = new ProcessStartInfo()
             {
@@ -162,12 +162,12 @@ namespace SyncTrayzor.SyncThing
         {
             var args = new List<string>(defaultArguments)
             {
-                String.Format("-gui-apikey=\"{0}\"", this.ApiKey),
-                String.Format("-gui-address=\"{0}\"", this.HostAddress)
+                $"-gui-apikey=\"{this.ApiKey}\"",
+                $"-gui-address=\"{this.HostAddress}\""
             };
 
             if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
-                args.Add(String.Format("-home=\"{0}\"", this.CustomHomeDir));
+                args.Add($"-home=\"{this.CustomHomeDir}\"");
 
             return args;
         }

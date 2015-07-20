@@ -179,7 +179,7 @@ namespace SyncTrayzor
         {
             // Testing has indicated that this and OnUnhandledException won't be called at the same time
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Error(String.Format("An unhandled AppDomain exception occurred. Terminating: {0}", e.IsTerminating), e.ExceptionObject as Exception);
+            logger.Error($"An unhandled AppDomain exception occurred. Terminating: {e.IsTerminating}", e.ExceptionObject as Exception);
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
@@ -206,9 +206,9 @@ namespace SyncTrayzor
                 var couldNotFindSyncthingException = e.Exception as CouldNotFindSyncthingException;
                 if (couldNotFindSyncthingException != null)
                 {
-                    var msg = String.Format("Could not find syncthing.exe at {0}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
+                    var msg = $"Could not find syncthing.exe at {couldNotFindSyncthingException.SyncthingPath}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
                     "antivirus program quarantined it, restore it. If all else fails, download syncthing.exe from https://github.com/syncthing/syncthing/releases the put it " +
-                    "in this location.\n\nSyncTrayzor will now close.", couldNotFindSyncthingException.SyncthingPath);
+                    "in this location.\n\nSyncTrayzor will now close.";
                     windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
                     // Don't "crash"

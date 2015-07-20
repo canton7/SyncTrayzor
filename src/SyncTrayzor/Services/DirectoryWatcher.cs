@@ -114,7 +114,7 @@ namespace SyncTrayzor.Services
             {
                 // This can happen if e.g. the user points us towards 'My Documents' on Vista+, and we get an
                 // 'Error reading the xxx directory'
-                logger.Warn(String.Format("Watcher for {0} couldn't be created: {1}", this.directory, e.Message), e);
+                logger.Warn($"Watcher for {this.directory} couldn't be created: {e.Message}", e);
                 // We'll try again soon
                 return null;
             }
@@ -203,7 +203,7 @@ namespace SyncTrayzor.Services
             }
             catch (FileNotFoundException e)
             {
-                logger.Warn(String.Format("Path {0} changed, but it doesn't exist any more", path), e);
+                logger.Warn($"Path {path} changed, but it doesn't exist any more", e);
             }
 
             return path;

@@ -14,7 +14,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<Device deviceId={0}>", this.DeviceId);
+            return $"<Device deviceId={this.DeviceId}>";
         }
     }
 
@@ -46,8 +46,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<Folder id={0} path={1} devices=[{2}] readonly={3} rescalinterval={4} invalid={5}>",
-                this.ID, this.Path, String.Join(", ", this.Devices), this.ReadOnly, this.RescanInterval, this.Invalid);
+            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] readonly={this.ReadOnly} rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
         }
     }
 
@@ -75,7 +74,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<Device id={0} name={1} addresses=[{2}] compression=N/A certname={3} isintroducer={4}>", this.DeviceID, this.Name, String.Join(", ", this.Addresses), this.CertName, this.IsIntroducer);
+            return $"Device id={this.DeviceID} name={this.Name} addresses=[{String.Join(", ", this.Addresses)}] compression=N/A certname={this.CertName} isintroducer={this.IsIntroducer}>";
         }
     }
 
@@ -92,7 +91,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<Config version={0} folders=[{1}] devices=[{2}]>", this.Version, String.Join(", ", this.Folders), String.Join(", ", this.Devices));
+            return $"<Config version={this.Version} folders=[{String.Join(", ", this.Folders)}] devices=[{String.Join(", ", this.Devices)}]>";
         }
     }
 }

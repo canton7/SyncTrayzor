@@ -28,7 +28,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<DeviceConnected ID={0} Time={1} Addr={2} Id={3}>", this.Id, this.Time, this.Data.Address, this.Data.Id);
+            return $"<DeviceConnected ID={this.Id} Time={this.Time} Addr={this.Data.Address} Id={this.Data.Id}>";
         }
     }
 }

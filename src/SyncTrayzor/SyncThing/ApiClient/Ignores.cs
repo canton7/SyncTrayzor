@@ -29,7 +29,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<Ignores ignore=[{0}] patterns=[{1}]>", String.Join(", ", this.IgnorePatterns), String.Join(", ", this.RegexPatterns));
+            return $"<Ignores ignore=[{String.Join(", ", this.IgnorePatterns)}] patterns=[{String.Join(", ", this.RegexPatterns)}]>";
         }
     }
 }

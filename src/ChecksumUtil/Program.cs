@@ -116,7 +116,7 @@ namespace ChecksumUtil
                             {
                                 var valid = ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, cleartext, Path.GetFileName(inputFileName), inputFile);
                                 if (!valid)
-                                    throw new Exception(String.Format("File {0} failed checksum", inputFileName));
+                                    throw new Exception($"File {inputFileName} failed checksum");
                             }
                         }
                     }
