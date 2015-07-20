@@ -145,9 +145,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private void OnVersionIgnored(Version ignoredVersion)
         {
-            var handler = this.VersionIgnored;
-            if (handler != null)
-                handler(this, new VersionIgnoredEventArgs(ignoredVersion));
+            this.VersionIgnored?.Invoke(this, new VersionIgnoredEventArgs(ignoredVersion));
         }
 
         private bool UpdateCheckDue()

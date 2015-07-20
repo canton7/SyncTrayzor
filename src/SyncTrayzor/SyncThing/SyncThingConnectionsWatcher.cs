@@ -89,9 +89,7 @@ namespace SyncTrayzor.SyncThing
 
         private void OnTotalConnectionStatsChanged(SyncThingConnectionStats connectionStats)
         {
-            var handler = this.TotalConnectionStatsChanged;
-            if (handler != null)
-                handler(this, new ConnectionStatsChangedEventArgs(connectionStats));
+            this.TotalConnectionStatsChanged?.Invoke(this, new ConnectionStatsChangedEventArgs(connectionStats));
         }
     }
 }

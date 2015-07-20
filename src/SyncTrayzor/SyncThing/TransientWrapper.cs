@@ -53,16 +53,12 @@ namespace SyncTrayzor.SyncThing
 
         private void OnValueCreated(T value)
         {
-            var handler = this.ValueCreated;
-            if (handler != null)
-                handler(this, new TransientWrapperValueChangedEventArgs<T>(value));
+            this.ValueCreated?.Invoke(this, new TransientWrapperValueChangedEventArgs<T>(value));
         }
 
         private void OnValueDestroyed(T value)
         {
-            var handler = this.ValueDestroyed;
-            if (handler != null)
-                handler(this, new TransientWrapperValueChangedEventArgs<T>(value));
+            this.ValueDestroyed?.Invoke(this, new TransientWrapperValueChangedEventArgs<T>(value));
         }
     }
 

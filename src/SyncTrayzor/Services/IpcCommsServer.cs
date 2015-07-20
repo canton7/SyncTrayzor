@@ -93,9 +93,7 @@ namespace SyncTrayzor.Services
 
         private void OnMainWindowShowRequested()
         {
-            var handler = this.MainWindowShowRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.MainWindowShowRequested?.Invoke(this, EventArgs.Empty);
         }
 
         public void Dispose()

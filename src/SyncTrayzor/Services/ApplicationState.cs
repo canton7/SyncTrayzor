@@ -70,16 +70,12 @@ namespace SyncTrayzor.Services
 
         public void ApplicationStarted()
         {
-            var handler = this.Startup;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.Startup?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnResumeFromSleep()
         {
-            var handler = this.ResumeFromSleep;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.ResumeFromSleep?.Invoke(this, EventArgs.Empty);
         }
     }
 }

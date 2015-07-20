@@ -129,23 +129,17 @@ namespace SyncTrayzor.NotifyIcon
 
         private void OnWindowOpenRequested()
         {
-            var handler = this.WindowOpenRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.WindowOpenRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnWindowCloseRequested()
         {
-            var handler = this.WindowCloseRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.WindowCloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnExitRequested()
         {
-            var handler = this.ExitRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.ExitRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 

@@ -34,9 +34,7 @@ namespace SyncTrayzor.Utils
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            var handler = this.CollectionChanged;
-            if (handler != null)
-                handler(this, e);
+            this.CollectionChanged?.Invoke(this, e);
         }
 
         public IEnumerator<T> GetEnumerator()

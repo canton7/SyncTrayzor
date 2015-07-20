@@ -269,9 +269,7 @@ namespace SyncTrayzor.Services
         private void OnDirectoryChanged(string subPath)
         {
             logger.Info("Path Changed: {0}", Path.Combine(this.directory, subPath));
-            var handler = this.DirectoryChanged;
-            if (handler != null)
-                handler(this, new DirectoryChangedEventArgs(this.directory, subPath));
+            this.DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(this.directory, subPath));
         }
 
         public void Dispose()
