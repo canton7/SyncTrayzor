@@ -318,11 +318,8 @@ namespace SyncTrayzor.SyncThing
             if (abortApi)
             {
                 logger.Debug("Aborting API clients");
-                lock (this.apiClientsLock)
-                {
-                    this.apiAbortCts.Cancel();
-                    this.StopApiClients();
-                }
+                // StopApiClients acquires the correct locks, and aborts the CTS
+                this.StopApiClients();
             }
 
             this.eventDispatcher.Raise(this.StateChanged, new SyncThingStateChangedEventArgs(oldState, state));
