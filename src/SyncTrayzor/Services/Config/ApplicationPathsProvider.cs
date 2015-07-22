@@ -1,11 +1,7 @@
 ﻿using NLog;
 using SyncTrayzor.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.Config
 {
@@ -50,39 +46,18 @@ namespace SyncTrayzor.Services.Config
 
         public string ExePath { get; set; }
 
-        public string LogFilePath
-        {
-            get { return EnvVarTransformer.Transform(this.pathConfiguration.LogFilePath); }
-        }
+        public string LogFilePath => EnvVarTransformer.Transform(this.pathConfiguration.LogFilePath);
 
-        public string SyncthingBackupPath
-        {
-            get { return Path.Combine(this.ExePath, "syncthing.exe"); }
-        }
+        public string SyncthingBackupPath => Path.Combine(this.ExePath, "syncthing.exe");
 
-        public string ConfigurationFilePath
-        {
-            get { return EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFilePath); }
-        }
+        public string ConfigurationFilePath =>  EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFilePath);
 
-        public string ConfigurationFileBackupPath
-        {
-            get { return EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFileBackupPath); }
-        }
+        public string ConfigurationFileBackupPath => EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFileBackupPath);
 
-        public string CefCachePath
-        {
-            get { return EnvVarTransformer.Transform(this.pathConfiguration.CefCachePath); }
-        }
+        public string CefCachePath => EnvVarTransformer.Transform(this.pathConfiguration.CefCachePath);
 
-        public string UpdatesDownloadPath
-        {
-            get { return Path.Combine(Path.GetTempPath(), "SyncTrayzor"); }
-        }
+        public string UpdatesDownloadPath =>  Path.Combine(Path.GetTempPath(), "SyncTrayzor");
 
-        public string InstallCountFilePath
-        {
-            get { return Path.Combine(this.ExePath, "InstallCount.txt"); }
-        }
+        public string InstallCountFilePath =>  Path.Combine(this.ExePath, "InstallCount.txt");
     }
 }

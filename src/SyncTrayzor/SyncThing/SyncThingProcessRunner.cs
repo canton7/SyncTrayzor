@@ -4,12 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -25,7 +21,7 @@ namespace SyncTrayzor.SyncThing
 
     public class ProcessStoppedEventArgs : EventArgs
     {
-        public SyncThingExitStatus ExitStatus { get; private set; }
+        public SyncThingExitStatus ExitStatus { get; }
 
         public ProcessStoppedEventArgs(SyncThingExitStatus exitStatus)
         {

@@ -1,8 +1,5 @@
 ﻿using SyncTrayzor.SyncThing.ApiClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +7,7 @@ namespace SyncTrayzor.SyncThing
 {
     public class ConnectionStatsChangedEventArgs : EventArgs
     {
-        public SyncThingConnectionStats TotalConnectionStats { get; private set; }
+        public SyncThingConnectionStats TotalConnectionStats { get; }
 
         public ConnectionStatsChangedEventArgs(SyncThingConnectionStats totalConnectionStats)
         {

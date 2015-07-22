@@ -1,10 +1,5 @@
 ﻿using Microsoft.Win32;
-using Stylet;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SyncTrayzor.Services
@@ -53,10 +48,7 @@ namespace SyncTrayzor.Services
             }
         }
 
-        public bool HasMainWindow
-        {
-            get { return this.application.MainWindow != null; }
-        }
+        public bool HasMainWindow => this.application.MainWindow != null;
 
         public object FindResource(object resourceKey)
         {

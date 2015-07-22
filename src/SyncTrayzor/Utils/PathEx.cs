@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Utils
 {
@@ -23,7 +19,7 @@ namespace SyncTrayzor.Utils
                 return shortPath;
 
             var builder = new StringBuilder(255);
-            int result = GetLongPathName(shortPath, builder, builder.Capacity);
+            int result = NativeMethods.GetLongPathName(shortPath, builder, builder.Capacity);
             if (result > 0 && result < builder.Capacity)
             {
                 return builder.ToString(0, result);
@@ -33,7 +29,7 @@ namespace SyncTrayzor.Utils
                 if (result > 0)
                 {
                     builder = new StringBuilder(result);
-                    result = GetLongPathName(shortPath, builder, builder.Capacity);
+                    result = NativeMethods.GetLongPathName(shortPath, builder, builder.Capacity);
                     return builder.ToString(0, result);
                 }
                 else
@@ -43,11 +39,14 @@ namespace SyncTrayzor.Utils
             }
         }
 
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        private static extern int GetLongPathName(
-            [MarshalAs(UnmanagedType.LPTStr)] string lpszShortPath,
-            [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpszLongPath,
-            [MarshalAs(UnmanagedType.U4)] int cchBuffer);
+        private class NativeMethods
+        {
+            [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+            [return: MarshalAs(UnmanagedType.U4)]
+            public static extern int GetLongPathName(
+                [MarshalAs(UnmanagedType.LPTStr)] string lpszShortPath,
+                [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpszLongPath,
+                [MarshalAs(UnmanagedType.U4)] int cchBuffer);
+        }
     }
 }

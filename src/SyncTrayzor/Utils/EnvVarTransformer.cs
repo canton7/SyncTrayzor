@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Utils
 {
@@ -18,7 +15,7 @@ namespace SyncTrayzor.Utils
         {
             specials = new Dictionary<string, string>()
             {
-                { "EXEPATH", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) }
+                ["EXEPATH"] = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             };
         }
 

@@ -1,24 +1,18 @@
 ﻿using NLog;
-using Stylet;
-using SyncTrayzor.Pages;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
     public class VersionCheckResults
     {
-        public Version NewVersion { get; private set; }
-        public string DownloadUrl { get; private set; }
-        public string Sha1sumDownloadUrl { get; private set; }
-        public string ReleaseNotes { get; private set; }
-        public string ReleasePageUrl { get; private set; }
+        public Version NewVersion { get; }
+        public string DownloadUrl { get; }
+        public string Sha1sumDownloadUrl { get; }
+        public string ReleaseNotes { get; }
+        public string ReleasePageUrl { get; }
 
         public VersionCheckResults(
             Version newVersion,

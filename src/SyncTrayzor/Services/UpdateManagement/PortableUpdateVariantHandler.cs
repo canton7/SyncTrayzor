@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
     public class PortableUpdateVariantHandler : IUpdateVariantHandler
     {
-        public string VariantName { get { return "portable"; } }
+        public string VariantName => "portable";
 
-        public bool CanAutoInstall { get { return false; } }
+        public bool CanAutoInstall => false;
 
         public Task<bool> TryHandleUpdateAvailableAsync(VersionCheckResults checkResult)
         {

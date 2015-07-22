@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
     public class Release
     {
-        public Version Version { get; private set; }
-        public string DownloadUrl { get; private set; }
-        public string Body { get; private set; }
+        public Version Version { get; }
+        public string DownloadUrl { get; }
+        public string Body { get; }
 
         public Release(Version version, string downloadUrl, string body)
         {

@@ -1,11 +1,6 @@
-﻿using NLog;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -31,22 +26,13 @@ namespace SyncTrayzor.Services
             this.Version = new Version(version.Major, version.Minor, version.Build);
         }
 
-        public Version Version { get; private set; }
+        public Version Version { get; }
 
-        public Version FullVersion
-        {
-            get { return this.assembly.GetName().Version; }
-        }
+        public Version FullVersion => this.assembly.GetName().Version;
 
-        public string Location
-        {
-            get { return this.assembly.Location; }
-        }
+        public string Location => this.assembly.Location;
 
-        public ProcessorArchitecture ProcessorArchitecture
-        {
-            get { return this.assembly.GetName().ProcessorArchitecture; }
-        }
+        public ProcessorArchitecture ProcessorArchitecture => this.assembly.GetName().ProcessorArchitecture;
 
         public Stream GetManifestResourceStream(string path)
         {

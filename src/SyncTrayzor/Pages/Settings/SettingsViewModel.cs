@@ -37,47 +37,37 @@ namespace SyncTrayzor.Pages.Settings
         private readonly ISyncThingManager syncThingManager;
         private readonly List<SettingItem> settings = new List<SettingItem>();
 
-        public SettingItem<bool> MinimizeToTray { get; set; }
-        public SettingItem<bool> CloseToTray { get; set; }
-        public SettingItem<bool> NotifyOfNewVersions { get; set; }
-        public SettingItem<bool> ObfuscateDeviceIDs { get; set; }
-        public SettingItem<bool> UseComputerCulture { get; set; }
-        public SettingItem<bool> DisableHardwareRendering { get; set; }
+        public SettingItem<bool> MinimizeToTray { get; }
+        public SettingItem<bool> CloseToTray { get; }
+        public SettingItem<bool> NotifyOfNewVersions { get; }
+        public SettingItem<bool> ObfuscateDeviceIDs { get; }
+        public SettingItem<bool> UseComputerCulture { get; }
+        public SettingItem<bool> DisableHardwareRendering { get; }
 
-        public SettingItem<bool> ShowTrayIconOnlyOnClose { get; set; }
-        public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
-        public SettingItem<bool> ShowDeviceConnectivityBalloons { get; set; }
+        public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
+        public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
+        public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
 
-        public SettingItem<bool> StartSyncThingAutomatically { get; set; }
-        public SettingItem<bool> SyncthingRunLowPriority { get; set; }
-        public SettingItem<bool> SyncthingUseDefaultHome { get; set; }
-        public SettingItem<string> SyncThingAddress { get; set; }
-        public SettingItem<string> SyncThingApiKey { get; set; }
+        public SettingItem<bool> StartSyncThingAutomatically { get; }
+        public SettingItem<bool> SyncthingRunLowPriority { get; }
+        public SettingItem<bool> SyncthingUseDefaultHome { get; }
+        public SettingItem<string> SyncThingAddress { get; }
+        public SettingItem<string> SyncThingApiKey { get; }
 
         public bool CanReadAutostart { get; set; }
         public bool CanWriteAutostart { get; set; }
-        public bool CanReadOrWriteAutostart
-        {
-            get { return this.CanReadAutostart || this.CanWriteAutostart; }
-        }
-        public bool CanReadAndWriteAutostart
-        {
-            get { return this.CanReadAutostart && this.CanWriteAutostart; }
-        }
+        public bool CanReadOrWriteAutostart => this.CanReadAutostart || this.CanWriteAutostart; 
+        public bool CanReadAndWriteAutostart => this.CanReadAutostart && this.CanWriteAutostart;
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
-        public bool StartMinimizedEnabled
-        {
-            get { return this.CanReadAndWriteAutostart && this.StartOnLogon; }
-        }
-
-        public SettingItem<string> SyncThingEnvironmentalVariables { get; set; }
-        public SettingItem<bool> SyncthingDenyUpgrade { get; set; }
+        public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
+        public SettingItem<string> SyncThingEnvironmentalVariables { get;  }
+        public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
         private bool updatingFolderSettings;
         public bool? AreAllFoldersWatched { get; set; }
         public bool? AreAllFoldersNotified { get; set; }
-        public BindableCollection<FolderSettings> FolderSettings { get; set; }
+        public BindableCollection<FolderSettings> FolderSettings { get;  }
 
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
@@ -252,10 +242,7 @@ namespace SyncTrayzor.Pages.Settings
             this.updatingFolderSettings = false;
         }
 
-        public bool CanSave
-        {
-            get { return this.settings.All(x => !x.HasErrors); }
-        }
+        public bool CanSave => this.settings.All(x => !x.HasErrors);
         public void Save()
         {
             this.configurationProvider.AtomicLoadAndSave(configuration =>

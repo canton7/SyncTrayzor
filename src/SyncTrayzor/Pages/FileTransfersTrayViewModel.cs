@@ -4,15 +4,11 @@ using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace SyncTrayzor.Pages
@@ -22,17 +18,14 @@ namespace SyncTrayzor.Pages
         public readonly FileTransfer FileTransfer;
         private readonly DispatcherTimer completedTimeAgoUpdateTimer;
 
-        public string Path { get; private set; }
-        public string FolderId { get; private set; }
-        public string FullPath { get; private set; }
-        public Icon Icon { get; private set; }
+        public string Path { get; }
+        public string FolderId { get; }
+        public string FullPath { get; }
+        public Icon Icon { get; }
         public string Error { get; private set; }
-        public bool WasDeleted { get; private set; }
+        public bool WasDeleted { get;  }
 
-        public DateTime Completed
-        {
-            get { return this.FileTransfer.FinishedUtc.GetValueOrDefault().ToLocalTime(); }
-        }
+        public DateTime Completed => this.FileTransfer.FinishedUtc.GetValueOrDefault().ToLocalTime();
 
         public string CompletedTimeAgo
         {

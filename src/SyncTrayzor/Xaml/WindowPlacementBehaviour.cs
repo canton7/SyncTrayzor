@@ -1,11 +1,7 @@
 ﻿using SyncTrayzor.Services.Config;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -65,7 +61,7 @@ namespace SyncTrayzor.Xaml
                     (int)this.Placement.NormalPosition.Bottom),
             };
 
-            SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement);
+            NativeMethods.SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement);
 
             // Not 100% sure why this is needed, but if the window is minimzed before being closed to tray,
             // then is restored, we can end up in a state where we aren't active
@@ -77,7 +73,7 @@ namespace SyncTrayzor.Xaml
             var nativePlacement = new WINDOWPLACEMENT();
             WindowPlacement placement = null;
 
-            if (GetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, out nativePlacement))
+            if (NativeMethods.GetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, out nativePlacement))
             {
                 placement = new WindowPlacement()
                 {
@@ -96,12 +92,6 @@ namespace SyncTrayzor.Xaml
             if (!this.Placement.Equals(placement))
                 this.Placement = placement;
         }
-
-        [DllImport("user32.dll")]
-        private static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
 
         private const int SW_SHOWNORMAL = 1;
         private const int SW_SHOWMAXIMIZED = 3;
@@ -148,6 +138,15 @@ namespace SyncTrayzor.Xaml
             public POINT minPosition;
             public POINT maxPosition;
             public RECT normalPosition;
+        }
+
+        private class NativeMethods
+        {
+            [DllImport("user32.dll")]
+            public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
+
+            [DllImport("user32.dll")]
+            public static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
         }
     }
 }

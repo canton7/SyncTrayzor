@@ -1,10 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -54,10 +50,7 @@ namespace SyncTrayzor.Services
             this.RootWindowClosed?.Invoke(this, e);
         }
 
-        public ScreenState State
-        {
-            get { return this.rootViewModel.State; }
-        }
+        public ScreenState State => this.rootViewModel.State;
 
         public void CloseToTray()
         {

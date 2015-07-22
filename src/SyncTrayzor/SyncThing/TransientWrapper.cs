@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
     public class TransientWrapperValueChangedEventArgs<T> : EventArgs
     {
-        public T Value { get; private set; }
+        public T Value { get; }
 
         public TransientWrapperValueChangedEventArgs(T value)
         {
@@ -65,10 +61,7 @@ namespace SyncTrayzor.SyncThing
     public class SynchronizedTransientWrapper<T> : TransientWrapper<T> where T : class
     {
         private readonly object _lockObject;
-        public object LockObject
-        {
-            get { return this._lockObject; }
-        }
+        public object LockObject => this._lockObject;
 
         public override T Value
         {

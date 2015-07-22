@@ -2,11 +2,8 @@
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using Path = Pri.LongPath.Path;
 
@@ -14,8 +11,8 @@ namespace SyncTrayzor.Services
 {
     public class DirectoryChangedEventArgs : EventArgs
     {
-        public string DirectoryPath { get; private set; }
-        public string SubPath { get; private set; }
+        public string DirectoryPath { get; }
+        public string SubPath { get; }
 
         public DirectoryChangedEventArgs(string directoryPath, string subPath)
         {

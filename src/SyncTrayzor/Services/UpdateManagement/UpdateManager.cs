@@ -1,22 +1,16 @@
 ﻿using NLog;
 using Stylet;
-using SyncTrayzor.Pages;
-using SyncTrayzor.Services.Config;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Threading;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
     public class VersionIgnoredEventArgs : EventArgs
     {
-        public Version IgnoredVersion { get; private set; }
+        public Version IgnoredVersion { get;  }
 
         public VersionIgnoredEventArgs(Version ignoredVersion)
         {

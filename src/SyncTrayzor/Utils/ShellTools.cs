@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Utils
 {
@@ -16,7 +12,7 @@ namespace SyncTrayzor.Utils
             var flags = (uint)(SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
             var attribute = isFile ? (uint)FILE_ATTRIBUTE_FILE : (uint)FILE_ATTRIBUTE_DIRECTORY;
             var shfi = new SHFileInfo();
-            var res = SHGetFileInfo(path, attribute, out shfi, (uint)Marshal.SizeOf(shfi), flags);
+            var res = NativeMethods.SHGetFileInfo(path, attribute, out shfi, (uint)Marshal.SizeOf(shfi), flags);
 
             if (res == IntPtr.Zero)
                 throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
@@ -28,7 +24,7 @@ namespace SyncTrayzor.Utils
             }
             finally
             {
-                DestroyIcon(shfi.hIcon);
+                NativeMethods.DestroyIcon(shfi.hIcon);
             }
         }
 
@@ -54,11 +50,14 @@ namespace SyncTrayzor.Utils
         private const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
         private const uint FILE_ATTRIBUTE_FILE = 0x00000100;
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, out SHFileInfo psfi, uint cbFileInfo, uint uFlags);
+        private class NativeMethods
+        {
+            [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+            public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, out SHFileInfo psfi, uint cbFileInfo, uint uFlags);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DestroyIcon(IntPtr hIcon);
+            [DllImport("user32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool DestroyIcon(IntPtr hIcon);
+        }
     }
 }

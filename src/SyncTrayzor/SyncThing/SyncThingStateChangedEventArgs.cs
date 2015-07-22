@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
     public class SyncThingStateChangedEventArgs : EventArgs
     {
-        public SyncThingState OldState { get; private set; }
-        public SyncThingState NewState { get; private set; }
+        public SyncThingState OldState { get; }
+        public SyncThingState NewState { get; }
 
         public SyncThingStateChangedEventArgs(SyncThingState oldState, SyncThingState newState)
         {

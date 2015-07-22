@@ -3,12 +3,8 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Security;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace SyncTrayzor.Services
 {
@@ -45,16 +41,10 @@ namespace SyncTrayzor.Services
         public bool IsEnabled { get; set; }
 
         private bool _canRead;
-        public bool CanRead
-        {
-            get { return this.IsEnabled && this._canRead; }
-        }
+        public bool CanRead => this.IsEnabled && this._canRead;
 
         private bool _canWrite;
-        public bool CanWrite
-        {
-            get { return this.IsEnabled && this._canWrite; }
-        }
+        public bool CanWrite => this.IsEnabled && this._canWrite;
 
         public AutostartProvider(IAssemblyProvider assemblyProvider)
         {

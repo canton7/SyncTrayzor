@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
@@ -15,7 +12,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private string installerPath;
 
-        public string VariantName { get { return "installed"; } }
+        public string VariantName => "installed";
         public bool CanAutoInstall { get; private set; }
 
         public InstalledUpdateVariantHandler(

@@ -1,10 +1,5 @@
 ﻿using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.TransferHistory
 {
@@ -16,10 +11,10 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         public long TotalBytes { get; private set; }
         public double? DownloadBytesPerSecond { get; private set; }
 
-        public string FolderId { get; private set; }
-        public string Path { get; private set; }
-        public ItemChangedItemType ItemType { get; private set; }
-        public ItemChangedActionType ActionType { get; private set; }
+        public string FolderId { get; }
+        public string Path { get; }
+        public ItemChangedItemType ItemType { get; }
+        public ItemChangedActionType ActionType { get; }
 
         public DateTime StartedUtc { get; private set; }
         public DateTime? FinishedUtc { get; private set; }
