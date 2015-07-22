@@ -35,7 +35,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return $"<ItemStarted ID={this.Id} Time={this.Time} Item={this.Data.Item,} Folder={this.Data.Folder} Type={this.Data.Type} Action={this.Data.Action}>";
+            return $"<ItemStarted ID={this.Id} Time={this.Time} Item={this.Data.Item} Folder={this.Data.Folder} Type={this.Data.Type} Action={this.Data.Action}>";
         }
     }
 }
