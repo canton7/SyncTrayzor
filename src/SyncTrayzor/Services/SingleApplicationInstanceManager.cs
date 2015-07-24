@@ -1,10 +1,6 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -62,7 +58,7 @@ namespace SyncTrayzor.Services
                 }
                 catch (Exception e)
                 {
-                    logger.Error(String.Format("Error accessing information for process with PID {0}", process.Id), e);
+                    logger.Error($"Error accessing information for process with PID { process.Id}", e);
                 }
             }
 

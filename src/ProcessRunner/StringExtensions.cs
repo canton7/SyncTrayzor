@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProcessRunner
 {
@@ -51,7 +49,7 @@ namespace ProcessRunner
 
         public static string JoinCommandLine(IEnumerable<string> input)
         {
-            return String.Join(" ", input.Select(x => x.Contains(' ') ? String.Format("\"{0}\"", x.Replace("\"", "\\\"")) : x));
+            return String.Join(" ", input.Select(x => x.Contains(' ') ? $"\"{x.Replace("\"", "\\\"")}\"" : x));
         }
     }
 }

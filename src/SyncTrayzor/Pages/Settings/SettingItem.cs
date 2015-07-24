@@ -2,10 +2,7 @@
 using SyncTrayzor.Services.Config;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Pages.Settings
 {
@@ -26,10 +23,7 @@ namespace SyncTrayzor.Pages.Settings
         public T OriginalValue { get; private set; }
         public T Value { get; set; }
 
-        public override bool HasChanged
-        {
-            get { return !EqualityComparer<T>.Default.Equals(this.OriginalValue, this.Value); }
-        }
+        public override bool HasChanged => !EqualityComparer<T>.Default.Equals(this.OriginalValue, this.Value);
 
         public SettingItem(Expression<Func<Configuration, T>> accessExpression, IModelValidator validator = null)
         {

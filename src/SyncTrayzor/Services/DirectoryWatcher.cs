@@ -2,11 +2,8 @@
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using Path = Pri.LongPath.Path;
 
@@ -14,8 +11,8 @@ namespace SyncTrayzor.Services
 {
     public class DirectoryChangedEventArgs : EventArgs
     {
-        public string DirectoryPath { get; private set; }
-        public string SubPath { get; private set; }
+        public string DirectoryPath { get; }
+        public string SubPath { get; }
 
         public DirectoryChangedEventArgs(string directoryPath, string subPath)
         {
@@ -114,7 +111,7 @@ namespace SyncTrayzor.Services
             {
                 // This can happen if e.g. the user points us towards 'My Documents' on Vista+, and we get an
                 // 'Error reading the xxx directory'
-                logger.Warn(String.Format("Watcher for {0} couldn't be created: {1}", this.directory, e.Message), e);
+                logger.Warn($"Watcher for {this.directory} couldn't be created: {e.Message}", e);
                 // We'll try again soon
                 return null;
             }
@@ -203,7 +200,7 @@ namespace SyncTrayzor.Services
             }
             catch (FileNotFoundException e)
             {
-                logger.Warn(String.Format("Path {0} changed, but it doesn't exist any more", path), e);
+                logger.Warn($"Path {path} changed, but it doesn't exist any more", e);
             }
 
             return path;
@@ -269,9 +266,7 @@ namespace SyncTrayzor.Services
         private void OnDirectoryChanged(string subPath)
         {
             logger.Info("Path Changed: {0}", Path.Combine(this.directory, subPath));
-            var handler = this.DirectoryChanged;
-            if (handler != null)
-                handler(this, new DirectoryChangedEventArgs(this.directory, subPath));
+            this.DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(this.directory, subPath));
         }
 
         public void Dispose()

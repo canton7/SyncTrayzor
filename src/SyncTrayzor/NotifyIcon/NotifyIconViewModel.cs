@@ -5,11 +5,7 @@ using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace SyncTrayzor.NotifyIcon
@@ -32,10 +28,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncThingState SyncThingState { get; set; }
 
-        public bool SyncThingStarted
-        {
-            get { return this.SyncThingState == SyncThingState.Running; }
-        }
+        public bool SyncThingStarted => this.SyncThingState == SyncThingState.Running;
 
         public bool SyncThingSyncing { get; private set; }
 
@@ -95,28 +88,19 @@ namespace SyncTrayzor.NotifyIcon
             this.OnWindowCloseRequested();
         }
 
-        public bool CanStart
-        {
-            get { return this.SyncThingState == SyncThingState.Stopped; }
-        }
+        public bool CanStart => this.SyncThingState == SyncThingState.Stopped;
         public async void Start()
         {
             await this.syncThingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
-        public bool CanStop
-        {
-            get { return this.SyncThingState == SyncThingState.Running; }
-        }
+        public bool CanStop => this.SyncThingState == SyncThingState.Running;
         public void Stop()
         {
             this.syncThingManager.StopAsync();
         }
 
-        public bool CanRestart
-        {
-            get { return this.SyncThingState == SyncThingState.Running; }
-        }
+        public bool CanRestart => this.SyncThingState == SyncThingState.Running;
         public void Restart()
         {
             this.syncThingManager.RestartAsync();
@@ -127,26 +111,11 @@ namespace SyncTrayzor.NotifyIcon
             this.OnExitRequested();
         }
 
-        private void OnWindowOpenRequested()
-        {
-            var handler = this.WindowOpenRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
+        private void OnWindowOpenRequested() => this.WindowOpenRequested?.Invoke(this, EventArgs.Empty);
 
-        private void OnWindowCloseRequested()
-        {
-            var handler = this.WindowCloseRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
+        private void OnWindowCloseRequested() => this.WindowCloseRequested?.Invoke(this, EventArgs.Empty);
 
-        private void OnExitRequested()
-        {
-            var handler = this.ExitRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
+        private void OnExitRequested() => this.ExitRequested?.Invoke(this, EventArgs.Empty);
     }
 
     // Slightly hacky, as we can't use s:Action in a style setter...
@@ -155,7 +124,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly Folder folder;
         private readonly IProcessStartProvider processStartProvider;
 
-        public string FolderId { get { return this.folder.FolderId; } }
+        public string FolderId => this.folder.FolderId;
 
         public FolderViewModel(Folder folder, IProcessStartProvider processStartProvider)
         {
@@ -164,7 +133,7 @@ namespace SyncTrayzor.NotifyIcon
         }
 
         public event EventHandler CanExecuteChanged { add { } remove { } }
-        public bool CanExecute(object parameter) { return true; }
+        public bool CanExecute(object parameter) => true;
 
         public void Execute(object parameter)
         {

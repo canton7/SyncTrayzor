@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace SyncTrayzor.Xaml
 {
@@ -12,15 +7,9 @@ namespace SyncTrayzor.Xaml
     {
         private readonly WheelDirection direction;
 
-        public static MouseWheelGesture CtrlDown
-        {
-            get { return new MouseWheelGesture(ModifierKeys.Control, WheelDirection.Down); }
-        }
+        public static MouseWheelGesture CtrlDown => new MouseWheelGesture(ModifierKeys.Control, WheelDirection.Down);
 
-        public static MouseWheelGesture CtrlUp
-        {
-            get { return new MouseWheelGesture(ModifierKeys.Control, WheelDirection.Up); }
-        }
+        public static MouseWheelGesture CtrlUp =>  new MouseWheelGesture(ModifierKeys.Control, WheelDirection.Up);
 
         public MouseWheelGesture(ModifierKeys modifiers, WheelDirection direction)
             : base(MouseAction.WheelClick, modifiers)

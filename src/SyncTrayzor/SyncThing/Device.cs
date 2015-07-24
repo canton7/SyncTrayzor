@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SyncTrayzor.SyncThing
+﻿namespace SyncTrayzor.SyncThing
 {
     public class Device
     {
-        public string DeviceId { get; private set; }
-        public string Name { get; private set; }
+        public string DeviceId { get; }
+        public string Name { get; }
 
         private readonly object connectivityLock = new object();
 

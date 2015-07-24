@@ -3,10 +3,6 @@ using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -113,60 +109,42 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)
         {
-            var handler = this.SyncStateChanged;
-            if (handler != null)
-                handler(this, new SyncStateChangedEventArgs(folderId, oldState, syncState));
+            this.SyncStateChanged?.Invoke(this, new SyncStateChangedEventArgs(folderId, oldState, syncState));
         }
 
         private void OnStartupComplete()
         {
-            var handler = this.StartupComplete;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.StartupComplete?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnItemStarted(string folder, string item, ItemChangedActionType action, ItemChangedItemType itemType)
         {
-            var handler = this.ItemStarted;
-            if (handler != null)
-            {
-                handler(this, new ItemStartedEventArgs(folder, item, action, itemType));
-            }
+            this.ItemStarted?.Invoke(this, new ItemStartedEventArgs(folder, item, action, itemType));
         }
 
         private void OnItemFinished(string folder, string item, ItemChangedActionType action, ItemChangedItemType itemType, string error)
         {
-            var handler = this.ItemFinished;
-            if (handler != null)
-                handler(this, new ItemFinishedEventArgs(folder, item, action, itemType, error));
+            this.ItemFinished?.Invoke(this, new ItemFinishedEventArgs(folder, item, action, itemType, error));
         }
 
         private void OnItemDownloadProgressChanged(string folder, string item, long bytesDone, long bytesTotal)
         {
-            var handler = this.ItemDownloadProgressChanged;
-            if (handler != null)
-                handler(this, new ItemDownloadProgressChangedEventArgs(folder, item, bytesDone, bytesTotal));
+            this.ItemDownloadProgressChanged?.Invoke(this, new ItemDownloadProgressChangedEventArgs(folder, item, bytesDone, bytesTotal));
         }
 
         private void OnDeviceConnected(string deviceId, string address)
         {
-            var handler = this.DeviceConnected;
-            if (handler != null)
-                handler(this, new DeviceConnectedEventArgs(deviceId, address));
+            this.DeviceConnected?.Invoke(this, new DeviceConnectedEventArgs(deviceId, address));
         }
 
         private void OnDeviceDisconnected(string deviceId, string error)
         {
-            var handler = this.DeviceDisconnected;
-            if (handler != null)
-                handler(this, new DeviceDisconnectedEventArgs(deviceId, error));
+            this.DeviceDisconnected?.Invoke(this, new DeviceDisconnectedEventArgs(deviceId, error));
         }
 
         private void OnEventsSkipped()
         {
-            var handler = this.EventsSkipped;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.EventsSkipped?.Invoke(this, EventArgs.Empty);
         }
 
         #region IEventVisitor

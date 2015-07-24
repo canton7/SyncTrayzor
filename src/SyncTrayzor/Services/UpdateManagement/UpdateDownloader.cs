@@ -2,12 +2,9 @@
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Utils;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
@@ -162,7 +159,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
             catch (IOException e)
             {
-                logger.Warn(String.Format("Failed to initiate download to temp file {0}", downloadPath), e);
+                logger.Warn($"Failed to initiate download to temp file {downloadPath}", e);
                 return false;
             }
 
@@ -184,7 +181,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     }
                     catch (IOException e)
                     {
-                        logger.Warn(String.Format("Failed to delete old file {0}", file), e);
+                        logger.Warn($"Failed to delete old file {file}", e);
                     }
                 }
             }

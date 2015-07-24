@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.Utils
 {
     public struct CopyToAsyncProgress
     {
-        public long BytesRead { get; private set; }
-        public long TotalBytesToRead { get; private set; }
-        public int ProgressPercent { get; private set; }
+        public long BytesRead { get; }
+        public long TotalBytesToRead { get; }
+        public int ProgressPercent { get; }
 
         public CopyToAsyncProgress(long bytesRead, long totalBytesToRead)
             : this()

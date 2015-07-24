@@ -2,13 +2,8 @@
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -60,7 +55,7 @@ namespace SyncTrayzor.Services.Config
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
-        public bool HadToCreateConfiguration { get; private set; }
+        public bool HadToCreateConfiguration { get; }
         public bool WasUpgraded { get; private set; }
 
         public ConfigurationProvider(IApplicationPathsProvider paths, IFilesystemProvider filesystemProvider)
@@ -188,7 +183,7 @@ namespace SyncTrayzor.Services.Config
                 {
                     if (!this.filesystem.Exists(this.paths.ConfigurationFileBackupPath))
                         this.filesystem.CreateDirectory(this.paths.ConfigurationFileBackupPath);
-                    var backupPath = Path.Combine(this.paths.ConfigurationFileBackupPath, String.Format("config-v{0}.xml", i));
+                    var backupPath = Path.Combine(this.paths.ConfigurationFileBackupPath, $"config-v{i}.xml");
                     logger.Debug("Backing up configuration to {0}", backupPath);
                     configuration.Save(backupPath);
                 }
@@ -312,24 +307,18 @@ namespace SyncTrayzor.Services.Config
 
         private class XmlNodeComparer : IEqualityComparer<XElement>
         {
-            public bool Equals(XElement x, XElement y)
-            {
-                return x.Name == y.Name;
-            }
+            public bool Equals(XElement x, XElement y) => x.Name == y.Name;
 
-            public int GetHashCode(XElement obj)
-            {
-                return obj.Name.GetHashCode();
-            }
+            public int GetHashCode(XElement obj) => obj.Name.GetHashCode();
         }
     }
 
     public class CouldNotFindSyncthingException : Exception
     {
-        public string SyncthingPath { get; private set; }
+        public string SyncthingPath { get; }
 
         public CouldNotFindSyncthingException(string syncthingPath)
-            : base(String.Format("Could not find syncthing.exe at {0}", syncthingPath))
+            : base($"Could not find syncthing.exe at {syncthingPath}")
         {
             this.SyncthingPath = syncthingPath;
         }
@@ -337,10 +326,10 @@ namespace SyncTrayzor.Services.Config
 
     public class BadConfigurationException : Exception
     {
-        public string ConfigurationFilePath { get; private set; }
+        public string ConfigurationFilePath { get; }
 
         public BadConfigurationException(string configurationFilePath, Exception innerException)
-            : base(String.Format("Error deserializing configuration file at {0}", configurationFilePath), innerException)
+            : base($"Error deserializing configuration file at {configurationFilePath}", innerException)
         {
             this.ConfigurationFilePath = configurationFilePath;
         }

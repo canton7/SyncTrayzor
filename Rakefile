@@ -5,7 +5,7 @@ require 'openssl'
 ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
 SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
 SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
-MSBUILD = ENV['MSBUILD'] || %q{C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe}
+MSBUILD = ENV['MSBUILD'] || %q{C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe}
 
 CONFIG = ENV['CONFIG'] || 'Release'
 MSBUILD_LOGGER = ENV['MSBUILD_LOGGER']

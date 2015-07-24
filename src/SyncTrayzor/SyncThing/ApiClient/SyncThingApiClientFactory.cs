@@ -1,11 +1,8 @@
 ﻿using NLog;
 using RestEase;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,7 +62,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             }
 
             if (!success)
-                throw new SyncThingDidNotStartCorrectlyException(String.Format("Syncthing didn't connect after {0}", timeout), lastException);
+                throw new SyncThingDidNotStartCorrectlyException($"Syncthing didn't connect after {timeout}", lastException);
 
             return client;
         }

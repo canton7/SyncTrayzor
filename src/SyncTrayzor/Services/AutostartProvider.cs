@@ -3,12 +3,8 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Security;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace SyncTrayzor.Services
 {
@@ -29,7 +25,7 @@ namespace SyncTrayzor.Services
 
         public override string ToString()
         {
-            return String.Format("<AutostartConfiguration AutoStart={0} StartMinimized={1}>", this.AutoStart, this.StartMinimized);
+            return $"<AutostartConfiguration AutoStart={this.AutoStart} StartMinimized={this.StartMinimized}>";
         }
     }
 
@@ -45,16 +41,10 @@ namespace SyncTrayzor.Services
         public bool IsEnabled { get; set; }
 
         private bool _canRead;
-        public bool CanRead
-        {
-            get { return this.IsEnabled && this._canRead; }
-        }
+        public bool CanRead => this.IsEnabled && this._canRead;
 
         private bool _canWrite;
-        public bool CanWrite
-        {
-            get { return this.IsEnabled && this._canWrite; }
-        }
+        public bool CanWrite => this.IsEnabled && this._canWrite;
 
         public AutostartProvider(IAssemblyProvider assemblyProvider)
         {
@@ -115,7 +105,7 @@ namespace SyncTrayzor.Services
 
                         // See if this one points to our application
                         var keyValue = key.GetValue(entry) as string;
-                        if (keyValue != null && keyValue.StartsWith(String.Format("\"{0}\"", this.assemblyProvider.Location)))
+                        if (keyValue != null && keyValue.StartsWith($"\"{this.assemblyProvider.Location}\""))
                         {
                             foundKey = entry;
                             break;
@@ -140,7 +130,7 @@ namespace SyncTrayzor.Services
 
             if (numberToUse == 1)
                 return "SyncTrayzor";
-            return String.Format("SyncTrayzor ({0})", numberToUse);
+            return $"SyncTrayzor ({numberToUse})";
         }
 
         private RegistryKey OpenRegistryKey(bool writable)

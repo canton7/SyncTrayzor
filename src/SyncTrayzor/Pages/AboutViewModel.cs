@@ -1,18 +1,12 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
-using SyncTrayzor.Properties;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Pages
 {

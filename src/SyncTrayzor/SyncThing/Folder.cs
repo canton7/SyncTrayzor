@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -15,9 +11,9 @@ namespace SyncTrayzor.SyncThing
 
     public class FolderIgnores
     {
-        public IReadOnlyList<string> IgnorePatterns { get; private set; }
-        public IReadOnlyList<Regex> IncludeRegex { get; private set; }
-        public IReadOnlyList<Regex> ExcludeRegex { get; private set; }
+        public IReadOnlyList<string> IgnorePatterns { get; }
+        public IReadOnlyList<Regex> IncludeRegex { get; }
+        public IReadOnlyList<Regex> ExcludeRegex { get; }
 
         public FolderIgnores(List<string> ignores, List<string> patterns)
         {
@@ -40,8 +36,8 @@ namespace SyncTrayzor.SyncThing
 
     public class Folder
     {
-        public string FolderId { get; private set; }
-        public string Path { get; private set; }
+        public string FolderId { get; }
+        public string Path { get; }
 
         private readonly object syncStateLock = new object();
         private FolderSyncState _syncState;

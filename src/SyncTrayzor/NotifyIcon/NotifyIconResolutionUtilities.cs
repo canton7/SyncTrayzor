@@ -1,11 +1,7 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Resources;
@@ -64,11 +60,8 @@ namespace SyncTrayzor.NotifyIcon
 
         static NotifyIconResolutionUtilities()
         {
-            idealIconSize = GetSystemMetrics(SystemMetric.SM_CXSMICON);
+            idealIconSize = NativeMethods.GetSystemMetrics(SystemMetric.SM_CXSMICON);
         }
-
-        [DllImport("user32.dll")]
-        private static extern int GetSystemMetrics(SystemMetric smIndex);
 
         private enum SystemMetric
         {
@@ -167,9 +160,14 @@ namespace SyncTrayzor.NotifyIcon
             SM_SHUTTINGDOWN = 0x2000, // 0x2000
             SM_REMOTECONTROL = 0x2001, // 0x2001
 
-
             SM_CONVERTABLESLATEMODE = 0x2003,
             SM_SYSTEMDOCKED = 0x2004,
+        }
+
+        private class NativeMethods
+        {
+            [DllImport("user32.dll")]
+            public static extern int GetSystemMetrics(SystemMetric smIndex);
         }
     }
 }

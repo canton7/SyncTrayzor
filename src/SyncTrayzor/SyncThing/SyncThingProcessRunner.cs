@@ -4,12 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -25,7 +21,7 @@ namespace SyncTrayzor.SyncThing
 
     public class ProcessStoppedEventArgs : EventArgs
     {
-        public SyncThingExitStatus ExitStatus { get; private set; }
+        public SyncThingExitStatus ExitStatus { get; }
 
         public ProcessStoppedEventArgs(SyncThingExitStatus exitStatus)
         {
@@ -91,7 +87,7 @@ namespace SyncTrayzor.SyncThing
             logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
-                throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
+                throw new Exception($"Unable to find Syncthing at path {this.ExecutablePath}");
 
             var processStartInfo = new ProcessStartInfo()
             {
@@ -162,12 +158,12 @@ namespace SyncTrayzor.SyncThing
         {
             var args = new List<string>(defaultArguments)
             {
-                String.Format("-gui-apikey=\"{0}\"", this.ApiKey),
-                String.Format("-gui-address=\"{0}\"", this.HostAddress)
+                $"-gui-apikey=\"{this.ApiKey}\"",
+                $"-gui-address=\"{this.HostAddress}\""
             };
 
             if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
-                args.Add(String.Format("-home=\"{0}\"", this.CustomHomeDir));
+                args.Add($"-home=\"{this.CustomHomeDir}\"");
 
             return args;
         }
@@ -214,31 +210,23 @@ namespace SyncTrayzor.SyncThing
 
         private void OnStarting()
         {
-            var handler = this.Starting;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.Starting?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnProcessStopped(SyncThingExitStatus exitStatus)
         {
-            var handler = this.ProcessStopped;
-            if (handler != null)
-                handler(this, new ProcessStoppedEventArgs(exitStatus));
+            this.ProcessStopped?.Invoke(this, new ProcessStoppedEventArgs(exitStatus));
         }
 
         private void OnProcessRestarted()
         {
-            var handler = this.ProcessRestarted;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.ProcessRestarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnMessageLogged(string logMessage)
         {
             logger.Debug(logMessage);
-            var handler = this.MessageLogged;
-            if (handler != null)
-                handler(this, new MessageLoggedEventArgs(logMessage));
+            this.MessageLogged?.Invoke(this, new MessageLoggedEventArgs(logMessage));
         }
 
         public void KillAllSyncthingProcesses()

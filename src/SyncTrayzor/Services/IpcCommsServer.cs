@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipes;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,10 +22,7 @@ namespace SyncTrayzor.Services
 
         public event EventHandler MainWindowShowRequested;
 
-        public string PipeName
-        {
-            get { return String.Format("SyncTrayzor-{0}", Process.GetCurrentProcess().Id); }
-        }
+        public string PipeName =>  $"SyncTrayzor-{Process.GetCurrentProcess().Id}";
 
         public void StartServer()
         {
@@ -93,9 +88,7 @@ namespace SyncTrayzor.Services
 
         private void OnMainWindowShowRequested()
         {
-            var handler = this.MainWindowShowRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.MainWindowShowRequested?.Invoke(this, EventArgs.Empty);
         }
 
         public void Dispose()

@@ -1,10 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -41,29 +37,20 @@ namespace SyncTrayzor.Services
 
         private void OnRootWindowActivated(ActivationEventArgs e)
         {
-            var handler = this.RootWindowActivated;
-            if (handler != null)
-                handler(this, e);
+            this.RootWindowActivated?.Invoke(this, e);
         }
 
         private void OnRootWindowDeactivated(DeactivationEventArgs e)
         {
-            var handler = this.RootWindowDeactivated;
-            if (handler != null)
-                handler(this, e);
+            this.RootWindowDeactivated?.Invoke(this, e);
         }
 
         private void OnRootWindowClosed(CloseEventArgs e)
         {
-            var handler = this.RootWindowClosed;
-            if (handler != null)
-                handler(this, e);
+            this.RootWindowClosed?.Invoke(this, e);
         }
 
-        public ScreenState State
-        {
-            get { return this.rootViewModel.State; }
-        }
+        public ScreenState State => this.rootViewModel.State;
 
         public void CloseToTray()
         {

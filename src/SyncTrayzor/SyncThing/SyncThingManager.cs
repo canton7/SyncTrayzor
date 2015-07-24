@@ -7,14 +7,10 @@ using SyncTrayzor.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using EventWatcher = SyncTrayzor.SyncThing.EventWatcher;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -220,7 +216,7 @@ namespace SyncTrayzor.SyncThing
                 if (e.NewState == SyncThingState.Stopped)
                     tcs.TrySetResult(null);
                 else if (e.NewState != SyncThingState.Stopping)
-                    tcs.TrySetException(new Exception(String.Format("Failed to stop Syncthing: Went to state {0} instead", e.NewState)));
+                    tcs.TrySetException(new Exception($"Failed to stop Syncthing: Went to state {e.NewState} instead"));
             };
             this.StateChanged += stateChangedHandler;
 
@@ -351,20 +347,20 @@ namespace SyncTrayzor.SyncThing
             }
             catch (ApiException e)
             {
-                var msg = String.Format("Refit Error. StatusCode: {0}. Content: {1}. Reason: {2}", e.StatusCode, e.Content, e.ReasonPhrase);
+                var msg = $"Refit Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
                 logger.Error(msg, e);
                 throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
             catch (HttpRequestException e)
             {
-                var msg = String.Format("HttpRequestException while starting Syncthing", e);
+                var msg = $"HttpRequestException while starting Syncthing: {e.Message}";
                 logger.Error(msg, e);
                 throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
             catch (Exception e)
             {
                 logger.Error("Error starting Syncthing API", e);
-                throw e;
+                throw;
             }
         }
 

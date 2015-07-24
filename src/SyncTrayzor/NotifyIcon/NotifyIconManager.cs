@@ -5,7 +5,6 @@ using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using System;
 using System.Collections.Generic;

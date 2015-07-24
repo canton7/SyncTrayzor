@@ -2,11 +2,7 @@
 using SyncTrayzor.Localization;
 using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.SyncThing;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 

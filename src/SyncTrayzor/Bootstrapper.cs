@@ -1,10 +1,7 @@
-﻿using CefSharp;
-using FluentValidation;
-using Microsoft.Win32;
+﻿using FluentValidation;
 using NLog;
 using Stylet;
 using StyletIoC;
-using SyncTrayzor.Localization;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
@@ -15,16 +12,13 @@ using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
-using SyncTrayzor.SyncThing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
@@ -179,7 +173,7 @@ namespace SyncTrayzor
         {
             // Testing has indicated that this and OnUnhandledException won't be called at the same time
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Error(String.Format("An unhandled AppDomain exception occurred. Terminating: {0}", e.IsTerminating), e.ExceptionObject as Exception);
+            logger.Error($"An unhandled AppDomain exception occurred. Terminating: {e.IsTerminating}", e.ExceptionObject as Exception);
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
@@ -206,9 +200,9 @@ namespace SyncTrayzor
                 var couldNotFindSyncthingException = e.Exception as CouldNotFindSyncthingException;
                 if (couldNotFindSyncthingException != null)
                 {
-                    var msg = String.Format("Could not find syncthing.exe at {0}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
+                    var msg = $"Could not find syncthing.exe at {couldNotFindSyncthingException.SyncthingPath}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
                     "antivirus program quarantined it, restore it. If all else fails, download syncthing.exe from https://github.com/syncthing/syncthing/releases the put it " +
-                    "in this location.\n\nSyncTrayzor will now close.", couldNotFindSyncthingException.SyncthingPath);
+                    "in this location.\n\nSyncTrayzor will now close.";
                     windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
                     // Don't "crash"

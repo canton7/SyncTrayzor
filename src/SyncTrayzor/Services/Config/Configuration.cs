@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -37,7 +34,7 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            return String.Format("<Folder ID={0} IsWatched={1} NotificationsEnabled={2}>", this.ID, this.IsWatched, this.NotificationsEnabled);
+            return $"<Folder ID={this.ID} IsWatched={this.IsWatched} NotificationsEnabled={this.NotificationsEnabled}>";
         }
     }
 
@@ -88,7 +85,7 @@ namespace SyncTrayzor.Services.Config
             set
             {
                 if (CurrentVersion != value)
-                    throw new InvalidOperationException(String.Format("Can't deserialize config of version {0} (expected {1})", value, CurrentVersion));
+                    throw new InvalidOperationException($"Can't deserialize config of version {value} (expected {CurrentVersion})");
             }
         }
 
@@ -189,18 +186,15 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            return String.Format("<Configuration ShowTrayIconOnlyOnClose={0} MinimizeToTray={1} CloseToTray={2} " +
-                "ShowDeviceConnectivityBalloons={3} SyncthingAddress={4} StartSyncthingAutomatically={5} SyncthingApiKey={6} SyncthingEnvironmentalVariables=[{7}] " +
-                "SyncthingUseCustomHome={8} SyncthingDenyUpgrade={9} SyncthingRunLowPriority={10} Folders=[{11}] NotifyOfNewVersions={12} " +
-                "LastNotifiedVersion={13} ObfuscateDeviceIDs={14} UseComputerCulture={15} SyncthingConsoleHeight={16} WindowPlacement={17} " +
-                "SyncthingWebBrowserZoomLevel={18} LastSeenInstallCount={19} SyncthingPath={20} SyncthingCustomHomePath={21} ShowSynchronizedBalloonEvenIfNothingDownloaded={22} " +
-                "DisableHardwareRendering={23}>",
-                this.ShowTrayIconOnlyOnClose, this.MinimizeToTray, this.CloseToTray, this.ShowDeviceConnectivityBalloons,
-                this.SyncthingAddress, this.StartSyncthingAutomatically, this.SyncthingApiKey, String.Join(" ", this.SyncthingEnvironmentalVariables.Select(x => String.Format("{0}={1}", x.Key, x.Value))),
-                this.SyncthingUseCustomHome, this.SyncthingDenyUpgrade, this.SyncthingRunLowPriority, String.Join(", ", this.Folders), this.NotifyOfNewVersions,
-                this.LatestNotifiedVersion, this.ObfuscateDeviceIDs, this.UseComputerCulture, this.SyncthingConsoleHeight, this.WindowPlacement,
-                this.SyncthingWebBrowserZoomLevel, this.LastSeenInstallCount, this.SyncthingPath, this.SyncthingCustomHomePath, this.ShowSynchronizedBalloonEvenIfNothingDownloaded,
-                this.DisableHardwareRendering);
+            return $"<Configuration ShowTrayIconOnlyOnClose={this.ShowTrayIconOnlyOnClose} MinimizeToTray={this.MinimizeToTray} CloseToTray={this.CloseToTray} " +
+                $"ShowDeviceConnectivityBalloons={this.ShowDeviceConnectivityBalloons} SyncthingAddress={this.SyncthingAddress} StartSyncthingAutomatically={this.StartSyncthingAutomatically} " +
+                $"SyncthingApiKey={this.SyncthingApiKey} SyncthingEnvironmentalVariables=[{String.Join(" ", this.SyncthingEnvironmentalVariables)}] " +
+                $"SyncthingUseCustomHome={this.SyncthingUseCustomHome} SyncthingDenyUpgrade={this.SyncthingDenyUpgrade} SyncthingRunLowPriority={this.SyncthingRunLowPriority} " +
+                $"Folders=[{String.Join(", ", this.Folders)}] NotifyOfNewVersions={this.NotifyOfNewVersions} LatestNotifiedVersion={this.LatestNotifiedVersion} " +
+                $"ObfuscateDeviceIDs={this.ObfuscateDeviceIDs} UseComputerCulture={this.UseComputerCulture} SyncthingConsoleHeight={this.SyncthingConsoleHeight} WindowPlacement={this.WindowPlacement} " +
+                $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingPath={this.SyncthingPath} " +
+                $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
+                $"DisableHardwareRendering={this.DisableHardwareRendering}>";
         }
     }
 }
