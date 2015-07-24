@@ -238,6 +238,7 @@
     <Compile Include="Services\UpdateManagement\UpdateNotificationResponse.cs" />
     <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
     <Compile Include="Services\UserActivityMonitor.cs" />
+    <Compile Include="SyncThing\ApiClient\ConfigSavedEvent.cs" />
     <Compile Include="SyncThing\ApiClient\DefaultingStringEnumConverter.cs" />
     <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
     <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedActionType.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedItemType.cs" />
+    <Compile Include="SyncThing\EventWatcher\ConfigSavedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
     <Compile Include="SyncThing\FreePortFinder.cs" />

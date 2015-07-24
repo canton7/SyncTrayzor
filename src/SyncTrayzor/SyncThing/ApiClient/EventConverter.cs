@@ -17,6 +17,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             { EventType.DeviceConnected, typeof(DeviceConnectedEvent) },
             { EventType.DeviceDisconnected, typeof(DeviceDisconnectedEvent) },
             { EventType.DownloadProgress, typeof(DownloadProgressEvent) },
+            { EventType.ConfigSaved, typeof(ConfigSavedEvent) },
         };
 
         protected override Event Create(Type objectType, JObject jObject)

@@ -112,5 +112,16 @@ namespace SyncTrayzor.SyncThing
             this._lockObject = lockObject;
             this.Value = value;
         }
+
+        public T GetAsserted()
+        {
+            lock (this._lockObject)
+            {
+                if (base.Value == null)
+                    throw new InvalidOperationException("Synchronized value is null");
+
+                return base.Value;
+            }
+        }
     }
 }

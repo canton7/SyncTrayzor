@@ -17,6 +17,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        event EventHandler<ConfigSavedEventArgs> ConfigSaved;
         event EventHandler EventsSkipped;
     }
 
@@ -36,6 +37,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler<ItemDownloadProgressChangedEventArgs> ItemDownloadProgressChanged;
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        public event EventHandler<ConfigSavedEventArgs> ConfigSaved;
         public event EventHandler EventsSkipped;
 
         public SyncThingEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
@@ -142,6 +144,11 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             this.DeviceDisconnected?.Invoke(this, new DeviceDisconnectedEventArgs(deviceId, error));
         }
 
+        private void OnConfigSaved(Config config)
+        {
+            this.ConfigSaved?.Invoke(this, new ConfigSavedEventArgs(config));
+        }
+
         private void OnEventsSkipped()
         {
             this.EventsSkipped?.Invoke(this, EventArgs.Empty);
@@ -202,6 +209,11 @@ namespace SyncTrayzor.SyncThing.EventWatcher
                     this.OnItemDownloadProgressChanged(folder.Key, file.Key, file.Value.BytesDone, file.Value.BytesTotal);
                 }
             }
+        }
+
+        public void Accept(ConfigSavedEvent evt)
+        {
+            this.OnConfigSaved(evt.Data);
         }
 
         #endregion

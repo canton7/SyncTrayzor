@@ -97,6 +97,8 @@ namespace SyncTrayzor.SyncThing
             set { lock (this.stateLock) { this._state = value; } }
         }
 
+        private SystemInfo systemInfo;
+
         public bool IsDataLoaded { get; private set; }
         public event EventHandler DataLoaded;
         public event EventHandler<SyncThingStateChangedEventArgs> StateChanged;
@@ -168,6 +170,8 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher = eventWatcherFactory.CreateEventWatcher(this.apiClient);
             this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
             this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
+            this.eventWatcher.ConfigSaved += (o, e) => this.ReloadConfigDataAsync();
+            this.eventWatcher.EventsSkipped += (o, e) => this.ReloadConfigDataAsync();
 
             this.connectionsWatcher = connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
@@ -435,22 +439,41 @@ namespace SyncTrayzor.SyncThing
 
             // There's a race where Syncthing died, and so we kill the API clients and set it to null,
             // but we still end up here, because threading.
-            ISyncThingApiClient apiClient;
-            lock (this.apiClientsLock)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                apiClient = this.apiClient.UnsynchronizedValue;
-                if (apiClient == null)
-                    throw new InvalidOperationException("ApiClient must not be null");
-            }
+            cancellationToken.ThrowIfCancellationRequested();
+            var apiClient = this.apiClient.GetAsserted();
 
-            var configTask = apiClient.FetchConfigAsync();
             var systemTask = apiClient.FetchSystemInfoAsync();
             var versionTask = apiClient.FetchVersionAsync();
-            var connectionsTask = apiClient.FetchConnectionsAsync();
+            
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await Task.WhenAll(systemTask, versionTask);
 
             cancellationToken.ThrowIfCancellationRequested();
-            await Task.WhenAll(configTask, systemTask, versionTask, connectionsTask);
+
+            this.systemInfo = systemTask.Result;
+            await this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            this.Version = versionTask.Result;
+            
+            this.StartedTime = DateTime.UtcNow;
+            this.IsDataLoaded = true;
+            this.OnDataLoaded();
+        }
+
+        private async Task LoadConfigDataAsync(string tilde, bool isReload, CancellationToken cancellationToken)
+        {
+            var apiClient = this.apiClient.GetAsserted();
+
+            var configTask = apiClient.FetchConfigAsync();
+            var connectionsTask = apiClient.FetchConnectionsAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await Task.WhenAll(configTask, connectionsTask);
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             // We can potentially see duplicate devices (if the user set their config file that way). Ignore them.
             var devices = configTask.Result.Devices.DistinctBy(x => x.DeviceID).Select(device =>
@@ -463,15 +486,31 @@ namespace SyncTrayzor.SyncThing
             });
             this.devices = new ConcurrentDictionary<string, Device>(devices.Select(x => new KeyValuePair<string, Device>(x.DeviceId, x)));
 
-            await this._folders.LoadFoldersAsync(configTask.Result, systemTask.Result, cancellationToken);
+            if (isReload)
+                await this._folders.ReloadFoldersAsync(configTask.Result, tilde, cancellationToken);
+            else
+                await this._folders.LoadFoldersAsync(configTask.Result, tilde, cancellationToken);
+        }
 
-            this.Version = versionTask.Result;
+        private async void ReloadConfigDataAsync()
+        {
+            // Shit. We don't know what state any of our folders are in. We'll have to poll them all....
+            // Note that we're executing on the ThreadPool here: we don't have a Task route back to the main thread.
+            // Any exceptions are ours to manage....
 
-            cancellationToken.ThrowIfCancellationRequested();
-            
-            this.StartedTime = DateTime.UtcNow;
-            this.IsDataLoaded = true;
-            this.OnDataLoaded();
+            // HttpRequestException, ApiException, and  OperationCanceledException are more or less expected: Syncthing could shut down
+            // at any point
+
+            try
+            { 
+                await this.LoadConfigDataAsync(this.systemInfo.Tilde, true, CancellationToken.None);
+            }
+            catch (HttpRequestException)
+            { }
+            catch (OperationCanceledException)
+            { }
+            catch (ApiException)
+            { }
         }
 
         private void OnDeviceConnected(EventWatcher.DeviceConnectedEventArgs e)
