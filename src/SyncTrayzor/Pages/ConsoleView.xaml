@@ -18,7 +18,7 @@
                  FontSize="11"
                  IsReadOnly="True"
                  UndoLimit="0"
-                 Text="{Binding LogMessages, Converter={StaticResource LogMessagesConverter}}">
+                 Text="{Binding LogMessages, Converter={StaticResource LogMessagesConverter}, Mode=OneWay}">
             <i:Interaction.Behaviors>
                 <xaml:ScrollToEndBehaviour/>
             </i:Interaction.Behaviors>
