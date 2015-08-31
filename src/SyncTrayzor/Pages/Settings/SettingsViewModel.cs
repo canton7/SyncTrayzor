@@ -61,7 +61,8 @@ namespace SyncTrayzor.Pages.Settings
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
         public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
-        public SettingItem<string> SyncThingEnvironmentalVariables { get;  }
+        public SettingItem<string> SyncThingCommandLineFlags { get; }
+        public SettingItem<string> SyncThingEnvironmentalVariables { get; }
         public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
         private bool updatingFolderSettings;
@@ -118,13 +119,24 @@ namespace SyncTrayzor.Pages.Settings
                 this.StartMinimized = currentSetup.StartMinimized;
             }
 
-            this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
-                x => EnvironmentalVariablesParser.Format(x.SyncthingEnvironmentalVariables),
+            this.SyncThingCommandLineFlags = this.CreateBasicSettingItem(
+                x => String.Join(" ", x.SyncthingCommandLineFlags),
                 (x, v) =>
                 {
-                    EnvironmentalVariableCollection envVars;
-                    EnvironmentalVariablesParser.TryParse(v, out envVars);
-                    x.SyncthingEnvironmentalVariables = envVars;    
+                    IEnumerable<KeyValuePair<string, string>> envVars;
+                    KeyValueStringParser.TryParse(v, out envVars, mustHaveValue: false);
+                    x.SyncthingCommandLineFlags = envVars.Select(item => KeyValueStringParser.FormatItem(item.Key, item.Value)).ToList();
+                }, new SyncThingCommandLineFlagsValidator());
+            this.SyncThingCommandLineFlags.RequiresSyncthingRestart = true;
+
+
+            this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
+                x => KeyValueStringParser.Format(x.SyncthingEnvironmentalVariables),
+                (x, v) =>
+                {
+                    IEnumerable<KeyValuePair<string, string>> envVars;
+                    KeyValueStringParser.TryParse(v, out envVars);
+                    x.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection(envVars);
                 }, new SyncThingEnvironmentalVariablesValidator());
             this.SyncThingEnvironmentalVariables.RequiresSyncthingRestart = true;
 
@@ -194,9 +206,9 @@ namespace SyncTrayzor.Pages.Settings
             return this.CreateBasicSettingItemImpl(v => new SettingItem<T>(accessExpression, v), validator);
         }
 
-        private SettingItem<T> CreateBasicSettingItem<T>(Func<Configuration, T> getter, Action<Configuration, T> setter, IValidator<SettingItem<T>> validator = null)
+        private SettingItem<T> CreateBasicSettingItem<T>(Func<Configuration, T> getter, Action<Configuration, T> setter, IValidator<SettingItem<T>> validator = null, Func<T, T, bool> comparer = null)
         {
-            return this.CreateBasicSettingItemImpl(v => new SettingItem<T>(getter, setter, v), validator);
+            return this.CreateBasicSettingItemImpl(v => new SettingItem<T>(getter, setter, v, comparer), validator);
         }
 
         private SettingItem<T> CreateBasicSettingItemImpl<T>(Func<IModelValidator, SettingItem<T>> generator, IValidator<SettingItem<T>> validator)

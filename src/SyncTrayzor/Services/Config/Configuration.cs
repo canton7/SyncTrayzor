@@ -40,6 +40,18 @@ namespace SyncTrayzor.Services.Config
 
     public class EnvironmentalVariableCollection : Dictionary<string, string>, IXmlSerializable
     {
+        public EnvironmentalVariableCollection()
+        {
+        }
+
+        public EnvironmentalVariableCollection(IEnumerable<KeyValuePair<string, string>> source)
+        {
+            foreach (var kvp in source)
+            {
+                this.Add(kvp.Key, kvp.Value);
+            }
+        }
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -97,6 +109,9 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingAddress { get; set; }
         public bool StartSyncthingAutomatically { get; set; }
         public string SyncthingApiKey { get; set; }
+
+        [XmlArrayItem("SyncthingCommandLineFlag")]
+        public List<string> SyncthingCommandLineFlags { get; set; }
         public EnvironmentalVariableCollection SyncthingEnvironmentalVariables { get; set; }
         public bool SyncthingUseCustomHome { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
@@ -138,6 +153,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingAddress = "localhost:8384";
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = null;
+            this.SyncthingCommandLineFlags = new List<string>();
             this.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection();
             this.SyncthingUseCustomHome = true;
             this.SyncthingDenyUpgrade = false;
@@ -166,6 +182,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingAddress = other.SyncthingAddress;
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
+            this.SyncthingCommandLineFlags = other.SyncthingCommandLineFlags;
             this.SyncthingEnvironmentalVariables = other.SyncthingEnvironmentalVariables;
             this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.SyncthingDenyUpgrade = other.SyncthingDenyUpgrade;
@@ -188,6 +205,7 @@ namespace SyncTrayzor.Services.Config
         {
             return $"<Configuration ShowTrayIconOnlyOnClose={this.ShowTrayIconOnlyOnClose} MinimizeToTray={this.MinimizeToTray} CloseToTray={this.CloseToTray} " +
                 $"ShowDeviceConnectivityBalloons={this.ShowDeviceConnectivityBalloons} SyncthingAddress={this.SyncthingAddress} StartSyncthingAutomatically={this.StartSyncthingAutomatically} " +
+                $"SyncthingCommandLineFlags=[{String.Join(",", this.SyncthingCommandLineFlags)}]" +
                 $"SyncthingApiKey={this.SyncthingApiKey} SyncthingEnvironmentalVariables=[{String.Join(" ", this.SyncthingEnvironmentalVariables)}] " +
                 $"SyncthingUseCustomHome={this.SyncthingUseCustomHome} SyncthingDenyUpgrade={this.SyncthingDenyUpgrade} SyncthingRunLowPriority={this.SyncthingRunLowPriority} " +
                 $"Folders=[{String.Join(", ", this.Folders)}] NotifyOfNewVersions={this.NotifyOfNewVersions} LatestNotifiedVersion={this.LatestNotifiedVersion} " +

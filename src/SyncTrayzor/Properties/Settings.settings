@@ -51,6 +51,7 @@
   &lt;ShowSynchronizedBalloonEvenIfNothingDownloaded&gt;false&lt;/ShowSynchronizedBalloonEvenIfNothingDownloaded&gt;
   &lt;SyncthingAddress&gt;localhost:8384&lt;/SyncthingAddress&gt;
   &lt;StartSyncthingAutomatically&gt;true&lt;/StartSyncthingAutomatically&gt;
+  &lt;SyncthingCommandLineFlags /&gt;
   &lt;SyncthingEnvironmentalVariables /&gt;
   &lt;SyncthingUseCustomHome&gt;true&lt;/SyncthingUseCustomHome&gt;
   &lt;SyncthingDenyUpgrade&gt;false&lt;/SyncthingDenyUpgrade&gt;

@@ -19,25 +19,28 @@ namespace SyncTrayzor.Pages.Settings
     {
         private readonly Func<Configuration, T> getter;
         private readonly Action<Configuration, T> setter;
+        private readonly Func<T, T, bool> comparer;
 
         public T OriginalValue { get; private set; }
         public T Value { get; set; }
 
-        public override bool HasChanged => !EqualityComparer<T>.Default.Equals(this.OriginalValue, this.Value);
+        public override bool HasChanged => !this.comparer(this.OriginalValue, this.Value);
 
-        public SettingItem(Expression<Func<Configuration, T>> accessExpression, IModelValidator validator = null)
+        public SettingItem(Expression<Func<Configuration, T>> accessExpression, IModelValidator validator = null, Func<T, T, bool> comparer = null)
         {
             var propertyName = accessExpression.NameForProperty();
             var propertyInfo = typeof(Configuration).GetProperty(propertyName);
             this.getter = c => (T)propertyInfo.GetValue(c);
             this.setter = (c, v) => propertyInfo.SetValue(c, v);
+            this.comparer = comparer ?? new Func<T, T, bool>((x, y) => EqualityComparer<T>.Default.Equals(x, y));
             this.Validator = validator;
         }
 
-        public SettingItem(Func<Configuration, T> getter, Action<Configuration, T> setter, IModelValidator validator = null)
+        public SettingItem(Func<Configuration, T> getter, Action<Configuration, T> setter, IModelValidator validator = null, Func<T, T, bool> comparer = null)
         {
             this.getter = getter;
             this.setter = setter;
+            this.comparer = comparer ?? new Func<T, T, bool>((x, y) => EqualityComparer<T>.Default.Equals(x, y));
             this.Validator = validator;
         }
 

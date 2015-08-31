@@ -832,6 +832,33 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You may not specify the flag {0}.
+        /// </summary>
+        public static string SettingsView_Validation_SyncthingCommandLineFlagIsNotAllowed {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_SyncthingCommandLineFlagIsNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command-line flags must begin with &apos;-&apos;.
+        /// </summary>
+        public static string SettingsView_Validation_SyncthingCommandLineFlagsMustBeginWithHyphen {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_SyncthingCommandLineFlagsMustBeginWithHyphen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must be in the format &apos;-flag1 -flag2=value2 -flag3=&quot;value3&quot;&apos;.
+        /// </summary>
+        public static string SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be in the format &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;.
         /// </summary>
         public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {

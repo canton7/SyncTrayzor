@@ -684,4 +684,13 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_WatchedFolders_Header_Watched" xml:space="preserve">
     <value>Watched</value>
   </data>
+  <data name="SettingsView_Validation_SyncthingCommandLineFlagIsNotAllowed" xml:space="preserve">
+    <value>You may not specify the flag {0}</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingCommandLineFlagsMustBeginWithHyphen" xml:space="preserve">
+    <value>Command-line flags must begin with '-'</value>
+  </data>
+  <data name="SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat" xml:space="preserve">
+    <value>Must be in the format '-flag1 -flag2=value2 -flag3="value3"'</value>
+  </data>
 </root>

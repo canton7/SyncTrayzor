@@ -1,6 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Collections.Generic;
+using FluentValidation;
 using SyncTrayzor.Properties.Strings;
-using SyncTrayzor.Services.Config;
 
 namespace SyncTrayzor.Pages.Settings
 {
@@ -10,8 +10,8 @@ namespace SyncTrayzor.Pages.Settings
         {
             RuleFor(x => x.Value).Must(str =>
             {
-                EnvironmentalVariableCollection result;
-                return EnvironmentalVariablesParser.TryParse(str, out result);
+                IEnumerable<KeyValuePair<string, string>> result;
+                return KeyValueStringParser.TryParse(str, out result);
             }).WithMessage(Resources.SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat);
         }
     }

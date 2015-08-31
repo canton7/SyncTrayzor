@@ -35,6 +35,7 @@ namespace SyncTrayzor.SyncThing
         string ApiKey { get; set; }
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
+        List<string> CommandLineFlags { get; set; }
         IDictionary<string, string> EnvironmentalVariables { get; set; }
         bool DenyUpgrade { get; set; }
         bool RunLowPriority { get; set; }
@@ -64,7 +65,8 @@ namespace SyncTrayzor.SyncThing
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
-        public IDictionary<string, string> EnvironmentalVariables { get; set; }
+        public List<string> CommandLineFlags { get; set; } = new List<string>();
+        public IDictionary<string, string> EnvironmentalVariables { get; set; } = new Dictionary<string, string>();
         public bool DenyUpgrade { get; set; }
         public bool RunLowPriority { get; set; }
         public bool HideDeviceIds { get; set; }
@@ -102,12 +104,12 @@ namespace SyncTrayzor.SyncThing
                 StandardErrorEncoding = Encoding.UTF8,
             };
 
+            if (this.DenyUpgrade)
+                processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
             foreach (var kvp in this.EnvironmentalVariables)
             {
                 processStartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
             }
-            if (this.DenyUpgrade)
-                processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
 
             lock (this.processLock)
             {
@@ -164,6 +166,8 @@ namespace SyncTrayzor.SyncThing
 
             if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
                 args.Add($"-home=\"{this.CustomHomeDir}\"");
+
+            args.AddRange(this.CommandLineFlags);
 
             return args;
         }

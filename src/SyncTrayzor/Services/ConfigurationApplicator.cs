@@ -67,6 +67,7 @@ namespace SyncTrayzor.Services
 
             this.syncThingManager.PreferredAddress = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
+            this.syncThingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
             this.syncThingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
             this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
                 EnvVarTransformer.Transform(configuration.SyncthingCustomHomePath)

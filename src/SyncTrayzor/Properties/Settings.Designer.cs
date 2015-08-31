@@ -139,6 +139,7 @@ namespace SyncTrayzor.Properties {
   <ShowSynchronizedBalloonEvenIfNothingDownloaded>false</ShowSynchronizedBalloonEvenIfNothingDownloaded>
   <SyncthingAddress>localhost:8384</SyncthingAddress>
   <StartSyncthingAutomatically>true</StartSyncthingAutomatically>
+  <SyncthingCommandLineFlags />
   <SyncthingEnvironmentalVariables />
   <SyncthingUseCustomHome>true</SyncthingUseCustomHome>
   <SyncthingDenyUpgrade>false</SyncthingDenyUpgrade>

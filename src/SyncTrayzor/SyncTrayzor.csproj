@@ -155,10 +155,11 @@
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
-    <Compile Include="Pages\Settings\EnvironmentalVariableParser.cs" />
+    <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
     <Compile Include="Pages\Settings\SettingItem.cs" />
     <Compile Include="Pages\Settings\SyncThingAddressValidator.cs" />
     <Compile Include="Pages\Settings\SyncThingApiKeyValidator.cs" />
+    <Compile Include="Pages\Settings\SyncThingCommandLineFlagsValidator.cs" />
     <Compile Include="Pages\Settings\SyncThingEnvironmentalVariablesValidator.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
