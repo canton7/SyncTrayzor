@@ -548,7 +548,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>_Reset</value>
   </data>
   <data name="SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat" xml:space="preserve">
-    <value>Must be in the format 'VAR=value VAR2="val1 val2"'</value>
+    <value>Must be in the format 'VAR=value' or 'VAR="val1 val2"'</value>
   </data>
   <data name="NewVersionInstalledView_Message" xml:space="preserve">
     <value>SyncTrayzor version {0} was successfully installed.</value>
@@ -691,6 +691,6 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Command-line flags must begin with '-'</value>
   </data>
   <data name="SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat" xml:space="preserve">
-    <value>Must be in the format '-flag1 -flag2=value2 -flag3="value3"'</value>
+    <value>Must be in the format '-flag' or '-flag=value' or '-flag="value with spaces"'</value>
   </data>
 </root>

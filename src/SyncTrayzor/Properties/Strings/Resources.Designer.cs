@@ -850,7 +850,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must be in the format &apos;-flag1 -flag2=value2 -flag3=&quot;value3&quot;&apos;.
+        ///   Looks up a localized string similar to Must be in the format &apos;-flag&apos; or &apos;-flag=value&apos; or &apos;-flag=&quot;value with spaces&quot;&apos;.
         /// </summary>
         public static string SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat {
             get {
@@ -859,7 +859,7 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must be in the format &apos;VAR=value VAR2=&quot;val1 val2&quot;&apos;.
+        ///   Looks up a localized string similar to Must be in the format &apos;VAR=value&apos; or &apos;VAR=&quot;val1 val2&quot;&apos;.
         /// </summary>
         public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {
             get {
