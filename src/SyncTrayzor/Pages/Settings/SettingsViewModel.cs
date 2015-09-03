@@ -20,12 +20,6 @@ namespace SyncTrayzor.Pages.Settings
         public bool IsNotified { get; set; }
     }
 
-    public class WatchedFolder
-    {
-        public string Folder { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
     public class SettingsViewModel : Screen
     {
         private readonly IConfigurationProvider configurationProvider;
@@ -153,7 +147,7 @@ namespace SyncTrayzor.Pages.Settings
             this.FolderSettings = new BindableCollection<FolderSettings>();
             if (syncThingManager.State == SyncThingState.Running)
             {
-                this.FolderSettings.AddRange(configuration.Folders.Select(x => new FolderSettings()
+                this.FolderSettings.AddRange(configuration.Folders.OrderByDescending(x => x.ID).Select(x => new FolderSettings()
                 {
                     FolderName = x.ID,
                     IsWatched = x.IsWatched,
