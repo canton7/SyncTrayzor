@@ -769,6 +769,15 @@ namespace SyncTrayzor.Properties.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folders.
+        /// </summary>
+        public static string SettingsView_Tab_Folders {
+            get {
+                return ResourceManager.GetString("SettingsView_Tab_Folders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Syncthing.
         /// </summary>
         public static string SettingsView_Tab_Syncthing {

@@ -126,7 +126,7 @@
                 </DockPanel>
             </TabItem>
 
-            <TabItem Header="Folders">
+            <TabItem Header="{l:Loc SettingsView_Tab_Folders}">
                 <!-- If we don't give this a width, then the 'folders' column expands to fill all available space -->
                 <!-- Width carefully chosen to given 10px margin on both sides -->
                 <DockPanel Margin="10" Width="386">

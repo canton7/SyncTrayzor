@@ -693,4 +693,7 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat" xml:space="preserve">
     <value>Must be in the format '-flag' or '-flag=value' or '-flag="value with spaces"'</value>
   </data>
+  <data name="SettingsView_Tab_Folders" xml:space="preserve">
+    <value>Folders</value>
+  </data>
 </root>
