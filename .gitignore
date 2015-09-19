@@ -28,6 +28,7 @@ obj/
 
 #Project files
 [Bb]uild/
+!/build
 
 #NuGet
 packages/
