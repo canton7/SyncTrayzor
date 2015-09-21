@@ -2,6 +2,8 @@ require 'tmpdir'
 require 'open-uri'
 require 'openssl'
 
+require_relative 'build/TxClient'
+
 ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
 SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
 SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
@@ -308,3 +310,27 @@ end
 
 desc 'Download syncthing for all architectures'
 task :"download-syncthing", [:version] => ARCH_CONFIG.map{ |x| :"download-syncthing:#{x.arch}" }
+
+def create_tx_client(require_password = false)
+  raise "TX_PASSWORD not specified" if require_password && (ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?)
+  tx_client = TxClient.new('synctrayzor', 'canton7', ENV['TX_PASSWORD'], 'src/SyncTrayzor/SyncTrayzor.csproj', 'Properties/Strings')
+  tx_client.language_exceptions['es_ES'] = 'es'
+  tx_client
+end
+
+namespace :tx do
+  desc "Remove all translations from csproj"
+  task :clean do
+    create_tx_client(false).clean_translations
+  end
+
+  desc "Fetch all translatinos"
+  task :pull do
+    tx_client = create_tx_client(true)
+    tx_client.list_translations.each do |language|
+      next if language == 'en'
+      puts "Fetching #{language}..."
+      tx_client.add_translation(language)
+    end
+  end
+end

@@ -4,40 +4,41 @@ require 'openssl'
 require 'rexml/document'
 
 class TxClient
-  TX_BASE = 'https://www.transifex.com/api/2/project/synctrayzor'
+  TX_BASE = 'https://www.transifex.com/api/2/project/%s'
   STATS_URL = TX_BASE + '/resource/strings/stats'
   TRANSLATION_URL = TX_BASE + '/resource/strings/translation/%s'
 
   attr_reader :language_exceptions
 
-  def initialize(user, password, csproj_path, relative_resx_path)
-    @user, @password, @csproj_path, @relative_resx_path = user, password, csproj_path, relative_resx_path
+  def initialize(project, user, password, csproj_path, relative_resx_path)
+    @project, @user, @password, @csproj_path, @relative_resx_path = project, user, password, csproj_path, relative_resx_path
 
     @language_exceptions = {
       'ca@valencia' => 'ca-ES-valencia',
     }
   end
 
-  def request(uri)
-    open(uri, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE, http_basic_authentication: [@user, @password]) do |f|
-      JSON.parse(f.read)
-    end
-  end
-
   def list_translations(completion_percent = 75)
-    request(STATS_URL).select do |lang, stats|
+    request(sprintf(STATS_URL, @project)).select do |lang, stats|
       stats['translated_entities'].fdiv(stats['translated_entities'] + stats['untranslated_entities']) * 100 > completion_percent
     end.keys
   end
 
   def add_translation(language)
-    # resx_path = resx_path_for_language(language)
-
-    # download_and_write_resx(language)
-
+    download_and_write_resx(language)
     add_resx_to_csproj(language)
-    # remove_all_resx_from_csproj
-    
+  end
+
+  def clean_translations
+    remove_all_resx_from_csproj
+  end
+
+  private
+
+  def request(uri)
+    open(uri, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE, http_basic_authentication: [@user, @password]) do |f|
+      JSON.parse(f.read)
+    end
   end
 
   def relative_resx_path_for_language(language)
@@ -46,11 +47,11 @@ class TxClient
   end
 
   def absolute_resx_path_for_language(language)
-    File.join(File.dirname(@csproj_path), relative_resx_path_for_language(langauge))
+    File.join(File.dirname(@csproj_path), relative_resx_path_for_language(language))
   end
 
   def download_and_write_resx(language)
-    content = request(sprintf(TRANSLATION_URL, language))["content"]
+    content = request(sprintf(TRANSLATION_URL, @project, language))["content"]
     File.open(absolute_resx_path_for_language(language), 'w') do |f|
       f.write(content)
     end
@@ -111,5 +112,3 @@ class TxClient
     end
   end
 end
-
-TxClient.new('canton7', '', '../src/SyncTrayzor/SyncTrayzor.csproj', 'Properties/Strings').add_translation("de")
