@@ -62,11 +62,13 @@ class TxClient
 
     csproj.each_element("//Project/ItemGroup/EmbeddedResource") do |resource|
       next unless resource.attributes['Include'] =~ /^#{Regexp.quote(@relative_resx_path.gsub('/', '\\'))}\\Resources\.\S+\.resx$/
+      File.delete(File.join(File.dirname(@csproj_path), resource.attributes['Include']))
       resource.parent.delete(resource)
     end
 
     csproj.each_element("//Project/ItemGroup/Compile") do |resource|
       next unless resource.attributes['Include'] =~ /^#{Regexp.quote(@relative_resx_path.gsub('/', '\\'))}\\Resources\.\S+\.Designer.cs$/
+      File.delete(File.join(File.dirname(@csproj_path), resource.attributes['Include']))
       resource.parent.delete(resource)
     end
 
