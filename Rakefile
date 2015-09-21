@@ -313,7 +313,7 @@ task :"download-syncthing", [:version] => ARCH_CONFIG.map{ |x| :"download-syncth
 
 def create_tx_client(require_password = false)
   raise "TX_PASSWORD not specified" if require_password && (ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?)
-  tx_client = TxClient.new('synctrayzor', 'canton7', ENV['TX_PASSWORD'], 'src/SyncTrayzor/SyncTrayzor.csproj', 'Properties/Strings')
+  tx_client = TxClient.new('synctrayzor', 'canton7', ENV['TX_PASSWORD'], 'src/SyncTrayzor/SyncTrayzor.csproj', 'Properties')
   tx_client.language_exceptions['es_ES'] = 'es'
   tx_client
 end
