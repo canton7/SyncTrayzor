@@ -3,6 +3,7 @@ require 'open-uri'
 require 'openssl'
 
 require_relative 'build/TxClient'
+require_relative 'build/CsprojResxWriter'
 
 ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
 SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
@@ -311,26 +312,32 @@ end
 desc 'Download syncthing for all architectures'
 task :"download-syncthing", [:version] => ARCH_CONFIG.map{ |x| :"download-syncthing:#{x.arch}" }
 
-def create_tx_client(require_password = false)
-  raise "TX_PASSWORD not specified" if require_password && (ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?)
-  tx_client = TxClient.new('synctrayzor', 'canton7', ENV['TX_PASSWORD'], 'src/SyncTrayzor/SyncTrayzor.csproj', 'Properties')
-  tx_client.language_exceptions['es_ES'] = 'es'
-  tx_client
+def create_tx_client
+  raise "TX_PASSWORD not specified" if ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?
+  TxClient.new('synctrayzor', 'canton7', ENV['TX_PASSWORD'])
+end
+
+def create_csproj_resx_writer
+  csproj_resx_writer = CsprojResxWriter.new('src/SyncTrayzor/SyncTrayzor.csproj', 'Properties')
+  csproj_resx_writer.language_exceptions['es_ES'] = 'es'
+  csproj_resx_writer
 end
 
 namespace :tx do
   desc "Remove all translations from csproj"
   task :clean do
-    create_tx_client(false).clean_translations
+    create_csproj_resx_writer().remove_all_resx
   end
 
-  desc "Fetch all translatinos"
+  desc "Fetch all translations"
   task :pull do
-    tx_client = create_tx_client(true)
-    tx_client.list_translations.each do |language|
+    tx_client = create_tx_client()
+    csproj_resx_writer = create_csproj_resx_writer()
+    tx_client.list_translations().each do |language|
       next if language == 'en'
       puts "Fetching #{language}..."
-      tx_client.add_translation(language)
+      tx_client.download_translation(language, csproj_resx_writer.absolute_resx_path_for_language(language))
+      csproj_resx_writer.add_resx_to_csproj(language)
     end
   end
 end
