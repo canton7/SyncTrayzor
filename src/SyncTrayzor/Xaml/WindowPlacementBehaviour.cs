@@ -89,7 +89,7 @@ namespace SyncTrayzor.Xaml
                 };
             }
 
-            if (!this.Placement.Equals(placement))
+            if (this.Placement != null && !this.Placement.Equals(placement))
                 this.Placement = placement;
         }
 
