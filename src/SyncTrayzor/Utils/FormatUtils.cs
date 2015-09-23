@@ -1,5 +1,5 @@
 ﻿using SyncTrayzor.Localization;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using System;
 
 namespace SyncTrayzor.Utils

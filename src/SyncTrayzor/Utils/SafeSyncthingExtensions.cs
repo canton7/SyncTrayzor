@@ -1,6 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using SyncTrayzor.SyncThing;
 using System.ComponentModel;
 using System.Threading.Tasks;

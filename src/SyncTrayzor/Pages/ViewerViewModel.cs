@@ -8,7 +8,7 @@ using CefSharp.Wpf;
 using SyncTrayzor.Services.Config;
 using System.Threading;
 using SyncTrayzor.Services;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages
 {

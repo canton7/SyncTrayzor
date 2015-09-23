@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages.Settings
 {

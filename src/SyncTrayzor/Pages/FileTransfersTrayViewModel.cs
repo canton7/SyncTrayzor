@@ -1,6 +1,6 @@
 ﻿using Pri.LongPath;
 using Stylet;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;

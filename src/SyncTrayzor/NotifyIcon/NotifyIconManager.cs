@@ -1,7 +1,7 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
 using SyncTrayzor.Localization;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;

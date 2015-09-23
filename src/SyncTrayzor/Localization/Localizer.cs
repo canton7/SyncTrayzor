@@ -1,5 +1,5 @@
 ﻿using SmartFormat;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using System;
 using System.Globalization;
 using System.Threading;

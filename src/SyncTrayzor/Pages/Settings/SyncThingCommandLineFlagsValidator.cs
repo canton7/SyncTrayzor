@@ -4,7 +4,7 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using SyncTrayzor.Localization;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages.Settings
 {

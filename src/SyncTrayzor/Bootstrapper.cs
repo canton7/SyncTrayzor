@@ -5,7 +5,6 @@ using StyletIoC;
 using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
-using SyncTrayzor.Properties.Strings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;

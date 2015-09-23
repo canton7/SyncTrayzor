@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using System;
 
 namespace SyncTrayzor.Pages.Settings
