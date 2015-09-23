@@ -44,6 +44,20 @@ class CsprojResxWriter
     write_csproj(csproj)
   end
 
+  def read_and_sort_source_resx
+    doc = REXML::Document.new(IO.read(File.join(File.dirname(@csproj_path), @relative_resx_path, "Resources.resx")), { :attribute_quote => :quote })
+    elements = doc.get_elements('//root/data')
+    elements.sort_by!{ |x| x.attributes['name'] }
+    elements.each do |element|
+      parent = element.parent
+      parent.delete(element)
+      parent.add(element)
+    end
+    output = ""
+    doc.write(output)
+    output
+  end
+
   private
 
   def relative_resx_path_for_language(language)

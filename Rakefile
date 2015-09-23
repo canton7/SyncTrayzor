@@ -314,7 +314,7 @@ task :"download-syncthing", [:version] => ARCH_CONFIG.map{ |x| :"download-syncth
 
 def create_tx_client
   raise "TX_PASSWORD not specified" if ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?
-  TxClient.new('synctrayzor', 'canton7', ENV['TX_PASSWORD'])
+  TxClient.new('synctrayzor', 'strings', 'canton7', ENV['TX_PASSWORD'])
 end
 
 def create_csproj_resx_writer
@@ -339,5 +339,15 @@ namespace :tx do
       tx_client.download_translation(language, csproj_resx_writer.absolute_resx_path_for_language(language))
       csproj_resx_writer.add_resx_to_csproj(language)
     end
+  end
+
+  desc "Push source translations"
+  task :push do
+    tx_client = create_tx_client()
+    csproj_resx_writer = create_csproj_resx_writer()
+
+    source_resx = csproj_resx_writer.read_and_sort_source_resx
+    response = tx_client.upload_source(source_resx)
+    puts "Added: #{response['strings_added']}. Updated: #{response['strings_updated']}. Deleted: #{response['strings_delete']}."
   end
 end
