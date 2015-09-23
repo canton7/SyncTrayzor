@@ -161,60 +161,15 @@
     <Compile Include="Pages\Settings\SyncThingApiKeyValidator.cs" />
     <Compile Include="Pages\Settings\SyncThingCommandLineFlagsValidator.cs" />
     <Compile Include="Pages\Settings\SyncThingEnvironmentalVariablesValidator.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.cs.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.cs.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.el.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.el.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.fr.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.fr.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.hu-HU.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.hu-HU.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.it-IT.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.it-IT.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.ja.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.ja.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.nl-NL.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.nl-NL.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.pt-BR.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.pt-BR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.ru.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.ru.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.zh-CN.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
@@ -267,21 +222,6 @@
     <Compile Include="Pages\Settings\SettingsViewModel.cs" />
     <Compile Include="Pages\ThirdPartyComponentsViewModel.cs" />
     <Compile Include="Pages\UnhandledExceptionViewModel.cs" />
-    <Compile Include="Properties\Strings\Resources.de.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.de.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Strings\Resources.es.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.es.resx</DependentUpon>
-    </Compile>
     <Compile Include="Services\AutostartProvider.cs" />
     <Compile Include="Services\Config\Configuration.cs" />
     <Compile Include="Services\ConfigurationApplicator.cs" />
@@ -390,42 +330,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <EmbeddedResource Include="Properties\Strings\Resources.cs.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.cs.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.el.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.el.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.fr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.fr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.hu-HU.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.hu-HU.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.it-IT.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.it-IT.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.ja.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.ja.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.nl-NL.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.nl-NL.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.pt-BR.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.pt-BR.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.ru.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.ru.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="SyncTrayzor.ruleset" />
   </ItemGroup>
   <ItemGroup>
@@ -524,22 +428,10 @@
     <Resource Include="Icons\default.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Strings\Resources.de.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.es.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.es.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.resx">
+    <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings\Resources.zh-CN.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Licenses\Syncthing.txt" />
   </ItemGroup>
@@ -599,7 +491,7 @@
   <Import Project="..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets'))" />
     <Error Condition="!Exists('..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets'))" />
