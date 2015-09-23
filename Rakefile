@@ -327,10 +327,11 @@ namespace :tx do
   desc "Remove all translations from csproj"
   task :clean do
     create_csproj_resx_writer().remove_all_resx
+    puts "Cleaned translations"
   end
 
   desc "Fetch all translations"
-  task :pull do
+  task :pull => [:"tx:clean"] do
     tx_client = create_tx_client()
     csproj_resx_writer = create_csproj_resx_writer()
     tx_client.list_translations().each do |language|
