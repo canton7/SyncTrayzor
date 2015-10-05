@@ -83,9 +83,11 @@ namespace SyncTrayzor
 
             AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
 
-            var singleApplicationInstanceManager = this.Container.Get<ISingleApplicationInstanceManager>();
-            if (singleApplicationInstanceManager.ShouldExit())
-                Environment.Exit(0);
+            if (Settings.Default.EnforceSingleProcessPerUser)
+            {
+                if (this.Container.Get<ISingleApplicationInstanceManager>().ShouldExit())
+                    Environment.Exit(0);
+            }
 
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
@@ -93,7 +95,10 @@ namespace SyncTrayzor
             configurationProvider.Initialize(Settings.Default.DefaultUserConfiguration);
             var configuration = this.Container.Get<IConfigurationProvider>().Load();
 
-            singleApplicationInstanceManager.StartServer();
+            if (Settings.Default.EnforceSingleProcessPerUser)
+            {
+                this.Container.Get<ISingleApplicationInstanceManager>().StartServer();
+            }
 
             // Has to be done before the VMs are fetched from the container
             var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));

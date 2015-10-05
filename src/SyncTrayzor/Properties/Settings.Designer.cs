@@ -160,5 +160,14 @@ namespace SyncTrayzor.Properties {
                 return ((global::SyncTrayzor.Services.Config.Configuration)(this["DefaultUserConfiguration"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnforceSingleProcessPerUser {
+            get {
+                return ((bool)(this["EnforceSingleProcessPerUser"]));
+            }
+        }
     }
 }

@@ -68,5 +68,8 @@
   &lt;DisableHardwareRendering&gt;false&lt;/DisableHardwareRendering&gt;
 &lt;/Configuration&gt;</Value>
     </Setting>
+    <Setting Name="EnforceSingleProcessPerUser" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
