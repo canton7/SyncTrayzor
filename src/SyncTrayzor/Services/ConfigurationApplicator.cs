@@ -73,7 +73,7 @@ namespace SyncTrayzor.Services
                 EnvVarTransformer.Transform(configuration.SyncthingCustomHomePath)
                 : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
-            this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
+            this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
             this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
 

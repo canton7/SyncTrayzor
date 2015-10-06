@@ -130,8 +130,17 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnforceSingleProcessPerUser {
+            get {
+                return ((bool)(this["EnforceSingleProcessPerUser"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""4"">
+<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""5"">
   <ShowTrayIconOnlyOnClose>false</ShowTrayIconOnlyOnClose>
   <MinimizeToTray>false</MinimizeToTray>
   <CloseToTray>true</CloseToTray>
@@ -143,7 +152,7 @@ namespace SyncTrayzor.Properties {
   <SyncthingEnvironmentalVariables />
   <SyncthingUseCustomHome>true</SyncthingUseCustomHome>
   <SyncthingDenyUpgrade>false</SyncthingDenyUpgrade>
-  <SyncthingRunLowPriority>false</SyncthingRunLowPriority>
+  <SyncthingPriorityLevel>Normal</SyncthingPriorityLevel>
   <Folders />
   <NotifyOfNewVersions>true</NotifyOfNewVersions>
   <ObfuscateDeviceIDs>true</ObfuscateDeviceIDs>
@@ -158,15 +167,6 @@ namespace SyncTrayzor.Properties {
         public global::SyncTrayzor.Services.Config.Configuration DefaultUserConfiguration {
             get {
                 return ((global::SyncTrayzor.Services.Config.Configuration)(this["DefaultUserConfiguration"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EnforceSingleProcessPerUser {
-            get {
-                return ((bool)(this["EnforceSingleProcessPerUser"]));
             }
         }
     }

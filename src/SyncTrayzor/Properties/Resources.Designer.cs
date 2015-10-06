@@ -697,6 +697,51 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing Process Priority:.
+        /// </summary>
+        public static string SettingsView_Syncthing_ProcessPriority {
+            get {
+                return ResourceManager.GetString("SettingsView_Syncthing_ProcessPriority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Above Normal.
+        /// </summary>
+        public static string SettingsView_Syncthing_ProcessPriority_AboveNormal {
+            get {
+                return ResourceManager.GetString("SettingsView_Syncthing_ProcessPriority_AboveNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Below Normal.
+        /// </summary>
+        public static string SettingsView_Syncthing_ProcessPriority_BelowNormal {
+            get {
+                return ResourceManager.GetString("SettingsView_Syncthing_ProcessPriority_BelowNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        public static string SettingsView_Syncthing_ProcessPriority_Idle {
+            get {
+                return ResourceManager.GetString("SettingsView_Syncthing_ProcessPriority_Idle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        public static string SettingsView_Syncthing_ProcessPriority_Normal {
+            get {
+                return ResourceManager.GetString("SettingsView_Syncthing_ProcessPriority_Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GUI Listen Address:.
         /// </summary>
         public static string SettingsView_SyncthingAddress {
@@ -738,15 +783,6 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_SyncthingEnvironmentalVariables {
             get {
                 return ResourceManager.GetString("SettingsView_SyncthingEnvironmentalVariables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Run Syncthing as a low-priority process.
-        /// </summary>
-        public static string SettingsView_SyncthingRunLowPriority {
-            get {
-                return ResourceManager.GetString("SettingsView_SyncthingRunLowPriority", resourceCulture);
             }
         }
         

@@ -505,9 +505,6 @@ SyncTrayzor is going to have to close. Sorry about that</value>
   <data name="SettingsView_SyncthingDenyUpgrade_ToolTip" xml:space="preserve">
     <value>Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor's config folder</value>
   </data>
-  <data name="SettingsView_SyncthingRunLowPriority" xml:space="preserve">
-    <value>Run Syncthing as a low-priority process</value>
-  </data>
   <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
     <value>_Open Folder</value>
     <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
@@ -695,5 +692,24 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="SettingsView_Tab_Folders" xml:space="preserve">
     <value>Folders</value>
+  </data>
+  <data name="SettingsView_Syncthing_ProcessPriority" xml:space="preserve">
+    <value>Syncthing Process Priority:</value>
+  </data>
+  <data name="SettingsView_Syncthing_ProcessPriority_AboveNormal" xml:space="preserve">
+    <value>Above Normal</value>
+    <comment>Should match value in Task Manager, if you right-click a process -&gt;'Set Priority'</comment>
+  </data>
+  <data name="SettingsView_Syncthing_ProcessPriority_BelowNormal" xml:space="preserve">
+    <value>Below Normal</value>
+    <comment>Should match value in Task Manager, if you right-click a process -&gt;'Set Priority'</comment>
+  </data>
+  <data name="SettingsView_Syncthing_ProcessPriority_Idle" xml:space="preserve">
+    <value>Low</value>
+    <comment>Should match value in Task Manager, if you right-click a process -&gt;'Set Priority'</comment>
+  </data>
+  <data name="SettingsView_Syncthing_ProcessPriority_Normal" xml:space="preserve">
+    <value>Normal</value>
+    <comment>Should match value in Task Manager, if you right-click a process -&gt;'Set Priority'</comment>
   </data>
 </root>

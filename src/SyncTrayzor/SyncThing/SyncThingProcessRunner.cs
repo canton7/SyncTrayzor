@@ -1,4 +1,5 @@
 ﻿using NLog;
+using SyncTrayzor.Services.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,7 +39,7 @@ namespace SyncTrayzor.SyncThing
         List<string> CommandLineFlags { get; set; }
         IDictionary<string, string> EnvironmentalVariables { get; set; }
         bool DenyUpgrade { get; set; }
-        bool RunLowPriority { get; set; }
+        SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
         bool HideDeviceIds { get; set; }
 
         event EventHandler Starting;
@@ -58,6 +59,14 @@ namespace SyncTrayzor.SyncThing
         // Leave just the first set of digits, removing everything after it
         private static readonly Regex deviceIdHideRegex = new Regex(@"-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}");
 
+        private static readonly Dictionary<SyncThingPriorityLevel, ProcessPriorityClass> priorityMapping = new Dictionary<SyncThingPriorityLevel, ProcessPriorityClass>()
+        {
+            { SyncThingPriorityLevel.AboveNormal, ProcessPriorityClass.AboveNormal },
+            { SyncThingPriorityLevel.Normal, ProcessPriorityClass.Normal },
+            { SyncThingPriorityLevel.BelowNormal, ProcessPriorityClass.BelowNormal },
+            { SyncThingPriorityLevel.Idle, ProcessPriorityClass.Idle },
+        };
+
         private readonly object processLock = new object();
         private Process process;
 
@@ -68,7 +77,7 @@ namespace SyncTrayzor.SyncThing
         public List<string> CommandLineFlags { get; set; } = new List<string>();
         public IDictionary<string, string> EnvironmentalVariables { get; set; } = new Dictionary<string, string>();
         public bool DenyUpgrade { get; set; }
-        public bool RunLowPriority { get; set; }
+        public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
         public bool HideDeviceIds { get; set; }
 
         public event EventHandler Starting;
@@ -117,8 +126,7 @@ namespace SyncTrayzor.SyncThing
 
                 this.process = Process.Start(processStartInfo);
 
-                if (this.RunLowPriority)
-                    this.process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                this.process.PriorityClass = priorityMapping[this.SyncthingPriorityLevel];
 
                 this.process.EnableRaisingEvents = true;
                 this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);

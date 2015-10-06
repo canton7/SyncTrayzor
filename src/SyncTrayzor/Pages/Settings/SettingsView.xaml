@@ -96,10 +96,13 @@
                             </DockPanel.Resources>
 
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncThingAutomatically.Value}" Content="{l:Loc SettingsView_StartSyncthingAutomatically}"/>
-                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingRunLowPriority.Value}" Content="{l:Loc SettingsView_SyncthingRunLowPriority}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseDefaultHome.Value}"
                                           Content="{l:Loc SettingsView_SyncthingUseDefaultHome}"
                                           ToolTip="{l:Loc SettingsView_SyncthingUseDefaultHome_ToolTip}"/>
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
+                                <TextBlock Margin="0,0,5,0" Text="{l:Loc SettingsView_Syncthing_ProcessPriority}"/>
+                                <ComboBox ItemsSource="{Binding PriorityLevels}" SelectedValuePath="Value" SelectedValue="{Binding SyncthingPriorityLevel.Value}"/>
+                            </StackPanel>
 
                             <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
                             <TextBox DockPanel.Dock="Top" x:Name="SyncThingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncThingAddress.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>

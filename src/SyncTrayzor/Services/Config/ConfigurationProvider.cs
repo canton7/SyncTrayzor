@@ -69,6 +69,7 @@ namespace SyncTrayzor.Services.Config
                 this.MigrateV1ToV2,
                 this.MigrateV2ToV3,
                 this.MigrateV3ToV4,
+                this.MigrateV4ToV5,
             };
         }
 
@@ -233,6 +234,14 @@ namespace SyncTrayzor.Services.Config
             {
                 folder.Add(new XElement("ShowSynchronizedBalloon", showNotifications.GetValueOrDefault(true)));
             }
+            return configuration;
+        }
+
+        private XDocument MigrateV4ToV5(XDocument configuration)
+        {
+            bool? runLowPriority = (bool?)configuration.Root.Element("SyncthingRunLowPriority");
+            // No need to remove - it'll be ignored when we deserialize into Configuration, and not written back to file
+            configuration.Root.Add(new XElement("SyncthingPriorityLevel", runLowPriority == true ? "BelowNormal" : "Normal"));
             return configuration;
         }
 

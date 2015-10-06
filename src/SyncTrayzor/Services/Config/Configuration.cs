@@ -8,86 +8,10 @@ using System.Xml.Serialization;
 
 namespace SyncTrayzor.Services.Config
 {
-    public class FolderConfiguration
-    {
-        public string ID { get; set; }
-        public bool IsWatched { get; set; }
-        public bool NotificationsEnabled { get; set; }
-
-        public FolderConfiguration()
-        {
-        }
-
-        public FolderConfiguration(string id, bool isWatched, bool notificationsEnabled)
-        {
-            this.ID = id;
-            this.IsWatched = isWatched;
-            this.NotificationsEnabled = notificationsEnabled;
-        }
-
-        public FolderConfiguration(FolderConfiguration other)
-        {
-            this.ID = other.ID;
-            this.IsWatched = other.IsWatched;
-            this.NotificationsEnabled = other.NotificationsEnabled;
-        }
-
-        public override string ToString()
-        {
-            return $"<Folder ID={this.ID} IsWatched={this.IsWatched} NotificationsEnabled={this.NotificationsEnabled}>";
-        }
-    }
-
-    public class EnvironmentalVariableCollection : Dictionary<string, string>, IXmlSerializable
-    {
-        public EnvironmentalVariableCollection()
-        {
-        }
-
-        public EnvironmentalVariableCollection(IEnumerable<KeyValuePair<string, string>> source)
-        {
-            foreach (var kvp in source)
-            {
-                this.Add(kvp.Key, kvp.Value);
-            }
-        }
-
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-            // Used to use XElement.Load(reader.ReadSubtree()), but that effectively closed the reader
-            // and nothing else would get parsed.
-            var root = XElement.Parse(reader.ReadOuterXml());
-            foreach (var element in root.Elements("Item"))
-            {
-                this.Add(element.Element("Key").Value, element.Element("Value").Value);
-            }
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            var elements = this.Select(item =>
-            {
-                return new XElement("Item",
-                    new XElement("Key", item.Key),
-                    new XElement("Value", item.Value)
-                );
-            });
-            foreach (var element in elements)
-            {
-                element.WriteTo(writer);
-            }
-        }
-    }
-
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public const int CurrentVersion = 4;
+        public const int CurrentVersion = 5;
         public const double DefaultSyncthingConsoleHeight = 100;
 
         [XmlAttribute("Version")]
@@ -115,7 +39,7 @@ namespace SyncTrayzor.Services.Config
         public EnvironmentalVariableCollection SyncthingEnvironmentalVariables { get; set; }
         public bool SyncthingUseCustomHome { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
-        public bool SyncthingRunLowPriority { get; set; }
+        public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
 
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
@@ -157,7 +81,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection();
             this.SyncthingUseCustomHome = true;
             this.SyncthingDenyUpgrade = false;
-            this.SyncthingRunLowPriority = false;
+            this.SyncthingPriorityLevel = SyncThingPriorityLevel.Normal;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.ObfuscateDeviceIDs = true;
@@ -186,7 +110,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingEnvironmentalVariables = other.SyncthingEnvironmentalVariables;
             this.SyncthingUseCustomHome = other.SyncthingUseCustomHome;
             this.SyncthingDenyUpgrade = other.SyncthingDenyUpgrade;
-            this.SyncthingRunLowPriority = other.SyncthingRunLowPriority;
+            this.SyncthingPriorityLevel = other.SyncthingPriorityLevel;
             this.Folders = other.Folders.Select(x => new FolderConfiguration(x)).ToList();
             this.NotifyOfNewVersions = other.NotifyOfNewVersions;
             this.ObfuscateDeviceIDs = other.ObfuscateDeviceIDs;
@@ -207,7 +131,7 @@ namespace SyncTrayzor.Services.Config
                 $"ShowDeviceConnectivityBalloons={this.ShowDeviceConnectivityBalloons} SyncthingAddress={this.SyncthingAddress} StartSyncthingAutomatically={this.StartSyncthingAutomatically} " +
                 $"SyncthingCommandLineFlags=[{String.Join(",", this.SyncthingCommandLineFlags)}]" +
                 $"SyncthingApiKey={this.SyncthingApiKey} SyncthingEnvironmentalVariables=[{String.Join(" ", this.SyncthingEnvironmentalVariables)}] " +
-                $"SyncthingUseCustomHome={this.SyncthingUseCustomHome} SyncthingDenyUpgrade={this.SyncthingDenyUpgrade} SyncthingRunLowPriority={this.SyncthingRunLowPriority} " +
+                $"SyncthingUseCustomHome={this.SyncthingUseCustomHome} SyncthingDenyUpgrade={this.SyncthingDenyUpgrade} SyncthingPriorityLevel={this.SyncthingPriorityLevel} " +
                 $"Folders=[{String.Join(", ", this.Folders)}] NotifyOfNewVersions={this.NotifyOfNewVersions} LatestNotifiedVersion={this.LatestNotifiedVersion} " +
                 $"ObfuscateDeviceIDs={this.ObfuscateDeviceIDs} UseComputerCulture={this.UseComputerCulture} SyncthingConsoleHeight={this.SyncthingConsoleHeight} WindowPlacement={this.WindowPlacement} " +
                 $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingPath={this.SyncthingPath} " +

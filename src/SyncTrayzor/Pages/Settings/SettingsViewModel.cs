@@ -43,7 +43,10 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
 
         public SettingItem<bool> StartSyncThingAutomatically { get; }
-        public SettingItem<bool> SyncthingRunLowPriority { get; }
+
+        public BindableCollection<LabelledValue<SyncThingPriorityLevel>> PriorityLevels { get; }
+        public SettingItem<SyncThingPriorityLevel> SyncthingPriorityLevel { get; }
+
         public SettingItem<bool> SyncthingUseDefaultHome { get; }
         public SettingItem<string> SyncThingAddress { get; }
         public SettingItem<string> SyncThingApiKey { get; }
@@ -95,8 +98,8 @@ namespace SyncTrayzor.Pages.Settings
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
 
             this.StartSyncThingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
-            this.SyncthingRunLowPriority = this.CreateBasicSettingItem(x => x.SyncthingRunLowPriority);
-            this.SyncthingRunLowPriority.RequiresSyncthingRestart = true;
+            this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);
+            this.SyncthingPriorityLevel.RequiresSyncthingRestart = true;
             this.SyncthingUseDefaultHome = this.CreateBasicSettingItem(x => !x.SyncthingUseCustomHome, (x, v) => x.SyncthingUseCustomHome = !v);
             this.SyncthingUseDefaultHome.RequiresSyncthingRestart = true;
             this.SyncThingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncThingAddressValidator());
@@ -160,6 +163,14 @@ namespace SyncTrayzor.Pages.Settings
                 folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
                 folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
             }
+
+            this.PriorityLevels = new BindableCollection<LabelledValue<SyncThingPriorityLevel>>()
+            {
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_AboveNormal, SyncThingPriorityLevel.AboveNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Normal, SyncThingPriorityLevel.Normal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_BelowNormal, SyncThingPriorityLevel.BelowNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Idle, SyncThingPriorityLevel.Idle),
+            };
 
             this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
             {

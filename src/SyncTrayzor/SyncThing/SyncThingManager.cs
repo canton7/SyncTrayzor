@@ -1,5 +1,6 @@
 ﻿using NLog;
 using RestEase;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.SyncThing.ApiClient;
 using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
@@ -35,7 +36,7 @@ namespace SyncTrayzor.SyncThing
         IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
         string SyncthingCustomHomeDir { get; set; }
         bool SyncthingDenyUpgrade { get; set; }
-        bool SyncthingRunLowPriority { get; set; }
+        SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
         bool SyncthingHideDeviceIds { get; set; }
         TimeSpan SyncthingConnectTimeout { get; set; }
         DateTime StartedTime { get; }
@@ -126,7 +127,7 @@ namespace SyncTrayzor.SyncThing
         public List<string> SyncthingCommandLineFlags { get; set; } = new List<string>();
         public IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; } = new Dictionary<string, string>();
         public bool SyncthingDenyUpgrade { get; set; }
-        public bool SyncthingRunLowPriority { get; set; }
+        public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
         public bool SyncthingHideDeviceIds { get; set; }
         public TimeSpan SyncthingConnectTimeout { get; set; }
 
@@ -412,7 +413,7 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.CommandLineFlags = this.SyncthingCommandLineFlags;
             this.processRunner.EnvironmentalVariables = this.SyncthingEnvironmentalVariables;
             this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
-            this.processRunner.RunLowPriority = this.SyncthingRunLowPriority;
+            this.processRunner.SyncthingPriorityLevel = this.SyncthingPriorityLevel;
             this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;
 
             var isRestart = (this.State == SyncThingState.Restarting);
