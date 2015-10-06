@@ -97,7 +97,7 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10800")]
+        [global::System.Configuration.DefaultSettingValueAttribute("86400")]
         public int UpdateCheckIntervalSeconds {
             get {
                 return ((int)(this["UpdateCheckIntervalSeconds"]));
