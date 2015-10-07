@@ -72,7 +72,7 @@ namespace SyncTrayzor
                 Trace.Assert(false);
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
-            builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
+            builder.Bind(typeof(IValidator<>)).ToAllImplementations();
         }
 
         protected override void Configure()
