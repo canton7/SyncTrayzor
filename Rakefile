@@ -2,10 +2,13 @@ require 'tmpdir'
 require 'open-uri'
 require 'openssl'
 
+require_relative 'build/TxClient'
+require_relative 'build/CsprojResxWriter'
+
 ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
 SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
 SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
-MSBUILD = ENV['MSBUILD'] || %q{C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe}
+MSBUILD = ENV['MSBUILD'] || %q{C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe}
 
 CONFIG = ENV['CONFIG'] || 'Release'
 MSBUILD_LOGGER = ENV['MSBUILD_LOGGER']
@@ -168,7 +171,8 @@ namespace :portable do
         Dir.chdir(arch_config.bin_dir) do
           files = FileList['**/*'].exclude(
             '*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll',
-            '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data/*', 'logs')
+            '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data/*', 'logs',
+            'ffmpegsumo.dll', 'd3dcompiler_43.dll', 'd3dcompiler_47.dll', 'libEGL.dll', 'libGLESv2.dll', 'pdf.dll')
 
           files.each do |file|
             cp_to_portable(portable_dir, file)
@@ -307,3 +311,44 @@ end
 
 desc 'Download syncthing for all architectures'
 task :"download-syncthing", [:version] => ARCH_CONFIG.map{ |x| :"download-syncthing:#{x.arch}" }
+
+def create_tx_client
+  raise "TX_PASSWORD not specified" if ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?
+  TxClient.new('synctrayzor', 'strings', 'canton7', ENV['TX_PASSWORD'])
+end
+
+def create_csproj_resx_writer
+  csproj_resx_writer = CsprojResxWriter.new('src/SyncTrayzor/SyncTrayzor.csproj', 'Properties')
+  csproj_resx_writer.language_exceptions['es_ES'] = 'es'
+  csproj_resx_writer
+end
+
+namespace :tx do
+  desc "Remove all translations from csproj"
+  task :clean do
+    create_csproj_resx_writer().remove_all_resx
+    puts "Cleaned translations"
+  end
+
+  desc "Fetch all translations"
+  task :pull => [:"tx:clean"] do
+    tx_client = create_tx_client()
+    csproj_resx_writer = create_csproj_resx_writer()
+    tx_client.list_translations().each do |language|
+      next if language == 'en'
+      puts "Fetching #{language}..."
+      tx_client.download_translation(language, csproj_resx_writer.absolute_resx_path_for_language(language))
+      csproj_resx_writer.add_resx_to_csproj(language)
+    end
+  end
+
+  desc "Push source translations"
+  task :push do
+    tx_client = create_tx_client()
+    csproj_resx_writer = create_csproj_resx_writer()
+
+    source_resx = csproj_resx_writer.read_and_sort_source_resx
+    response = tx_client.upload_source(source_resx)
+    puts "Added: #{response['strings_added']}. Updated: #{response['strings_updated']}. Deleted: #{response['strings_delete']}."
+  end
+end

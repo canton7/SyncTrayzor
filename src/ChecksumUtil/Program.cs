@@ -1,11 +1,8 @@
 ﻿using SyncTrayzor.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChecksumUtil
 {
@@ -116,7 +113,7 @@ namespace ChecksumUtil
                             {
                                 var valid = ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, cleartext, Path.GetFileName(inputFileName), inputFile);
                                 if (!valid)
-                                    throw new Exception(String.Format("File {0} failed checksum", inputFileName));
+                                    throw new Exception($"File {inputFileName} failed checksum");
                             }
                         }
                     }

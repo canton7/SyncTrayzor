@@ -27,7 +27,7 @@
       <Value Profile="(Default)">Portable</Value>
     </Setting>
     <Setting Name="UpdateCheckIntervalSeconds" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">10800</Value>
+      <Value Profile="(Default)">43200</Value>
     </Setting>
     <Setting Name="SyncthingConnectTimeoutSeconds" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">600</Value>
@@ -41,9 +41,12 @@
   &lt;CefCachePath&gt;%EXEPATH%\data\cef\cache&lt;/CefCachePath&gt;
 &lt;/PathConfiguration&gt;</Value>
     </Setting>
+    <Setting Name="EnforceSingleProcessPerUser" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="DefaultUserConfiguration" Type="SyncTrayzor.Services.Config.Configuration" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="4"&gt;
+&lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="5"&gt;
   &lt;ShowTrayIconOnlyOnClose&gt;false&lt;/ShowTrayIconOnlyOnClose&gt;
   &lt;MinimizeToTray&gt;false&lt;/MinimizeToTray&gt;
   &lt;CloseToTray&gt;true&lt;/CloseToTray&gt;
@@ -51,10 +54,11 @@
   &lt;ShowSynchronizedBalloonEvenIfNothingDownloaded&gt;false&lt;/ShowSynchronizedBalloonEvenIfNothingDownloaded&gt;
   &lt;SyncthingAddress&gt;localhost:8384&lt;/SyncthingAddress&gt;
   &lt;StartSyncthingAutomatically&gt;true&lt;/StartSyncthingAutomatically&gt;
+  &lt;SyncthingCommandLineFlags /&gt;
   &lt;SyncthingEnvironmentalVariables /&gt;
   &lt;SyncthingUseCustomHome&gt;true&lt;/SyncthingUseCustomHome&gt;
   &lt;SyncthingDenyUpgrade&gt;false&lt;/SyncthingDenyUpgrade&gt;
-  &lt;SyncthingRunLowPriority&gt;false&lt;/SyncthingRunLowPriority&gt;
+  &lt;SyncthingPriorityLevel&gt;Normal&lt;/SyncthingPriorityLevel&gt;
   &lt;Folders /&gt;
   &lt;NotifyOfNewVersions&gt;true&lt;/NotifyOfNewVersions&gt;
   &lt;ObfuscateDeviceIDs&gt;true&lt;/ObfuscateDeviceIDs&gt;

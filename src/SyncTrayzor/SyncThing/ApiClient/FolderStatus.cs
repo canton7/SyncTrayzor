@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -56,10 +52,10 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<FolderStatus GlobalBytes={0} GlobalDeleted={1} GlobalFiles={2} LocalBytes={3} LocalDeleted={4} LocalFiles={5} " +
-                "InSyncBytes={6} InSyncFiles={7} NeedBytes={8} NeedFiles={9} IgnorePattners={10} Invalid={11} State={12} StateChanged={13} Version={14}>",
-                this.GlobalBytes, this.GlobalDeleted, this.GlobalFiles, this.LocalBytes, this.LocalDeleted, this.LocalFiles,
-                this.InSyncBytes, this.InSyncFiles, this.NeedBytes, this.NeedFiles, this.IgnorePatterns, this.Invalid, this.State, this.StateChanged, this.Version);
+            return $"<FolderStatus GlobalBytes={this.GlobalBytes} GlobalDeleted={this.GlobalDeleted} GlobalFiles={this.GlobalFiles} " +
+                $"LocalBytes={this.LocalBytes} LocalDeleted={this.LocalDeleted} LocalFiles={this.LocalFiles} " +
+                $"InSyncBytes={this.InSyncBytes} InSyncFiles={this.InSyncFiles} NeedBytes={this.NeedBytes} NeedFiles={this.NeedFiles} " +
+                $"IgnorePattners={this.IgnorePatterns}, Invalid={this.Invalid} State={this.State} StateChanged={this.StateChanged} Version={this.Version}>";
         }
     }
 }

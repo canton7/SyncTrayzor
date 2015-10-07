@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -31,7 +26,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<RemoteIndexUpdatedEvent ID={0} Time={1} Device={2} Folder={3} Items={4}>", this.Id, this.Time, this.Data.Device, this.Data.Folder, this.Data.Items);
+            return $"<RemoteIndexUpdatedEvent ID={this.Id} Time={this.Time} Device={this.Data.Device} Folder={this.Data.Folder} Items={this.Data.Items}>";
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using NLog;
+using SyncTrayzor.Services.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -25,7 +22,7 @@ namespace SyncTrayzor.SyncThing
 
     public class ProcessStoppedEventArgs : EventArgs
     {
-        public SyncThingExitStatus ExitStatus { get; private set; }
+        public SyncThingExitStatus ExitStatus { get; }
 
         public ProcessStoppedEventArgs(SyncThingExitStatus exitStatus)
         {
@@ -39,9 +36,10 @@ namespace SyncTrayzor.SyncThing
         string ApiKey { get; set; }
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
+        List<string> CommandLineFlags { get; set; }
         IDictionary<string, string> EnvironmentalVariables { get; set; }
         bool DenyUpgrade { get; set; }
-        bool RunLowPriority { get; set; }
+        SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
         bool HideDeviceIds { get; set; }
 
         event EventHandler Starting;
@@ -61,6 +59,14 @@ namespace SyncTrayzor.SyncThing
         // Leave just the first set of digits, removing everything after it
         private static readonly Regex deviceIdHideRegex = new Regex(@"-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}");
 
+        private static readonly Dictionary<SyncThingPriorityLevel, ProcessPriorityClass> priorityMapping = new Dictionary<SyncThingPriorityLevel, ProcessPriorityClass>()
+        {
+            { SyncThingPriorityLevel.AboveNormal, ProcessPriorityClass.AboveNormal },
+            { SyncThingPriorityLevel.Normal, ProcessPriorityClass.Normal },
+            { SyncThingPriorityLevel.BelowNormal, ProcessPriorityClass.BelowNormal },
+            { SyncThingPriorityLevel.Idle, ProcessPriorityClass.Idle },
+        };
+
         private readonly object processLock = new object();
         private Process process;
 
@@ -68,9 +74,10 @@ namespace SyncTrayzor.SyncThing
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
-        public IDictionary<string, string> EnvironmentalVariables { get; set; }
+        public List<string> CommandLineFlags { get; set; } = new List<string>();
+        public IDictionary<string, string> EnvironmentalVariables { get; set; } = new Dictionary<string, string>();
         public bool DenyUpgrade { get; set; }
-        public bool RunLowPriority { get; set; }
+        public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
         public bool HideDeviceIds { get; set; }
 
         public event EventHandler Starting;
@@ -91,7 +98,7 @@ namespace SyncTrayzor.SyncThing
             logger.Info("Starting syncthing: {0}", this.ExecutablePath);
 
             if (!File.Exists(this.ExecutablePath))
-                throw new Exception(String.Format("Unable to find Syncthing at path {0}", this.ExecutablePath));
+                throw new Exception($"Unable to find Syncthing at path {this.ExecutablePath}");
 
             var processStartInfo = new ProcessStartInfo()
             {
@@ -106,12 +113,12 @@ namespace SyncTrayzor.SyncThing
                 StandardErrorEncoding = Encoding.UTF8,
             };
 
+            if (this.DenyUpgrade)
+                processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
             foreach (var kvp in this.EnvironmentalVariables)
             {
                 processStartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
             }
-            if (this.DenyUpgrade)
-                processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
 
             lock (this.processLock)
             {
@@ -119,8 +126,7 @@ namespace SyncTrayzor.SyncThing
 
                 this.process = Process.Start(processStartInfo);
 
-                if (this.RunLowPriority)
-                    this.process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                this.process.PriorityClass = priorityMapping[this.SyncthingPriorityLevel];
 
                 this.process.EnableRaisingEvents = true;
                 this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);
@@ -162,12 +168,14 @@ namespace SyncTrayzor.SyncThing
         {
             var args = new List<string>(defaultArguments)
             {
-                String.Format("-gui-apikey=\"{0}\"", this.ApiKey),
-                String.Format("-gui-address=\"{0}\"", this.HostAddress)
+                $"-gui-apikey=\"{this.ApiKey}\"",
+                $"-gui-address=\"{this.HostAddress}\""
             };
 
             if (!String.IsNullOrWhiteSpace(this.CustomHomeDir))
-                args.Add(String.Format("-home=\"{0}\"", this.CustomHomeDir));
+                args.Add($"-home=\"{this.CustomHomeDir}\"");
+
+            args.AddRange(this.CommandLineFlags);
 
             return args;
         }
@@ -214,31 +222,23 @@ namespace SyncTrayzor.SyncThing
 
         private void OnStarting()
         {
-            var handler = this.Starting;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.Starting?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnProcessStopped(SyncThingExitStatus exitStatus)
         {
-            var handler = this.ProcessStopped;
-            if (handler != null)
-                handler(this, new ProcessStoppedEventArgs(exitStatus));
+            this.ProcessStopped?.Invoke(this, new ProcessStoppedEventArgs(exitStatus));
         }
 
         private void OnProcessRestarted()
         {
-            var handler = this.ProcessRestarted;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.ProcessRestarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnMessageLogged(string logMessage)
         {
             logger.Debug(logMessage);
-            var handler = this.MessageLogged;
-            if (handler != null)
-                handler(this, new MessageLoggedEventArgs(logMessage));
+            this.MessageLogged?.Invoke(this, new MessageLoggedEventArgs(logMessage));
         }
 
         public void KillAllSyncthingProcesses()

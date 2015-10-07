@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -12,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace SyncTrayzor.Services.Config
 {
-    public class WindowPlacement : IXmlSerializable
+    public class WindowPlacement : IEquatable<WindowPlacement>, IXmlSerializable
     {
         private static readonly TypeConverter pointConverter = TypeDescriptor.GetConverter(typeof(Point));
         private static readonly TypeConverter rectangleConverter = TypeDescriptor.GetConverter(typeof(Rectangle));
@@ -24,14 +21,10 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            return String.Format("<WindowPlacement IsMaximized={0} MinPosition={1} MaxPosition={2} Normalposition={3}>",
-                this.IsMaximised, this.MinPosition, this.MaxPosition, this.NormalPosition);
+            return $"<WindowPlacement IsMaximized={this.IsMaximised} MinPosition={this.MinPosition} MaxPosition={this.MaxPosition} Normalposition={this.NormalPosition}>";
         }
 
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() => null;
 
         public void ReadXml(XmlReader reader)
         {
@@ -71,6 +64,14 @@ namespace SyncTrayzor.Services.Config
             {
                 element.WriteTo(writer);
             }
+        }
+
+        public bool Equals(WindowPlacement other)
+        {
+            return this.IsMaximised == other.IsMaximised &&
+                this.MaxPosition == other.MaxPosition &&
+                this.MinPosition == other.MinPosition &&
+                this.NormalPosition == other.NormalPosition;
         }
     }
 }

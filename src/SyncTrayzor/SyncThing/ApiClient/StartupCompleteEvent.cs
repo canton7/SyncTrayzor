@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -19,7 +14,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<StartupComplete ID={0} Time={1}>", this.Id, this.Time);
+            return $"<StartupComplete ID={this.Id} Time={this.Time}>";
         }
     }
 }

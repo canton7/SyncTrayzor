@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Pipes;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -22,10 +19,7 @@ namespace SyncTrayzor.Services
 
     public class IpcCommsClient : IIpcCommsClient
     {
-        private string PipeNameForPid(int pid)
-        {
-            return String.Format("SyncTrayzor-{0}", pid);
-        }
+        private string PipeNameForPid(int pid) => $"SyncTrayzor-{pid}";
 
         public void RequestShowMainWindow(int pid)
         {
@@ -60,7 +54,7 @@ namespace SyncTrayzor.Services
             if (response == "OK")
                 return;
 
-            throw new UnknownIpcCommandException(String.Format("Remote side replied with {0}", response));
+            throw new UnknownIpcCommandException($"Remote side replied with {response}");
         }
     }
 }

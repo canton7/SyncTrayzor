@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v1.0.28
+-------
+
+ - Allow extra Syncthing command-line arguments to be specified (#133)
+ - Fix bug which would prevent multiple logged-on users using the same SyncTrayzor installation (#148)
+ - Add extra process priority options for Syncthing (other than just 'low priority') (#143)
+ - Fix a couple of small crashes
+ - Reduce installer/portable zip size slightly
+ - Handle restart-less Folder and Device changes in Syncthing
+ - Handle some edge-cases where Syncthing state changes in the middle of lots of file transfers may not be noticed
+ - Fix a very rare "Error creating the Web Proxy" issue (#131)
+ - Improve translations (#142, others)
+
+
 v1.0.27
 -------
 

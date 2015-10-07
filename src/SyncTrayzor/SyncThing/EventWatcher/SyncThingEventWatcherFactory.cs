@@ -1,11 +1,4 @@
-﻿using SyncTrayzor.SyncThing;
-using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SyncTrayzor.SyncThing.ApiClient;
 
 namespace SyncTrayzor.SyncThing.EventWatcher
 {

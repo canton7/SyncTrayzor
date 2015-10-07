@@ -5,10 +5,7 @@ using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -70,12 +67,13 @@ namespace SyncTrayzor.Services
 
             this.syncThingManager.PreferredAddress = new Uri("https://" + configuration.SyncthingAddress);
             this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
+            this.syncThingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
             this.syncThingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
             this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
                 EnvVarTransformer.Transform(configuration.SyncthingCustomHomePath)
                 : null;
             this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
-            this.syncThingManager.SyncthingRunLowPriority = configuration.SyncthingRunLowPriority;
+            this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
             this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
 

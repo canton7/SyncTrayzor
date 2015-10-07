@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -34,8 +29,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public override string ToString()
         {
-            return String.Format("<SystemInfo alloc={0} cpuPercent={1} goroutines={2} myId={3} pathSeparator={4} sys={5} tilde={6}>",
-                this.AllocatedMemoryInUse, this.CpuPercent, this.GoRoutines, this.MyID, this.PathSeparator, this.AllocatedMemoryTotal, this.Tilde);
+            return $"<SystemInfo alloc={this.AllocatedMemoryInUse} cpuPercent={this.CpuPercent} goroutines={this.GoRoutines} myId={this.MyID} " +
+                $"pathSeparator={this.PathSeparator} sys={this.AllocatedMemoryTotal} tilde={this.Tilde}>";
         }
     }
 }

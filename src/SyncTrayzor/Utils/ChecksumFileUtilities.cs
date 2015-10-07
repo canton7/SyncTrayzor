@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Utils
 {
@@ -58,7 +55,7 @@ namespace SyncTrayzor.Utils
             }
 
             if (checksum == null)
-                throw new ArgumentException(String.Format("Could not find checksum for file {0} in checksumFile", filenameToCheck));
+                throw new ArgumentException($"Could not find checksum for file {filenameToCheck} in checksumFile");
 
             byte[] hash = hashAlgorithm.ComputeHash(fileToCheck);
             var formattedHash = FormatHash(hash);

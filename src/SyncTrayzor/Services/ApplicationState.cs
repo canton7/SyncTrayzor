@@ -1,10 +1,5 @@
 ﻿using Microsoft.Win32;
-using Stylet;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SyncTrayzor.Services
@@ -42,13 +37,18 @@ namespace SyncTrayzor.Services
         public ShutdownMode ShutdownMode
         {
             get { return this.application.ShutdownMode; }
-            set { this.application.ShutdownMode = value; }
+            set
+            {
+                // This will fail if we're shutting down
+                try
+                {
+                    this.application.ShutdownMode = value;
+                }
+                catch (InvalidOperationException) { }
+            }
         }
 
-        public bool HasMainWindow
-        {
-            get { return this.application.MainWindow != null; }
-        }
+        public bool HasMainWindow => this.application.MainWindow != null;
 
         public object FindResource(object resourceKey)
         {
@@ -62,16 +62,12 @@ namespace SyncTrayzor.Services
 
         public void ApplicationStarted()
         {
-            var handler = this.Startup;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.Startup?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnResumeFromSleep()
         {
-            var handler = this.ResumeFromSleep;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            this.ResumeFromSleep?.Invoke(this, EventArgs.Empty);
         }
     }
 }

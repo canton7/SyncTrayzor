@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,17 +62,29 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher.SyncStateChanged += (o, e) => this.FolderSyncStateChanged(e);
             this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
             this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
-            this.eventWatcher.EventsSkipped += (o, e) => this.EventsSkipped();
         }
 
         public bool TryFetchById(string folderId, out Folder folder)
         {
-            return this.folders.TryGetValue(folderId, out folder);
+            var folders = this.folders;
+            if (folders == null)
+            {
+                folder = null;
+                return false;
+            }
+            else
+            {
+                return folders.TryGetValue(folderId, out folder);
+            }
         }
 
         public IReadOnlyCollection<Folder> FetchAll()
         {
-            return new List<Folder>(this.folders.Values).AsReadOnly();
+            var folders = this.folders;
+            if (folders == null)
+                return null;
+            else
+                return new List<Folder>(folders.Values).AsReadOnly();
         }
 
         public async Task ReloadIgnoresAsync(string folderId)
@@ -86,7 +97,55 @@ namespace SyncTrayzor.SyncThing
             folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
         }
 
-        public async Task LoadFoldersAsync(Config config, SystemInfo systemInfo, CancellationToken cancellationToken)
+        public async Task LoadFoldersAsync(Config config, string tilde, CancellationToken cancellationToken)
+        {
+            var folders = await this.FetchFoldersAsync(config, tilde, cancellationToken);
+            this.folders = new ConcurrentDictionary<string, Folder>(folders.Select(x => new KeyValuePair<string, Folder>(x.FolderId, x)));
+
+            this.OnFoldersChanged();
+        }
+
+        public async Task ReloadFoldersAsync(Config config, string tilde, CancellationToken cancellationToken)
+        {
+            var folders = await this.FetchFoldersAsync(config, tilde, cancellationToken);
+            var newFolders = new ConcurrentDictionary<string, Folder>();
+            var existingFolders = this.folders;
+
+            // Maybe nothing changed?
+            if (existingFolders.Values.SequenceEqual(folders))
+                return;
+
+            var changeNotifications = new List<Action>();
+
+            // Re-use the existing folder object if possible
+            foreach (var folder in folders)
+            {
+                Folder existingFolder;
+                if (existingFolders.TryGetValue(folder.FolderId, out existingFolder))
+                {
+                    if (existingFolder.SyncState != folder.SyncState)
+                    {
+                        changeNotifications.Add(() => this.OnSyncStateChanged(folder, existingFolder.SyncState, folder.SyncState));
+                        existingFolder.SyncState = folder.SyncState;
+                    }
+                    newFolders[folder.FolderId] = existingFolder;
+                }
+                else
+                {
+                    newFolders[folder.FolderId] = folder;
+                }
+            }
+
+            this.folders = newFolders;
+            foreach (var changeNotification in changeNotifications)
+            {
+                changeNotification();
+            }
+
+            this.OnFoldersChanged();
+        }
+
+        private async Task<IEnumerable<Folder>> FetchFoldersAsync(Config config, string tilde, CancellationToken cancellationToken)
         {
             // If the folder is invalid for any reason, we'll ignore it.
             // Again, there's the potential for duplicate folder IDs (if the user's been fiddling their config). 
@@ -100,7 +159,7 @@ namespace SyncTrayzor.SyncThing
                     var syncState = await this.FetchFolderSyncStateAsync(folder.ID, cancellationToken);
                     var path = folder.Path;
                     if (path.StartsWith("~"))
-                        path = Path.Combine(systemInfo.Tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                        path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
                     return new Folder(folder.ID, path, syncState, new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns));
                 });
@@ -108,9 +167,25 @@ namespace SyncTrayzor.SyncThing
             cancellationToken.ThrowIfCancellationRequested();
 
             var folders = await Task.WhenAll(folderConstructionTasks);
-            this.folders = new ConcurrentDictionary<string, Folder>(folders.Select(x => new KeyValuePair<string, Folder>(x.FolderId, x)));
+            return folders;
+        }
 
-            this.OnFoldersChanged();
+        private async Task RefreshFoldersAsync()
+        {
+            var folders = this.FetchAll();
+            var updateTasks = folders.Select(async folder =>
+            {
+                var newState = await this.FetchFolderSyncStateAsync(folder.FolderId, CancellationToken.None);
+                var oldState = folder.SyncState;
+
+                if (oldState != newState)
+                {
+                    folder.SyncState = newState;
+                    this.OnSyncStateChanged(folder, oldState, newState);
+                }
+            });
+
+            await Task.WhenAll(updateTasks);
         }
 
         private async Task<Ignores> FetchFolderIgnoresAsync(string folderId, CancellationToken cancellationToken)
@@ -152,7 +227,7 @@ namespace SyncTrayzor.SyncThing
             }
 
             if (ignores == null)
-                throw new SyncThingDidNotStartCorrectlyException(String.Format("Unable to fetch ignores for folder {0}. Syncthing returned 500 after {1}", folderId, this.ignoresFetchTimeout));
+                throw new SyncThingDidNotStartCorrectlyException($"Unable to fetch ignores for folder {folderId}. Syncthing returned 500 after {this.ignoresFetchTimeout}");
 
             return ignores;
         }
@@ -190,44 +265,6 @@ namespace SyncTrayzor.SyncThing
             folder.SyncState = e.SyncState;
 
             this.OnSyncStateChanged(folder, e.PrevSyncState, e.SyncState);
-        }
-
-        private async void EventsSkipped()
-        {
-            // Shit. We don't know what state any of our folders are in. We'll have to poll them all....
-            // Note that we're executing on the ThreadPool here: we don't have a Task route back to the main thread.
-            // Any exceptions are ours to manage....
-
-            // HttpRequestException, ApiException, and  OperationCanceledException are more or less expected: Syncthing could shut down
-            // at any point
-            try
-            {
-                await this.RefreshFoldersAsync();
-            }
-            catch (HttpRequestException)
-            { }
-            catch (OperationCanceledException)
-            { }
-            catch (ApiException)
-            { }
-        }
-
-        private async Task RefreshFoldersAsync()
-        {
-            var folders = this.FetchAll();
-            var updateTasks = folders.Select(async folder =>
-            {
-                var newState = await this.FetchFolderSyncStateAsync(folder.FolderId, CancellationToken.None);
-                var oldState = folder.SyncState;
-
-                if (oldState != newState)
-                {
-                    folder.SyncState = newState;
-                    this.OnSyncStateChanged(folder, oldState, newState);
-                }
-            });
-
-            await Task.WhenAll(updateTasks);
         }
 
         private void OnFoldersChanged()

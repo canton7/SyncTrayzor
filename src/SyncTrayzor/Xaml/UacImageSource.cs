@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
@@ -20,20 +16,14 @@ namespace SyncTrayzor.Xaml
             SHSTOCKICONINFO sii = new SHSTOCKICONINFO();
             sii.cbSize = (UInt32)Marshal.SizeOf(typeof(SHSTOCKICONINFO));
 
-            Marshal.ThrowExceptionForHR(SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD,
+            Marshal.ThrowExceptionForHR(NativeMethods.SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD,
                 SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON,
                 ref sii));
 
             Shield = Imaging.CreateBitmapSourceFromHIcon(sii.hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
-            DestroyIcon(sii.hIcon);
+            NativeMethods.DestroyIcon(sii.hIcon);
         }
-
-        [DllImport("Shell32.dll", SetLastError = false)]
-        private static extern Int32 SHGetStockIconInfo(SHSTOCKICONID siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool DestroyIcon(IntPtr hIcon);
 
         [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private struct SHSTOCKICONINFO
@@ -155,6 +145,16 @@ namespace SyncTrayzor.Xaml
             SIID_MEDIABDRE = 139,
             SIID_CLUSTEREDDRIVE = 140,
             SIID_MAX_ICONS = 175
+        }
+
+        private class NativeMethods
+        {
+            [DllImport("Shell32.dll", SetLastError = false)]
+            public static extern Int32 SHGetStockIconInfo(SHSTOCKICONID siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
+
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern bool DestroyIcon(IntPtr hIcon);
+
         }
     }
 }

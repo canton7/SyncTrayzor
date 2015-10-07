@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing
 {
     public class TransientWrapperValueChangedEventArgs<T> : EventArgs
     {
-        public T Value { get; private set; }
+        public T Value { get; }
 
         public TransientWrapperValueChangedEventArgs(T value)
         {
@@ -53,26 +49,19 @@ namespace SyncTrayzor.SyncThing
 
         private void OnValueCreated(T value)
         {
-            var handler = this.ValueCreated;
-            if (handler != null)
-                handler(this, new TransientWrapperValueChangedEventArgs<T>(value));
+            this.ValueCreated?.Invoke(this, new TransientWrapperValueChangedEventArgs<T>(value));
         }
 
         private void OnValueDestroyed(T value)
         {
-            var handler = this.ValueDestroyed;
-            if (handler != null)
-                handler(this, new TransientWrapperValueChangedEventArgs<T>(value));
+            this.ValueDestroyed?.Invoke(this, new TransientWrapperValueChangedEventArgs<T>(value));
         }
     }
 
     public class SynchronizedTransientWrapper<T> : TransientWrapper<T> where T : class
     {
         private readonly object _lockObject;
-        public object LockObject
-        {
-            get { return this._lockObject; }
-        }
+        public object LockObject => this._lockObject;
 
         public override T Value
         {
@@ -122,6 +111,17 @@ namespace SyncTrayzor.SyncThing
         {
             this._lockObject = lockObject;
             this.Value = value;
+        }
+
+        public T GetAsserted()
+        {
+            lock (this._lockObject)
+            {
+                if (base.Value == null)
+                    throw new InvalidOperationException("Synchronized value is null");
+
+                return base.Value;
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 using FluentValidation;
 using Stylet;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.SyncThing;
@@ -20,12 +20,6 @@ namespace SyncTrayzor.Pages.Settings
         public bool IsNotified { get; set; }
     }
 
-    public class WatchedFolder
-    {
-        public string Folder { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
     public class SettingsViewModel : Screen
     {
         private readonly IConfigurationProvider configurationProvider;
@@ -37,47 +31,41 @@ namespace SyncTrayzor.Pages.Settings
         private readonly ISyncThingManager syncThingManager;
         private readonly List<SettingItem> settings = new List<SettingItem>();
 
-        public SettingItem<bool> MinimizeToTray { get; set; }
-        public SettingItem<bool> CloseToTray { get; set; }
-        public SettingItem<bool> NotifyOfNewVersions { get; set; }
-        public SettingItem<bool> ObfuscateDeviceIDs { get; set; }
-        public SettingItem<bool> UseComputerCulture { get; set; }
-        public SettingItem<bool> DisableHardwareRendering { get; set; }
+        public SettingItem<bool> MinimizeToTray { get; }
+        public SettingItem<bool> CloseToTray { get; }
+        public SettingItem<bool> NotifyOfNewVersions { get; }
+        public SettingItem<bool> ObfuscateDeviceIDs { get; }
+        public SettingItem<bool> UseComputerCulture { get; }
+        public SettingItem<bool> DisableHardwareRendering { get; }
 
-        public SettingItem<bool> ShowTrayIconOnlyOnClose { get; set; }
-        public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
-        public SettingItem<bool> ShowDeviceConnectivityBalloons { get; set; }
+        public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
+        public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
+        public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
 
-        public SettingItem<bool> StartSyncThingAutomatically { get; set; }
-        public SettingItem<bool> SyncthingRunLowPriority { get; set; }
-        public SettingItem<bool> SyncthingUseDefaultHome { get; set; }
-        public SettingItem<string> SyncThingAddress { get; set; }
-        public SettingItem<string> SyncThingApiKey { get; set; }
+        public SettingItem<bool> StartSyncThingAutomatically { get; }
+
+        public BindableCollection<LabelledValue<SyncThingPriorityLevel>> PriorityLevels { get; }
+        public SettingItem<SyncThingPriorityLevel> SyncthingPriorityLevel { get; }
+
+        public SettingItem<bool> SyncthingUseDefaultHome { get; }
+        public SettingItem<string> SyncThingAddress { get; }
+        public SettingItem<string> SyncThingApiKey { get; }
 
         public bool CanReadAutostart { get; set; }
         public bool CanWriteAutostart { get; set; }
-        public bool CanReadOrWriteAutostart
-        {
-            get { return this.CanReadAutostart || this.CanWriteAutostart; }
-        }
-        public bool CanReadAndWriteAutostart
-        {
-            get { return this.CanReadAutostart && this.CanWriteAutostart; }
-        }
+        public bool CanReadOrWriteAutostart => this.CanReadAutostart || this.CanWriteAutostart; 
+        public bool CanReadAndWriteAutostart => this.CanReadAutostart && this.CanWriteAutostart;
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
-        public bool StartMinimizedEnabled
-        {
-            get { return this.CanReadAndWriteAutostart && this.StartOnLogon; }
-        }
-
-        public SettingItem<string> SyncThingEnvironmentalVariables { get; set; }
-        public SettingItem<bool> SyncthingDenyUpgrade { get; set; }
+        public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
+        public SettingItem<string> SyncThingCommandLineFlags { get; }
+        public SettingItem<string> SyncThingEnvironmentalVariables { get; }
+        public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
         private bool updatingFolderSettings;
         public bool? AreAllFoldersWatched { get; set; }
         public bool? AreAllFoldersNotified { get; set; }
-        public BindableCollection<FolderSettings> FolderSettings { get; set; }
+        public BindableCollection<FolderSettings> FolderSettings { get;  }
 
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
@@ -110,8 +98,8 @@ namespace SyncTrayzor.Pages.Settings
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
 
             this.StartSyncThingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
-            this.SyncthingRunLowPriority = this.CreateBasicSettingItem(x => x.SyncthingRunLowPriority);
-            this.SyncthingRunLowPriority.RequiresSyncthingRestart = true;
+            this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);
+            this.SyncthingPriorityLevel.RequiresSyncthingRestart = true;
             this.SyncthingUseDefaultHome = this.CreateBasicSettingItem(x => !x.SyncthingUseCustomHome, (x, v) => x.SyncthingUseCustomHome = !v);
             this.SyncthingUseDefaultHome.RequiresSyncthingRestart = true;
             this.SyncThingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncThingAddressValidator());
@@ -128,13 +116,24 @@ namespace SyncTrayzor.Pages.Settings
                 this.StartMinimized = currentSetup.StartMinimized;
             }
 
-            this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
-                x => EnvironmentalVariablesParser.Format(x.SyncthingEnvironmentalVariables),
+            this.SyncThingCommandLineFlags = this.CreateBasicSettingItem(
+                x => String.Join(" ", x.SyncthingCommandLineFlags),
                 (x, v) =>
                 {
-                    EnvironmentalVariableCollection envVars;
-                    EnvironmentalVariablesParser.TryParse(v, out envVars);
-                    x.SyncthingEnvironmentalVariables = envVars;    
+                    IEnumerable<KeyValuePair<string, string>> envVars;
+                    KeyValueStringParser.TryParse(v, out envVars, mustHaveValue: false);
+                    x.SyncthingCommandLineFlags = envVars.Select(item => KeyValueStringParser.FormatItem(item.Key, item.Value)).ToList();
+                }, new SyncThingCommandLineFlagsValidator());
+            this.SyncThingCommandLineFlags.RequiresSyncthingRestart = true;
+
+
+            this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
+                x => KeyValueStringParser.Format(x.SyncthingEnvironmentalVariables),
+                (x, v) =>
+                {
+                    IEnumerable<KeyValuePair<string, string>> envVars;
+                    KeyValueStringParser.TryParse(v, out envVars);
+                    x.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection(envVars);
                 }, new SyncThingEnvironmentalVariablesValidator());
             this.SyncThingEnvironmentalVariables.RequiresSyncthingRestart = true;
 
@@ -151,7 +150,7 @@ namespace SyncTrayzor.Pages.Settings
             this.FolderSettings = new BindableCollection<FolderSettings>();
             if (syncThingManager.State == SyncThingState.Running)
             {
-                this.FolderSettings.AddRange(configuration.Folders.Select(x => new FolderSettings()
+                this.FolderSettings.AddRange(configuration.Folders.OrderByDescending(x => x.ID).Select(x => new FolderSettings()
                 {
                     FolderName = x.ID,
                     IsWatched = x.IsWatched,
@@ -164,6 +163,14 @@ namespace SyncTrayzor.Pages.Settings
                 folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
                 folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
             }
+
+            this.PriorityLevels = new BindableCollection<LabelledValue<SyncThingPriorityLevel>>()
+            {
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_AboveNormal, SyncThingPriorityLevel.AboveNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Normal, SyncThingPriorityLevel.Normal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_BelowNormal, SyncThingPriorityLevel.BelowNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Idle, SyncThingPriorityLevel.Idle),
+            };
 
             this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
             {
@@ -204,9 +211,9 @@ namespace SyncTrayzor.Pages.Settings
             return this.CreateBasicSettingItemImpl(v => new SettingItem<T>(accessExpression, v), validator);
         }
 
-        private SettingItem<T> CreateBasicSettingItem<T>(Func<Configuration, T> getter, Action<Configuration, T> setter, IValidator<SettingItem<T>> validator = null)
+        private SettingItem<T> CreateBasicSettingItem<T>(Func<Configuration, T> getter, Action<Configuration, T> setter, IValidator<SettingItem<T>> validator = null, Func<T, T, bool> comparer = null)
         {
-            return this.CreateBasicSettingItemImpl(v => new SettingItem<T>(getter, setter, v), validator);
+            return this.CreateBasicSettingItemImpl(v => new SettingItem<T>(getter, setter, v, comparer), validator);
         }
 
         private SettingItem<T> CreateBasicSettingItemImpl<T>(Func<IModelValidator, SettingItem<T>> generator, IValidator<SettingItem<T>> validator)
@@ -252,10 +259,7 @@ namespace SyncTrayzor.Pages.Settings
             this.updatingFolderSettings = false;
         }
 
-        public bool CanSave
-        {
-            get { return this.settings.All(x => !x.HasErrors); }
-        }
+        public bool CanSave => this.settings.All(x => !x.HasErrors);
         public void Save()
         {
             this.configurationProvider.AtomicLoadAndSave(configuration =>

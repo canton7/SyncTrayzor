@@ -2,23 +2,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public class ConfigFolderDevice
+    public class ConfigFolderDevice : IEquatable<ConfigFolderDevice>
     {
         [JsonProperty("DeviceID")]
         public string DeviceId { get; set; }
 
+        public bool Equals(ConfigFolderDevice other)
+        {
+            return this.DeviceId == other.DeviceId;
+        }
+
         public override string ToString()
         {
-            return String.Format("<Device deviceId={0}>", this.DeviceId);
+            return $"<Device deviceId={this.DeviceId}>";
         }
     }
 
-    public class ConfigFolder
+    public class ConfigFolder : IEquatable<ConfigFolder>
     {
         [JsonProperty("ID")]
         public string ID { get; set; }
@@ -44,14 +47,23 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [JsonProperty("invalid")]
         public string Invalid { get; set; }
 
+        public bool Equals(ConfigFolder other)
+        {
+            return this.ID == other.ID &&
+                this.Path == other.Path &&
+                this.Devices.SequenceEqual(other.Devices) &&
+                this.ReadOnly == other.ReadOnly &&
+                this.RescanIntervalSeconds == other.RescanIntervalSeconds &&
+                this.Invalid == other.Invalid;
+        }
+
         public override string ToString()
         {
-            return String.Format("<Folder id={0} path={1} devices=[{2}] readonly={3} rescalinterval={4} invalid={5}>",
-                this.ID, this.Path, String.Join(", ", this.Devices), this.ReadOnly, this.RescanInterval, this.Invalid);
+            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] readonly={this.ReadOnly} rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
         }
     }
 
-    public class ConfigDevice
+    public class ConfigDevice : IEquatable<ConfigDevice>
     {
         [JsonProperty("DeviceID")]
         public string DeviceID { get; set; }
@@ -73,13 +85,22 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [JsonProperty("Introducer")]
         public bool IsIntroducer { get; set; }
 
+        public bool Equals(ConfigDevice other)
+        {
+            return this.DeviceID == other.DeviceID &&
+                this.Name == other.Name &&
+                this.Addresses.SequenceEqual(other.Addresses) &&
+                this.CertName == other.CertName &&
+                this.IsIntroducer == other.IsIntroducer;
+        }
+
         public override string ToString()
         {
-            return String.Format("<Device id={0} name={1} addresses=[{2}] compression=N/A certname={3} isintroducer={4}>", this.DeviceID, this.Name, String.Join(", ", this.Addresses), this.CertName, this.IsIntroducer);
+            return $"Device id={this.DeviceID} name={this.Name} addresses=[{String.Join(", ", this.Addresses)}] compression=N/A certname={this.CertName} isintroducer={this.IsIntroducer}>";
         }
     }
 
-    public class Config
+    public class Config : IEquatable<Config>
     {
         [JsonProperty("Version")]
         public long Version { get; set; }
@@ -90,9 +111,16 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [JsonProperty("Devices")]
         public List<ConfigDevice> Devices { get; set; }
 
+        public bool Equals(Config other)
+        {
+            return this.Version == other.Version &&
+                this.Folders.SequenceEqual(other.Folders) &&
+                this.Devices.SequenceEqual(other.Devices);
+        }
+
         public override string ToString()
         {
-            return String.Format("<Config version={0} folders=[{1}] devices=[{2}]>", this.Version, String.Join(", ", this.Folders), String.Join(", ", this.Devices));
+            return $"<Config version={this.Version} folders=[{String.Join(", ", this.Folders)}] devices=[{String.Join(", ", this.Devices)}]>";
         }
     }
 }

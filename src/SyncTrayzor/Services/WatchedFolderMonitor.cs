@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -43,7 +41,7 @@ namespace SyncTrayzor.Services
         public WatchedFolderMonitor(ISyncThingManager syncThingManager)
         {
             this.syncThingManager = syncThingManager;
-            this.syncThingManager.DataLoaded += (o, e) => this.Reset();
+            this.syncThingManager.Folders.FoldersChanged += (o, e) => this.Reset();
             this.syncThingManager.StateChanged += (o, e) => this.Reset();
         }
 
@@ -59,10 +57,14 @@ namespace SyncTrayzor.Services
             }
             this.directoryWatchers.Clear();
 
-            if (this.syncThingManager.State != SyncThingState.Running || !this.syncThingManager.IsDataLoaded)
+            if (this.syncThingManager.State != SyncThingState.Running)
                 return;
 
-            foreach (var folder in this.syncThingManager.Folders.FetchAll())
+            var folders = this.syncThingManager.Folders.FetchAll();
+            if (folders == null)
+                return; // Folders haven't yet loaded
+
+            foreach (var folder in folders)
             {
                 if (!this._watchedFolders.Contains(folder.FolderId))
                     continue;

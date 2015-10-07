@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SyncTrayzor.SyncThing.ApiClient
+﻿namespace SyncTrayzor.SyncThing.ApiClient
 {
     public interface IEventVisitor
     {
@@ -18,5 +12,6 @@ namespace SyncTrayzor.SyncThing.ApiClient
         void Accept(DeviceConnectedEvent evt);
         void Accept(DeviceDisconnectedEvent evt);
         void Accept(DownloadProgressEvent evt);
+        void Accept(ConfigSavedEvent evt);
     }
 }

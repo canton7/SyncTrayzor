@@ -3,11 +3,6 @@ using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 
 namespace SyncTrayzor.Pages
@@ -19,7 +14,7 @@ namespace SyncTrayzor.Pages
         private readonly ISyncThingManager syncThingManager;
         private readonly Buffer<string> logMessagesBuffer;
 
-        public Queue<string> LogMessages { get; private set; }
+        public Queue<string> LogMessages { get;  }
 
         public ConsoleViewModel(
             ISyncThingManager syncThingManager,

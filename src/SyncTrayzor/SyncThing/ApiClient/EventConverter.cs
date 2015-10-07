@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -21,6 +17,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             { EventType.DeviceConnected, typeof(DeviceConnectedEvent) },
             { EventType.DeviceDisconnected, typeof(DeviceDisconnectedEvent) },
             { EventType.DownloadProgress, typeof(DownloadProgressEvent) },
+            { EventType.ConfigSaved, typeof(ConfigSavedEvent) },
         };
 
         protected override Event Create(Type objectType, JObject jObject)

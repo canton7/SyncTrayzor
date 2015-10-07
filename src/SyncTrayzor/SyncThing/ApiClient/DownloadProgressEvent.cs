@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -79,7 +76,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
                 }
             }
 
-            return String.Format("<DownloadProgress ID={0} Time={1} {2}>", this.Id, this.Time, sb.ToString());
+            return $"<DownloadProgress ID={this.Id} Time={this.Time} {sb.ToString()}>";
         }
     }
 }

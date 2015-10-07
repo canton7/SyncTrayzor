@@ -1,12 +1,7 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -52,7 +47,7 @@ namespace SyncTrayzor.Services
             if (arguments == null)
                 arguments = String.Empty;
 
-            var formattedArguments = String.Format("--shell -- \"{0}\" {1}", filename, arguments);
+            var formattedArguments = $"--shell -- \"{filename}\" {arguments}";
 
             logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
             var startInfo = new ProcessStartInfo()
@@ -72,7 +67,7 @@ namespace SyncTrayzor.Services
                 arguments = String.Empty;
 
             var launch = launchAfterFinished == null ? null : String.Format("--launch=\"{0}\"", launchAfterFinished.Replace("\"", "\\\""));
-            var formattedArguments = String.Format("--nowindow -- \"{0}\" --runas {1} -- \"{2}\" {3}", processRunnerPath, launch, filename, arguments);
+            var formattedArguments = $"--nowindow -- \"{processRunnerPath}\" --runas {launch} -- \"{filename}\" {arguments}";
 
             logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
 

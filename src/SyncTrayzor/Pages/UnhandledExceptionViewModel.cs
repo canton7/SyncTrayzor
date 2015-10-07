@@ -1,14 +1,9 @@
 ﻿using Stylet;
-using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Pages
 {
@@ -19,13 +14,13 @@ namespace SyncTrayzor.Pages
 
         public Exception Exception { get; set; }
 
-        public string IssuesUrl { get; private set; }
+        public string IssuesUrl { get; }
 
         public string ErrorMessage
         {
             get { return this.GenerateErrorMessage(); }
         }
-        public string LogFilePath { get; private set; }
+        public string LogFilePath { get; }
         public Icon Icon
         {
             get { return SystemIcons.Error; }

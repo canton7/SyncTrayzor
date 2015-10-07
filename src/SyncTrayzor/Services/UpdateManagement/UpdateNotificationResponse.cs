@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
 {
@@ -32,8 +28,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public override string ToString()
         {
-            return String.Format("<UpdateNotificationData version={0} direct_download_url={1} sha1sum_download_url={2} release_page_url={3} release_notes={4}>",
-                this.Version.ToString(3), this.DirectDownloadUrl, this.Sha1sumDownloadUrl, this.ReleasePageUrl, this.ReleaseNotes);
+            return $"<UpdateNotificationData version={this.Version.ToString(3)} direct_download_url={this.DirectDownloadUrl} sha1sum_download_url={this.Sha1sumDownloadUrl} " +
+                $"release_page_url={this.ReleasePageUrl} release_notes={this.ReleaseNotes}>";
         }
     }
 
@@ -47,7 +43,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public override string ToString()
         {
-            return String.Format("<UpdateNotificationError code={0} message={1}>", this.Code, this.Message);
+            return $"<UpdateNotificationError code={this.Code} message={ this.Message}>";
         }
     }
 
@@ -61,7 +57,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public override string ToString()
         {
-            return String.Format("<UpdateNotificationResponse data={0} error={1}>", this.Data, this.Error);
+            return $"<UpdateNotificationResponse data={this.Data} error={this.Error}>";
         }
     }
 }

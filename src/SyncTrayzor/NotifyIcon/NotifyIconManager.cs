@@ -1,11 +1,10 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Stylet;
 using SyncTrayzor.Localization;
-using SyncTrayzor.Properties.Strings;
+using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
 using SyncTrayzor.SyncThing.TransferHistory;
 using System;
 using System.Collections.Generic;

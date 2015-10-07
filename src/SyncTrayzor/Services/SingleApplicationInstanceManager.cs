@@ -1,10 +1,6 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services
 {
@@ -34,14 +30,15 @@ namespace SyncTrayzor.Services
         public bool ShouldExit()
         {
             var ourLocation = this.assemblyProvider.Location;
-            var ourId = Process.GetCurrentProcess().Id;
+            var ourProcess = Process.GetCurrentProcess();
             var processes = Process.GetProcessesByName("SyncTrayzor");
             logger.Info("Checking for other SyncTrayzor processes");
             foreach (var process in processes)
             {
                 try
                 {
-                    if (String.Equals(process.MainModule.FileName, ourLocation, StringComparison.OrdinalIgnoreCase) && process.Id != ourId)
+                    // Only care if the process came from our session: allow multiple instances under different users
+                    if (String.Equals(process.MainModule.FileName, ourLocation, StringComparison.OrdinalIgnoreCase) && process.SessionId == ourProcess.SessionId && process.Id != ourProcess.Id)
                     {
                         logger.Info("Found process with ID {0} and location {1}. Asking it to show its main window...", process.Id, process.MainModule.FileName);
                         try
@@ -55,14 +52,14 @@ namespace SyncTrayzor.Services
                             logger.Error("Process produced an error", e);
                         }
                     }
-                    else if (process.Id != ourId)
+                    else if (process.Id != ourProcess.Id)
                     {
                         logger.Info("Found process with ID {0} and location {1}, but it's a different exe (we are {2})", process.Id, process.MainModule.FileName, ourLocation);
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.Error(String.Format("Error accessing information for process with PID {0}", process.Id), e);
+                    logger.Error($"Error accessing information for process with PID { process.Id}", e);
                 }
             }
 

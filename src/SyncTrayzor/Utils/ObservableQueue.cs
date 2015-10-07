@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncTrayzor.Utils
 {
@@ -14,10 +10,7 @@ namespace SyncTrayzor.Utils
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public int Count
-        {
-            get { return this.queue.Count; }
-        }
+        public int Count => this.queue.Count;
 
         public void Enqueue(T item)
         {
@@ -34,9 +27,7 @@ namespace SyncTrayzor.Utils
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            var handler = this.CollectionChanged;
-            if (handler != null)
-                handler(this, e);
+            this.CollectionChanged?.Invoke(this, e);
         }
 
         public IEnumerator<T> GetEnumerator()
