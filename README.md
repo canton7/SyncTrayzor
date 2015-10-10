@@ -124,6 +124,6 @@ The portable version won't start on login by default. If you check "Automaticall
 Building from Source
 --------------------
 
-You'll need [Visual Studio 2013](http://www.visualstudio.com/en-us/news/vs2013-community-vs.aspx).
+You'll need [Visual Studio 2015](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx).
 Clone/download the repository, open `src\SyncTrayzor.sln`, and compile.
 You'll also need to [download syncthing.exe](https://github.com/syncthing/syncthing/releases) and place it in the `bin\x86\Debug`, `bin\x64\Debug`, `bin\x86\Release`, or `bin\x64\Release` folder as appropriate.
