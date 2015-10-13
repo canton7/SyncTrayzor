@@ -60,7 +60,7 @@
                                             <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
                                             <TextBlock DockPanel.Dock="Top" Foreground="DimGray" Text="{Binding ProgressString}"/>
                                             <ProgressBar DockPanel.Dock="Top" Margin="0,4,0,0" Minimum="0" Maximum="100" Height="10"
-                                                         Value="{Binding ProgressPercent}"/>
+                                                         Value="{Binding ProgressPercent, Mode=OneWay}"/>
                                         </DockPanel>
                                     </Border>
                                 </DataTemplate>
