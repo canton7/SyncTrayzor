@@ -98,7 +98,7 @@ What will SyncTrayzor do to my system?
 
 Good question. The answer depends on whether you installed SyncTrayzor using the installer, or are running it standalone.
 
-### Installer
+### Installed
 
 SyncTrayzor will install itself into `C:\Program Files\SyncTrayzor`. 
 
@@ -112,13 +112,36 @@ This is useful if you want to keep the copy of Syncthing managed by SyncTrayzor 
 
 The auto-update mechanism may download updates to `%TEMP%\SyncTrayzor`. This location is periodically cleared out (once every few days).
 
-### Standalone
+### Portable
 
 SyncTrayzor will put its own configuration in `SyncTrayzorPortable\data`, and tell Syncthing to use `SyncTrayzorPortable\data\syncthing` for its database.
 This means that, when upgrading, you can simply move the 'data' folder over to move all your settings, and database.
 If you uncheck "Use custom home directory or Syncthing" in the settings, then Syncthing will use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
 
 The portable version won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
+
+
+Using Syncthing beta releases
+-----------------------------
+
+### Installed
+
+SyncTrayzor keeps two copies of syncthing.exe.
+
+The copy that is executed is at `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing.exe`.
+This one is writable by the user, allowing Syncthing to auto-upgrade.
+
+There's also a backup copy in `C:\Program Files\SyncTrayzor\syncthing.exe`.
+This one is copied to `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing.exe` if that one does not exist (SyncTrayzor has never been run before for that user, for example).
+
+If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace the `syncthing.exe` in `C:\Users\<You>\AppData\Local\SyncTrayzor`.
+
+
+### Portable
+
+SyncTrayzor keeps a single version of `syncthing.exe`, next to `SyncTrayzor.exe`.
+
+If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace this `syncthing.exe`.
 
 
 Building from Source
