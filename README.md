@@ -121,6 +121,17 @@ If you uncheck "Use custom home directory or Syncthing" in the settings, then Sy
 The portable version won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
 
 
+Which syncthing.exe gets executed?
+--------------------------------------
+
+SyncTrayzor keeps two copies of syncthing.exe.
+
+The one that is executed is in %APPDATA%\SyncTrayzor. This one is writable by the user, and so can auto-upgrade.
+There's a backup in Program Files. This one is copied to %APPDATA%\SyncTrayzor if the one in %APPDATA%\SyncTrayzor does not exist (SyncTrayzor has never been run before for that user, for example).
+
+If you want to manually upgrade, you should replace the one in %APPDATA%\SyncTrayzor.
+
+
 Building from Source
 --------------------
 
