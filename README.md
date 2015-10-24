@@ -107,7 +107,7 @@ It will also create a registry key at `HKEY_CURRENT_USER\Software\Microsoft\Wind
 
 You can delete this registry key by unchecking "Automatically start on login" in the settings.
 
-If you check "Use custom home directory or Syncthing" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing` for its database.
+If you uncheck "Use Syncthing's default database location" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing` for its database.
 This is useful if you want to keep the copy of Syncthing managed by SyncTrayzor separate from another copy running on your machine.
 
 The auto-update mechanism may download updates to `%TEMP%\SyncTrayzor`. This location is periodically cleared out (once every few days).
