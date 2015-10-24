@@ -12,19 +12,27 @@ namespace SyncTrayzor.SyncThing.ApiClient
             {
                 return base.ReadJson(reader, objectType, existingValue, serializer);
             }
-            catch (JsonSerializationException e)
+            // It seems we can get both...
+            catch (ArgumentException)
             {
-                if (e.InnerException is ArgumentException)
-                {
-                    // Failed to convert enum
-                    foreach (var element in Enum.GetValues(objectType))
-                    {
-                        return element;
-                    }
-                }
-
-                throw; // No values? Highly unusual, but keep the compiler happy
+                return ReadDefaultEnumValue(objectType);
             }
+            catch (JsonSerializationException e) when (e.InnerException is ArgumentException)
+            {
+                return ReadDefaultEnumValue(objectType);
+            }
+        }
+
+        private static object ReadDefaultEnumValue(Type objectType)
+        {
+            // Failed to convert enum
+            foreach (var element in Enum.GetValues(objectType))
+            {
+                return element;
+            }
+
+            // No values? Highly unusual, but keep the compiler happy
+            throw new ArgumentException($"Enum type {objectType.Name} does not have any values");
         }
     }
 }

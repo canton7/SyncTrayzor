@@ -1,11 +1,16 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using NLog;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
     public class EventConverter : JsonCreationConverter<Event>
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static JsonSerializer eventTypeSerializer = new JsonSerializer();
+
         private static readonly Dictionary<EventType, Type> eventTypes = new Dictionary<EventType, Type>()
         {
             { EventType.RemoteIndexUpdated, typeof(RemoteIndexUpdatedEvent) },
@@ -20,9 +25,19 @@ namespace SyncTrayzor.SyncThing.ApiClient
             { EventType.ConfigSaved, typeof(ConfigSavedEvent) },
         };
 
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return base.ReadJson(reader, objectType, existingValue, serializer);
+        }
+
         protected override Event Create(Type objectType, JObject jObject)
         {
-            var eventType = jObject["type"].ToObject<EventType>();
+            // It seems we need to pass in a serializer for it to read the JsonSerializerAttribute on EventType
+            var eventType = jObject["type"].ToObject<EventType>(eventTypeSerializer);
+
+            if (eventType == EventType.Unknown)
+                logger.Warn($"Unknown event type: {jObject["type"]}");
+
             Type type;
             if (eventTypes.TryGetValue(eventType, out type))
                 return (Event)jObject.ToObject(type);
