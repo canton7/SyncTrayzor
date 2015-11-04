@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.29
+-------
+
+ - Support Syncthing v0.12
+ - Fix a couple of rare crashes (#150, #157)
+ 
+
 v1.0.28
 -------
 
