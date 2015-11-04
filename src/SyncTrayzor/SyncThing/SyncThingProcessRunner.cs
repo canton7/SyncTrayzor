@@ -126,7 +126,16 @@ namespace SyncTrayzor.SyncThing
 
                 this.process = Process.Start(processStartInfo);
 
-                this.process.PriorityClass = priorityMapping[this.SyncthingPriorityLevel];
+                try
+                {
+                    this.process.PriorityClass = priorityMapping[this.SyncthingPriorityLevel];
+                }
+                catch (InvalidOperationException e)
+                {
+                    // This can happen if syncthing.exe stops really really quickly (see #150)
+                    // We shouldn't crash out: instead, keep going and see what the exit code was
+                    logger.Warn("Failed to set process priority", e);
+                }
 
                 this.process.EnableRaisingEvents = true;
                 this.process.OutputDataReceived += (o, e) => this.DataReceived(e.Data);

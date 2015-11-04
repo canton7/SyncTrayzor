@@ -30,5 +30,6 @@ namespace SyncTrayzor.SyncThing.ApiClient
         FolderSummary,
         FolderCompletion,
         FolderErrors,
+        RelayStateChanged,
     }
 }

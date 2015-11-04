@@ -65,20 +65,21 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.28' => [
+   '1.0.29' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.28/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.28/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.29/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.29/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.28/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.28',
-      'release_notes' => "- Allow extra Syncthing command-line arguments to be specified (#133)\n- Fix bug which would prevent multiple logged-on users using the same SyncTrayzor installation (#148)\n- Add extra process priority options for Syncthing (other than just 'low priority') (#143)\n- Fix a couple of small crashes\n- Reduce installer/portable zip size slightly\n- Handle restart-less Folder and Device changes in Syncthing\n- Handle some edge-cases where Syncthing state changes in the middle of lots of file transfers may not be noticed\n- Fix a very rare \"Error creating the Web Proxy\" issue (#131)\n- Improve translations (#142, others)",
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.29/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.29',
+      'release_notes' => "- Support Syncthing v0.12\n- Fix a couple of rare crashes (#150, #157)",
    ]
 ];
 
 $upgrades = [
+   '1.0.28' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.27' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.26' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.25' => ['to' => 'latest', 'formatter' => '3'],

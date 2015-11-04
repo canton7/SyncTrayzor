@@ -126,8 +126,8 @@ namespace SyncTrayzor.Pages
                     // In 0.11, it changed from 'folder.ID' to 'folder.id'
                     var script = @"$('#folders .panel-footer .pull-right').prepend(" +
                     @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id || angular.element(this).folder.ID)"">" +
-                    @"<span class=""glyphicon glyphicon-folder-open""></span>" +
-                    @"<span style=""margin-left: 12px"">" +
+                    @"<span class=""fa fa-folder-open""></span>" +
+                    @"<span style=""margin-left: 3px"">" +
                     Resources.ViewerView_OpenFolder +
                     "</span></button>')";
                     webBrowser.ExecuteScriptAsync(script);
