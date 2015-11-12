@@ -628,6 +628,7 @@ Full Path: {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFile" xml:space="preserve">
     <value>Deleted {0:p:1 file|{} files}</value>
+    <comment>{0}: Number of files that were deleted</comment>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile" xml:space="preserve">
     <value>{0}: Deleted {1}</value>
@@ -641,6 +642,7 @@ Full Path: {1}</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFile" xml:space="preserve">
     <value>Updated {0:p:1 file|{} files}</value>
+    <comment>{0}: Number of files that were updated</comment>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
     <value>Show 'Synchronized' balloon messages even if no files were updated</value>
@@ -648,7 +650,7 @@ Full Path: {1}</value>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
     <comment>{0}: Folder that finished syncing
-{1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile, or one of each (e.g. output might be 'MyFolder: Updated 2 files' or 'MyFolder: Updated 1 file; Deleted 2 files')</comment>
+{1}: List of things that happened. Can be a single TrayIcon_Balloon_FinishedSyncing_UpdatedFile or TrayIcon_Balloon_FinishedSyncing_UpdatedFileWithFailures, a single TrayIcon_Balloon_FinishedSyncing_DeletedFile or TrayIcon_Balloon_FinishedSyncing_DeletedFileWithFailures, or one of each (e.g. output might be 'MyFolder: Updated 2 files', 'MyFolder: Updated 1 file; Deleted 2 files', or 'MyFolder: Updated 2 files (1 failure); Deleted 2 files')</comment>
   </data>
   <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
     <value>Disable hardware rendering</value>
@@ -711,5 +713,27 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_Syncthing_ProcessPriority_Normal" xml:space="preserve">
     <value>Normal</value>
     <comment>Should match value in Task Manager, if you right-click a process -&gt;'Set Priority'</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_DeletedFileWithFailures" xml:space="preserve">
+    <value>Deleted {0:p:1 file|{} files} ({1:p:1 failure|{} failures})</value>
+    <comment>{0}: Number of files that were deleted
+{1}: Number of failures</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_FailedToDeleteSingleFile" xml:space="preserve">
+    <value>{0}: Failed to delete {1} ({2})</value>
+    <comment>{0}: ID of folder which finished synchronizing
+{1}: File that failed to be deleted
+{2}: Failure reason</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_FailedToUpdateSingleFile" xml:space="preserve">
+    <value>{0}: Failed to update {1} ({2})</value>
+    <comment>{0}: ID of folder which finished synchronizing
+{1}: File that failed to be updated
+{2}: Failure reason</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FinishedSyncing_UpdatedFileWithFailures" xml:space="preserve">
+    <value>Updated {0:p:1 file|{} files} ({1:p:1 failure|{} failures})</value>
+    <comment>{0}: Number of files that were updated
+{1}: Number of failures</comment>
   </data>
 </root>

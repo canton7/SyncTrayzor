@@ -144,10 +144,20 @@ namespace SyncTrayzor.NotifyIcon
                 {
                     var fileTransfer = e.FileTransfers[0];
                     string msg = null;
-                    if (fileTransfer.ActionType == ItemChangedActionType.Update)
-                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
-                    else if (fileTransfer.ActionType == ItemChangedActionType.Delete)
-                        msg = String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                    if (fileTransfer.Error == null)
+                    { 
+                        if (fileTransfer.ActionType == ItemChangedActionType.Update)
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                        else if (fileTransfer.ActionType == ItemChangedActionType.Delete)
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                    }
+                    else
+                    {
+                        if (fileTransfer.ActionType == ItemChangedActionType.Update)
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_FailedToUpdateSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path), fileTransfer.Error);
+                        else if (fileTransfer.ActionType == ItemChangedActionType.Delete)
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_FailedToDeleteSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path), fileTransfer.Error);
+                    }
 
                     if (msg != null)
                     {
@@ -157,17 +167,30 @@ namespace SyncTrayzor.NotifyIcon
                 }
                 else
                 {
-                    var updatedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Update).Count();
-                    var deletedCount = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Delete).Count();
+                    var updates = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Update).ToArray();
+                    var deletes = e.FileTransfers.Where(x => x.ActionType == ItemChangedActionType.Delete).ToArray();
 
                     var messageParts = new List<string>();
 
-                    if (updatedCount > 0)
-                        messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile, updatedCount));
+                    if (updates.Length > 0)
+                    {
+                        var failureCount = updates.Count(x => x.Error != null);
+                        if (failureCount > 0)
+                            messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFileWithFailures, updates.Length, failureCount));
+                        else
+                            messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedFile, updates.Length));
+                    }
+                        
 
-                    if (deletedCount > 0)
-                        messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile, deletedCount));
-
+                    if (deletes.Length > 0)
+                    {
+                        var failureCount = deletes.Count(x => x.Error != null);
+                        if (failureCount > 0)
+                            messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFileWithFailures, deletes.Length, failureCount));
+                        else
+                            messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile, deletes.Length));
+                    }
+                        
                     var text = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_Multiple, e.FolderId, messageParts);
 
                     this.taskbarIcon.HideBalloonTip();
