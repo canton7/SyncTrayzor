@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using NLog;
 
 namespace SyncTrayzor.Xaml
 {
     public class WindowPlacementBehaviour : DetachingBehaviour<Window>
     {
         private const int taskbarHeight = 40; // Max height
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public WindowPlacement Placement
         {
@@ -61,7 +63,10 @@ namespace SyncTrayzor.Xaml
                     (int)this.Placement.NormalPosition.Bottom),
             };
 
-            NativeMethods.SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement);
+            if (!NativeMethods.SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement))
+            {
+                logger.Warn("Call to SetWindowPlacement failed", new Win32Exception(Marshal.GetLastWin32Error()));
+            }
 
             // Not 100% sure why this is needed, but if the window is minimzed before being closed to tray,
             // then is restored, we can end up in a state where we aren't active
@@ -87,6 +92,10 @@ namespace SyncTrayzor.Xaml
                         nativePlacement.normalPosition.Bottom
                     ),
                 };
+            }
+            else
+            {
+                logger.Warn("Call to SetWindowPlacement failed", new Win32Exception(Marshal.GetLastWin32Error()));
             }
 
             if (this.Placement != null && !this.Placement.Equals(placement))
@@ -142,10 +151,10 @@ namespace SyncTrayzor.Xaml
 
         private class NativeMethods
         {
-            [DllImport("user32.dll")]
+            [DllImport("user32.dll", SetLastError = true)]
             public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
 
-            [DllImport("user32.dll")]
+            [DllImport("user32.dll", SetLastError = true)]
             public static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
         }
     }
