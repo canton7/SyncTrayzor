@@ -241,10 +241,6 @@
   <data name="SettingsView_OnlyShowTrayIconOnClose" xml:space="preserve">
     <value>Show Tray Icon only on close</value>
   </data>
-  <data name="SettingsView_Section_Advanced" xml:space="preserve">
-    <value>Advanced</value>
-    <comment>Section header for advanced settings</comment>
-  </data>
   <data name="SettingsView_Section_StartOnLogin" xml:space="preserve">
     <value>Start on Login</value>
     <comment>Section header for settings to do with automatically starting SyncTrayzor when the user logs in</comment>
