@@ -625,6 +625,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        public static string SettingsView_Section_Advanced {
+            get {
+                return ResourceManager.GetString("SettingsView_Section_Advanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start on Login.
         /// </summary>
         public static string SettingsView_Section_StartOnLogin {
