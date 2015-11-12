@@ -30,10 +30,10 @@ namespace SyncTrayzor.Design
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
 
             var completedFileTransfer1 = new FileTransfer("folder", "path.pdf", ItemChangedItemType.File, ItemChangedActionType.Update);
-            completedFileTransfer1.SetComplete(null);
+            completedFileTransfer1.SetComplete(null, false);
 
             var completedFileTransfer2 = new FileTransfer("folder", "a really very long path that's far too long to sit on the page.h", ItemChangedItemType.File, ItemChangedActionType.Delete);
-            completedFileTransfer2.SetComplete("Something went very wrong");
+            completedFileTransfer2.SetComplete("Something went very wrong", true);
 
             //this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer1));
             this.CompletedTransfers.Add(new FileTransferViewModel(completedFileTransfer2));

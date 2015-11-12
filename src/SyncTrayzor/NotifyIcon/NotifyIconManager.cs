@@ -127,6 +127,12 @@ namespace SyncTrayzor.NotifyIcon
 
         private void FolderSynchronizationFinished(object sender, FolderSynchronizationFinishedEventArgs e)
         {
+            // If it only contains failed transfers we've seen before, then we don't care.
+            // Otherwise we'll keep bugging the user (every minute) for a failing transfer. 
+            // However, with this behaviour, we'll still remind them about the failure whenever something succeeds (or a new failure is added)
+            if (e.FileTransfers.All(x => x.Error != null && !x.IsNewError))
+                return;
+
             bool notificationsEnabled;
             if (this.FolderNotificationsEnabled != null && this.FolderNotificationsEnabled.TryGetValue(e.FolderId, out notificationsEnabled) && notificationsEnabled)
             {
