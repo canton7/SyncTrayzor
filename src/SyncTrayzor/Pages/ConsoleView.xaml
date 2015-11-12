@@ -14,9 +14,9 @@
     </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" LastChildFill="False" Height="27">
-            <TextBlock DockPanel.Dock="Left" Margin="15,0,0,0" VerticalAlignment="Center" FontWeight="Bold" Text="{l:Loc ConsoleView_Title}"/>
-            <Button DockPanel.Dock="Right" Padding="0" Margin="5,3" Height="NaN" Command="{s:Action ClearLog}" Content="{l:Loc ConsoleView_ClearButton}"/>
-            <ToggleButton DockPanel.Dock="Right" Padding="0" Margin="0,3" IsChecked="{Binding LogPaused}" Content="{l:Loc ConsoleView_PauseButton}"/>
+            <TextBlock DockPanel.Dock="Left" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="Bold" Text="{l:Loc ConsoleView_Title}"/>
+            <Button DockPanel.Dock="Right" Padding="3,0" Margin="5,3" Height="NaN" Command="{s:Action ClearLog}" Content="{l:Loc ConsoleView_ClearButton}"/>
+            <ToggleButton DockPanel.Dock="Right" Padding="3,0" Margin="0,3" IsChecked="{Binding LogPaused}" Content="{l:Loc ConsoleView_PauseButton}"/>
         </DockPanel>
         <TextBox ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"

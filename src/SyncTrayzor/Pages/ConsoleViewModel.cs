@@ -35,14 +35,20 @@ namespace SyncTrayzor.Pages
                         this.LogMessages.Dequeue();
                 }
 
-                this.NotifyOfPropertyChange(() => this.LogMessages);
+                if (!this.LogPaused)
+                    this.NotifyOfPropertyChange(() => this.LogMessages);
             };
 
             this.syncThingManager.MessageLogged += (o, e) =>
             {
-                if (!this.LogPaused)
-                    this.logMessagesBuffer.Add(e.LogMessage);
+                this.logMessagesBuffer.Add(e.LogMessage);
             };
+
+            this.Bind(s => s.LogPaused, (o, e) =>
+            {
+                if (!e.NewValue)
+                    this.NotifyOfPropertyChange(() => this.LogMessages);
+            });
         }
 
         public void ClearLog()
