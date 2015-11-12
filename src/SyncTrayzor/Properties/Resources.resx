@@ -736,4 +736,13 @@ Do you want to restart SyncTrayzor now?</value>
     <comment>{0}: Number of files that were updated
 {1}: Number of failures</comment>
   </data>
+  <data name="ConsoleView_ClearButton" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ConsoleView_PauseButton" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="ConsoleView_Title" xml:space="preserve">
+    <value>Syncthing Console</value>
+  </data>
 </root>

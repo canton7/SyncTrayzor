@@ -133,6 +133,33 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ConsoleView_ClearButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_ClearButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        public static string ConsoleView_PauseButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_PauseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Console.
+        /// </summary>
+        public static string ConsoleView_Title {
+            get {
+                return ResourceManager.GetString("ConsoleView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
         ///
         ///This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running..
