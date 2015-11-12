@@ -68,7 +68,8 @@ namespace SyncTrayzor.Services.Config
 
         public bool Equals(WindowPlacement other)
         {
-            return this.IsMaximised == other.IsMaximised &&
+            return other != null &&
+                this.IsMaximised == other.IsMaximised &&
                 this.MaxPosition == other.MaxPosition &&
                 this.MinPosition == other.MinPosition &&
                 this.NormalPosition == other.NormalPosition;

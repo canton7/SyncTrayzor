@@ -98,7 +98,7 @@ namespace SyncTrayzor.Xaml
                 logger.Warn("Call to SetWindowPlacement failed", new Win32Exception(Marshal.GetLastWin32Error()));
             }
 
-            if (this.Placement != null && !this.Placement.Equals(placement))
+            if (placement != null && !placement.Equals(this.Placement))
                 this.Placement = placement;
         }
 

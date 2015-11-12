@@ -284,6 +284,7 @@ namespace SyncTrayzor.Services.Config
             lock (this.currentConfigLock)
             {
                 setter(this.currentConfig);
+                logger.Debug("Saving configuration atomically: {0}", this.currentConfig);
                 this.SaveToFile(this.currentConfig);
                 newConfig = this.currentConfig;
             }
