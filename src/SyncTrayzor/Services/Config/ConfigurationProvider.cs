@@ -293,7 +293,7 @@ namespace SyncTrayzor.Services.Config
 
         private void SaveToFile(Configuration config)
         {
-            using (var stream = this.filesystem.OpenAtomic(this.paths.ConfigurationFilePath, FileMode.Create))
+            using (var stream = this.filesystem.CreateAtomic(this.paths.ConfigurationFilePath))
             {
                 serializer.Serialize(stream, config);
             }

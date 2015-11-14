@@ -9,7 +9,7 @@ namespace SyncTrayzor.Services
         bool Exists(string path);
         FileStream Open(string path, FileMode mode);
         FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
-        FileStream OpenAtomic(string path, FileMode mode);
+        FileStream CreateAtomic(string path);
         FileStream OpenRead(string path);
         void Copy(string from, string to);
         void Move(string from, string to);
@@ -29,7 +29,7 @@ namespace SyncTrayzor.Services
 
         public FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare) => new FileStream(path, fileMode, fileAccess, fileShare);
 
-        public FileStream OpenAtomic(string path, FileMode mode) => AtomicFileStream.Open(path, mode);
+        public FileStream CreateAtomic(string path) => AtomicFileStream.Create(path);
 
         public FileStream OpenRead(string path) => File.OpenRead(path);
 
