@@ -93,6 +93,11 @@
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Interop.NETWORKLIST">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\lib\$(Platform)\Interop.NETWORKLIST.dll</HintPath>
+    </Reference>
     <Reference Include="Itenso.Windows.Controls.ListViewLayout">
       <HintPath>..\..\lib\Itenso.Windows.Controls.ListViewLayout.dll</HintPath>
     </Reference>
@@ -197,6 +202,7 @@
     <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
+    <Compile Include="Services\MeteredNetworkManager.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />

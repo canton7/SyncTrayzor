@@ -83,6 +83,8 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            new MeteredNetworkManager();
+
             // Have to set the log path before anything else
             var pathConfiguration = Settings.Default.PathConfiguration;
             GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
