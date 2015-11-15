@@ -140,7 +140,7 @@ namespace SyncTrayzor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""5"">
+<Configuration xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" Version=""6"">
   <ShowTrayIconOnlyOnClose>false</ShowTrayIconOnlyOnClose>
   <MinimizeToTray>false</MinimizeToTray>
   <CloseToTray>true</CloseToTray>
@@ -160,7 +160,7 @@ namespace SyncTrayzor.Properties {
   <SyncthingConsoleHeight>100</SyncthingConsoleHeight>
   <SyncthingWebBrowserZoomLevel>0</SyncthingWebBrowserZoomLevel>
   <LastSeenInstallCount>0</LastSeenInstallCount>
-  <SyncthingPath>%EXEPATH%\syncthing.exe</SyncthingPath>
+  <SyncthingPath>%EXEPATH%\data\syncthing.exe</SyncthingPath>
   <SyncthingCustomHomePath>%EXEPATH%\data\syncthing</SyncthingCustomHomePath>
   <DisableHardwareRendering>false</DisableHardwareRendering>
 </Configuration>")]

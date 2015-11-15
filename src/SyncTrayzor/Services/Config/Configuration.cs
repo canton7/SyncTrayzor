@@ -11,7 +11,7 @@ namespace SyncTrayzor.Services.Config
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public const int CurrentVersion = 5;
+        public const int CurrentVersion = 6;
         public const double DefaultSyncthingConsoleHeight = 100;
 
         [XmlAttribute("Version")]
@@ -91,7 +91,7 @@ namespace SyncTrayzor.Services.Config
             this.WindowPlacement = null;
             this.SyncthingWebBrowserZoomLevel = 0;
             this.LastSeenInstallCount = 0;
-            this.SyncthingPath = @"%EXEPATH%\syncthing.exe";
+            this.SyncthingPath = @"%EXEPATH%\data\syncthing.exe";
             this.SyncthingCustomHomePath = @"%EXEPATH%\data\syncthing";
             this.DisableHardwareRendering = false;
         }
