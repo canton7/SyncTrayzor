@@ -202,9 +202,9 @@
     <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
     <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
-    <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p11.cs" />
+    <Compile Include="SyncThing\ApiClient\ISyncThingApi.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
-    <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p11.cs" />
+    <Compile Include="SyncThing\ApiClient\SyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedActionType.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedItemType.cs" />
     <Compile Include="SyncThing\EventWatcher\ConfigSavedEventArgs.cs" />
@@ -268,9 +268,7 @@
     <Compile Include="SyncThing\Folder.cs" />
     <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
-    <Compile Include="SyncThing\ApiClient\ISyncThingApiV0p10.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
-    <Compile Include="SyncThing\ApiClient\SyncThingApiClientV0p10.cs" />
     <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcher.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcher.cs" />

@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public class SyncThingApiClientV0p10 : ISyncThingApiClient
+    public class SyncThingApiClient : ISyncThingApiClient
     {
         private static readonly Logger logger = LogManager.GetLogger("SyncTrayzor.SyncThing.ApiClient.SyncThingApiClient");
-        private ISyncThingApiV0p10 api;
+        private ISyncThingApi api;
 
-        public SyncThingApiClientV0p10(Uri baseAddress, string apiKey)
+        public SyncThingApiClient(Uri baseAddress, string apiKey)
         {
             var httpClient = new HttpClient(new SyncThingHttpClientHandler())
             {
                 BaseAddress = baseAddress.NormalizeZeroHost(),
                 Timeout = TimeSpan.FromSeconds(70),
             };
-            this.api = RestClient.For<ISyncThingApiV0p10>(httpClient, new JsonSerializerSettings()
+            this.api = RestClient.For<ISyncThingApi>(httpClient, new JsonSerializerSettings()
             {
                 Converters = { new EventConverter() }
             });
@@ -65,14 +65,9 @@ namespace SyncTrayzor.SyncThing.ApiClient
             return systemInfo;
         }
 
-        public async Task<Connections> FetchConnectionsAsync()
+        public Task<Connections> FetchConnectionsAsync()
         {
-            var v0p10Connections = await this.api.FetchConnectionsAsync();
-            return new Connections()
-            {
-                Total = v0p10Connections.Total,
-                DeviceConnections = v0p10Connections.DeviceConnections,
-            };
+            return this.api.FetchConnectionsAsync();
         }
 
         public async Task<SyncthingVersion> FetchVersionAsync()
