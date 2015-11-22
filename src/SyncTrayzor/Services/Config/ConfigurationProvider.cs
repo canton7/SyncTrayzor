@@ -79,7 +79,7 @@ namespace SyncTrayzor.Services.Config
             if (defaultConfiguration == null)
                 throw new ArgumentNullException("defaultConfiguration");
 
-            if (!this.filesystem.Exists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
+            if (!this.filesystem.FileExists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
                 this.filesystem.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
             this.currentConfig = this.LoadFromDisk(defaultConfiguration);
@@ -87,7 +87,7 @@ namespace SyncTrayzor.Services.Config
             bool updateConfigInstallCount = false;
             int latestInstallCount = 0;
             // Might be portable, in which case this file won't exist
-            if (this.filesystem.Exists(this.paths.InstallCountFilePath))
+            if (this.filesystem.FileExists(this.paths.InstallCountFilePath))
             {
                 latestInstallCount = Int32.Parse(this.filesystem.ReadAllText(this.paths.InstallCountFilePath).Trim());
                 if (latestInstallCount != this.currentConfig.LastSeenInstallCount)
@@ -100,11 +100,11 @@ namespace SyncTrayzor.Services.Config
 
             var expandedSyncthingPath = EnvVarTransformer.Transform(this.currentConfig.SyncthingPath);
 
-            if (!this.filesystem.Exists(this.paths.SyncthingBackupPath))
+            if (!this.filesystem.FileExists(this.paths.SyncthingBackupPath))
                 throw new CouldNotFindSyncthingException(this.paths.SyncthingBackupPath);
 
             // They might be the same if we're portable, in which case, nothing to do
-            if (!this.filesystem.Exists(expandedSyncthingPath))
+            if (!this.filesystem.FileExists(expandedSyncthingPath))
             {
                 // We know that this.paths.SyncthingBackupPath exists, because we checked this above
                 logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
@@ -135,7 +135,7 @@ namespace SyncTrayzor.Services.Config
             try
             {
                 XDocument loadedConfig;
-                if (this.filesystem.Exists(this.paths.ConfigurationFilePath))
+                if (this.filesystem.FileExists(this.paths.ConfigurationFilePath))
                 {
                     logger.Debug("Found existing configuration at {0}", this.paths.ConfigurationFilePath);
                     using (var stream = this.filesystem.OpenRead(this.paths.ConfigurationFilePath))
@@ -183,7 +183,7 @@ namespace SyncTrayzor.Services.Config
 
                 if (this.paths.ConfigurationFileBackupPath != null)
                 {
-                    if (!this.filesystem.Exists(this.paths.ConfigurationFileBackupPath))
+                    if (!this.filesystem.FileExists(this.paths.ConfigurationFileBackupPath))
                         this.filesystem.CreateDirectory(this.paths.ConfigurationFileBackupPath);
                     var backupPath = Path.Combine(this.paths.ConfigurationFileBackupPath, $"config-v{i}.xml");
                     logger.Debug("Backing up configuration to {0}", backupPath);

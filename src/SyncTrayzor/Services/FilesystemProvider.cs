@@ -6,7 +6,8 @@ namespace SyncTrayzor.Services
 {
     public interface IFilesystemProvider
     {
-        bool Exists(string path);
+        bool FileExists(string path);
+        bool DirectoryExists(string path);
         FileStream Open(string path, FileMode mode);
         FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
         FileStream CreateAtomic(string path);
@@ -14,16 +15,20 @@ namespace SyncTrayzor.Services
         void Copy(string from, string to);
         void Move(string from, string to);
         void CreateDirectory(string path);
-        void Delete(string path);
+        void DeleteFile(string path);
+        void DeleteDirectory(string path, bool recursive);
         void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
         DateTime GetLastAccessTimeUtc(string path);
         string[] GetFiles(string path);
         string ReadAllText(string path);
+        string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
     }
 
     public class FilesystemProvider : IFilesystemProvider
     {
-        public bool Exists(string path) => File.Exists(path);
+        public bool FileExists(string path) => File.Exists(path);
+
+        public bool DirectoryExists(string path) => Directory.Exists(path);
 
         public FileStream Open(string path, FileMode mode) => File.Open(path, mode);
 
@@ -39,7 +44,9 @@ namespace SyncTrayzor.Services
 
         public void CreateDirectory(string path) => Directory.CreateDirectory(path);
 
-        public void Delete(string path) =>  File.Delete(path);
+        public void DeleteFile(string path) =>  File.Delete(path);
+
+        public void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);
 
         public void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc) => File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
 
@@ -48,5 +55,7 @@ namespace SyncTrayzor.Services
         public string[] GetFiles(string path) => Directory.GetFiles(path);
 
         public string ReadAllText(string path) => File.ReadAllText(path);
+
+        public string[] GetFiles(string path, string searchPattern, SearchOption searchOption) => Directory.GetFiles(path, searchPattern, searchOption);
     }
 }

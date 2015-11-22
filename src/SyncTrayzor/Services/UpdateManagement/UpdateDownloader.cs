@@ -77,7 +77,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 this.filesystemProvider.CreateDirectory(this.downloadsDir);
 
                 // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
-                if (this.filesystemProvider.Exists(downloadPath))
+                if (this.filesystemProvider.FileExists(downloadPath))
                 {
                     logger.Info("Skipping download as file {0} already exists", downloadPath);
                     var initialValidationResult = verifier();
@@ -92,7 +92,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     else
                     {
                         logger.Info("Actually, it's corrupt. Re-downloading");
-                        this.filesystemProvider.Delete(downloadPath);
+                        this.filesystemProvider.DeleteFile(downloadPath);
                     }
                 }
 
@@ -109,7 +109,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 if (!downloadedValidationResult.Item1)
                 {
                     logger.Warn("Download verification failed. Deleting {0}", downloadPath);
-                    this.filesystemProvider.Delete(downloadPath);
+                    this.filesystemProvider.DeleteFile(downloadPath);
 
                     // EXIT POINT
                     return Tuple.Create(false, default(T));
@@ -176,7 +176,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 {
                     try
                     {
-                        this.filesystemProvider.Delete(Path.Combine(this.downloadsDir, file));
+                        this.filesystemProvider.DeleteFile(Path.Combine(this.downloadsDir, file));
                         logger.Info("Deleted old file {0}", file);
                     }
                     catch (IOException e)
