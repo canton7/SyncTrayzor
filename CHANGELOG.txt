@@ -1,12 +1,20 @@
 Changelog
 =========
 
+v1.0.31
+-------
+
+ - Fix crash if 'logs archive' folder doesn't exist (#178)
+
 v1.0.30
 -------
 
- - Default to Syncthing v0.12. This only affects new users
- - Fix issue where AV programs could lock our config file, causing a crash (#159, #166)
- - 
+- Default to Syncthing v0.12. This only affects new users
+- Fix issue where AV programs could lock our config file, causing a crash (#159, #166)
+- Fix bug where window placement wouldn't be recorded on new installs (#171)
+- Display failed transfers separately in balloon messages (#173)
+- Add pause/clear buttons to Syncthing console window (#174)
+- Clean up config folder
 
 v1.0.29
 -------
