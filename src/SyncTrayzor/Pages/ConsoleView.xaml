@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
              mc:Ignorable="d" 
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
@@ -11,7 +12,12 @@
     <UserControl.Resources>
         <xaml:LogMessageListToStringConverter x:Key="LogMessagesConverter"/>
     </UserControl.Resources>
-    <Grid>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Height="27">
+            <TextBlock DockPanel.Dock="Left" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="Bold" Text="{l:Loc ConsoleView_Title}"/>
+            <Button DockPanel.Dock="Right" Padding="3,0" Margin="5,3" Height="NaN" Command="{s:Action ClearLog}" Content="{l:Loc ConsoleView_ClearButton}"/>
+            <ToggleButton DockPanel.Dock="Right" Padding="3,0" Margin="0,3" IsChecked="{Binding LogPaused}" Content="{l:Loc ConsoleView_PauseButton}"/>
+        </DockPanel>
         <TextBox ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  FontFamily="Consolas"
@@ -23,5 +29,5 @@
                 <xaml:ScrollToEndBehaviour/>
             </i:Interaction.Behaviors>
         </TextBox>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -24,30 +24,6 @@ namespace SyncTrayzor.SyncThing.ApiClient
         public string ClientVersion { get; set; }
     }
 
-    public class ConnectionsV0p10
-    {
-        [JsonProperty("total")]
-        public ItemConnectionData Total { get; set; }
-
-        [JsonExtensionData]
-        public Dictionary<string, JToken> DeviceConnectionsRaw { get; set; }
-
-        private Dictionary<string, ItemConnectionData> _deviceConnections;
-        public Dictionary<string, ItemConnectionData> DeviceConnections
-        {
-            get
-            {
-                if (this._deviceConnections == null)
-                {
-                    this._deviceConnections = this.DeviceConnectionsRaw == null ?
-                        new Dictionary<string, ItemConnectionData>() :
-                        this.DeviceConnectionsRaw.ToDictionary(x => x.Key, x => x.Value.ToObject<ItemConnectionData>());
-                }
-                return this._deviceConnections;
-            }
-        }
-    }
-
     public class Connections
     {
         [JsonProperty("total")]

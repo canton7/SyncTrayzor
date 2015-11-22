@@ -12,7 +12,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public bool Equals(ConfigFolderDevice other)
         {
-            return this.DeviceId == other.DeviceId;
+            return other != null && this.DeviceId == other.DeviceId;
         }
 
         public override string ToString()
@@ -49,7 +49,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public bool Equals(ConfigFolder other)
         {
-            return this.ID == other.ID &&
+            return other != null &&
+                this.ID == other.ID &&
                 this.Path == other.Path &&
                 this.Devices.SequenceEqual(other.Devices) &&
                 this.ReadOnly == other.ReadOnly &&
@@ -87,7 +88,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public bool Equals(ConfigDevice other)
         {
-            return this.DeviceID == other.DeviceID &&
+            return other != null &&
+                this.DeviceID == other.DeviceID &&
                 this.Name == other.Name &&
                 this.Addresses.SequenceEqual(other.Addresses) &&
                 this.CertName == other.CertName &&
@@ -113,7 +115,8 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         public bool Equals(Config other)
         {
-            return this.Version == other.Version &&
+            return other != null &&
+                this.Version == other.Version &&
                 this.Folders.SequenceEqual(other.Folders) &&
                 this.Devices.SequenceEqual(other.Devices);
         }

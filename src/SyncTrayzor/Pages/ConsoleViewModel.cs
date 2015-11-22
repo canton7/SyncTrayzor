@@ -15,6 +15,7 @@ namespace SyncTrayzor.Pages
         private readonly Buffer<string> logMessagesBuffer;
 
         public Queue<string> LogMessages { get;  }
+        public bool LogPaused { get; set; }
 
         public ConsoleViewModel(
             ISyncThingManager syncThingManager,
@@ -34,13 +35,26 @@ namespace SyncTrayzor.Pages
                         this.LogMessages.Dequeue();
                 }
 
-                this.NotifyOfPropertyChange(() => this.LogMessages);
+                if (!this.LogPaused)
+                    this.NotifyOfPropertyChange(() => this.LogMessages);
             };
 
             this.syncThingManager.MessageLogged += (o, e) =>
             {
                 this.logMessagesBuffer.Add(e.LogMessage);
             };
+
+            this.Bind(s => s.LogPaused, (o, e) =>
+            {
+                if (!e.NewValue)
+                    this.NotifyOfPropertyChange(() => this.LogMessages);
+            });
+        }
+
+        public void ClearLog()
+        {
+            this.LogMessages.Clear();
+            this.NotifyOfPropertyChange(() => this.LogMessages);
         }
     }
 }

@@ -36,6 +36,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private readonly Queue<FileTransfer> completedTransfers = new Queue<FileTransfer>();
 
         private readonly Dictionary<FolderPathKey, FileTransfer> inProgressTransfers = new Dictionary<FolderPathKey, FileTransfer>();
+        private readonly HashSet<FolderPathKey> currentlyFailingTransfers = new HashSet<FolderPathKey>();
 
         // Collection of stuff synchronized recently. Keyed on folder. Cleared when that folder finished synchronizing
         private readonly Dictionary<string, List<FileTransfer>> recentlySynchronized = new Dictionary<string, List<FileTransfer>>();
@@ -132,6 +133,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             lock (this.transfersLock)
             {
                 fileTransfer = this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item, e.ItemType, e.Action);
+
                 this.CompleteFileTransfer(fileTransfer, e.Error);
             }
 
@@ -145,7 +147,14 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             lock (this.transfersLock)
             {
                 var key = new FolderPathKey(fileTransfer.FolderId, fileTransfer.Path);
-                fileTransfer.SetComplete(error);
+
+                bool isNewError = false;
+                if (error == null)
+                    this.currentlyFailingTransfers.Remove(key);
+                else
+                    isNewError = this.currentlyFailingTransfers.Add(key);
+
+                fileTransfer.SetComplete(error, isNewError);
                 this.inProgressTransfers.Remove(key);
 
                 logger.Debug("File Transfer set to complete: {0}", fileTransfer);

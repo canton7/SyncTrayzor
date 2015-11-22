@@ -20,6 +20,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         public DateTime? FinishedUtc { get; private set; }
 
         public string Error { get; private set; }
+        public bool IsNewError { get; private set; }
 
         private DateTime? lastProgressUpdateUtc;
 
@@ -49,12 +50,13 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             this.lastProgressUpdateUtc = now;
         }
 
-        public void SetComplete(string error)
+        public void SetComplete(string error, bool isNewError)
         {
             this.Status = FileTransferStatus.Completed;
             this.BytesTransferred = this.TotalBytes;
             this.FinishedUtc = DateTime.UtcNow;
             this.Error = error;
+            this.IsNewError = isNewError;
         }
 
         public override string ToString()

@@ -1,88 +1,30 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace SyncTrayzor.Utils
 {
     public class AtomicFileStream : FileStream
     {
-        private const int DefaultBufferSize = 4096;
         private const string DefaultTempFileSuffix = ".tmp";
 
         private readonly string path;
         private readonly string tempPath;
 
-        public static AtomicFileStream Open(string path, FileMode mode)
+        public static FileStream Create(string path)
         {
-            return Open(path, TempFilePath(path), mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite), FileShare.Read, DefaultBufferSize, FileOptions.None);
+            return Create(path, TempFilePath(path));
         }
 
-        public static AtomicFileStream Open(string path, string tempFilePath, FileMode mode)
+        public static FileStream Create(string path, string tempPath)
         {
-            return Open(path, tempFilePath, mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite), FileShare.Read, DefaultBufferSize, FileOptions.None);
+            var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite);
+            return new AtomicFileStream(path, tempPath, fileStream.SafeFileHandle);
         }
 
-        public static  AtomicFileStream Open(string path, FileMode mode, FileAccess access)
-        {
-            return Open(path, TempFilePath(path), mode, access, FileShare.Read, DefaultBufferSize, FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, string tempFilePath, FileMode mode, FileAccess access)
-        {
-            return Open(path, tempFilePath, mode, access, FileShare.Read, DefaultBufferSize, FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, FileMode mode, FileAccess access, FileShare share)
-        {
-            return Open(path, TempFilePath(path), mode, access, share, DefaultBufferSize, FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, string tempFilePath, FileMode mode, FileAccess access, FileShare share)
-        {
-            return Open(path, tempFilePath, mode, access, share, DefaultBufferSize, FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize)
-        {
-            return Open(path, TempFilePath(path), mode, access, share, bufferSize, FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync)
-        {
-            return Open(path, TempFilePath(path), mode, access, share, bufferSize, useAsync ? FileOptions.Asynchronous : FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, string tempFilePath, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync)
-        {
-            return Open(path, tempFilePath, mode, access, share, bufferSize, useAsync ? FileOptions.Asynchronous : FileOptions.None);
-        }
-
-        public static AtomicFileStream Open(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)
-        {
-            return Open(path, TempFilePath(path), mode, access, share, bufferSize, options);
-        }
-
-        public static AtomicFileStream Open(string path, string tempPath, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)
-        {
-            if (access == FileAccess.Read)
-                throw new ArgumentException("If you're just opening the file for reading, AtomicFileStream won't help you at all");
-
-            if (File.Exists(tempPath))
-                File.Delete(tempPath);
-
-            if (File.Exists(path) && (mode == FileMode.Append || mode == FileMode.Open || mode == FileMode.OpenOrCreate))
-                File.Copy(path, tempPath);
-
-            return new AtomicFileStream(path, tempPath, mode, access, share, bufferSize, options);
-        }
-
-        public static FileStream OpenWrite(string path)
-        {
-            return AtomicFileStream.Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-        }
-
-        private AtomicFileStream(string path, string tempPath, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)
-            : base(tempPath, mode, access, share, bufferSize, options)
+        private AtomicFileStream(string path, string tempPath, SafeFileHandle handle)
+            : base(handle, FileAccess.ReadWrite)
         {
             if (path == null)
                 throw new ArgumentNullException("path");

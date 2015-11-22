@@ -127,8 +127,8 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.toastCts != null)
                 this.toastCts.Cancel();
 
-            if (this.UpdateCheckDue())
-                await this.CheckForUpdatesAsync();
+            // Always check on root window activated
+            await this.CheckForUpdatesAsync();
         }
 
         private async void PromptTimerElapsed(object sender, EventArgs e)

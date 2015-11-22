@@ -1,4 +1,10 @@
-﻿namespace SyncTrayzor.SyncThing.ApiClient
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace SyncTrayzor.SyncThing.ApiClient
 {
     public class GenericEvent : Event
     {
@@ -7,9 +13,12 @@
             visitor.Accept(this);
         }
 
+        [JsonProperty("data")]
+        public JToken Data { get; set; }
+
         public override string ToString()
         {
-            return $"<GenericEvent ID={this.Id} Type={this.Type} Time={this.Time}>";
+            return $"<GenericEvent ID={this.Id} Type={this.Type} Time={this.Time} Data={this.Data.ToString(Formatting.None)}>";
         }
     }
 }

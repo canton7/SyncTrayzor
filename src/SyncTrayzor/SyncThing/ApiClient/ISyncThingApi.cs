@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
-    public interface ISyncThingApiV0p10
+    public interface ISyncThingApi
     {
         [Header("X-API-Key")]
         string ApiKey { get; set; }
@@ -16,31 +16,31 @@ namespace SyncTrayzor.SyncThing.ApiClient
         [Get("/rest/events")]
         Task<List<Event>> FetchEventsLimitAsync(int since, int limit, CancellationToken cancellationToken);
 
-        [Get("/rest/config")]
+        [Get("/rest/system/config")]
         Task<Config> FetchConfigAsync();
 
-        [Post("/rest/shutdown")]
+        [Post("/rest/system/shutdown")]
         Task ShutdownAsync();
 
-        [Post("/rest/scan")]
+        [Post("/rest/db/scan")]
         Task ScanAsync(string folder, string sub);
 
-        [Get("/rest/system")]
+        [Get("/rest/system/status")]
         Task<SystemInfo> FetchSystemInfoAsync();
 
-        [Get("/rest/connections")]
-        Task<ConnectionsV0p10> FetchConnectionsAsync();
+        [Get("/rest/system/connections")]
+        Task<Connections> FetchConnectionsAsync();
 
-        [Get("/rest/version")]
+        [Get("/rest/system/version")]
         Task<SyncthingVersion> FetchVersionAsync();
 
-        [Get("/rest/ignores")]
+        [Get("/rest/db/ignores")]
         Task<Ignores> FetchIgnoresAsync(string folder);
 
-        [Post("/rest/restart")]
+        [Post("/rest/system/restart")]
         Task RestartAsync();
 
-        [Get("/rest/model")]
+        [Get("/rest/db/status")]
         Task<FolderStatus> FetchFolderStatusAsync(string folder, CancellationToken cancellationToken);
     }
 }

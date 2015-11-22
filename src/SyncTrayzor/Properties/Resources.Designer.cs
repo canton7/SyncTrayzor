@@ -133,6 +133,33 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ConsoleView_ClearButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_ClearButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        public static string ConsoleView_PauseButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_PauseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Console.
+        /// </summary>
+        public static string ConsoleView_Title {
+            get {
+                return ResourceManager.GetString("ConsoleView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to kill all Syncthing processes, even those not managed by SyncTrayzor?
         ///
         ///This risks corrupting Syncthing&apos;s database. ONLY do this if you are unable to start Syncthing because another Syncthing process is currently running..
@@ -1294,11 +1321,38 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleted {0:p:1 file|{} files} ({1:p:1 failure|{} failures}).
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_DeletedFileWithFailures {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_DeletedFileWithFailures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}: Deleted {1}.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile {
             get {
                 return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: Failed to delete {1} ({2}).
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_FailedToDeleteSingleFile {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_FailedToDeleteSingleFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: Failed to update {1} ({2}).
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_FailedToUpdateSingleFile {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_FailedToUpdateSingleFile", resourceCulture);
             }
         }
         
@@ -1335,6 +1389,15 @@ namespace SyncTrayzor.Properties {
         public static string TrayIcon_Balloon_FinishedSyncing_UpdatedFile {
             get {
                 return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated {0:p:1 file|{} files} ({1:p:1 failure|{} failures}).
+        /// </summary>
+        public static string TrayIcon_Balloon_FinishedSyncing_UpdatedFileWithFailures {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedFileWithFailures", resourceCulture);
             }
         }
         

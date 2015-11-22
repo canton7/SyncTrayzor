@@ -112,20 +112,18 @@
                         </DockPanel>
                     </GroupBox>
 
-                    <Expander DockPanel.Dock="Bottom" Header="{l:Loc SettingsView_Section_Advanced}">
-                        <GroupBox Header="{l:Loc SettingsView_Section_Advanced}">
-                            <DockPanel LastChildFill="False">
-                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingDenyUpgrade.Value}"
+                    <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Advanced}">
+                        <DockPanel LastChildFill="False">
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingDenyUpgrade.Value}"
                                           Content="{l:Loc SettingsView_SyncthingDenyUpgrade}"
                                           ToolTip="{l:Loc SettingsView_SyncthingDenyUpgrade_ToolTip}"/>
-                                
-                                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingCommandLineFlags}" Content="Syncthing Command-line Flags"/>
-                                <TextBox DockPanel.Dock="Top" x:Name="SyncThingCommandLineFlags"  Text="{Binding SyncThingCommandLineFlags.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
-                                <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
-                                <TextBox DockPanel.Dock="Top" x:Name="SyncThingEnvironmentalVariables" Text="{Binding SyncThingEnvironmentalVariables.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
-                            </DockPanel>
-                        </GroupBox>
-                    </Expander>
+
+                            <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingCommandLineFlags}" Content="Syncthing Command-line Flags"/>
+                            <TextBox DockPanel.Dock="Top" x:Name="SyncThingCommandLineFlags"  Text="{Binding SyncThingCommandLineFlags.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
+                            <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncThingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
+                            <TextBox DockPanel.Dock="Top" x:Name="SyncThingEnvironmentalVariables" Text="{Binding SyncThingEnvironmentalVariables.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
+                        </DockPanel>
+                    </GroupBox>
                 </DockPanel>
             </TabItem>
 
