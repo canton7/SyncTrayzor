@@ -65,20 +65,21 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.29' => [
+   '1.0.30' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.29/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.29/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.30/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.30/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.29/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.29',
-      'release_notes' => "- Support Syncthing v0.12\n- Fix a couple of rare crashes (#150, #157)",
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.30/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.30',
+      'release_notes' => "- Fix issue where AV programs could lock our config file, causing a crash (#159, #166)\n- Fix bug where window placement wouldn't be recorded on new installs (#171)\n- Display failed transfers separately in balloon messages (#173)\n- Add pause/clear buttons to Syncthing console window (#174)\n- Clean up config folder",
    ]
 ];
 
 $upgrades = [
+   '1.0.29' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.28' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.27' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.26' => ['to' => 'latest', 'formatter' => '3'],
