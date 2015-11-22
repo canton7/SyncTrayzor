@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.30
+-------
+
+ - Default to Syncthing v0.12. This only affects new users
+ - Fix issue where AV programs could lock our config file, causing a crash (#159, #166)
+ - 
+
 v1.0.29
 -------
 
