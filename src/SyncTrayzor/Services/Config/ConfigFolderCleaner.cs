@@ -23,6 +23,18 @@ namespace SyncTrayzor.Services.Config
 
         public void Clean()
         {
+            try
+            {
+                this.CleanImpl();
+            }
+            catch (Exception e)
+            {
+                logger.Error("Failed to run config folder cleaner", e);
+            }
+        }
+
+        private void CleanImpl()
+        {
             // We used to have a 'logs archive' folder in the root - that's no longer used, in favour of 'logs/logs archive'
             var oldLogArchivesPath = Path.Combine(Path.GetDirectoryName(this.applicationPathsProvider.LogFilePath), "logs archive");
             if (this.filesystemProvider.DirectoryExists(oldLogArchivesPath))
@@ -55,10 +67,14 @@ namespace SyncTrayzor.Services.Config
             }
 
             // Delete all 'syncthing.x.log' files from within the log file archive path
-            foreach (var file in this.filesystemProvider.GetFiles(Path.Combine(this.applicationPathsProvider.LogFilePath, "logs archive"), "syncthing.*.log", SearchOption.TopDirectoryOnly))
+            var logsArchivePath = Path.Combine(this.applicationPathsProvider.LogFilePath, "logs archive");
+            if (this.filesystemProvider.DirectoryExists(logsArchivePath))
             {
-                logger.Info("Deleting old Syncthing log archive: {0}", file);
-                this.filesystemProvider.DeleteFile(file);
+                foreach (var file in this.filesystemProvider.GetFiles(logsArchivePath, "syncthing.*.log", SearchOption.TopDirectoryOnly))
+                {
+                    logger.Info("Deleting old Syncthing log archive: {0}", file);
+                    this.filesystemProvider.DeleteFile(file);
+                }
             }
         }
     }
