@@ -65,21 +65,22 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.31' => [
+   '1.0.32' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.31/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.31/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.31/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.31',
-      'release_notes' => "- Fix issue where AV programs could lock our config file, causing a crash (#159, #166)\n- Fix bug where window placement wouldn't be recorded on new installs (#171)\n- Display failed transfers separately in balloon messages (#173)\n- Add pause/clear buttons to Syncthing console window (#174)\n- Clean up config folder",
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.32',
+      'release_notes' => "- Fix rare crash when trying to save the config file",
    ]
 ];
 
 $upgrades = [
-   '1.0.30' => ['to' => 'latest', 'formatter' => '3', 'overrides' => ['release_notes' => "- Fix crash if 'logs archive' folder doesn't exist (#178)"]],
+   '1.0.31' => ['to' => 'latest', 'formatter' => '3'],
+   '1.0.30' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.29' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.28' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.27' => ['to' => 'latest', 'formatter' => '3'],
