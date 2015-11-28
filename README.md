@@ -1,5 +1,8 @@
-SyncTrayzor
+SyncTrayzor [![Build status](https://ci.appveyor.com/api/projects/status/pwa4mpy4066okxyu?svg=true)](https://ci.appveyor.com/project/canton7/synctrayzor)
 ===========
+
+[Download and install SyncTrayzor now](#installation).
+
 
 Introduction
 ------------
@@ -27,11 +30,11 @@ Features include:
 Installation
 ------------
 
-SyncTrayzor is packaged as both an installer and a standalone zip. It will run on Windows Vista, 7, and 8.
+SyncTrayzor is packaged as both an installer and a standalone zip. It will run on Windows Vista or newer.
 
 ### Installer
 
-Grab and run the latest installer from the [releases](https://github.com/canton7/SyncTrayzor/releases) tab.
+[Download `SyncTrayzorSetup-x64.exe` or `SyncTrayzorSetup-x86.exe`](https://github.com/canton7/SyncTrayzor/releases/latest) and run it.
 If you already have SyncTrayzor installed, this will update it.
 
 ### Standalone
@@ -39,7 +42,7 @@ If you already have SyncTrayzor installed, this will update it.
 First, you'll need .net 4.5. [Download the offline](http://www.microsoft.com/en-gb/download/details.aspx?id=42642) or
 [web installer](http://www.microsoft.com/en-gb/download/details.aspx?id=42643) if you don't have it installed already.
 
-Grab the latest standalone .zip from the [releases](https://github.com/canton7/SyncTrayzor/releases) tab.
+[Download `SyncTrayzorPortable-x64.zip` or `SyncTrayzorPortable-x86.zip`](https://github.com/canton7/SyncTrayzor/releases/latest) .
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
 

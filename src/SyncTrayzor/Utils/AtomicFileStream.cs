@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
 
 namespace SyncTrayzor.Utils
 {
@@ -12,19 +11,13 @@ namespace SyncTrayzor.Utils
         private readonly string path;
         private readonly string tempPath;
 
-        public static FileStream Create(string path)
+        public AtomicFileStream(string path)
+            : this(path, TempFilePath(path))
         {
-            return Create(path, TempFilePath(path));
         }
 
-        public static FileStream Create(string path, string tempPath)
-        {
-            var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite);
-            return new AtomicFileStream(path, tempPath, fileStream.SafeFileHandle);
-        }
-
-        private AtomicFileStream(string path, string tempPath, SafeFileHandle handle)
-            : base(handle, FileAccess.ReadWrite)
+        public AtomicFileStream(string path, string tempPath)
+            : base(tempPath, FileMode.Create, FileAccess.ReadWrite)
         {
             if (path == null)
                 throw new ArgumentNullException("path");

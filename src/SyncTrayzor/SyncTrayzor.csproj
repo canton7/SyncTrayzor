@@ -299,9 +299,11 @@
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
+    <Compile Include="Utils\SlimObservable.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Design\ViewModelLocator.cs" />
+    <Compile Include="Xaml\ActivateBehaviour.cs" />
     <Compile Include="Xaml\CultureAwareBinding.cs" />
     <Compile Include="Xaml\GridLengthToAbsoluteConverter.cs" />
     <Compile Include="Xaml\MouseWheelGesture.cs" />

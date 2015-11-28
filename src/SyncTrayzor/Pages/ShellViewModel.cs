@@ -23,6 +23,7 @@ namespace SyncTrayzor.Pages
         public bool ShowConsole { get; set; }
         public double ConsoleHeight { get; set; }
         public WindowPlacement Placement { get; set; }
+        public SlimObservable<bool> ActivateObservable { get; } = new SlimObservable<bool>();
         public ConsoleViewModel Console { get; }
         public ViewerViewModel Viewer { get; }
 
@@ -161,10 +162,7 @@ namespace SyncTrayzor.Pages
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
 
-            // This is ugly, but hey...
-            var window = this.View as Window;
-            if (window != null)
-                window.Activate();
+            this.ActivateObservable.Publish(true);
         }
     }
 }
