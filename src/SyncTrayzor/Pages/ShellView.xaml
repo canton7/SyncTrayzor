@@ -9,6 +9,7 @@
         Title="SyncTrayzor">
     <i:Interaction.Behaviors>
         <xaml:WindowPlacementBehaviour Placement="{Binding Placement}"/>
+        <xaml:ActivateBehaviour ActivateObservable="{Binding ActivateObservable}"/>
     </i:Interaction.Behaviors>
     <Window.InputBindings>
         <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlUp}" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
