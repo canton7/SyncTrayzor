@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.0.32
+-------
+
+ - Fix rare crash when trying to save the config file
+
 v1.0.31
 -------
 
