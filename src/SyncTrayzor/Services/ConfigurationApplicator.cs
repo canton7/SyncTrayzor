@@ -76,6 +76,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
             this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
+            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

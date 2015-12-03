@@ -64,6 +64,7 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingPath { get; set; }
         public string SyncthingCustomHomePath { get; set; }
         public bool DisableHardwareRendering { get; set; }
+        public List<string> SyncthingDebugFacilities { get; set; }
 
         public Configuration()
         {
@@ -94,6 +95,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingPath = @"%EXEPATH%\data\syncthing.exe";
             this.SyncthingCustomHomePath = @"%EXEPATH%\data\syncthing";
             this.DisableHardwareRendering = false;
+            this.SyncthingDebugFacilities = new List<string>();
         }
 
         public Configuration(Configuration other)
@@ -136,7 +138,7 @@ namespace SyncTrayzor.Services.Config
                 $"ObfuscateDeviceIDs={this.ObfuscateDeviceIDs} UseComputerCulture={this.UseComputerCulture} SyncthingConsoleHeight={this.SyncthingConsoleHeight} WindowPlacement={this.WindowPlacement} " +
                 $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingPath={this.SyncthingPath} " +
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
-                $"DisableHardwareRendering={this.DisableHardwareRendering}>";
+                $"DisableHardwareRendering={this.DisableHardwareRendering}>, SyncthingDebugFacilities={String.Join(",", this.SyncthingDebugFacilities ?? new List<string>())}";
         }
     }
 }
