@@ -13,7 +13,7 @@ namespace SyncTrayzor.Services
         FileStream CreateAtomic(string path);
         FileStream OpenRead(string path);
         void Copy(string from, string to);
-        void Move(string from, string to);
+        void MoveFile(string from, string to);
         void CreateDirectory(string path);
         void DeleteFile(string path);
         void DeleteDirectory(string path, bool recursive);
@@ -22,6 +22,7 @@ namespace SyncTrayzor.Services
         string[] GetFiles(string path);
         string ReadAllText(string path);
         string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
+        string[] GetDirectories(string path);
     }
 
     public class FilesystemProvider : IFilesystemProvider
@@ -40,7 +41,7 @@ namespace SyncTrayzor.Services
 
         public void Copy(string from, string to) => File.Copy(from, to);
 
-        public void Move(string from, string to) => File.Move(from, to);
+        public void MoveFile(string from, string to) => File.Move(from, to);
 
         public void CreateDirectory(string path) => Directory.CreateDirectory(path);
 
@@ -57,5 +58,7 @@ namespace SyncTrayzor.Services
         public string ReadAllText(string path) => File.ReadAllText(path);
 
         public string[] GetFiles(string path, string searchPattern, SearchOption searchOption) => Directory.GetFiles(path, searchPattern, searchOption);
+
+        public string[] GetDirectories(string path) => Directory.GetDirectories(path);
     }
 }

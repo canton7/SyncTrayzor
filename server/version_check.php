@@ -72,6 +72,12 @@ $versions = [
             'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorSetup-x86.exe',
          ],
       ],
+      'portable' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorPortable-x64.zip',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorPortable-x86.zip',
+         ],
+      ],
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/sha1sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.32',
       'release_notes' => "- Fix rare crash when trying to save the config file",

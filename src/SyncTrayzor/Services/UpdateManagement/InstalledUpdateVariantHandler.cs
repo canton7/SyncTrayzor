@@ -5,33 +5,31 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public class InstalledUpdateVariantHandler : IUpdateVariantHandler
     {
+        private const string updateDownloadFileName = "SyncTrayzorUpdate-{0}.exe";
+
         private readonly IUpdateDownloader updateDownloader;
         private readonly IProcessStartProvider processStartProvider;
-        private readonly IAssemblyProvider assemblyProvider;
-        private readonly IApplicationState applicationState;
 
         private string installerPath;
 
         public string VariantName => "installed";
+        public bool RequiresUac => true;
+
         public bool CanAutoInstall { get; private set; }
 
         public InstalledUpdateVariantHandler(
             IUpdateDownloader updateDownloader,
-            IProcessStartProvider processStartProvider,
-            IAssemblyProvider assemblyProvider,
-            IApplicationState applicationState)
+            IProcessStartProvider processStartProvider)
         {
             this.updateDownloader = updateDownloader;
             this.processStartProvider = processStartProvider;
-            this.assemblyProvider = assemblyProvider;
-            this.applicationState = applicationState;
         }
 
         public async Task<bool> TryHandleUpdateAvailableAsync(VersionCheckResults checkResult)
         {
             if (!String.IsNullOrWhiteSpace(checkResult.DownloadUrl) && !String.IsNullOrWhiteSpace(checkResult.Sha1sumDownloadUrl))
             {
-                this.installerPath = await this.updateDownloader.DownloadUpdateAsync(checkResult.DownloadUrl, checkResult.Sha1sumDownloadUrl, checkResult.NewVersion);
+                this.installerPath = await this.updateDownloader.DownloadUpdateAsync(checkResult.DownloadUrl, checkResult.Sha1sumDownloadUrl, checkResult.NewVersion, updateDownloadFileName);
                 this.CanAutoInstall = true;
 
                 // If we return false, the upgrade will be aborted
@@ -46,18 +44,14 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
-        public void AutoInstall()
+        public void AutoInstall(string pathToRestartApplication)
         {
             if (!this.CanAutoInstall)
                 throw new InvalidOperationException("Auto-install not available");
             if (this.installerPath == null)
                 throw new InvalidOperationException("TryHandleUpdateAvailableAsync returned false: cannot call AutoInstall");
 
-            var path = $"\"{this.assemblyProvider.Location}\"";
-            if (!this.applicationState.HasMainWindow)
-                path += " -minimized";
-
-            this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT", path);
+            this.processStartProvider.StartElevatedDetached(this.installerPath, "/SILENT", pathToRestartApplication);
         }
     }
 }

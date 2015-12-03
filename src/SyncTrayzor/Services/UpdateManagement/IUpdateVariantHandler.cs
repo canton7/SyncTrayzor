@@ -6,8 +6,9 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         string VariantName { get; }
         bool CanAutoInstall { get; }
+        bool RequiresUac { get; }
 
         Task<bool> TryHandleUpdateAvailableAsync(VersionCheckResults checkResult);
-        void AutoInstall();
+        void AutoInstall(string pathToRestartApplication);
     }
 }

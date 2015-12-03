@@ -179,6 +179,10 @@ namespace :portable do
           end
         end
 
+        Dir.chdir(File.join('bin', 'PortableInstaller', CONFIG)) do
+          cp_to_portable(portable_dir, 'PortableInstaller.exe')
+        end
+
         cp File.join(SRC_DIR, 'Icons', 'default.ico'), arch_config.portable_output_dir
 
         FileList['*.md', '*.txt'].each do |file|

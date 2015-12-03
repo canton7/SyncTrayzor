@@ -39,6 +39,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly IUpdateCheckerFactory updateCheckerFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
+        private readonly IAssemblyProvider assemblyProvider;
         private readonly Func<IUpdateVariantHandler> updateVariantHandlerFactory;
         private readonly DispatcherTimer promptTimer;
 
@@ -72,6 +73,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             IUpdateCheckerFactory updateCheckerFactory,
             IProcessStartProvider processStartProvider,
             IUpdatePromptProvider updatePromptProvider,
+            IAssemblyProvider assemblyProvider,
             Func<IUpdateVariantHandler> updateVariantHandlerFactory)
         {
             this.applicationState = applicationState;
@@ -80,6 +82,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.updateCheckerFactory = updateCheckerFactory;
             this.processStartProvider = processStartProvider;
             this.updatePromptProvider = updatePromptProvider;
+            this.assemblyProvider = assemblyProvider;
             this.updateVariantHandlerFactory = updateVariantHandlerFactory;
 
             this.promptTimer = new DispatcherTimer();
@@ -182,7 +185,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 VersionPromptResult promptResult;
                 if (this.applicationState.HasMainWindow)
                 {
-                    promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                    promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                 }
                 else
                 {
@@ -193,21 +196,21 @@ namespace SyncTrayzor.Services.UpdateManagement
                     try
                     {
                         this.toastCts = new CancellationTokenSource();
-                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, this.toastCts.Token);
+                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac, this.toastCts.Token);
                         this.toastCts = null;
 
                         // Special case
                         if (promptResult == VersionPromptResult.ShowMoreDetails)
                         {
                             this.applicationWindowState.EnsureInForeground();
-                            promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                            promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                         }
                     }
                     catch (OperationCanceledException)
                     {
                         this.toastCts = null;
                         logger.Info("Update toast cancelled. Moving to a dialog");
-                        promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                        promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                     }
                 }
 
@@ -216,7 +219,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     case VersionPromptResult.InstallNow:
                         Debug.Assert(variantHandler.CanAutoInstall);
                         logger.Info("Auto-installing {0}", checkResult.NewVersion);
-                        variantHandler.AutoInstall();
+                        variantHandler. AutoInstall(this.PathToRestartApplication());
                         break;
 
                     case VersionPromptResult.Download:
@@ -246,6 +249,15 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 this.versionCheckLock.Release();
             }
+        }
+
+        private string PathToRestartApplication()
+        {
+            var path = $"\"{this.assemblyProvider.Location}\"";
+            if (!this.applicationState.HasMainWindow)
+                path += " -minimized";
+
+            return path;
         }
 
         public Task<VersionCheckResults> CheckForAcceptableUpdateAsync()
