@@ -122,7 +122,11 @@ namespace SyncTrayzor.Services.UpdateManagement
         private async void ResumeFromSleep(object sender, EventArgs e)
         {
             if (this.UpdateCheckDue())
+            {
+                // We often wake up before the network does. Give the network some time to sort itself out
+                await Task.Delay(TimeSpan.FromSeconds(60));
                 await this.CheckForUpdatesAsync();
+            }
         }
 
         private async void RootWindowActivated(object sender, ActivationEventArgs e)
