@@ -421,6 +421,7 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
             this.processRunner.CommandLineFlags = this.SyncthingCommandLineFlags;
             this.processRunner.EnvironmentalVariables = this.SyncthingEnvironmentalVariables;
+            this.processRunner.DebugFacilities = this.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
             this.processRunner.SyncthingPriorityLevel = this.SyncthingPriorityLevel;
             this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;

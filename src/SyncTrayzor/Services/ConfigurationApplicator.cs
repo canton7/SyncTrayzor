@@ -6,6 +6,7 @@ using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SyncTrayzor.Services
 {
@@ -39,7 +40,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor = watchedFolderMonitor;
             this.updateManager = updateManager;
 
-            this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
+            this.syncThingManager.DataLoaded += (o, e) => this.OnDataLoaded();
             this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
         }
 
@@ -76,7 +77,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
             this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
-            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
+            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
@@ -84,9 +85,17 @@ namespace SyncTrayzor.Services
             this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
         }
 
-        private void LoadFolders()
+        private void OnDataLoaded()
         {
-            var configuration = this.configurationProvider.Load();
+            this.configurationProvider.AtomicLoadAndSave(c =>
+            {
+                this.LoadFolders(c);
+                this.LoadTraceFacilities(c);
+            });
+        }
+
+        private void LoadFolders(Configuration configuration)
+        {
             var folderIds = this.syncThingManager.Folders.FetchAll().Select(x => x.FolderId).ToList();
 
             foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
@@ -95,8 +104,27 @@ namespace SyncTrayzor.Services
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
+        }
 
-            this.configurationProvider.Save(configuration);
+        private void LoadTraceFacilities(Configuration configuration)
+        {
+            var configFacilities = configuration.SyncthingDebugFacilities.ToDictionary(x => x.Name, x => x);
+            foreach (var facility in this.syncThingManager.DebugFacilities.DebugFacilities)
+            {
+                SyncThingDebugFacility configFacility;
+                if (configFacilities.TryGetValue(facility.Name, out configFacility))
+                {
+                    // Update description from syncthing
+                    configFacility.Description = facility.Description;
+                    configFacility.IsEnabled = facility.IsEnabled;
+                }
+                else
+                {
+                    configuration.SyncthingDebugFacilities.Add(new SyncThingDebugFacility(facility.Name, facility.Description, facility.IsEnabled));
+                }
+            }
+
+            configuration.SyncthingDebugFacilities.RemoveAll(x => !this.syncThingManager.DebugFacilities.DebugFacilities.Any(y => y.Name == x.Name));
         }
     }
 }

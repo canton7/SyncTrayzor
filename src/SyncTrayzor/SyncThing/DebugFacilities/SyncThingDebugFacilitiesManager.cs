@@ -37,7 +37,7 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
 
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
 
-        private bool isLegacy;
+        private bool canSendToSyncthing;
         private DebugFacilitiesSettings debugFacilitySettings;
         private List<string> enabledDebugFacilities;
 
@@ -46,18 +46,19 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
         public SyncThingDebugFacilitiesManager(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
         {
             this.apiClient = apiClient;
+            this.canSendToSyncthing = false;
         }
 
         public async Task LoadAsync(Version syncthingVersion)
         {
             if (syncthingVersion.Minor < 12)
             {
-                this.isLegacy = true;
+                this.canSendToSyncthing = false;
                 this.debugFacilitySettings = null;
             }
             else
             {
-                this.isLegacy = false;
+                this.canSendToSyncthing = true;
                 this.debugFacilitySettings = await this.apiClient.Value.FetchDebugFacilitiesAsync();
             }
 
@@ -66,10 +67,10 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
 
         private void UpdateDebugFacilities()
         {
-            if (this.isLegacy)
-                this.DebugFacilities = legacyFacilities.Select(kvp => new DebugFacility(kvp.Key, kvp.Value, this.enabledDebugFacilities.Contains(kvp.Key))).ToList().AsReadOnly();
-            else
+            if (this.canSendToSyncthing)
                 this.DebugFacilities = this.debugFacilitySettings.Facilities.Select(kvp => new DebugFacility(kvp.Key, kvp.Value, this.enabledDebugFacilities.Contains(kvp.Key))).ToList().AsReadOnly();
+            else
+                this.DebugFacilities = legacyFacilities.Select(kvp => new DebugFacility(kvp.Key, kvp.Value, this.enabledDebugFacilities.Contains(kvp.Key))).ToList().AsReadOnly();
         }
 
         public async void SetEnabledDebugFacilities(IEnumerable<string> enabledDebugFacilities)
@@ -77,11 +78,13 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
             this.enabledDebugFacilities = enabledDebugFacilities?.ToList() ?? new List<string>();
             this.UpdateDebugFacilities();
 
-            if (this.isLegacy)
+            if (!this.canSendToSyncthing)
                 return;
 
             var enabled = this.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             var disabled = this.DebugFacilities.Where(x => !x.IsEnabled).Select(x => x.Name).ToList();
+
+            // TODO: Skip the update if there's nothing to change...
 
             await this.apiClient.Value?.SetDebugFacilitiesAsync(enabled, disabled);
         }

@@ -37,6 +37,7 @@ namespace SyncTrayzor.SyncThing
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
         List<string> CommandLineFlags { get; set; }
+        List<string> DebugFacilities { get; set; }
         IDictionary<string, string> EnvironmentalVariables { get; set; }
         bool DenyUpgrade { get; set; }
         SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
@@ -75,6 +76,7 @@ namespace SyncTrayzor.SyncThing
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
         public List<string> CommandLineFlags { get; set; } = new List<string>();
+        public List<string> DebugFacilities { get; set; } = new List<string>();
         public IDictionary<string, string> EnvironmentalVariables { get; set; } = new Dictionary<string, string>();
         public bool DenyUpgrade { get; set; }
         public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
@@ -115,6 +117,9 @@ namespace SyncTrayzor.SyncThing
 
             if (this.DenyUpgrade)
                 processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
+            if (this.DebugFacilities.Count > 0)
+                processStartInfo.EnvironmentVariables["STTRACE"] = String.Join(",", this.DebugFacilities);
+
             foreach (var kvp in this.EnvironmentalVariables)
             {
                 processStartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
