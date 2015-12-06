@@ -57,25 +57,6 @@ namespace SyncTrayzor.Services.Config
                 logger.Info("Deleting old Syncthing log file: {0}", oldSyncthingRootLogPath);
                 this.filesystemProvider.DeleteFile(oldSyncthingRootLogPath);
             }
-
-            // Delete 'syncthing.log' files from within the log files path
-            var syncthingLogPath = Path.Combine(this.applicationPathsProvider.LogFilePath, "syncthing.log");
-            if (this.filesystemProvider.FileExists(syncthingLogPath))
-            {
-                logger.Info("Deleting old Syncthing log path: {0}", syncthingLogPath);
-                this.filesystemProvider.DeleteFile(syncthingLogPath);
-            }
-
-            // Delete all 'syncthing.x.log' files from within the log file archive path
-            var logsArchivePath = Path.Combine(this.applicationPathsProvider.LogFilePath, "logs archive");
-            if (this.filesystemProvider.DirectoryExists(logsArchivePath))
-            {
-                foreach (var file in this.filesystemProvider.GetFiles(logsArchivePath, "syncthing.*.log", SearchOption.TopDirectoryOnly))
-                {
-                    logger.Info("Deleting old Syncthing log archive: {0}", file);
-                    this.filesystemProvider.DeleteFile(file);
-                }
-            }
         }
     }
 }
