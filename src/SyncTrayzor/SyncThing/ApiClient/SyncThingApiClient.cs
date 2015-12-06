@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace SyncTrayzor.SyncThing.ApiClient
 {
@@ -95,6 +96,22 @@ namespace SyncTrayzor.SyncThing.ApiClient
             var folderStatus = await this.api.FetchFolderStatusAsync(folderId, cancellationToken);
             logger.Debug("Fetched folder status for folder {0}: {1}", folderId, folderStatus);
             return folderStatus;
+        }
+
+        public async Task<DebugFacilitiesSettings> FetchDebugFacilitiesAsync()
+        {
+            var facilities = await this.api.FetchDebugFacilitiesAsync();
+            logger.Debug("Got debug facilities: {0}", facilities);
+            return facilities; 
+        }
+
+        public Task SetDebugFacilitiesAsync(IEnumerable<string> enable, IEnumerable<string> disable)
+        {
+            var enabled = String.Join(",", enable);
+            var disabled = String.Join(",", disable);
+            logger.Debug("Setting trace facilities: enabling {0}; disabling {1}", enabled, disabled);
+
+            return this.api.SetDebugFacilitiesAsync(enabled, disabled);
         }
     }
 }

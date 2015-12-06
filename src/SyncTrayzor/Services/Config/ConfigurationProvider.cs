@@ -70,7 +70,8 @@ namespace SyncTrayzor.Services.Config
                 this.MigrateV2ToV3,
                 this.MigrateV3ToV4,
                 this.MigrateV4ToV5,
-                this.MigrateV5ToV6
+                this.MigrateV5ToV6,
+                this.MigrateV6ToV7
             };
         }
 
@@ -256,6 +257,28 @@ namespace SyncTrayzor.Services.Config
                 if (pathElement.Value == @"%EXEPATH%\syncthing.exe")
                     pathElement.Value = @"%EXEPATH%\data\syncthing.exe";
             }
+            return configuration;
+        }
+
+        private XDocument MigrateV6ToV7(XDocument configuration)
+        {
+            // Take STTRACE values, and put them in SyncthingDebugFacilities
+            var envVarsElement = configuration.Root.Element("SyncthingEnvironmentalVariables");
+            var debugFacilitiesElement = new XElement("SyncthingDebugFacilities");
+            configuration.Root.Add(debugFacilitiesElement);
+
+            var traceFacilitiesElement = envVarsElement.Elements("Item").Where(x => (string)x.Element("Key") == "STTRACE").FirstOrDefault();
+            if (traceFacilitiesElement != null)
+            {
+                traceFacilitiesElement.Remove();
+                foreach (var traceFacility in ((string)traceFacilitiesElement.Element("Value")).Split(','))
+                {
+                    debugFacilitiesElement.Add(
+                        new XElement("DebugFacility", traceFacility)
+                    );
+                }
+            }
+
             return configuration;
         }
 

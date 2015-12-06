@@ -46,10 +46,10 @@ namespace SyncTrayzor.Pages
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = Properties.Settings.Default.HomepageUrl;
 
-            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
+            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ToString();
             this.syncThingManager.DataLoaded += (o, e) =>
             {
-                this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
+                this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ToString();
             };
 
             this.CheckForNewerVersionAsync();

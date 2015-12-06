@@ -200,6 +200,7 @@
     <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
     <Compile Include="Services\UserActivityMonitor.cs" />
     <Compile Include="SyncThing\ApiClient\ConfigSavedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\DebugFacilitiesSettings.cs" />
     <Compile Include="SyncThing\ApiClient\DefaultingStringEnumConverter.cs" />
     <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
     <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
@@ -209,6 +210,8 @@
     <Compile Include="SyncThing\ApiClient\SyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedActionType.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedItemType.cs" />
+    <Compile Include="SyncThing\DebugFacilities\DebugFacility.cs" />
+    <Compile Include="SyncThing\DebugFacilities\SyncThingDebugFacilitiesManager.cs" />
     <Compile Include="SyncThing\EventWatcher\ConfigSavedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />

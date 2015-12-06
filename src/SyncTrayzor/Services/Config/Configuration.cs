@@ -11,7 +11,7 @@ namespace SyncTrayzor.Services.Config
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public const int CurrentVersion = 6;
+        public const int CurrentVersion = 7;
         public const double DefaultSyncthingConsoleHeight = 100;
 
         [XmlAttribute("Version")]
@@ -65,6 +65,9 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingCustomHomePath { get; set; }
         public bool DisableHardwareRendering { get; set; }
 
+        [XmlArrayItem("DebugFacility")]
+        public List<string> SyncthingDebugFacilities { get; set; }
+
         public Configuration()
         {
             // Default configuration is for a portable setup.
@@ -94,6 +97,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingPath = @"%EXEPATH%\data\syncthing.exe";
             this.SyncthingCustomHomePath = @"%EXEPATH%\data\syncthing";
             this.DisableHardwareRendering = false;
+            this.SyncthingDebugFacilities = new List<string>();
         }
 
         public Configuration(Configuration other)
@@ -123,6 +127,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingPath = other.SyncthingPath;
             this.SyncthingCustomHomePath = other.SyncthingCustomHomePath;
             this.DisableHardwareRendering = other.DisableHardwareRendering;
+            this.SyncthingDebugFacilities = other.SyncthingDebugFacilities;
         }
 
         public override string ToString()
@@ -136,7 +141,7 @@ namespace SyncTrayzor.Services.Config
                 $"ObfuscateDeviceIDs={this.ObfuscateDeviceIDs} UseComputerCulture={this.UseComputerCulture} SyncthingConsoleHeight={this.SyncthingConsoleHeight} WindowPlacement={this.WindowPlacement} " +
                 $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingPath={this.SyncthingPath} " +
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
-                $"DisableHardwareRendering={this.DisableHardwareRendering}>";
+                $"DisableHardwareRendering={this.DisableHardwareRendering}>, SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}]>";
         }
     }
 }

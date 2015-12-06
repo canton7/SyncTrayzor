@@ -46,7 +46,7 @@
     </Setting>
     <Setting Name="DefaultUserConfiguration" Type="SyncTrayzor.Services.Config.Configuration" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="6"&gt;
+&lt;Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="7"&gt;
   &lt;ShowTrayIconOnlyOnClose&gt;false&lt;/ShowTrayIconOnlyOnClose&gt;
   &lt;MinimizeToTray&gt;false&lt;/MinimizeToTray&gt;
   &lt;CloseToTray&gt;true&lt;/CloseToTray&gt;
@@ -69,6 +69,7 @@
   &lt;SyncthingPath&gt;%EXEPATH%\data\syncthing.exe&lt;/SyncthingPath&gt;
   &lt;SyncthingCustomHomePath&gt;%EXEPATH%\data\syncthing&lt;/SyncthingCustomHomePath&gt;
   &lt;DisableHardwareRendering&gt;false&lt;/DisableHardwareRendering&gt;
+  &lt;SyncthingDebugFacilities /&gt;
 &lt;/Configuration&gt;</Value>
     </Setting>
   </Settings>
