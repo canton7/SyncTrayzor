@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
+using System.IO;
 
 namespace SyncTrayzor.Pages.Settings
 {
@@ -35,6 +36,7 @@ namespace SyncTrayzor.Pages.Settings
         private readonly IProcessStartProvider processStartProvider;
         private readonly IAssemblyProvider assemblyProvider;
         private readonly IApplicationState applicationState;
+        private readonly IApplicationPathsProvider applicationPathsProvider;
         private readonly ISyncThingManager syncThingManager;
         private readonly List<SettingItem> settings = new List<SettingItem>();
 
@@ -83,6 +85,7 @@ namespace SyncTrayzor.Pages.Settings
             IProcessStartProvider processStartProvider,
             IAssemblyProvider assemblyProvider,
             IApplicationState applicationState,
+            IApplicationPathsProvider applicationPathsProvider,
             ISyncThingManager syncThingManager)
         {
             this.configurationProvider = configurationProvider;
@@ -91,6 +94,7 @@ namespace SyncTrayzor.Pages.Settings
             this.processStartProvider = processStartProvider;
             this.assemblyProvider = assemblyProvider;
             this.applicationState = applicationState;
+            this.applicationPathsProvider = applicationPathsProvider;
             this.syncThingManager = syncThingManager;
 
             this.MinimizeToTray = this.CreateBasicSettingItem(x => x.MinimizeToTray);
@@ -334,6 +338,16 @@ namespace SyncTrayzor.Pages.Settings
         public void Cancel()
         {
             this.RequestClose(false);
+        }
+
+        public void ShowSyncthingLogFile()
+        {
+            this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{Path.Combine(this.applicationPathsProvider.LogFilePath, "syncthing.log")}\"");
+        }
+
+        public void ShowSyncTrayzorLogFile()
+        {
+            this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log")}\"");
         }
     }
 }

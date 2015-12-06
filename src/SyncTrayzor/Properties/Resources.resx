@@ -416,13 +416,9 @@ Details on each component, and its license text, are shown below.</value>
     <value>Oops! Something went badly wrong.
 SyncTrayzor is going to have to close. Sorry about that</value>
   </data>
-  <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
-    <value />
-    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately after the log path</comment>
-  </data>
-  <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
-    <value>You may be asked to provide a log file. You can find this in:</value>
-    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately before the log path</comment>
+  <data name="UnhandledExceptionView_LogFileLocation_Description" xml:space="preserve">
+    <value>You may be asked to provide a log file.</value>
+    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
     <value>and include the following information:</value>
@@ -757,5 +753,9 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_Validation_SetSttraceInTab" xml:space="preserve">
     <value>Set STTRACE in the 'Logging + STTRACE' tab</value>
     <comment>Shown when the user attempts to enter an STTRACE value in the 'Syncthing Environmental Variables' box. They should use the tab with the heading 'Logging +STTRACE' instead.</comment>
+  </data>
+  <data name="UnhandledExceptionView_LogFileLocation_Link" xml:space="preserve">
+    <value>You can find SyncTrayzor's log file here.</value>
+    <comment>Clickable text to open the location of the log file</comment>
   </data>
 </root>

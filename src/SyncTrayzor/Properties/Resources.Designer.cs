@@ -1529,20 +1529,20 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to You may be asked to provide a log file..
         /// </summary>
-        public static string UnhandledExceptionView_LogFileLocation_Post {
+        public static string UnhandledExceptionView_LogFileLocation_Description {
             get {
-                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Post", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You may be asked to provide a log file. You can find this in:.
+        ///   Looks up a localized string similar to You can find SyncTrayzor&apos;s log file here..
         /// </summary>
-        public static string UnhandledExceptionView_LogFileLocation_Pre {
+        public static string UnhandledExceptionView_LogFileLocation_Link {
             get {
-                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Pre", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Link", resourceCulture);
             }
         }
         
