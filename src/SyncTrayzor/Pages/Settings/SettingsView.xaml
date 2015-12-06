@@ -26,7 +26,7 @@
             <Button IsDefault="True" Command="{s:Action Save}" Content="{l:Loc Generic_Dialog_Save}"/>
         </StackPanel>
         
-        <TabControl Background="Transparent" BorderThickness="0,1,0,0">
+        <TabControl Background="Transparent" BorderThickness="0,1,0,0" SelectedIndex="{Binding SelectedTabIndex}">
             <TabControl.Resources>
                 <Style TargetType="GroupBox">
                     <Setter Property="Padding" Value="5"/>

@@ -4,6 +4,7 @@ using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using SyncTrayzor.Services.Config;
+using SyncTrayzor.Pages.Settings;
 
 namespace SyncTrayzor.Pages
 {
@@ -11,17 +12,23 @@ namespace SyncTrayzor.Pages
     {
         private const int maxLogMessages = 1500;
 
+        private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly Buffer<string> logMessagesBuffer;
+        private readonly Func<SettingsViewModel> settingsViewModelFactory;
 
         public Queue<string> LogMessages { get;  }
         public bool LogPaused { get; set; }
 
         public ConsoleViewModel(
+            IWindowManager windowManager,
             ISyncThingManager syncThingManager,
-            IConfigurationProvider configurationProvider)
+            IConfigurationProvider configurationProvider,
+            Func<SettingsViewModel> settingsViewModelFactory)
         {
+            this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
+            this.settingsViewModelFactory = settingsViewModelFactory;
             this.LogMessages = new Queue<string>();
 
             // Display log messages 100ms after the previous message, or every 500ms if they're arriving thick and fast
@@ -55,6 +62,13 @@ namespace SyncTrayzor.Pages
         {
             this.LogMessages.Clear();
             this.NotifyOfPropertyChange(() => this.LogMessages);
+        }
+
+        public void ShowSettings()
+        {
+            var vm = this.settingsViewModelFactory();
+            vm.SelectLoggingTab();
+            this.windowManager.ShowDialog(vm);
         }
     }
 }

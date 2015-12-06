@@ -30,6 +30,10 @@ namespace SyncTrayzor.Pages.Settings
 
     public class SettingsViewModel : Screen
     {
+        // We can be opened directly on this tab. All of the layout is done in xaml, so this is
+        // the neatest way we can select it...
+        private const int loggingTabIndex = 3;
+
         private readonly IConfigurationProvider configurationProvider;
         private readonly IAutostartProvider autostartProvider;
         private readonly IWindowManager windowManager;
@@ -39,6 +43,8 @@ namespace SyncTrayzor.Pages.Settings
         private readonly IApplicationPathsProvider applicationPathsProvider;
         private readonly ISyncThingManager syncThingManager;
         private readonly List<SettingItem> settings = new List<SettingItem>();
+
+        public int SelectedTabIndex { get; set; }
 
         public SettingItem<bool> MinimizeToTray { get; }
         public SettingItem<bool> CloseToTray { get; }
@@ -348,6 +354,11 @@ namespace SyncTrayzor.Pages.Settings
         public void ShowSyncTrayzorLogFile()
         {
             this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log")}\"");
+        }
+
+        public void SelectLoggingTab()
+        {
+            this.SelectedTabIndex = loggingTabIndex;
         }
     }
 }

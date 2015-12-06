@@ -151,6 +151,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string ConsoleView_SettingsButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_SettingsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Syncthing Console.
         /// </summary>
         public static string ConsoleView_Title {

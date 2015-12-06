@@ -754,6 +754,9 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Set STTRACE in the 'Logging + STTRACE' tab</value>
     <comment>Shown when the user attempts to enter an STTRACE value in the 'Syncthing Environmental Variables' box. They should use the tab with the heading 'Logging +STTRACE' instead.</comment>
   </data>
+  <data name="ConsoleView_SettingsButton" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="UnhandledExceptionView_LogFileLocation_Link" xml:space="preserve">
     <value>You can find SyncTrayzor's log file here.</value>
     <comment>Clickable text to open the location of the log file</comment>
