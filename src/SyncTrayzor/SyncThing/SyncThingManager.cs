@@ -456,8 +456,13 @@ namespace SyncTrayzor.SyncThing
             cancellationToken.ThrowIfCancellationRequested();
             var apiClient = this.apiClient.GetAsserted();
 
-            var systemTask = apiClient.FetchSystemInfoAsync();
-            var syncthingVersion = await apiClient.FetchVersionAsync();
+            var syncthingVersionTask = apiClient.FetchVersionAsync();
+            var systemInfoTask = apiClient.FetchSystemInfoAsync();
+
+            await Task.WhenAll(syncthingVersionTask, systemInfoTask);
+
+            this.systemInfo = systemInfoTask.Result;
+            var syncthingVersion = syncthingVersionTask.Result;
 
             Version version;
             if (!Version.TryParse(syncthingVersion.Version.TrimStart('v'), out version))
@@ -469,13 +474,10 @@ namespace SyncTrayzor.SyncThing
             
             cancellationToken.ThrowIfCancellationRequested();
 
-            await this._debugFacilities.LoadAsync(this.Version);
+            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync(this.Version);
+            var configDataLoadTask = this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
 
-            cancellationToken.ThrowIfCancellationRequested();
-
-            this.systemInfo = await systemTask;
-            
-            await this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
+            await Task.WhenAll(debugFacilitiesLoadTask, configDataLoadTask);
 
             cancellationToken.ThrowIfCancellationRequested();
             
