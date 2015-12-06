@@ -10,6 +10,7 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
 {
     public interface ISyncThingDebugFacilitiesManager
     {
+        bool SupportsRestartlessUpdate { get; }
         IReadOnlyList<DebugFacility> DebugFacilities { get; }
 
         void SetEnabledDebugFacilities(IEnumerable<string> enabledDebugFacilities);
@@ -36,28 +37,29 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
 
         private readonly SynchronizedTransientWrapper<ISyncThingApiClient> apiClient;
 
-        private bool syncthingSupports;
         private DebugFacilitiesSettings fetchedDebugFacilitySettings;
         private List<string> enabledDebugFacilities = new List<string>();
 
+        public bool SupportsRestartlessUpdate { get; private set; }
         public IReadOnlyList<DebugFacility> DebugFacilities { get; private set; }
 
         public SyncThingDebugFacilitiesManager(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
         {
             this.apiClient = apiClient;
-            this.syncthingSupports = false;
+            this.SupportsRestartlessUpdate = false;
+            this.DebugFacilities = new List<DebugFacility>();
         }
 
         public async Task LoadAsync(Version syncthingVersion)
         {
             if (syncthingVersion.Minor < 12)
             {
-                this.syncthingSupports = false;
+                this.SupportsRestartlessUpdate = false;
                 this.fetchedDebugFacilitySettings = null;
             }
             else
             {
-                this.syncthingSupports = true;
+                this.SupportsRestartlessUpdate = true;
                 this.fetchedDebugFacilitySettings = await this.apiClient.Value.FetchDebugFacilitiesAsync();
             }
 
@@ -66,7 +68,7 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
 
         private void UpdateDebugFacilities()
         {
-            if (this.syncthingSupports)
+            if (this.SupportsRestartlessUpdate)
                 this.DebugFacilities = this.fetchedDebugFacilitySettings.Facilities.Select(kvp => new DebugFacility(kvp.Key, kvp.Value, this.enabledDebugFacilities.Contains(kvp.Key))).ToList().AsReadOnly();
             else
                 this.DebugFacilities = legacyFacilities.Select(kvp => new DebugFacility(kvp.Key, kvp.Value, this.enabledDebugFacilities.Contains(kvp.Key))).ToList().AsReadOnly();
@@ -82,13 +84,12 @@ namespace SyncTrayzor.SyncThing.DebugFacilities
             this.enabledDebugFacilities = enabledDebugFacilitiesList;
             this.UpdateDebugFacilities();
 
-            if (!this.syncthingSupports)
+            if (!this.SupportsRestartlessUpdate)
                 return;
 
             var enabled = this.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             var disabled = this.DebugFacilities.Where(x => !x.IsEnabled).Select(x => x.Name).ToList();
 
-            // TODO: Skip the update if there's nothing to change...
             var apiClient = this.apiClient.Value;
             if (apiClient != null)
                 await apiClient.SetDebugFacilitiesAsync(enabled, disabled);

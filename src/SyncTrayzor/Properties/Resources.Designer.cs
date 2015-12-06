@@ -558,6 +558,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead..
+        /// </summary>
+        public static string SettingsView_Logging_Explanation {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_Explanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Debug Facilities unavailable. Please start Syncthing..
+        /// </summary>
+        public static string SettingsView_Logging_Unavailable {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_Unavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimize to tray.
         /// </summary>
         public static string SettingsView_MinimizeToTray {
@@ -841,6 +859,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logging + STTRACE.
+        /// </summary>
+        public static string SettingsView_Tab_Logging {
+            get {
+                return ResourceManager.GetString("SettingsView_Tab_Logging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Syncthing.
         /// </summary>
         public static string SettingsView_Tab_Syncthing {
@@ -900,6 +927,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Validation_NotShouldBeEmpty {
             get {
                 return ResourceManager.GetString("SettingsView_Validation_NotShouldBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set STTRACE in the &apos;Logging + STTRACE&apos; tab.
+        /// </summary>
+        public static string SettingsView_Validation_SetSttraceInTab {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_SetSttraceInTab", resourceCulture);
             }
         }
         
