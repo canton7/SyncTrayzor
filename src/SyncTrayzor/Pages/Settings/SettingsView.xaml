@@ -192,11 +192,12 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <CheckBox IsChecked="{Binding IsEnabled}"/>
-                                                    <TextBlock Margin="5,0,0,0">
-                                                        <TextBlock Text="{Binding Name}"/>:
-                                                        <TextBlock Text="{Binding Description}"/>
-                                                    </TextBlock>
+                                                    <CheckBox IsChecked="{Binding IsEnabled}" x:Name="DebugFacilityIsEnabled">
+                                                        <TextBlock>
+                                                            <TextBlock Text="{Binding Name}"/>:
+                                                            <TextBlock Text="{Binding Description}"/>
+                                                        </TextBlock>
+                                                    </CheckBox>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
