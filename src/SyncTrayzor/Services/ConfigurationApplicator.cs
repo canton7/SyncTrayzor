@@ -77,7 +77,7 @@ namespace SyncTrayzor.Services
             this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
             this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
-            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
+            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
@@ -90,7 +90,6 @@ namespace SyncTrayzor.Services
             this.configurationProvider.AtomicLoadAndSave(c =>
             {
                 this.LoadFolders(c);
-                this.LoadTraceFacilities(c);
             });
         }
 
@@ -104,27 +103,6 @@ namespace SyncTrayzor.Services
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
-        }
-
-        private void LoadTraceFacilities(Configuration configuration)
-        {
-            var configFacilities = configuration.SyncthingDebugFacilities.ToDictionary(x => x.Name, x => x);
-            foreach (var facility in this.syncThingManager.DebugFacilities.DebugFacilities)
-            {
-                SyncThingDebugFacility configFacility;
-                if (configFacilities.TryGetValue(facility.Name, out configFacility))
-                {
-                    // Update description from syncthing
-                    configFacility.Description = facility.Description;
-                    configFacility.IsEnabled = facility.IsEnabled;
-                }
-                else
-                {
-                    configuration.SyncthingDebugFacilities.Add(new SyncThingDebugFacility(facility.Name, facility.Description, facility.IsEnabled));
-                }
-            }
-
-            configuration.SyncthingDebugFacilities.RemoveAll(x => !this.syncThingManager.DebugFacilities.DebugFacilities.Any(y => y.Name == x.Name));
         }
     }
 }

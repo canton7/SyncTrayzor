@@ -178,7 +178,6 @@
     <Compile Include="Services\Config\ConfigFolderCleaner.cs" />
     <Compile Include="Services\Config\EnvironmentalVariableCollection.cs" />
     <Compile Include="Services\Config\FolderConfiguration.cs" />
-    <Compile Include="Services\Config\SyncThingDebugFacility.cs" />
     <Compile Include="Services\Config\SyncThingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />

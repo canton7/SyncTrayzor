@@ -274,10 +274,7 @@ namespace SyncTrayzor.Services.Config
                 foreach (var traceFacility in ((string)traceFacilitiesElement.Element("Value")).Split(','))
                 {
                     debugFacilitiesElement.Add(
-                        new XElement("DebugFacility",
-                            new XElement("Name", traceFacility),
-                            new XElement("IsEnabled", true)
-                        )
+                        new XElement("DebugFacility", traceFacility)
                     );
                 }
             }

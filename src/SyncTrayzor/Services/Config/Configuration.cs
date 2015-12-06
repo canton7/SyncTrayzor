@@ -66,7 +66,7 @@ namespace SyncTrayzor.Services.Config
         public bool DisableHardwareRendering { get; set; }
 
         [XmlArrayItem("DebugFacility")]
-        public List<SyncThingDebugFacility> SyncthingDebugFacilities { get; set; }
+        public List<string> SyncthingDebugFacilities { get; set; }
 
         public Configuration()
         {
@@ -97,7 +97,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingPath = @"%EXEPATH%\data\syncthing.exe";
             this.SyncthingCustomHomePath = @"%EXEPATH%\data\syncthing";
             this.DisableHardwareRendering = false;
-            this.SyncthingDebugFacilities = new List<SyncThingDebugFacility>();
+            this.SyncthingDebugFacilities = new List<string>();
         }
 
         public Configuration(Configuration other)

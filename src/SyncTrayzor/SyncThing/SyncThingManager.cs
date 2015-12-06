@@ -155,7 +155,7 @@ namespace SyncTrayzor.SyncThing
             get { return this._transferHistory; }
         }
 
-        private ISyncThingDebugFacilitiesManager _debugFacilities;
+        private SyncThingDebugFacilitiesManager _debugFacilities;
         public ISyncThingDebugFacilitiesManager DebugFacilities
         {
             get { return this._debugFacilities; }
@@ -458,7 +458,14 @@ namespace SyncTrayzor.SyncThing
 
             var systemTask = apiClient.FetchSystemInfoAsync();
             var syncthingVersion = await apiClient.FetchVersionAsync();
-            this.Version = new Version(syncthingVersion.Version.TrimStart('v'));
+
+            Version version;
+            if (!Version.TryParse(syncthingVersion.Version.TrimStart('v'), out version))
+            {
+                logger.Warn("Unable to parse Syncthing version {0}", syncthingVersion.Version);
+                version = new Version(0, 0, 0);
+            }
+            this.Version = version;
             
             cancellationToken.ThrowIfCancellationRequested();
 
