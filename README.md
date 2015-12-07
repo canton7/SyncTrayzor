@@ -112,13 +112,16 @@ You can delete this registry key by unchecking "Automatically start on login" in
 If you uncheck "Use Syncthing's default database location" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing` for its database.
 This is useful if you want to keep the copy of Syncthing managed by SyncTrayzor separate from another copy running on your machine.
 
-The auto-update mechanism may download updates to `%TEMP%\SyncTrayzor`. This location is periodically cleared out (once every few days).
+The auto-update mechanism may download updates to `%TEMP%\SyncTrayzor`.
+This location is periodically cleared out (once every few days).
 
 ### Portable
 
 SyncTrayzor will put its own configuration in `SyncTrayzorPortable\data`, and tell Syncthing to use `SyncTrayzorPortable\data\syncthing` for its database.
-This means that, when upgrading, you can simply move the 'data' folder over to move all your settings, and database.
-If you uncheck "Use custom home directory or Syncthing" in the settings, then Syncthing will use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
+This means that, when manually upgrading, you can simply move the 'data' folder over to move all your settings, and database.
+If you check "Use Syncthing's default database location" in the settings (on the Syncthing tab), then Syncthing will use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
+
+If you're moving from "raw" Syncthing to SyncTrayzor, you'll either want to check this setting or move/copy the contents of `C:\Users\<You>\AppData\Local\Syncthing` into `data\syncthing`.
 
 The portable version won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
 
