@@ -80,7 +80,7 @@ namespace SyncTrayzor.Services.Config
             if (defaultConfiguration == null)
                 throw new ArgumentNullException("defaultConfiguration");
 
-            if (!this.filesystem.FileExists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
+            if (!this.filesystem.DirectoryExists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
                 this.filesystem.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
             this.currentConfig = this.LoadFromDisk(defaultConfiguration);
