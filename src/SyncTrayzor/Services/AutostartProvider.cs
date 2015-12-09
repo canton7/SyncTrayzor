@@ -32,8 +32,9 @@ namespace SyncTrayzor.Services
     public class AutostartProvider : IAutostartProvider
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const string applicationName = "SyncTrayzor";
         // Matches 'SyncTrayzor' and 'SyncTrayzor (n)' (where n is a digit)
-        private static readonly Regex keyRegex = new Regex(@"^SyncTrayzor(?: \((\d+)\))?$");
+        private static readonly Regex keyRegex = new Regex("^" + applicationName + @"(?: \((\d+)\))?$");
         private readonly string keyName;
 
         private readonly IAssemblyProvider assemblyProvider;
@@ -121,7 +122,7 @@ namespace SyncTrayzor.Services
 
             // No numbers seen? "SyncTrayzor". The logic below can't handle an empty list either
             if (numbersSeen.Count == 0)
-                return "SyncTrayzor";
+                return applicationName;
 
             numbersSeen.Sort();
             var firstGap = Enumerable.Range(1, numbersSeen.Count).Except(numbersSeen).FirstOrDefault();
@@ -129,8 +130,9 @@ namespace SyncTrayzor.Services
             var numberToUse = firstGap == 0 ? numbersSeen[numbersSeen.Count - 1] + 1 : firstGap;
 
             if (numberToUse == 1)
-                return "SyncTrayzor";
-            return $"SyncTrayzor ({numberToUse})";
+                return applicationName;
+            else
+                return $"{applicationName} ({numberToUse})";
         }
 
         private RegistryKey OpenRegistryKey(bool writable)
