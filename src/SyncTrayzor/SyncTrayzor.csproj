@@ -181,6 +181,7 @@
     <Compile Include="Services\Config\SyncThingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />
+    <Compile Include="Services\ConflictFileFinder.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />

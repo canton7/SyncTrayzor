@@ -1,6 +1,7 @@
 ﻿using SyncTrayzor.Utils;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SyncTrayzor.Services
 {
@@ -23,6 +24,8 @@ namespace SyncTrayzor.Services
         string ReadAllText(string path);
         string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
         string[] GetDirectories(string path);
+        IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+        IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
     }
 
     public class FilesystemProvider : IFilesystemProvider
@@ -60,5 +63,11 @@ namespace SyncTrayzor.Services
         public string[] GetFiles(string path, string searchPattern, SearchOption searchOption) => Directory.GetFiles(path, searchPattern, searchOption);
 
         public string[] GetDirectories(string path) => Directory.GetDirectories(path);
+
+        public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+            => Directory.EnumerateFiles(path, searchPattern, searchOption);
+
+        public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
+            => Directory.EnumerateDirectories(path, searchPattern, searchOption);
     }
 }
