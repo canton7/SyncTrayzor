@@ -56,6 +56,7 @@ namespace SyncTrayzor.SyncThing
     public class SyncThingProcessRunner : ISyncThingProcessRunner
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger syncthingLogger = LogManager.GetLogger("Syncthing");
         private static readonly string[] defaultArguments = new[] { "-no-browser", "-no-restart" };
         // Leave just the first set of digits, removing everything after it
         private static readonly Regex deviceIdHideRegex = new Regex(@"-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}");
@@ -252,6 +253,7 @@ namespace SyncTrayzor.SyncThing
         private void OnMessageLogged(string logMessage)
         {
             logger.Debug(logMessage);
+            syncthingLogger.Info(logMessage);
             this.MessageLogged?.Invoke(this, new MessageLoggedEventArgs(logMessage));
         }
 
