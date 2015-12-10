@@ -23,13 +23,13 @@ namespace SyncTrayzor.Services
         }
     }
 
-    public interface IConflictFileFinder
+    public interface IConflictFileManager
     {
         IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
         void ResolveConflict(ConflictSet conflictSet, string chosenPath);
     }
 
-    public class ConflictFileFinder : IConflictFileFinder
+    public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
         private static readonly Regex conflictRegex = new Regex(@"^(.*).sync-conflict-(\d{8}-\d{6})\.(.*)$");
@@ -37,7 +37,7 @@ namespace SyncTrayzor.Services
 
         private readonly IFilesystemProvider filesystemProvider;
 
-        public ConflictFileFinder(IFilesystemProvider filesystemProvider)
+        public ConflictFileManager(IFilesystemProvider filesystemProvider)
         {
             this.filesystemProvider = filesystemProvider;
         }
@@ -47,19 +47,16 @@ namespace SyncTrayzor.Services
             var subject = new SlimObservable<ConflictSet>();
             Task.Run(() =>
             {
-                using (cancellationToken.Register(() => subject.Complete()))
+                try
                 {
-                    try
-                    {
-                        this.FindConflictsImpl(basePath, subject, cancellationToken);
-                        subject.Complete();
-                    }
-                    catch (Exception e) when (!(e is OperationCanceledException))
-                    {
-                        subject.Error(e);
-                    }
+                    this.FindConflictsImpl(basePath, subject, cancellationToken);
+                    subject.Complete();
                 }
-            }, cancellationToken);
+                catch (Exception e)
+                {
+                    subject.Error(e);
+                }
+            });
             return subject;
         }
 
@@ -101,7 +98,7 @@ namespace SyncTrayzor.Services
                     subject.Next(new ConflictSet(kvp.Key, kvp.Value));
                 }
 
-                foreach (var subDirectory in this.filesystemProvider.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly))
+                foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly))
                 {
                     if (Path.GetFileName(subDirectory) == ".stversions")
                         continue;
@@ -116,7 +113,7 @@ namespace SyncTrayzor.Services
         private static string BaseFileNameForConflictFile(string conflictFileName)
         {
             var parsed = conflictRegex.Match(conflictFileName);
-            return parsed.Groups[0].Value + parsed.Groups[2].Value;
+            return parsed.Groups[1].Value + parsed.Groups[3].Value;
         }
 
         public void ResolveConflict(ConflictSet conflictSet, string chosenFile)

@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
@@ -18,6 +19,7 @@ namespace SyncTrayzor.Pages
         private readonly IConfigurationProvider configurationProvider;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly Func<AboutViewModel> aboutViewModelFactory;
+        private readonly Func<ConflictResolutionViewModel> confictResolutionViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
 
         public bool ShowConsole { get; set; }
@@ -38,6 +40,7 @@ namespace SyncTrayzor.Pages
             ViewerViewModel viewer,
             Func<SettingsViewModel> settingsViewModelFactory,
             Func<AboutViewModel> aboutViewModelFactory,
+            Func<ConflictResolutionViewModel> confictResolutionViewModelFactory,
             IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
@@ -48,6 +51,7 @@ namespace SyncTrayzor.Pages
             this.Viewer = viewer;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.aboutViewModelFactory = aboutViewModelFactory;
+            this.confictResolutionViewModelFactory = confictResolutionViewModelFactory;
             this.processStartProvider = processStartProvider;
 
             var configuration = this.configurationProvider.Load();
@@ -116,6 +120,12 @@ namespace SyncTrayzor.Pages
             this.windowManager.ShowDialog(vm);
         }
 
+        public void ShowConflictResolver()
+        {
+            var vm = this.confictResolutionViewModelFactory();
+            this.windowManager.ShowDialog(vm);
+        }
+
         public bool CanZoomBrowser => this.SyncThingState == SyncThingState.Running;
 
         public void BrowserZoomIn()
@@ -162,7 +172,7 @@ namespace SyncTrayzor.Pages
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
 
-            this.ActivateObservable.Publish(true);
+            this.ActivateObservable.Next(true);
         }
     }
 }

@@ -27,6 +27,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{l:Loc ShellView_Menu_File}">
                 <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
+                <MenuItem Header="Conflict Resolver" Command="{s:Action ShowConflictResolver}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
             </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">

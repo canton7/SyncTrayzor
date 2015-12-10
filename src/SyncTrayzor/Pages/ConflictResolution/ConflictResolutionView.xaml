@@ -1,0 +1,26 @@
+﻿<Window x:Class="SyncTrayzor.Pages.ConflictResolution.ConflictResolutionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SyncTrayzor.Pages.ConflictResolution"
+        xmlns:s="https://github.com/canton7/Stylet"
+        mc:Ignorable="d"
+        Title="ConflictResolutionView" Height="300" Width="300">
+    <DockPanel LastChildFill="False">
+        <ProgressBar DockPanel.Dock="Top" Height="10" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+        <ListView DockPanel.Dock="Top" ItemsSource="{Binding Conflicts}" Margin="0,10,0,0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="File">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding File}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>

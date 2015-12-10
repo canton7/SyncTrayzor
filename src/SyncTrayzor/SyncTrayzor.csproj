@@ -154,6 +154,11 @@
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictResolutionView.xaml.cs">
+      <DependentUpon>ConflictResolutionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
@@ -181,7 +186,7 @@
     <Compile Include="Services\Config\SyncThingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />
-    <Compile Include="Services\ConflictFileFinder.cs" />
+    <Compile Include="Services\ConflictFileManager.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
@@ -352,6 +357,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ConflictResolution\ConflictResolutionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

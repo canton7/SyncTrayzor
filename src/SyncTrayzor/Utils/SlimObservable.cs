@@ -56,14 +56,6 @@ namespace SyncTrayzor.Utils
             }
         }
 
-        private void Clear()
-        {
-            lock (this.observersLockObject)
-            {
-                this.observers.Clear();
-            }
-        }
-
         public void Next(T value)
         {
             this.Execute(o => o.OnNext(value));
@@ -71,14 +63,20 @@ namespace SyncTrayzor.Utils
 
         public void Complete()
         {
+            if (this.complete)
+                return;
+            this.complete = true;
+
             this.Execute(o => o.OnCompleted());
-            this.Clear();
         }
 
         public void Error(Exception error)
         {
+            if (this.complete)
+                return;
+            this.complete = true;
+
             this.Execute(o => o.OnError(error));
-            this.Clear();
         }
 
         private class Registration : IDisposable
@@ -137,7 +135,7 @@ namespace SyncTrayzor.Utils
         {
             var tcs = new TaskCompletionSource<object>();
 
-            var observer = new SlimObserver<T>(onNext, () => tcs.SetResult(null), e => tcs.SetException(e));
+            var observer = new SlimObserver<T>(onNext, () => tcs.TrySetResult(null), e => tcs.TrySetException(e));
             using (observable.Subscribe(observer))
             {
                 await tcs.Task;
