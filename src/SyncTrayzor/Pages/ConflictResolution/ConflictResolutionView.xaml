@@ -5,20 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SyncTrayzor.Pages.ConflictResolution"
         xmlns:s="https://github.com/canton7/Stylet"
-        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ConflictResolutionViewModel}"
         Title="ConflictResolutionView" Height="400" Width="600">
     <DockPanel>
-        <DockPanel.Resources>
-            <CollectionViewSource x:Key="conflictsViewSource" Source="{Binding Conflicts}">
-                <CollectionViewSource.SortDescriptions>
-                    <scm:SortDescription PropertyName="FileName"/>
-                </CollectionViewSource.SortDescriptions>
-            </CollectionViewSource>
-        </DockPanel.Resources>
         <ProgressBar DockPanel.Dock="Top" Height="10" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-        <ListView ItemsSource="{Binding Source={StaticResource conflictsViewSource}}" Margin="0,10,0,0" SelectionMode="Single">
+        <ListView ItemsSource="{Binding Conflicts}" Margin="0,10,0,0" SelectionMode="Single">
+            <i:Interaction.Behaviors>
+                <xaml:GridViewSortByBehaviour/>
+            </i:Interaction.Behaviors>
             <ListView.Resources>
                 <Style TargetType="GridViewColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Left"/>

@@ -316,6 +316,7 @@
     <Compile Include="Xaml\ActivateBehaviour.cs" />
     <Compile Include="Xaml\CultureAwareBinding.cs" />
     <Compile Include="Xaml\GridLengthToAbsoluteConverter.cs" />
+    <Compile Include="Xaml\GridViewSortByBehaviour.cs" />
     <Compile Include="Xaml\MouseWheelGesture.cs" />
     <Compile Include="Xaml\NoSizeBelowScreenBehaviour.cs" />
     <Compile Include="Xaml\PopupConductorBehaviour.cs" />
