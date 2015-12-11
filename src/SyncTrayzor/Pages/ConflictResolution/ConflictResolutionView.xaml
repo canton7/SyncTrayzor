@@ -5,15 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SyncTrayzor.Pages.ConflictResolution"
         xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ConflictResolutionViewModel}"
-        Title="ConflictResolutionView" Height="300" Width="300">
-    <DockPanel LastChildFill="False">
+        Title="ConflictResolutionView" Height="400" Width="600">
+    <DockPanel>
+        <DockPanel.Resources>
+            <CollectionViewSource x:Key="conflictsViewSource" Source="{Binding Conflicts}">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="FileName"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+        </DockPanel.Resources>
         <ProgressBar DockPanel.Dock="Top" Height="10" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-        <ListView DockPanel.Dock="Top" ItemsSource="{Binding Conflicts}" Margin="0,10,0,0">
+        <ListView ItemsSource="{Binding Source={StaticResource conflictsViewSource}}" Margin="0,10,0,0" SelectionMode="Single">
+            <ListView.Resources>
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="File" DisplayMemberBinding="{Binding FileName}"/>
+                    <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}"/>
+                    <GridViewColumn Header="Folder">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock Text="{Binding InnerFolder}"/>
+                                    (<TextBlock Text="{Binding Folder}"/>)
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

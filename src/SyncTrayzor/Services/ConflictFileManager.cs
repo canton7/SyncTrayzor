@@ -14,7 +14,6 @@ namespace SyncTrayzor.Services
     public struct ConflictFile : IEquatable<ConflictFile>
     {
         public string FilePath { get; }
-        public string FileName => Path.GetFileName(this.FilePath);
         public DateTime LastModified { get; }
 
         public ConflictFile(string filePath, DateTime lastModified)
@@ -67,7 +66,7 @@ namespace SyncTrayzor.Services
     public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
-        private static readonly Regex conflictRegex = new Regex(@"^(.*).sync-conflict-(\d{8}-\d{6})\.(.*)$");
+        private static readonly Regex conflictRegex = new Regex(@"^(.*).sync-conflict-(\d{8}-\d{6})(\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IFilesystemProvider filesystemProvider;
@@ -112,9 +111,9 @@ namespace SyncTrayzor.Services
                 conflictLookup.Clear();
                 var directory = stack.Pop();
 
-                foreach (var file in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, SearchOption.TopDirectoryOnly))
+                foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, SearchOption.TopDirectoryOnly))
                 {
-                    var fileName = Path.GetFileName(file);
+                    var file = Path.Combine(directory, fileName);
                     var original = BaseFileNameForConflictFile(fileName);
 
                     List<string> existingConflicts;
@@ -137,10 +136,10 @@ namespace SyncTrayzor.Services
 
                 foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly))
                 {
-                    if (Path.GetFileName(subDirectory) == ".stversions")
+                    if (subDirectory == ".stversions")
                         continue;
 
-                    stack.Push(subDirectory);
+                    stack.Push(Path.Combine(directory, subDirectory));
 
                     cancellationToken.ThrowIfCancellationRequested();
                 }
