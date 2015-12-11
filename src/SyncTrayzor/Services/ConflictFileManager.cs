@@ -11,12 +11,47 @@ using SyncTrayzor.Utils;
 
 namespace SyncTrayzor.Services
 {
+    public struct ConflictFile : IEquatable<ConflictFile>
+    {
+        public string FilePath { get; }
+        public string FileName => Path.GetFileName(this.FilePath);
+        public DateTime LastModified { get; }
+
+        public ConflictFile(string filePath, DateTime lastModified)
+        {
+            this.FilePath = filePath;
+            this.LastModified = lastModified;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ConflictFile))
+                return false;
+            return this.Equals((ConflictFile)obj);
+        }
+
+        public bool Equals(ConflictFile other)
+        {
+            return this.FilePath == other.FilePath;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.FilePath.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return this.FilePath;
+        }
+    }
+
     public struct ConflictSet
     {
-        public string File { get; }
-        public List<string> Conflicts { get; }
+        public ConflictFile File { get; }
+        public List<ConflictFile> Conflicts { get; }
 
-        public ConflictSet(string file, List<string> conflicts)
+        public ConflictSet(ConflictFile file, List<ConflictFile> conflicts)
         {
             this.File = file;
             this.Conflicts = conflicts;
@@ -26,7 +61,7 @@ namespace SyncTrayzor.Services
     public interface IConflictFileManager
     {
         IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
-        void ResolveConflict(ConflictSet conflictSet, string chosenPath);
+        void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenPath);
     }
 
     public class ConflictFileManager : IConflictFileManager
@@ -95,7 +130,9 @@ namespace SyncTrayzor.Services
 
                 foreach (var kvp in conflictLookup)
                 {
-                    subject.Next(new ConflictSet(kvp.Key, kvp.Value));
+                    var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key));
+                    var conflicts = kvp.Value.Select(x => new ConflictFile(x, this.filesystemProvider.GetLastWriteTime(x))).ToList();
+                    subject.Next(new ConflictSet(file, conflicts));
                 }
 
                 foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly))
@@ -116,35 +153,35 @@ namespace SyncTrayzor.Services
             return parsed.Groups[1].Value + parsed.Groups[3].Value;
         }
 
-        public void ResolveConflict(ConflictSet conflictSet, string chosenFile)
+        public void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenFile)
         {
-            if (chosenFile != conflictSet.File && !conflictSet.Conflicts.Contains(chosenFile))
+            if (chosenFile.Equals(conflictSet.File) && !conflictSet.Conflicts.Contains(chosenFile))
                 throw new ArgumentException("chosenPath does not exist inside conflictSet");
 
-            if (chosenFile == conflictSet.File)
+            if (chosenFile.Equals(conflictSet.File))
             {
                 foreach (var file in conflictSet.Conflicts)
                 {
                     logger.Debug("Deleting {0}", file);
-                    this.filesystemProvider.DeleteFile(file);
+                    this.filesystemProvider.DeleteFile(file.FilePath);
                 }
             }
             else
             {
                 logger.Debug("Deleting {0}", conflictSet.File);
-                this.filesystemProvider.DeleteFile(conflictSet.File);
+                this.filesystemProvider.DeleteFile(conflictSet.File.FilePath);
 
                 foreach (var file in conflictSet.Conflicts)
                 {
-                    if (file == chosenFile)
+                    if (file.Equals(chosenFile))
                         continue;
 
                     logger.Debug("Deleting {0}", file);
-                    this.filesystemProvider.DeleteFile(file);
+                    this.filesystemProvider.DeleteFile(file.FilePath);
                 }
 
                 logger.Debug("Renaming {0} to {1}", chosenFile, conflictSet.File);
-                this.filesystemProvider.MoveFile(chosenFile, conflictSet.File);
+                this.filesystemProvider.MoveFile(chosenFile.FilePath, conflictSet.File.FilePath);
             }
         }
     }

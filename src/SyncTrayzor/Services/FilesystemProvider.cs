@@ -20,6 +20,7 @@ namespace SyncTrayzor.Services
         void DeleteDirectory(string path, bool recursive);
         void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
         DateTime GetLastAccessTimeUtc(string path);
+        DateTime GetLastWriteTime(string path);
         string[] GetFiles(string path);
         string ReadAllText(string path);
         string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
@@ -55,6 +56,8 @@ namespace SyncTrayzor.Services
         public void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc) => File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
 
         public DateTime GetLastAccessTimeUtc(string path) => File.GetLastAccessTimeUtc(path);
+
+        public DateTime GetLastWriteTime(string path) => File.GetLastWriteTime(path);
 
         public string[] GetFiles(string path) => Directory.GetFiles(path);
 

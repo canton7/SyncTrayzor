@@ -12,7 +12,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
     {
         public ConflictSet ConflictSet { get; }
 
-        public string File => this.ConflictSet.File;
+        public string FileName => this.ConflictSet.File.FileName;
 
         public ConflictViewModel(ConflictSet conflictSet)
         {
