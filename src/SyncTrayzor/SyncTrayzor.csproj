@@ -283,6 +283,7 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="SyncThing\SyncThingVersionInformation.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransfer.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransferChangedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransferStatus.cs" />

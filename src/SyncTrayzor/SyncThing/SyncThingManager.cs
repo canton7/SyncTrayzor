@@ -42,7 +42,7 @@ namespace SyncTrayzor.SyncThing
         TimeSpan SyncthingConnectTimeout { get; set; }
         DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
-        Version Version { get; }
+        SyncThingVersionInformation Version { get; }
         ISyncThingFolderManager Folders { get; }
         ISyncThingTransferHistory TransferHistory { get; }
         ISyncThingDebugFacilitiesManager DebugFacilities { get; }
@@ -141,7 +141,7 @@ namespace SyncTrayzor.SyncThing
             set { lock (this.devicesLock) this._devices = value; }
         }
 
-        public Version Version { get; private set; }
+        public SyncThingVersionInformation Version { get; private set; }
 
         private readonly SyncThingFolderManager _folders;
         public ISyncThingFolderManager Folders
@@ -464,17 +464,11 @@ namespace SyncTrayzor.SyncThing
             this.systemInfo = systemInfoTask.Result;
             var syncthingVersion = syncthingVersionTask.Result;
 
-            Version version;
-            if (!Version.TryParse(syncthingVersion.Version.TrimStart('v'), out version))
-            {
-                logger.Warn("Unable to parse Syncthing version {0}", syncthingVersion.Version);
-                version = new Version(0, 0, 0);
-            }
-            this.Version = version;
+            this.Version = new SyncThingVersionInformation(syncthingVersion.Version, syncthingVersion.LongVersion);
             
             cancellationToken.ThrowIfCancellationRequested();
 
-            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync(this.Version);
+            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync(this.Version.ParsedVersion);
             var configDataLoadTask = this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
 
             await Task.WhenAll(debugFacilitiesLoadTask, configDataLoadTask);
