@@ -46,13 +46,20 @@ namespace SyncTrayzor.Pages
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = Properties.Settings.Default.HomepageUrl;
 
-            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ShortVersion;
-            this.syncThingManager.DataLoaded += (o, e) =>
-            {
-                this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ShortVersion;
-            };
+            this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
+            this.LoadSyncthingVersion();
 
             this.CheckForNewerVersionAsync();
+        }
+
+        private void SyncthingDataLoaded(object sender, EventArgs e)
+        {
+            this.LoadSyncthingVersion();
+        }
+
+        private void LoadSyncthingVersion()
+        {
+            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ShortVersion;
         }
 
         private async void CheckForNewerVersionAsync()
@@ -89,6 +96,11 @@ namespace SyncTrayzor.Pages
         public void Close()
         {
             this.RequestClose(true);
+        }
+
+        protected override void OnClose()
+        {
+            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
     }
 }
