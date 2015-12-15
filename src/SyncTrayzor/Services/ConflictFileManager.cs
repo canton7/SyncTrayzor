@@ -11,7 +11,7 @@ using SyncTrayzor.Utils;
 
 namespace SyncTrayzor.Services
 {
-    public struct ConflictFile : IEquatable<ConflictFile>
+    public class ConflictFile : IEquatable<ConflictFile>
     {
         public string FilePath { get; }
         public DateTime LastModified { get; }
@@ -24,13 +24,15 @@ namespace SyncTrayzor.Services
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ConflictFile))
-                return false;
-            return this.Equals((ConflictFile)obj);
+            return this.Equals(obj as ConflictFile);
         }
 
         public bool Equals(ConflictFile other)
         {
+            if (Object.ReferenceEquals(other, null))
+                return false;
+            if (Object.ReferenceEquals(this, other))
+                return true;
             return this.FilePath == other.FilePath;
         }
 
@@ -45,7 +47,7 @@ namespace SyncTrayzor.Services
         }
     }
 
-    public struct ConflictSet
+    public class ConflictSet
     {
         public ConflictFile File { get; }
         public List<ConflictFile> Conflicts { get; }
@@ -66,7 +68,7 @@ namespace SyncTrayzor.Services
     public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
-        private static readonly Regex conflictRegex = new Regex(@"^(.*).sync-conflict-(\d{8}-\d{6})(\..*)$");
+        private static readonly Regex conflictRegex = new Regex(@"^(.*).sync-conflict-(\d{8}-\d{6})(.*)?(\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IFilesystemProvider filesystemProvider;
@@ -114,7 +116,10 @@ namespace SyncTrayzor.Services
                 foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, SearchOption.TopDirectoryOnly))
                 {
                     var file = Path.Combine(directory, fileName);
-                    var original = BaseFileNameForConflictFile(fileName);
+                    var original = this.FindBaseFileForConflictFile(directory, fileName);
+                    // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
+                    if (original == null)
+                        continue;
 
                     List<string> existingConflicts;
                     if (!conflictLookup.TryGetValue(original, out existingConflicts))
@@ -146,10 +151,28 @@ namespace SyncTrayzor.Services
             }
         }
 
-        private static string BaseFileNameForConflictFile(string conflictFileName)
+        private string FindBaseFileForConflictFile(string directory, string conflictFileName)
         {
             var parsed = conflictRegex.Match(conflictFileName);
-            return parsed.Groups[1].Value + parsed.Groups[3].Value;
+            if (!parsed.Success)
+                return null;
+
+            var prefix = parsed.Groups[1].Value;
+            var suffix = parsed.Groups[3].Value;
+            var extension = parsed.Groups[4].Value;
+
+            // 'suffix' might be a versioner thing (~date-time), or it might be something added by another tool...
+            // Try searching for it, and if that fails go without
+
+            var withSuffix = prefix + suffix + extension;
+            if (this.filesystemProvider.FileExists(Path.Combine(directory, withSuffix)))
+                return withSuffix;
+
+            var withoutSuffix = prefix + extension;
+            if (this.filesystemProvider.FileExists(Path.Combine(directory, withoutSuffix)))
+                return withoutSuffix;
+
+            return null;
         }
 
         public void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenFile)
