@@ -6,13 +6,25 @@
         xmlns:local="clr-namespace:SyncTrayzor.Pages.ConflictResolution"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ConflictResolutionViewModel}"
         Title="ConflictResolutionView" Height="400" Width="600">
+    <Window.Resources>
+        <CollectionViewSource x:Key="ConflictsItemsSource" Source="{Binding Conflicts}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="FolderId"/>
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <!-- Default sort, until the user clicks a column -->
+                <scm:SortDescription PropertyName="FileName" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
     <DockPanel>
         <ProgressBar DockPanel.Dock="Top" Height="10" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-        <ListView ItemsSource="{Binding Conflicts}" Margin="0,10,0,0" SelectionMode="Single">
+        <ListView ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}" Margin="0,10,0,0" SelectionMode="Single">
             <i:Interaction.Behaviors>
                 <xaml:GridViewSortByBehaviour/>
             </i:Interaction.Behaviors>
@@ -23,9 +35,9 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding FileName}"/>
-                    <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}"/>
-                    <GridViewColumn Header="Folder">
+                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding FileName}" xaml:GridViewSortBy.SortByKey="FileName"/>
+                    <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}" xaml:GridViewSortBy.SortByKey="LastModified"/>
+                    <GridViewColumn Header="Folder" xaml:GridViewSortBy.SortByKey="InnerFolder">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -37,6 +49,26 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Expander IsExpanded="True">
+                                            <Expander.Header>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </Expander.Header>
+                                            <ItemsPresenter />
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </ListView.GroupStyle>
         </ListView>
     </DockPanel>
 </Window>

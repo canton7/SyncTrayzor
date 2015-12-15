@@ -50,7 +50,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
                     {
                         await this.conflictFileManager.FindConflicts(folder.Path, this.loadingCts.Token).SubscribeAsync(x =>
                         {
-                            this.Conflicts.Add(new ConflictViewModel(x));
+                            this.Conflicts.Add(new ConflictViewModel(x, folder.FolderId));
                         });
                     }
                     catch (OperationCanceledException e) when (e.CancellationToken == this.loadingCts.Token)

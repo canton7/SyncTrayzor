@@ -20,11 +20,14 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public string Folder => Path.GetDirectoryName(this.ConflictSet.File.FilePath);
 
         public string InnerFolder => Path.GetFileName(this.Folder);
+
+        public string FolderId { get; }
         
 
-        public ConflictViewModel(ConflictSet conflictSet)
+        public ConflictViewModel(ConflictSet conflictSet, string folderName)
         {
             this.ConflictSet = conflictSet;
+            this.FolderId = folderName;
         }
     }
 }

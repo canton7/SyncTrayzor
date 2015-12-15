@@ -154,9 +154,6 @@
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
-    <Compile Include="Pages\ConflictResolution\ConflictResolutionView.xaml.cs">
-      <DependentUpon>ConflictResolutionView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
