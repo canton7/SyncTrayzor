@@ -22,12 +22,16 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public string InnerFolder => Path.GetFileName(this.Folder);
 
         public string FolderId { get; }
+
+        public BindableCollection<ConflictOptionViewModel> ConflictOptions { get; }
         
 
         public ConflictViewModel(ConflictSet conflictSet, string folderName)
         {
             this.ConflictSet = conflictSet;
             this.FolderId = folderName;
+
+            this.ConflictOptions = new BindableCollection<ConflictOptionViewModel>(this.ConflictSet.Conflicts.Select(x => new ConflictOptionViewModel(x)));
         }
     }
 }

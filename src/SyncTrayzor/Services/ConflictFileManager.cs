@@ -11,7 +11,7 @@ using SyncTrayzor.Utils;
 
 namespace SyncTrayzor.Services
 {
-    public class ConflictFile : IEquatable<ConflictFile>
+    public class ConflictFile
     {
         public string FilePath { get; }
         public DateTime LastModified { get; }
@@ -22,23 +22,25 @@ namespace SyncTrayzor.Services
             this.LastModified = lastModified;
         }
 
-        public override bool Equals(object obj)
+        public override string ToString()
         {
-            return this.Equals(obj as ConflictFile);
+            return this.FilePath;
         }
+    }
 
-        public bool Equals(ConflictFile other)
-        {
-            if (Object.ReferenceEquals(other, null))
-                return false;
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            return this.FilePath == other.FilePath;
-        }
+    public class ConflictOption
+    {
 
-        public override int GetHashCode()
+        public string FilePath { get; }
+        public DateTime LastModified { get; }
+
+        public DateTime Created { get; }
+
+        public ConflictOption(string filePath, DateTime lastModified, DateTime created)
         {
-            return this.FilePath.GetHashCode();
+            this.FilePath = filePath;
+            this.LastModified = lastModified;
+            this.Created = created;
         }
 
         public override string ToString()
@@ -50,9 +52,9 @@ namespace SyncTrayzor.Services
     public class ConflictSet
     {
         public ConflictFile File { get; }
-        public List<ConflictFile> Conflicts { get; }
+        public List<ConflictOption> Conflicts { get; }
 
-        public ConflictSet(ConflictFile file, List<ConflictFile> conflicts)
+        public ConflictSet(ConflictFile file, List<ConflictOption> conflicts)
         {
             this.File = file;
             this.Conflicts = conflicts;
@@ -135,7 +137,8 @@ namespace SyncTrayzor.Services
                 foreach (var kvp in conflictLookup)
                 {
                     var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key));
-                    var conflicts = kvp.Value.Select(x => new ConflictFile(x, this.filesystemProvider.GetLastWriteTime(x))).ToList();
+                    // TODO: Compute the 'conflict created' time from the file name
+                    var conflicts = kvp.Value.Select(x => new ConflictOption(x, this.filesystemProvider.GetLastWriteTime(x), DateTime.Now)).ToList();
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 
@@ -177,10 +180,10 @@ namespace SyncTrayzor.Services
 
         public void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenFile)
         {
-            if (chosenFile.Equals(conflictSet.File) && !conflictSet.Conflicts.Contains(chosenFile))
+            if (chosenFile.FilePath == conflictSet.File.FilePath && !conflictSet.Conflicts.Any(x => x.FilePath == chosenFile.FilePath))
                 throw new ArgumentException("chosenPath does not exist inside conflictSet");
 
-            if (chosenFile.Equals(conflictSet.File))
+            if (chosenFile.FilePath == conflictSet.File.FilePath)
             {
                 foreach (var file in conflictSet.Conflicts)
                 {
@@ -195,7 +198,7 @@ namespace SyncTrayzor.Services
 
                 foreach (var file in conflictSet.Conflicts)
                 {
-                    if (file.Equals(chosenFile))
+                    if (file.FilePath == chosenFile.FilePath)
                         continue;
 
                     logger.Debug("Deleting {0}", file);

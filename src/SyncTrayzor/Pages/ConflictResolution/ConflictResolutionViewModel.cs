@@ -21,6 +21,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public bool IsLoading => this.loadingCts != null;
         public BindableCollection<ConflictViewModel> Conflicts { get; } = new BindableCollection<ConflictViewModel>();
 
+        public ConflictViewModel SelectedConflict { get; set; }
+
         public ConflictResolutionViewModel(ISyncThingManager syncThingManager, IConflictFileManager conflictFileManager)
         {
             this.syncThingManager = syncThingManager;

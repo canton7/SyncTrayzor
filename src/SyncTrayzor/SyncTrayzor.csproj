@@ -154,6 +154,7 @@
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
@@ -405,6 +406,10 @@
     <Page Include="Pages\ViewerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\BoringListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Xaml\PassiveListView.xaml">
       <SubType>Designer</SubType>
