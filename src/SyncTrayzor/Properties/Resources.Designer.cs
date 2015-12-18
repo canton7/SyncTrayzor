@@ -576,6 +576,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Syncthing Log File.
+        /// </summary>
+        public static string SettingsView_Logging_ShowSyncthingLog {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_ShowSyncthingLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show SyncTrayzor Log File.
+        /// </summary>
+        public static string SettingsView_Logging_ShowSyncTrayzorLog {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_ShowSyncTrayzorLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Syncthing Debug Facilities unavailable. Please start Syncthing..
         /// </summary>
         public static string SettingsView_Logging_Unavailable {

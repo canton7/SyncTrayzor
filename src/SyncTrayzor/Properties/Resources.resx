@@ -761,4 +761,12 @@ Do you want to restart SyncTrayzor now?</value>
     <value>You can find SyncTrayzor's log file here.</value>
     <comment>Clickable text to open the location of the log file</comment>
   </data>
+  <data name="SettingsView_Logging_ShowSyncthingLog" xml:space="preserve">
+    <value>Show Syncthing Log File</value>
+    <comment>Text on button which will open Explorer at the location of Syncthing's log file</comment>
+  </data>
+  <data name="SettingsView_Logging_ShowSyncTrayzorLog" xml:space="preserve">
+    <value>Show SyncTrayzor Log File</value>
+    <comment>Text on button which will open Explorer at the location of SyncTrayzor's log file</comment>
+  </data>
 </root>
