@@ -20,7 +20,7 @@
             <TextBlock Text="{l:Loc UnhandledExceptionView_PleaseOpenIssue_Post}"/>
         </TextBlock>
 
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" Content="{l:Loc Generic_Dialog_Close}"/>
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" Content="{l:Loc Generic_Dialog_Close}" Style="{StaticResource DialogButton}"/>
         <TextBlock DockPanel.Dock="Bottom" Margin="0,10" TextWrapping="Wrap">
             <TextBlock Text="{l:Loc UnhandledExceptionView_LogFileLocation_Description}"/>
             <Hyperlink Command="{s:Action OpenLogFilePath}"><TextBlock Text="{l:Loc UnhandledExceptionView_LogFileLocation_Link}"/></Hyperlink>

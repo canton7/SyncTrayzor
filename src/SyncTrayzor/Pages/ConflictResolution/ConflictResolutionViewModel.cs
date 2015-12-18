@@ -80,5 +80,10 @@ namespace SyncTrayzor.Pages.ConflictResolution
             var correspondingVm = this.Conflicts.First(x => x.ConflictOptions.Contains(conflictOption));
             this.Conflicts.Remove(correspondingVm);
         }
+
+        public void Close()
+        {
+            this.RequestClose(true);
+        }
     }
 }

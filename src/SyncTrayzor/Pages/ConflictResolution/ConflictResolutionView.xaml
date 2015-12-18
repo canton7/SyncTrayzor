@@ -22,12 +22,13 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </Window.Resources>
-    <DockPanel>
+    <DockPanel Margin="10,0">
         <ProgressBar DockPanel.Dock="Top" Height="10" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
 
-        <DockPanel DockPanel.Dock="Bottom"
-                   MinHeight="100">
+        <Button DockPanel.Dock="Bottom" Margin="10" HorizontalAlignment="Right" Command="{s:Action Close}" Style="{StaticResource DialogButton}">Close</Button>
 
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0"
+                   Visibility="{Binding SelectedConflict, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
             <ListView ItemsSource="{Binding SelectedConflict.ConflictOptions}"
                       Style="{StaticResource BoringListViewStyle}">
                 <ListView.View>
@@ -38,7 +39,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <Button Command="{s:Action ChooseConflictFile}" CommandParameter="{Binding}">Choose</Button>
+                                        <Button Command="{s:Action ChooseConflictFile}" CommandParameter="{Binding}" Padding="NaN">Choose</Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

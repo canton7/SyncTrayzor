@@ -21,7 +21,7 @@
             </TextBlock>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
                 <StackPanel.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style TargetType="Button" BasedOn="{StaticResource DialogButton}">
                         <Setter Property="Padding" Value="15,0"/>
                         <!-- Slightly smaller -->
                     </Style>
