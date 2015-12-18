@@ -15,6 +15,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
     {
         private readonly ISyncThingManager syncThingManager;
         private readonly IConflictFileManager conflictFileManager;
+        private readonly IProcessStartProvider processStartProvider;
 
         private CancellationTokenSource loadingCts { get; set; }
 
@@ -23,10 +24,11 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public ConflictViewModel SelectedConflict { get; set; }
 
-        public ConflictResolutionViewModel(ISyncThingManager syncThingManager, IConflictFileManager conflictFileManager)
+        public ConflictResolutionViewModel(ISyncThingManager syncThingManager, IConflictFileManager conflictFileManager, IProcessStartProvider processStartProvider)
         {
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
+            this.processStartProvider = processStartProvider;
         }
 
         protected override void OnInitialActivate()
@@ -63,6 +65,20 @@ namespace SyncTrayzor.Pages.ConflictResolution
             {
                 this.loadingCts = null;
             }
+        }
+
+        public void ConflictFileDoubleClick()
+        {
+            this.processStartProvider.ShowInExplorer(this.SelectedConflict.FilePath);
+        }
+
+        public void ChooseConflictFile(ConflictOptionViewModel conflictOption)
+        {
+            // Call into the service... Don't do this now for testing
+
+            // The conflict will no longer exist, so remove it
+            var correspondingVm = this.Conflicts.First(x => x.ConflictOptions.Contains(conflictOption));
+            this.Conflicts.Remove(correspondingVm);
         }
     }
 }

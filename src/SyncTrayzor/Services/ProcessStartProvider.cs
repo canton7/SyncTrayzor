@@ -12,6 +12,7 @@ namespace SyncTrayzor.Services
         void StartDetached(string filename);
         void StartDetached(string filename, string arguments, string launchAfterFinished = null);
         void StartElevatedDetached(string filename, string arguments, string launchAfterFinished = null);
+        void ShowInExplorer(string filePath);
     }
 
     public class ProcessStartProvider : IProcessStartProvider
@@ -82,5 +83,7 @@ namespace SyncTrayzor.Services
 
             Process.Start(startInfo);
         }
+
+        public void ShowInExplorer(string filePath) => this.StartDetached("explorer.exe", $"/select, \"{filePath}\"");
     }
 }

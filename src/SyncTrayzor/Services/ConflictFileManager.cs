@@ -70,7 +70,8 @@ namespace SyncTrayzor.Services
     public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
-        private static readonly Regex conflictRegex = new Regex(@"^(.*).sync-conflict-(\d{8}-\d{6})(.*)?(\..*)$");
+        private static readonly Regex conflictRegex =
+            new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(?<suffix>.*)(?<extension>\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IFilesystemProvider filesystemProvider;
@@ -105,7 +106,7 @@ namespace SyncTrayzor.Services
             // all conflict files. Therefore we need to do this directory by directory, and flush out the cache
             // or conflicts after each directory.
 
-            var conflictLookup = new Dictionary<string, List<string>>();
+            var conflictLookup = new Dictionary<string, List<ParsedConflictFileInfo>>();
             var stack = new Stack<string>();
             stack.Push(basePath);
             while (stack.Count > 0)
@@ -117,19 +118,20 @@ namespace SyncTrayzor.Services
 
                 foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, SearchOption.TopDirectoryOnly))
                 {
-                    var file = Path.Combine(directory, fileName);
-                    var original = this.FindBaseFileForConflictFile(directory, fileName);
+                    var filePath = Path.Combine(directory, fileName);
+
+                    ParsedConflictFileInfo conflictFileInfo;
                     // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
-                    if (original == null)
+                    if (!this.TryFindBaseFileForConflictFile(filePath, out conflictFileInfo))
                         continue;
 
-                    List<string> existingConflicts;
-                    if (!conflictLookup.TryGetValue(original, out existingConflicts))
+                    List<ParsedConflictFileInfo> existingConflicts;
+                    if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out existingConflicts))
                     {
-                        existingConflicts = new List<string>();
-                        conflictLookup.Add(original, existingConflicts);
+                        existingConflicts = new List<ParsedConflictFileInfo>();
+                        conflictLookup.Add(conflictFileInfo.OriginalPath, existingConflicts);
                     }
-                    existingConflicts.Add(fileName);
+                    existingConflicts.Add(conflictFileInfo);
 
                     cancellationToken.ThrowIfCancellationRequested();
                 }
@@ -137,8 +139,7 @@ namespace SyncTrayzor.Services
                 foreach (var kvp in conflictLookup)
                 {
                     var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key));
-                    // TODO: Compute the 'conflict created' time from the file name
-                    var conflicts = kvp.Value.Select(x => new ConflictOption(x, this.filesystemProvider.GetLastWriteTime(x), DateTime.Now)).ToList();
+                    var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created)).ToList();
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 
@@ -154,28 +155,49 @@ namespace SyncTrayzor.Services
             }
         }
 
-        private string FindBaseFileForConflictFile(string directory, string conflictFileName)
+        private bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo)
         {
-            var parsed = conflictRegex.Match(conflictFileName);
-            if (!parsed.Success)
-                return null;
+            var directory = Path.GetDirectoryName(filePath);
+            var fileName = Path.GetFileName(filePath);
 
-            var prefix = parsed.Groups[1].Value;
-            var suffix = parsed.Groups[3].Value;
-            var extension = parsed.Groups[4].Value;
+            var parsed = conflictRegex.Match(fileName);
+            if (!parsed.Success)
+            {
+                parsedConflictFileInfo = default(ParsedConflictFileInfo);
+                return false;
+            }
+
+            var prefix = parsed.Groups["prefix"].Value;
+            var year = Int32.Parse(parsed.Groups["year"].Value);
+            var month = Int32.Parse(parsed.Groups["month"].Value);
+            var day = Int32.Parse(parsed.Groups["day"].Value);
+            var hours = Int32.Parse(parsed.Groups["hours"].Value);
+            var mins = Int32.Parse(parsed.Groups["mins"].Value);
+            var secs = Int32.Parse(parsed.Groups["secs"].Value);
+            var suffix = parsed.Groups["suffix"].Value;
+            var extension = parsed.Groups["extension"].Value;
+
+            var dateCreated = new DateTime(year, month, day, hours, mins, secs, DateTimeKind.Local);
 
             // 'suffix' might be a versioner thing (~date-time), or it might be something added by another tool...
             // Try searching for it, and if that fails go without
 
             var withSuffix = prefix + suffix + extension;
             if (this.filesystemProvider.FileExists(Path.Combine(directory, withSuffix)))
-                return withSuffix;
+            {
+                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, Path.Combine(directory, withSuffix), dateCreated);
+                return true;
+            }
 
             var withoutSuffix = prefix + extension;
             if (this.filesystemProvider.FileExists(Path.Combine(directory, withoutSuffix)))
-                return withoutSuffix;
+            {
+                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, Path.Combine(directory, withoutSuffix), dateCreated);
+                return true;
+            }
 
-            return null;
+            parsedConflictFileInfo = default(ParsedConflictFileInfo);
+            return false;
         }
 
         public void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenFile)
@@ -207,6 +229,20 @@ namespace SyncTrayzor.Services
 
                 logger.Debug("Renaming {0} to {1}", chosenFile, conflictSet.File);
                 this.filesystemProvider.MoveFile(chosenFile.FilePath, conflictSet.File.FilePath);
+            }
+        }
+
+        private struct ParsedConflictFileInfo
+        {
+            public readonly string FilePath;
+            public readonly string OriginalPath;
+            public readonly DateTime Created;
+
+            public ParsedConflictFileInfo(string filePath, string originalPath, DateTime created)
+            {
+                this.FilePath = filePath;
+                this.OriginalPath = originalPath;
+                this.Created = created;
             }
         }
     }

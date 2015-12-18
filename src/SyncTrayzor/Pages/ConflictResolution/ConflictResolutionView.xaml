@@ -38,7 +38,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <Button>Choose</Button>
+                                        <Button Command="{s:Action ChooseConflictFile}" CommandParameter="{Binding}">Choose</Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -51,7 +51,8 @@
         <ListView Margin="0,10,0,0"
                   ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
                   SelectedItem="{Binding SelectedConflict}"
-                  SelectionMode="Single">
+                  SelectionMode="Single"
+                  MouseDoubleClick="{s:Action ConflictFileDoubleClick}">
             <i:Interaction.Behaviors>
                 <xaml:GridViewSortByBehaviour/>
             </i:Interaction.Behaviors>
@@ -62,7 +63,13 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding FileName}" xaml:GridViewSortBy.SortByKey="FileName"/>
+                    <GridViewColumn Header="File" xaml:GridViewSortBy.SortByKey="FileName">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FileName}" Margin="20,0,0,0"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}" xaml:GridViewSortBy.SortByKey="LastModified"/>
                     <GridViewColumn Header="Folder" xaml:GridViewSortBy.SortByKey="InnerFolder">
                         <GridViewColumn.CellTemplate>
@@ -85,7 +92,7 @@
                                     <ControlTemplate>
                                         <Expander IsExpanded="True">
                                             <Expander.Header>
-                                                <TextBlock Text="{Binding Name}"/>
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
                                             </Expander.Header>
                                             <ItemsPresenter />
                                         </Expander>

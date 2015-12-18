@@ -13,6 +13,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
     {
         public ConflictSet ConflictSet { get; }
 
+        public string FilePath => this.ConflictSet.File.FilePath;
+
         public string FileName => Path.GetFileName(this.ConflictSet.File.FilePath);
 
         public DateTime LastModified => this.ConflictSet.File.LastModified;

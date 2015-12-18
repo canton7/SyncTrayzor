@@ -348,12 +348,12 @@ namespace SyncTrayzor.Pages.Settings
 
         public void ShowSyncthingLogFile()
         {
-            this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{Path.Combine(this.applicationPathsProvider.LogFilePath, "syncthing.log")}\"");
+            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "syncthing.log"));
         }
 
         public void ShowSyncTrayzorLogFile()
         {
-            this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log")}\"");
+            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
         }
 
         public void SelectLoggingTab()
