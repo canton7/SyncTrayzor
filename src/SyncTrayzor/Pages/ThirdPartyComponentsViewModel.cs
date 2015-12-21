@@ -67,7 +67,7 @@ namespace SyncTrayzor.Pages
                     Description = "Popular high-performance JSON framework for .NET ",
                     Homepage = "http://www.newtonsoft.com/json",
                     License = "MIT",
-                    Notes = "JSON deserializer, used in conjunction with Refit",
+                    Notes = "JSON deserializer, used in conjunction with RestEase",
                     LicenseText = this.LoadLicense("Json.NET.txt")
                 },
                 new ThirdPartyComponent()

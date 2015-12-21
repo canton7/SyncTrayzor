@@ -363,7 +363,7 @@ namespace SyncTrayzor.SyncThing
             }
             catch (ApiException e)
             {
-                var msg = $"Refit Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
+                var msg = $"RestEase Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
                 logger.Error(msg, e);
                 throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
@@ -432,7 +432,16 @@ namespace SyncTrayzor.SyncThing
             // Catch restart cases, and re-start the API
             // This isn't ideal, as we don't get to nicely propagate any exceptions to the UI
             if (isRestart)
-                await this.StartClientAsync();
+            {
+                try
+                {
+                    await this.StartClientAsync();
+                }
+                catch (SyncThingDidNotStartCorrectlyException)
+                {
+                    // We've already logged this
+                }
+            }
         }
 
         private void ProcessStopped(SyncThingExitStatus exitStatus)
