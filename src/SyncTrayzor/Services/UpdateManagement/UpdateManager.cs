@@ -47,6 +47,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private DateTime lastCheckedTime;
         private CancellationTokenSource toastCts;
+        private bool remindLaterActive;
 
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
@@ -90,10 +91,10 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             // Strategy time:
             // We'll prompt the user a fixed period after the computer starts up / resumes from sleep
+            // (this is handled by CheckForUpdates being set to true, if appropriate, by another part of the application)
             // We'll also check on a fixed interval since this point
-            // We'll also check when the application is restored from tray
+            // If 'remind me later' is active, we'll also check when the application is restored from tray
 
-            this.applicationState.Startup += this.ApplicationStartup;
             this.applicationState.ResumeFromSleep += this.ResumeFromSleep;
             this.applicationWindowState.RootWindowActivated += this.RootWindowActivated;
         }
@@ -114,11 +115,6 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
-        private async void ApplicationStartup(object sender, EventArgs e)
-        {
-            await this.CheckForUpdatesAsync();
-        }
-
         private async void ResumeFromSleep(object sender, EventArgs e)
         {
             if (this.UpdateCheckDue())
@@ -134,8 +130,9 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.toastCts != null)
                 this.toastCts.Cancel();
 
-            // Always check on root window activated
-            await this.CheckForUpdatesAsync();
+            // If the user clicked 'remind me later', check on root window activated
+            if (this.remindLaterActive)
+                await this.CheckForUpdatesAsync();
         }
 
         private async void PromptTimerElapsed(object sender, EventArgs e)
@@ -218,6 +215,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     }
                 }
 
+                this.remindLaterActive = false;
                 switch (promptResult)
                 {
                     case VersionPromptResult.InstallNow:
@@ -237,6 +235,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                         break;
 
                     case VersionPromptResult.RemindLater:
+                        this.remindLaterActive = true;
                         logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
                         break;
 
