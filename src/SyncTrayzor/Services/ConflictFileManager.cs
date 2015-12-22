@@ -64,7 +64,7 @@ namespace SyncTrayzor.Services
     public interface IConflictFileManager
     {
         IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
-        void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenPath);
+        void ResolveConflict(ConflictSet conflictSet, string chosenFilePath);
     }
 
     public class ConflictFileManager : IConflictFileManager
@@ -200,12 +200,12 @@ namespace SyncTrayzor.Services
             return false;
         }
 
-        public void ResolveConflict(ConflictSet conflictSet, ConflictFile chosenFile)
+        public void ResolveConflict(ConflictSet conflictSet, string chosenFilePath)
         {
-            if (chosenFile.FilePath == conflictSet.File.FilePath && !conflictSet.Conflicts.Any(x => x.FilePath == chosenFile.FilePath))
+            if (chosenFilePath == conflictSet.File.FilePath && !conflictSet.Conflicts.Any(x => x.FilePath == chosenFilePath))
                 throw new ArgumentException("chosenPath does not exist inside conflictSet");
 
-            if (chosenFile.FilePath == conflictSet.File.FilePath)
+            if (chosenFilePath == conflictSet.File.FilePath)
             {
                 foreach (var file in conflictSet.Conflicts)
                 {
@@ -215,20 +215,20 @@ namespace SyncTrayzor.Services
             }
             else
             {
-                logger.Debug("Deleting {0}", conflictSet.File);
+                logger.Debug("Deleting {0}", conflictSet.File.FilePath);
                 this.filesystemProvider.DeleteFile(conflictSet.File.FilePath);
 
                 foreach (var file in conflictSet.Conflicts)
                 {
-                    if (file.FilePath == chosenFile.FilePath)
+                    if (file.FilePath == chosenFilePath)
                         continue;
 
-                    logger.Debug("Deleting {0}", file);
+                    logger.Debug("Deleting {0}", file.FilePath);
                     this.filesystemProvider.DeleteFile(file.FilePath);
                 }
 
-                logger.Debug("Renaming {0} to {1}", chosenFile, conflictSet.File);
-                this.filesystemProvider.MoveFile(chosenFile.FilePath, conflictSet.File.FilePath);
+                logger.Debug("Renaming {0} to {1}", chosenFilePath, conflictSet.File.FilePath);
+                this.filesystemProvider.MoveFile(chosenFilePath, conflictSet.File.FilePath);
             }
         }
 

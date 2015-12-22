@@ -38,7 +38,8 @@
 
 
     <Style x:Key="BoringGridViewColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <!-- This used to be center -->
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <!-- Likewise this used to be Center -->
         <Setter Property="VerticalContentAlignment" Value="Bottom"/>
         <!-- Need to override styles being applied from elsewhere (I think?) -->

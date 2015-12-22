@@ -72,6 +72,12 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.processStartProvider.ShowInExplorer(this.SelectedConflict.FilePath);
         }
 
+        public void ChooseOriginal(ConflictViewModel conflict)
+        {
+            // The conflict will no longer exist, so remove it
+            this.Conflicts.Remove(conflict);
+        }
+
         public void ChooseConflictFile(ConflictOptionViewModel conflictOption)
         {
             // Call into the service... Don't do this now for testing
