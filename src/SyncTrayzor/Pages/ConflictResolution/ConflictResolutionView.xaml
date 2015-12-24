@@ -27,7 +27,12 @@
         </Style>
     </Window.Resources>
     <DockPanel Margin="10,0">
-        <ProgressBar DockPanel.Dock="Top" Height="10" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+        <!--  Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" -->
+        <DockPanel DockPanel.Dock="Top" Margin="0,10,0,0" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+            <TextBlock DockPanel.Dock="Left">Scanning...</TextBlock>
+            <Button DockPanel.Dock="Right" Command="{s:Action Cancel}">Cancel</Button>
+            <ProgressBar IsIndeterminate="True" Height="10" Margin="10,0" />
+        </DockPanel>
 
         <Button DockPanel.Dock="Bottom" Margin="10" HorizontalAlignment="Right" Command="{s:Action Close}" Style="{StaticResource DialogButton}">Close</Button>
 
@@ -92,62 +97,83 @@
         </Border>
 
         <Border Margin="0,10,0,0" Style="{StaticResource SectionBorderStyle}">
-            <ListView ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
-                      SelectedItem="{Binding SelectedConflict}"
-                      SelectionMode="Single"
-                      MouseDoubleClick="{s:Action ConflictFileDoubleClick}"
-                      BorderThickness="0">
-                <i:Interaction.Behaviors>
-                    <xaml:GridViewSortByBehaviour/>
-                </i:Interaction.Behaviors>
-                <ListView.Resources>
-                    <Style TargetType="GridViewColumnHeader">
-                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Grid>
+                <Grid.Resources>
+                    <Style x:Key="MessageStyle" TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
                     </Style>
-                </ListView.Resources>
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="File" xaml:GridViewSortBy.SortByKey="FileName">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding FileName}" Margin="20,0,0,0"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}" xaml:GridViewSortBy.SortByKey="LastModified"/>
-                        <GridViewColumn Header="Folder" xaml:GridViewSortBy.SortByKey="InnerFolder">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock>
-                                        <TextBlock Text="{Binding InnerFolder}"/>
-                                        (<TextBlock Text="{Binding Folder}"/>)
-                                    </TextBlock>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-                <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.ContainerStyle>
-                            <Style TargetType="{x:Type GroupItem}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate>
-                                            <Expander IsExpanded="True">
-                                                <Expander.Header>
-                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                                </Expander.Header>
-                                                <ItemsPresenter />
-                                            </Expander>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </GroupStyle.ContainerStyle>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-            </ListView>
+                </Grid.Resources>
+                <TextBlock Style="{StaticResource MessageStyle}"
+                           Visibility="{Binding IsLoadingAndNoConflictsFound, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                    No conflicts found (yet)...
+                </TextBlock>
+                <TextBlock Style="{StaticResource MessageStyle}"
+                           Visibility="{Binding HasFinishedLoadingAndNoConflictsFound, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                    No conflicts found. Good job!
+                </TextBlock>
+                <TextBlock Style="{StaticResource MessageStyle}"
+                           Visibility="{Binding IsSyncthingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                    Syncthing is not running. Please start Syncthing.
+                </TextBlock>
+                <ListView Visibility="{Binding Conflicts, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                          ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
+                          SelectedItem="{Binding SelectedConflict}"
+                          SelectionMode="Single"
+                          MouseDoubleClick="{s:Action ConflictFileDoubleClick}"
+                          BorderThickness="0">
+                    <i:Interaction.Behaviors>
+                        <xaml:GridViewSortByBehaviour/>
+                    </i:Interaction.Behaviors>
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="File" xaml:GridViewSortBy.SortByKey="FileName">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding FileName}" Margin="20,0,0,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}" xaml:GridViewSortBy.SortByKey="LastModified"/>
+                            <GridViewColumn Header="Folder" xaml:GridViewSortBy.SortByKey="InnerFolder">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <TextBlock Text="{Binding InnerFolder}"/>
+                                            (<TextBlock Text="{Binding Folder}"/>)
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Expander IsExpanded="True">
+                                                    <Expander.Header>
+                                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                                    </Expander.Header>
+                                                    <ItemsPresenter />
+                                                </Expander>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                </ListView>
+            </Grid>
         </Border>
     </DockPanel>
 </Window>

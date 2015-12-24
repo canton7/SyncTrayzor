@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Pri.LongPath;
 using NLog;
 using SyncTrayzor.Utils;
 
@@ -83,6 +83,7 @@ namespace SyncTrayzor.Services
 
         public IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var subject = new SlimObservable<ConflictSet>();
             Task.Run(() =>
             {
@@ -116,7 +117,7 @@ namespace SyncTrayzor.Services
                 conflictLookup.Clear();
                 var directory = stack.Pop();
 
-                foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, SearchOption.TopDirectoryOnly))
+                foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                 {
                     var filePath = Path.Combine(directory, fileName);
 
@@ -143,7 +144,7 @@ namespace SyncTrayzor.Services
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 
-                foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly))
+                foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
                 {
                     if (subDirectory == ".stversions")
                         continue;
@@ -202,7 +203,7 @@ namespace SyncTrayzor.Services
 
         public void ResolveConflict(ConflictSet conflictSet, string chosenFilePath)
         {
-            if (chosenFilePath == conflictSet.File.FilePath && !conflictSet.Conflicts.Any(x => x.FilePath == chosenFilePath))
+            if (chosenFilePath != conflictSet.File.FilePath && !conflictSet.Conflicts.Any(x => x.FilePath == chosenFilePath))
                 throw new ArgumentException("chosenPath does not exist inside conflictSet");
 
             if (chosenFilePath == conflictSet.File.FilePath)
