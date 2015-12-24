@@ -1,10 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Pri.LongPath;
 using System.Drawing;
 using SyncTrayzor.Utils;
