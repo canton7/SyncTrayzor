@@ -144,6 +144,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         private bool ResolveConflict(ConflictSet conflictSet, string filePath)
         {
+            // This can happen e.g. if the file chosen no longer exists
             try
             {
                 this.conflictFileManager.ResolveConflict(conflictSet, filePath);

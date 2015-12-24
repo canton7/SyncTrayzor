@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NLog;
 
 namespace SyncTrayzor.Utils
 {
     // Thanks to http://stackoverflow.com/a/3282481/1086121
-    public class RecycleBinDeleter
+    public static class RecycleBinDeleter
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Possible flags for the SHFileOperation method.
         /// </summary>
@@ -83,9 +86,6 @@ namespace SyncTrayzor.Utils
             public string lpszProgressTitle;
         }
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
-        private static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
-
         /// <summary>
         /// Send file to recycle bin
         /// </summary>
@@ -103,13 +103,24 @@ namespace SyncTrayzor.Utils
                              FileOperationFlags.FOF_NOCONFIRMATION |
                              FileOperationFlags.FOF_WANTNUKEWARNING,
                 };
-                SHFileOperation(ref fs);
+                int result = NativeMethods.SHFileOperation(ref fs);
+                if (result != 0)
+                {
+                    logger.Error("Delete file operation on {0} failed with error {1}", path, result);
+                    return false;
+                }
                 return true;
             }
             catch (Exception)
             {
                 return false;
             }
+        }
+
+        private static class NativeMethods
+        {
+            [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+            public static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
         }
     }
 }

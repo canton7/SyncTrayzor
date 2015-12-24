@@ -32,6 +32,8 @@ namespace SyncTrayzor.Services
 
     public class FilesystemProvider : IFilesystemProvider
     {
+        private const int maxPath = 260;
+
         public bool FileExists(string path) => Pri.LongPath.File.Exists(path);
 
         public bool DirectoryExists(string path) => Pri.LongPath.Directory.Exists(path);
@@ -52,7 +54,14 @@ namespace SyncTrayzor.Services
 
         public void DeleteFile(string path) => Pri.LongPath.File.Delete(path);
 
-        public void DeleteFileToRecycleBin(string path) => RecycleBinDeleter.Delete(path);
+        public void DeleteFileToRecycleBin(string path)
+        {
+            // This won't work with paths > MAX_PATH
+            if (path.Length >= maxPath)
+                Pri.LongPath.File.Delete(path);
+            else
+                RecycleBinDeleter.Delete(path);
+        }
 
         public void DeleteDirectory(string path, bool recursive) => Pri.LongPath.Directory.Delete(path, recursive);
 
