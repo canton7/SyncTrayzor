@@ -43,6 +43,7 @@
         </TextBlock>
         <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,5,0,0"
+                Style="{StaticResource DialogButton}"
                 Content="{l:Loc Generic_Dialog_Close}"/>
     </DockPanel>
 </Window>

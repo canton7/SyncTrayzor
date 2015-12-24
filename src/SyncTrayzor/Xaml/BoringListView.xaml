@@ -2,15 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 
-    <LinearGradientBrush x:Key="GridViewColumnHeaderBackground" EndPoint="0,1" StartPoint="0,0">
+    <!--<LinearGradientBrush x:Key="GridViewColumnHeaderBackground" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFFFFFFF" Offset="0"/>
         <GradientStop Color="#FFFFFFFF" Offset="0.4091"/>
         <GradientStop Color="#FFF7F8F9" Offset="1"/>
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="GridViewColumnHeaderBorderBackground" EndPoint="0,1" StartPoint="0,0">
+    </LinearGradientBrush>-->
+    <!--<LinearGradientBrush x:Key="GridViewColumnHeaderBorderBackground" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFF2F2F2" Offset="0"/>
         <GradientStop Color="#FFD5D5D5" Offset="1"/>
-    </LinearGradientBrush>
+    </LinearGradientBrush>-->
     <!--<LinearGradientBrush x:Key="GridViewColumnHeaderHoverBackground" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFBDEDFF" Offset="0"/>
         <GradientStop Color="#FFB7E7FB" Offset="1"/>
@@ -19,7 +19,7 @@
         <GradientStop Color="#FF8DD6F7" Offset="0"/>
         <GradientStop Color="#FF8AD1F5" Offset="1"/>
     </LinearGradientBrush>-->
-    <Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
+    <!--<Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
         <Setter Property="Canvas.Right" Value="-9"/>
         <Setter Property="Width" Value="18"/>
         <Setter Property="Height" Value="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent}}"/>
@@ -34,23 +34,25 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
 
-    <Style x:Key="PassiveGridViewColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
-        <!-- This used to be Center, but Stretch is more useful -->
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Style x:Key="BoringGridViewColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+        <!-- This used to be center -->
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <!-- Likewise this used to be Center -->
         <Setter Property="VerticalContentAlignment" Value="Bottom"/>
-        <Setter Property="Background" Value="{StaticResource GridViewColumnHeaderBackground}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource GridViewColumnHeaderBorderBackground}"/>
+        <!-- Need to override styles being applied from elsewhere (I think?) -->
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="2,0,2,0"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                    <Grid SnapsToDevicePixels="true">
+                    <!--<Grid SnapsToDevicePixels="true">
                         <Border x:Name="HeaderBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1,0,1" Background="{TemplateBinding Background}">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -68,7 +70,8 @@
                         <Canvas>
                             <Thumb x:Name="PART_HeaderGripper" Style="{StaticResource GridViewColumnHeaderGripper}"/>
                         </Canvas>
-                    </Grid>
+                    </Grid>-->
+                    <ContentPresenter x:Name="HeaderContent" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0,0,0,1" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     <ControlTemplate.Triggers>
                         <!--<Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" TargetName="HeaderBorder" Value="{StaticResource GridViewColumnHeaderHoverBackground}"/>
@@ -88,9 +91,9 @@
                         <Trigger Property="Height" Value="Auto">
                             <Setter Property="MinHeight" Value="20"/>
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
+                        <!--<Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                        </Trigger>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -126,7 +129,7 @@
     </Style>
 
 
-    <ControlTemplate x:Key="PassiveListViewItemControlTemplate" TargetType="{x:Type ListViewItem}">
+    <ControlTemplate x:Key="BoringListViewItemControlTemplate" TargetType="{x:Type ListViewItem}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2" SnapsToDevicePixels="True">
             <Border x:Name="InnerBorder" BorderThickness="1" CornerRadius="1">
                 <Grid>
@@ -203,7 +206,7 @@
     </ControlTemplate>
 
     <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
-    <Style x:Key="PassiveListViewStyle" TargetType="{x:Type ListView}">
+    <Style x:Key="BoringListViewStyle" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{StaticResource ListBorder}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -218,7 +221,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListView}">
-                    <Themes:ListBoxChrome x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                    <Themes:ListBoxChrome x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderFocused="{TemplateBinding IsKeyboardFocusWithin}" SnapsToDevicePixels="true">
                         <ScrollViewer Padding="{TemplateBinding Padding}" Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </ScrollViewer>
@@ -241,14 +244,14 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="Template" Value="{StaticResource PassiveListViewItemControlTemplate}"/>
+                    <Setter Property="Template" Value="{StaticResource BoringListViewItemControlTemplate}"/>
                     <!-- Not strictly part of the passiveness, but still useful -->
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </Setter.Value>
         </Setter>
         <Style.Resources>
-            <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource PassiveGridViewColumnHeaderStyle}"/>
+            <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource BoringGridViewColumnHeaderStyle}"/>
         </Style.Resources>
     </Style>
 </ResourceDictionary>

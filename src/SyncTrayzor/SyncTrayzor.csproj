@@ -154,6 +154,9 @@
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Services\Config\SyncThingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />
+    <Compile Include="Services\ConflictFileManager.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
@@ -301,6 +305,7 @@
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\PathEx.cs" />
     <Compile Include="Utils\PgpClearsignUtilities.cs" />
+    <Compile Include="Utils\RecycleBinDeleter.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
@@ -311,6 +316,7 @@
     <Compile Include="Xaml\ActivateBehaviour.cs" />
     <Compile Include="Xaml\CultureAwareBinding.cs" />
     <Compile Include="Xaml\GridLengthToAbsoluteConverter.cs" />
+    <Compile Include="Xaml\GridViewSortByBehaviour.cs" />
     <Compile Include="Xaml\MouseWheelGesture.cs" />
     <Compile Include="Xaml\NoSizeBelowScreenBehaviour.cs" />
     <Compile Include="Xaml\PopupConductorBehaviour.cs" />
@@ -352,6 +358,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ConflictResolution\ConflictResolutionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -398,6 +408,10 @@
     <Page Include="Pages\ViewerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\BoringListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Xaml\PassiveListView.xaml">
       <SubType>Designer</SubType>

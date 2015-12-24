@@ -60,6 +60,7 @@ namespace SyncTrayzor
             builder.Bind<IInstallerCertificateVerifier>().To<InstallerCertificateVerifier>().InSingletonScope();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
+            builder.Bind<IConflictFileManager>().To<ConflictFileManager>(); // Could be singleton... Not often used
             builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
             builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
