@@ -17,6 +17,7 @@ namespace SyncTrayzor.Services
         void MoveFile(string from, string to);
         void CreateDirectory(string path);
         void DeleteFile(string path);
+        void DeleteFileToRecycleBin(string path);
         void DeleteDirectory(string path, bool recursive);
         void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
         DateTime GetLastAccessTimeUtc(string path);
@@ -50,6 +51,8 @@ namespace SyncTrayzor.Services
         public void CreateDirectory(string path) => Pri.LongPath.Directory.CreateDirectory(path);
 
         public void DeleteFile(string path) => Pri.LongPath.File.Delete(path);
+
+        public void DeleteFileToRecycleBin(string path) => RecycleBinDeleter.Delete(path);
 
         public void DeleteDirectory(string path, bool recursive) => Pri.LongPath.Directory.Delete(path, recursive);
 

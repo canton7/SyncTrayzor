@@ -211,13 +211,13 @@ namespace SyncTrayzor.Services
                 foreach (var file in conflictSet.Conflicts)
                 {
                     logger.Debug("Deleting {0}", file);
-                    this.filesystemProvider.DeleteFile(file.FilePath);
+                    this.filesystemProvider.DeleteFileToRecycleBin(file.FilePath);
                 }
             }
             else
             {
                 logger.Debug("Deleting {0}", conflictSet.File.FilePath);
-                this.filesystemProvider.DeleteFile(conflictSet.File.FilePath);
+                this.filesystemProvider.DeleteFileToRecycleBin(conflictSet.File.FilePath);
 
                 foreach (var file in conflictSet.Conflicts)
                 {
@@ -225,7 +225,7 @@ namespace SyncTrayzor.Services
                         continue;
 
                     logger.Debug("Deleting {0}", file.FilePath);
-                    this.filesystemProvider.DeleteFile(file.FilePath);
+                    this.filesystemProvider.DeleteFileToRecycleBin(file.FilePath);
                 }
 
                 logger.Debug("Renaming {0} to {1}", chosenFilePath, conflictSet.File.FilePath);

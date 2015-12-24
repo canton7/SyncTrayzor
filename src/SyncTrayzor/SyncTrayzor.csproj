@@ -304,6 +304,7 @@
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\PathEx.cs" />
     <Compile Include="Utils\PgpClearsignUtilities.cs" />
+    <Compile Include="Utils\RecycleBinDeleter.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
