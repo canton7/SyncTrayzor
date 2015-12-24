@@ -8,9 +8,10 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
+        xmlns:l="clr-namespace:SyncTrayzor.Localization"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ConflictResolutionViewModel}"
-        Title="Conflict Resolver" Height="400" Width="700">
+        Title="{l:Loc ConflictResolutionView_Title}" Height="500" Width="800">
     <Window.Resources>
         <CollectionViewSource x:Key="ConflictsItemsSource" Source="{Binding Conflicts}">
             <CollectionViewSource.GroupDescriptions>
@@ -29,12 +30,17 @@
     <DockPanel Margin="10,0">
         <!--  Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}" -->
         <DockPanel DockPanel.Dock="Top" Margin="0,10,0,0" Visibility="{Binding IsLoading, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-            <TextBlock DockPanel.Dock="Left">Scanning...</TextBlock>
-            <Button DockPanel.Dock="Right" Command="{s:Action Cancel}">Cancel</Button>
-            <ProgressBar IsIndeterminate="True" Height="10" Margin="10,0" />
+            <TextBlock DockPanel.Dock="Left" Text="{l:Loc ConflictResolutionView_Scanning_Label}"/>
+            <Button DockPanel.Dock="Right" Command="{s:Action Cancel}" Content="{l:Loc ConflictResolutionView_Scanning_CancelButton}"/>
+            <ProgressBar IsIndeterminate="True" Height="10" Margin="10,0"/>
         </DockPanel>
 
-        <Button DockPanel.Dock="Bottom" Margin="10" HorizontalAlignment="Right" Command="{s:Action Close}" Style="{StaticResource DialogButton}">Close</Button>
+        <Button DockPanel.Dock="Bottom"
+                Margin="10"
+                HorizontalAlignment="Right"
+                Command="{s:Action Close}"
+                Style="{StaticResource DialogButton}"
+                Content="{l:Loc Generic_Dialog_Close}"/>
 
         <Border DockPanel.Dock="Bottom" Margin="0,10,0,0"
                 Style="{StaticResource SectionBorderStyle}"
@@ -60,8 +66,8 @@
                         </Style>
                     </Grid.Resources>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Header}">Original File</TextBlock>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Header}">Last Modified</TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_OriginalFile}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_LastModified}"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Value}" Text="{Binding SelectedConflict.FileName}"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding SelectedConflict.LastModified}"/>
@@ -69,7 +75,8 @@
                                 HorizontalAlignment="Left"
                                 Style="{StaticResource Value}"
                                 Command="{s:Action ChooseOriginal}"
-                                CommandParameter="{Binding SelectedConflict}">Choose</Button>
+                                CommandParameter="{Binding SelectedConflict}"
+                                Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
                 </Grid>
 
                 <ListView x:Name="SelectConflictOptions"
@@ -79,13 +86,19 @@
                           ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Conflicting File Name" DisplayMemberBinding="{Binding FileName}"/>
-                            <GridViewColumn Header="Conflict Created" DisplayMemberBinding="{Binding DateCreated}"/>
+                            <GridViewColumn
+                                Header="{l:Loc ConflictResolutionView_Header_ConflictingFileName}"
+                                DisplayMemberBinding="{Binding FileName}"/>
+                            <GridViewColumn
+                                Header="{l:Loc ConflictResolutionView_Header_ConflictCreated}"
+                                DisplayMemberBinding="{Binding DateCreated}"/>
                             <GridViewColumn>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <Button Command="{s:Action ChooseConflictFile}" CommandParameter="{Binding}">Choose</Button>
+                                            <Button Command="{s:Action ChooseConflictFile}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -105,17 +118,14 @@
                     </Style>
                 </Grid.Resources>
                 <TextBlock Style="{StaticResource MessageStyle}"
-                           Visibility="{Binding IsLoadingAndNoConflictsFound, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                    No conflicts found (yet)...
-                </TextBlock>
+                           Visibility="{Binding IsLoadingAndNoConflictsFound, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                           Text="{l:Loc ConflictResolutionView_Status_Scanning}"/>
                 <TextBlock Style="{StaticResource MessageStyle}"
-                           Visibility="{Binding HasFinishedLoadingAndNoConflictsFound, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                    No conflicts found. Good job!
-                </TextBlock>
+                           Visibility="{Binding HasFinishedLoadingAndNoConflictsFound, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                           Text="{l:Loc ConflictResolutionView_Status_NoConflicts}"/>
                 <TextBlock Style="{StaticResource MessageStyle}"
-                           Visibility="{Binding IsSyncthingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-                    Syncthing is not running. Please start Syncthing.
-                </TextBlock>
+                           Visibility="{Binding IsSyncthingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                           Text="{l:Loc ConflictResolutionView_Status_SyncthingNotRunning}"/>
                 <ListView Visibility="{Binding Conflicts, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                           ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
                           SelectedItem="{Binding SelectedConflict}"
@@ -132,15 +142,19 @@
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="File" xaml:GridViewSortBy.SortByKey="FileName">
+                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_File}"
+                                            xaml:GridViewSortBy.SortByKey="FileName">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding FileName}" Margin="20,0,0,0"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding LastModified}" xaml:GridViewSortBy.SortByKey="LastModified"/>
-                            <GridViewColumn Header="Folder" xaml:GridViewSortBy.SortByKey="InnerFolder">
+                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_LastModified}"
+                                            DisplayMemberBinding="{Binding LastModified}"
+                                            xaml:GridViewSortBy.SortByKey="LastModified"/>
+                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_Folder}"
+                                            xaml:GridViewSortBy.SortByKey="InnerFolder">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock>

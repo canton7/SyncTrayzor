@@ -761,4 +761,59 @@ Do you want to restart SyncTrayzor now?</value>
     <value>You can find SyncTrayzor's log file here.</value>
     <comment>Clickable text to open the location of the log file</comment>
   </data>
+  <data name="ConflictResolutionView_Button_Choose" xml:space="preserve">
+    <value>Choose</value>
+    <comment>Button shown next to each conflicted file, allowing the user to choose that version of the file as the one they want to keep (and deleting the other versions)</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_ConflictCreated" xml:space="preserve">
+    <value>Conflict Created</value>
+    <comment>Header shown above the list of times at which each confliction version of the file was created, and is shown when the user selects a conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_ConflictingFileName" xml:space="preserve">
+    <value>Conflicting File Name</value>
+    <comment>Header shown above a list of file names of each conflicting version of the file, and is shown when the user selects a conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_File" xml:space="preserve">
+    <value>File</value>
+    <comment>Header shown above the filename of each conflicted file in the main body of the window</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_Folder" xml:space="preserve">
+    <value>Folder</value>
+    <comment>Header shown above the folder containing each conflicted file in the main body of the window</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_LastModified" xml:space="preserve">
+    <value>Last Modified</value>
+    <comment>Header shown above the 'Last Modified' column. This is used both in the main body (to show when the original file in the conflict was last modified), and above each version of the conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_OriginalFile" xml:space="preserve">
+    <value>Original File</value>
+    <comment>Header shown above the 'Original File' entry, which contains the name of the original file in the conflict, and is shown when the user selects a conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Scanning_CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text on the 'Cancel' button, shown next to the 'Scanning' progress bar at the top of the page when scanning is in progress</comment>
+  </data>
+  <data name="ConflictResolutionView_Scanning_Label" xml:space="preserve">
+    <value>Scanning...</value>
+    <comment>Text shown next to the 'Scanning' progress bar at the top of the page, when scanning is in progress</comment>
+  </data>
+  <data name="ConflictResolutionView_Status_NoConflicts" xml:space="preserve">
+    <value>No conflicts found. Good job!</value>
+    <comment>Text shown in the main body of the window when we've finished scanning for conflicts, and didn't find any</comment>
+  </data>
+  <data name="ConflictResolutionView_Status_Scanning" xml:space="preserve">
+    <value>No conflicts found (yet)...</value>
+    <comment>Text shown in the main body of the window when we're scanning for conflicts, but haven't yet found any</comment>
+  </data>
+  <data name="ConflictResolutionView_Status_SyncthingNotRunning" xml:space="preserve">
+    <value>Syncthing is not running. Please start Syncthing.</value>
+    <comment>Text shown in the main body of the window when Syncthing isn't running (which means that we can't start scanning for conflicts)</comment>
+  </data>
+  <data name="ConflictResolutionView_Title" xml:space="preserve">
+    <value>Conflict Resolver</value>
+    <comment>Shown in the title bar of the Conflict Resolver window</comment>
+  </data>
+  <data name="ShellView_Menu_File_ConflictResolver" xml:space="preserve">
+    <value>_Conflict Resolver</value>
+  </data>
 </root>
