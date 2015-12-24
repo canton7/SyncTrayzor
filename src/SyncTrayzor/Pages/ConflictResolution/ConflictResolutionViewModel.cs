@@ -6,6 +6,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Collections.Specialized;
+using System.IO;
+using SyncTrayzor.Localization;
+using System.Windows;
+using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
@@ -14,6 +18,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
         private readonly ISyncThingManager syncThingManager;
         private readonly IConflictFileManager conflictFileManager;
         private readonly IProcessStartProvider processStartProvider;
+        private readonly IWindowManager windowManager;
 
         private CancellationTokenSource loadingCts { get; set; }
 
@@ -25,11 +30,16 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public ConflictViewModel SelectedConflict { get; set; }
 
-        public ConflictResolutionViewModel(ISyncThingManager syncThingManager, IConflictFileManager conflictFileManager, IProcessStartProvider processStartProvider)
+        public ConflictResolutionViewModel(
+            ISyncThingManager syncThingManager,
+            IConflictFileManager conflictFileManager,
+            IProcessStartProvider processStartProvider,
+            IWindowManager windowManager)
         {
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
             this.processStartProvider = processStartProvider;
+            this.windowManager = windowManager;
 
             this.Conflicts.CollectionChanged += (o, e) =>
             {
@@ -114,7 +124,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public void ChooseOriginal(ConflictViewModel conflict)
         {
-            this.conflictFileManager.ResolveConflict(this.SelectedConflict.ConflictSet, conflict.ConflictSet.File.FilePath);
+            if (!this.ResolveConflict(this.SelectedConflict.ConflictSet, conflict.ConflictSet.File.FilePath))
+                return;
 
             // The conflict will no longer exist, so remove it
             this.Conflicts.Remove(conflict);
@@ -123,11 +134,31 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public void ChooseConflictFile(ConflictOptionViewModel conflictOption)
         {
             // Call into the service... Don't do this now for testing
-            this.conflictFileManager.ResolveConflict(this.SelectedConflict.ConflictSet, conflictOption.ConflictOption.FilePath);
+            if (!this.ResolveConflict(this.SelectedConflict.ConflictSet, conflictOption.ConflictOption.FilePath))
+                return;
 
             // The conflict will no longer exist, so remove it
             var correspondingVm = this.Conflicts.First(x => x.ConflictOptions.Contains(conflictOption));
             this.Conflicts.Remove(correspondingVm);
+        }
+
+        private bool ResolveConflict(ConflictSet conflictSet, string filePath)
+        {
+            try
+            {
+                this.conflictFileManager.ResolveConflict(conflictSet, filePath);
+                return true;
+            }
+            catch (IOException e)
+            {
+                this.windowManager.ShowMessageBox(
+                    Localizer.F(Resources.ConflictResolutionView_Dialog_Failed_Message, e.Message),
+                    Resources.ConflictResolutionView_Dialog_Failed_Title,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                return false;
+            }
         }
 
         public void Close()

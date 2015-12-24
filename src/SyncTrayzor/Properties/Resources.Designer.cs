@@ -142,6 +142,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resolving this conflict failed: {0}.
+        /// </summary>
+        public static string ConflictResolutionView_Dialog_Failed_Message {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Dialog_Failed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation Failed.
+        /// </summary>
+        public static string ConflictResolutionView_Dialog_Failed_Title {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Dialog_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Conflict Created.
         /// </summary>
         public static string ConflictResolutionView_Header_ConflictCreated {
