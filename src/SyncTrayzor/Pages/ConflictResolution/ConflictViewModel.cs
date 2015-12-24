@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Pri.LongPath;
+using System.Drawing;
+using SyncTrayzor.Utils;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
@@ -26,6 +28,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public string FolderId { get; }
 
         public BindableCollection<ConflictOptionViewModel> ConflictOptions { get; }
+
+        public Icon Icon { get; }
         
 
         public ConflictViewModel(ConflictSet conflictSet, string folderName)
@@ -34,6 +38,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.FolderId = folderName;
 
             this.ConflictOptions = new BindableCollection<ConflictOptionViewModel>(this.ConflictSet.Conflicts.Select(x => new ConflictOptionViewModel(x)));
+            this.Icon = ShellTools.GetIcon(this.ConflictSet.File.FilePath, isFile: true);
         }
     }
 }

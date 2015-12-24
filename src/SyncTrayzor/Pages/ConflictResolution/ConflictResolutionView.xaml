@@ -86,9 +86,13 @@
                           ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn
-                                Header="{l:Loc ConflictResolutionView_Header_ConflictingFileName}"
-                                DisplayMemberBinding="{Binding FileName}"/>
+                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ConflictingFileName}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="0,0,10,0" Text="{Binding FileName}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn
                                 Header="{l:Loc ConflictResolutionView_Header_ConflictCreated}"
                                 DisplayMemberBinding="{Binding DateCreated}"/>
@@ -126,6 +130,7 @@
                 <TextBlock Style="{StaticResource MessageStyle}"
                            Visibility="{Binding IsSyncthingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                            Text="{l:Loc ConflictResolutionView_Status_SyncthingNotRunning}"/>
+                
                 <ListView Visibility="{Binding Conflicts, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                           ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
                           SelectedItem="{Binding SelectedConflict}"
@@ -146,7 +151,11 @@
                                             xaml:GridViewSortBy.SortByKey="FileName">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding FileName}" Margin="20,0,0,0"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Width="15" Height="15" Margin="0,0,5,0"
+                                                   Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                            <TextBlock Text="{Binding FileName}"/>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
