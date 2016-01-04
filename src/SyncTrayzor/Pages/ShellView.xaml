@@ -53,6 +53,7 @@
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
                 <RowDefinition>
                     <i:Interaction.Behaviors>
@@ -67,11 +68,13 @@
                 </RowDefinition>
             </Grid.RowDefinitions>
 
-            <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
+            <ContentControl Grid.Row="0" s:View.Model="{Binding BarAlerts}"/>
+            
+            <ContentControl Grid.Row="1" s:View.Model="{Binding Viewer}"/>
 
-            <GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="True" ResizeDirection="Rows"/>
+            <GridSplitter Grid.Row="2" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="True" ResizeDirection="Rows"/>
 
-            <ContentControl Grid.Row="2" s:View.Model="{Binding Console}"/>
+            <ContentControl Grid.Row="3" s:View.Model="{Binding Console}"/>
         </Grid>
     </DockPanel>
 </Window>

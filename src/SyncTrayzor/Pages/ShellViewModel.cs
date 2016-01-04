@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages.BarAlerts;
 using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Properties;
@@ -28,6 +29,7 @@ namespace SyncTrayzor.Pages
         public SlimObservable<bool> ActivateObservable { get; } = new SlimObservable<bool>();
         public ConsoleViewModel Console { get; }
         public ViewerViewModel Viewer { get; }
+        public BarAlertsViewModel BarAlerts { get; }
 
         public SyncThingState SyncThingState { get; private set; }
 
@@ -38,6 +40,7 @@ namespace SyncTrayzor.Pages
             IConfigurationProvider configurationProvider,
             ConsoleViewModel console,
             ViewerViewModel viewer,
+            BarAlertsViewModel barAlerts,
             Func<SettingsViewModel> settingsViewModelFactory,
             Func<AboutViewModel> aboutViewModelFactory,
             Func<ConflictResolutionViewModel> confictResolutionViewModelFactory,
@@ -49,6 +52,7 @@ namespace SyncTrayzor.Pages
             this.configurationProvider = configurationProvider;
             this.Console = console;
             this.Viewer = viewer;
+            this.BarAlerts = barAlerts;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.aboutViewModelFactory = aboutViewModelFactory;
             this.confictResolutionViewModelFactory = confictResolutionViewModelFactory;
@@ -58,6 +62,7 @@ namespace SyncTrayzor.Pages
 
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
+            this.BarAlerts.ConductWith(this);
 
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
             this.syncThingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
