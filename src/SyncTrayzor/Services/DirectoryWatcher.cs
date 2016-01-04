@@ -25,8 +25,13 @@ namespace SyncTrayzor.Services
     {
         public bool Cancel { get; set; }
 
-        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath)
-            : base(directoryPath, subPath) { }
+        public bool FileExists { get; }
+
+        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath, bool fileExists)
+            : base(directoryPath, subPath)
+        {
+            this.FileExists = fileExists;
+        }
     }
 
     public class DirectoryWatcher : IDisposable
@@ -177,7 +182,7 @@ namespace SyncTrayzor.Services
             // (e.g. because it was a deletion), then strip it back to the first component without an ~
             subPath = this.StripShortPathSegments(subPath);
 
-            if (this.OnPreviewDirectoryChanged(subPath))
+            if (this.OnPreviewDirectoryChanged(subPath, fileExists))
                 return;
 
             this.backoffTimer.Stop();
@@ -250,12 +255,12 @@ namespace SyncTrayzor.Services
         }
 
         // Return true to cancel
-        private bool OnPreviewDirectoryChanged(string subPath)
+        private bool OnPreviewDirectoryChanged(string subPath, bool fileExists)
         {
             var handler = this.PreviewDirectoryChanged;
             if (handler != null)
             {
-                var ea = new PreviewDirectoryChangedEventArgs(this.directory, subPath);
+                var ea = new PreviewDirectoryChangedEventArgs(this.directory, subPath, fileExists);
                 handler(this, ea);
                 logger.Trace("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.directory, subPath), ea.Cancel);
                 return ea.Cancel;

@@ -1,5 +1,5 @@
 ﻿using Stylet;
-using SyncTrayzor.Services;
+using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
@@ -10,6 +10,7 @@ using System.IO;
 using SyncTrayzor.Localization;
 using System.Windows;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Services;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {

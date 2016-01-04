@@ -8,7 +8,7 @@ using Pri.LongPath;
 using NLog;
 using SyncTrayzor.Utils;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Conflicts
 {
     public class ConflictFile
     {

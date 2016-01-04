@@ -7,6 +7,7 @@ using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
+using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
@@ -61,6 +62,7 @@ namespace SyncTrayzor
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
             builder.Bind<IConflictFileManager>().To<ConflictFileManager>(); // Could be singleton... Not often used
+            builder.Bind<IConflictFileWatcher>().To<ConflictFileWatcher>().InSingletonScope();
             builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
             builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
@@ -175,6 +177,8 @@ namespace SyncTrayzor
 
             logger.Debug("Cleaning up config folder path");
             this.Container.Get<ConfigFolderCleaner>().Clean();
+
+            this.Container.Get<IConflictFileWatcher>();
         }
 
         private void OnAppDomainUnhandledException(UnhandledExceptionEventArgs e)

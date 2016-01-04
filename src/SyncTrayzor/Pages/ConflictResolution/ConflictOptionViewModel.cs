@@ -1,5 +1,5 @@
 ﻿using Stylet;
-using SyncTrayzor.Services;
+using SyncTrayzor.Services.Conflicts;
 using System;
 using System.IO;
 

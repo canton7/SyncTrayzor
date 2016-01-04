@@ -6,11 +6,28 @@ using System.Linq;
 
 namespace SyncTrayzor.Services
 {
+    public class FileChangeDetectedEventArgs : EventArgs
+    {
+        public string Path { get; }
+        public bool FileExists { get; }
+
+        public FileChangeDetectedEventArgs(string path, bool fileExists)
+        {
+            this.Path = path;
+            this.FileExists = fileExists;
+        }
+    }
+
     public interface IWatchedFolderMonitor
     {
         IEnumerable<string> WatchedFolderIDs { get; set; }
         TimeSpan BackoffInterval { get; set; }
         TimeSpan FolderExistenceCheckingInterval { get; set; }
+
+        /// <summary>
+        /// Raised when anything changes; unfiltered
+        /// </summary>
+        event EventHandler<FileChangeDetectedEventArgs> FileChangeDetected;
     }
 
     public class WatchedFolderMonitor : IWatchedFolderMonitor
@@ -37,6 +54,8 @@ namespace SyncTrayzor.Services
 
         public TimeSpan BackoffInterval { get; set; }
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
+
+        public event EventHandler<FileChangeDetectedEventArgs> FileChangeDetected;
 
         public WatchedFolderMonitor(ISyncThingManager syncThingManager)
         {
@@ -70,16 +89,21 @@ namespace SyncTrayzor.Services
                     continue;
 
                 var watcher = new DirectoryWatcher(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
-                watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.PreviewDirectoryChanged(folder, e.SubPath);
-                watcher.DirectoryChanged += (o, e) => this.DirectoryChanged(folder, e.SubPath);
+                watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.WatcherPreviewDirectoryChanged(folder, e);
+                watcher.DirectoryChanged += (o, e) => this.WatcherDirectoryChanged(folder, e.SubPath);
 
                 this.directoryWatchers.Add(watcher);
             }
         }
 
         // Returns true to cancel
-        private bool PreviewDirectoryChanged(Folder folder, string subPath)
+        private bool WatcherPreviewDirectoryChanged(Folder folder, PreviewDirectoryChangedEventArgs e)
         {
+            var subPath = e.SubPath;
+
+            // ConflictFileWatcher relies on this
+            this.FileChangeDetected?.Invoke(this, new FileChangeDetectedEventArgs(Path.Combine(e.DirectoryPath, e.SubPath), e.FileExists));
+
             // Is it a syncthing temp/special path?
             if (specialPaths.Any(x => subPath.StartsWith(x)))
                 return true;
@@ -108,7 +132,7 @@ namespace SyncTrayzor.Services
             return false;
         }
 
-        private void DirectoryChanged(Folder folder, string subPath)
+        private void WatcherDirectoryChanged(Folder folder, string subPath)
         {
             // If it's currently syncing, then don't refresh it
             if (folder.SyncState == FolderSyncState.Syncing)
