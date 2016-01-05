@@ -94,12 +94,14 @@ namespace SyncTrayzor.Services.Conflicts
 
             bool changed;
 
+            var fullPath = Path.Combine(e.Directory, e.Path);
+
             lock (this.conflictedFilesLock)
             {
                 if (e.FileExists)
-                    changed = this.conflictedFiles.Add(e.Path);
+                    changed = this.conflictedFiles.Add(fullPath);
                 else
-                    changed = this.conflictedFiles.Remove(e.Path);
+                    changed = this.conflictedFiles.Remove(fullPath);
             }
 
             if (changed)
@@ -136,7 +138,7 @@ namespace SyncTrayzor.Services.Conflicts
                             {
                                 foreach (var file in conflict.Conflicts)
                                 {
-                                    this.conflictedFiles.Add(file.FilePath);
+                                    this.conflictedFiles.Add(Path.Combine(folder.Path, file.FilePath));
                                 }
                             }
                         });

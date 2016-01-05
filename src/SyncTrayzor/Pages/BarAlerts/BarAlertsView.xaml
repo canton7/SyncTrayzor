@@ -12,13 +12,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Grid Background="{Binding Severity, Converter={x:Static local:AlertSeverityToBackgroundColorConverter.Instance}}">
-                    <ContentControl Margin="3,5" Content="{Binding}">
-                        <ContentControl.Resources>
-                            <DataTemplate DataType="{x:Type local:ConflictsAlertViewModel}">
-                                <TextBlock Text="Found some conflicts!"/>
-                            </DataTemplate>
-                        </ContentControl.Resources>
-                    </ContentControl>
+                    <ContentControl Margin="3,5" s:View.Model="{Binding}"/>
                 </Grid>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

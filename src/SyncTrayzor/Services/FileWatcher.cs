@@ -24,6 +24,7 @@ namespace SyncTrayzor.Services
 
         public FileChangedEventArgs(string directory, string path, bool fileExists)
         {
+            this.Directory = directory;
             this.Path = path;
             this.FileExists = fileExists;
         }
@@ -61,18 +62,12 @@ namespace SyncTrayzor.Services
         {
             try
             {
-                NotifyFilters filters = 0;
-                if (this.mode.HasFlag(FileWatcherMode.ContentChanged))
-                    filters |= NotifyFilters.LastWrite;
-                if (this.mode.HasFlag(FileWatcherMode.CreatedOrDeleted))
-                    filters |= NotifyFilters.FileName | NotifyFilters.DirectoryName;
-
                 var watcher = new FileSystemWatcher()
                 {
                     Path = directory,
                     Filter = "*.*",
                     IncludeSubdirectories = true,
-                    NotifyFilter = filters,
+                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
                 };
 
                 if (this.mode.HasFlag(FileWatcherMode.ContentChanged))

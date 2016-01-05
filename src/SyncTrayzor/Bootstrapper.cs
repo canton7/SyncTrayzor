@@ -63,6 +63,7 @@ namespace SyncTrayzor
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
             builder.Bind<IConflictFileManager>().To<ConflictFileManager>(); // Could be singleton... Not often used
             builder.Bind<IConflictFileWatcher>().To<ConflictFileWatcher>().InSingletonScope();
+            builder.Bind<IAlertsManager>().To<AlertsManager>().InSingletonScope();
             builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
             builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
