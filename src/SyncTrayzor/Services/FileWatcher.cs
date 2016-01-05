@@ -35,6 +35,7 @@ namespace SyncTrayzor.Services
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly FileWatcherMode mode;
+        private readonly string filter;
         protected readonly string Directory;
         private readonly Timer existenceCheckingTimer;
 
@@ -42,9 +43,10 @@ namespace SyncTrayzor.Services
 
         public event EventHandler<FileChangedEventArgs> FileChanged;
 
-        public FileWatcher(FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval)
+        public FileWatcher(FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval, string filter = "*.*")
         {
             this.mode = mode;
+            this.filter = filter;
             this.Directory = directory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
             this.watcher = this.TryToCreateWatcher(this.Directory);
@@ -65,7 +67,7 @@ namespace SyncTrayzor.Services
                 var watcher = new FileSystemWatcher()
                 {
                     Path = directory,
-                    Filter = "*.*",
+                    Filter = this.filter,
                     IncludeSubdirectories = true,
                     NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
                 };

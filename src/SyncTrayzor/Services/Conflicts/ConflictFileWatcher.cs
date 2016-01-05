@@ -12,6 +12,7 @@ namespace SyncTrayzor.Services.Conflicts
 {
     public interface IConflictFileWatcher
     {
+        bool IsEnabled { get; set; }
         List<string> ConflictedFiles { get; }
         TimeSpan FolderExistenceCheckingInterval { get; set; }
 
@@ -22,6 +23,7 @@ namespace SyncTrayzor.Services.Conflicts
     {
         private const string versionsFolder = ".stversions";
         private const string conflictFileMarker = ".sync-conflict-";
+        private const string conflictFilePattern = "*.sync-conflict-*";
 
         private readonly ISyncThingManager syncThingManager;
         private readonly IConflictFileManager conflictFileManager;
@@ -45,6 +47,20 @@ namespace SyncTrayzor.Services.Conflicts
             }
         }
 
+        private bool _isEnabled;
+        public bool IsEnabled
+        {
+            get { return this._isEnabled; }
+            set
+            {
+                if (this._isEnabled == value)
+                    return;
+
+                this._isEnabled = value;
+                this.Reset();
+            }
+        }
+
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
 
         public event EventHandler ConflictedFilesChanged;
@@ -61,13 +77,18 @@ namespace SyncTrayzor.Services.Conflicts
 
         private async void Reset()
         {
+            this.StopWatchers();
+
+            if (!this.IsEnabled)
+                return;
+
             var folders = this.syncThingManager.Folders.FetchAll();
 
-            this.RefreshWatchers(folders);
+            this.StartWatchers(folders);
             await this.ScanFoldersAsync(folders);
         }
 
-        private void RefreshWatchers(IReadOnlyCollection<Folder> folders)
+        private void StopWatchers()
         {
             foreach (var watcher in this.fileWatchers)
             {
@@ -75,10 +96,13 @@ namespace SyncTrayzor.Services.Conflicts
             }
 
             this.fileWatchers.Clear();
+        }
 
+        private void StartWatchers(IReadOnlyCollection<Folder> folders)
+        {
             foreach (var folder in folders)
             {
-                var watcher = new FileWatcher(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval);
+                var watcher = new FileWatcher(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, conflictFilePattern);
                 watcher.FileChanged += this.FileChanged;
                 this.fileWatchers.Add(watcher);
             }
@@ -89,19 +113,26 @@ namespace SyncTrayzor.Services.Conflicts
             if (e.Path.StartsWith(versionsFolder))
                 return;
 
-            if (!Path.GetFileName(e.Path).Contains(conflictFileMarker))
+            var fullPath = Path.Combine(e.Directory, e.Path);
+
+            // TODO: This needs more work
+            // We don't handle it being deleted properly. We need ot see whether there are *any* conflict
+            // files for this file. Maybe keep a collection of file -> conflicts? We'll have to handle failure
+            // to find the base path properly...
+
+            // Can we find an original file for it?
+            ParsedConflictFileInfo parsedConflictFileInfo;
+            if (!this.conflictFileManager.TryFindBaseFileForConflictFile(fullPath, out parsedConflictFileInfo))
                 return;
 
             bool changed;
 
-            var fullPath = Path.Combine(e.Directory, e.Path);
-
             lock (this.conflictedFilesLock)
             {
                 if (e.FileExists)
-                    changed = this.conflictedFiles.Add(fullPath);
+                    changed = this.conflictedFiles.Add(parsedConflictFileInfo.OriginalPath);
                 else
-                    changed = this.conflictedFiles.Remove(fullPath);
+                    changed = this.conflictedFiles.Remove(parsedConflictFileInfo.OriginalPath);
             }
 
             if (changed)
@@ -136,10 +167,7 @@ namespace SyncTrayzor.Services.Conflicts
                         {
                             lock (this.conflictedFilesLock)
                             {
-                                foreach (var file in conflict.Conflicts)
-                                {
-                                    this.conflictedFiles.Add(Path.Combine(folder.Path, file.FilePath));
-                                }
+                                this.conflictedFiles.Add(Path.Combine(folder.Path, conflict.File.FilePath));
                             }
                         });
                     }
@@ -162,12 +190,7 @@ namespace SyncTrayzor.Services.Conflicts
 
         public void Dispose()
         {
-            foreach (var watcher in this.fileWatchers)
-            {
-                watcher.Dispose();
-            }
-
-            this.fileWatchers.Clear();
+            this.StopWatchers();
         }
     }
 }

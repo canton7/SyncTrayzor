@@ -29,7 +29,6 @@ namespace SyncTrayzor.Services.Conflicts
 
     public class ConflictOption
     {
-
         public string FilePath { get; }
         public DateTime LastModified { get; }
 
@@ -60,10 +59,27 @@ namespace SyncTrayzor.Services.Conflicts
         }
     }
 
+    public struct ParsedConflictFileInfo
+    {
+        public string FilePath { get; }
+        public string OriginalPath { get; }
+        public DateTime Created { get; }
+
+        public ParsedConflictFileInfo(string filePath, string originalPath, DateTime created)
+        {
+            this.FilePath = filePath;
+            this.OriginalPath = originalPath;
+            this.Created = created;
+        }
+    }
+
     public interface IConflictFileManager
     {
+        string ConflictPattern { get; }
+
         IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
         void ResolveConflict(ConflictSet conflictSet, string chosenFilePath);
+        bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo);
     }
 
     public class ConflictFileManager : IConflictFileManager
@@ -74,6 +90,8 @@ namespace SyncTrayzor.Services.Conflicts
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IFilesystemProvider filesystemProvider;
+
+        public string ConflictPattern => conflictPattern;
 
         public ConflictFileManager(IFilesystemProvider filesystemProvider)
         {
@@ -155,7 +173,7 @@ namespace SyncTrayzor.Services.Conflicts
             }
         }
 
-        private bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo)
+        public bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo)
         {
             var directory = Path.GetDirectoryName(filePath);
             var fileName = Path.GetFileName(filePath);
@@ -182,17 +200,17 @@ namespace SyncTrayzor.Services.Conflicts
             // 'suffix' might be a versioner thing (~date-time), or it might be something added by another tool...
             // Try searching for it, and if that fails go without
 
-            var withSuffix = prefix + suffix + extension;
-            if (this.filesystemProvider.FileExists(Path.Combine(directory, withSuffix)))
+            var withSuffix = Path.Combine(directory, prefix + suffix + extension);
+            if (this.filesystemProvider.FileExists(withSuffix))
             {
-                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, Path.Combine(directory, withSuffix), dateCreated);
+                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withSuffix, dateCreated);
                 return true;
             }
 
-            var withoutSuffix = prefix + extension;
-            if (this.filesystemProvider.FileExists(Path.Combine(directory, withoutSuffix)))
+            var withoutSuffix = Path.Combine(directory, prefix + extension);
+            if (this.filesystemProvider.FileExists(withoutSuffix))
             {
-                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, Path.Combine(directory, withoutSuffix), dateCreated);
+                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withoutSuffix, dateCreated);
                 return true;
             }
 
@@ -229,20 +247,6 @@ namespace SyncTrayzor.Services.Conflicts
 
                 logger.Debug("Renaming {0} to {1}", chosenFilePath, conflictSet.File.FilePath);
                 this.filesystemProvider.MoveFile(chosenFilePath, conflictSet.File.FilePath);
-            }
-        }
-
-        private struct ParsedConflictFileInfo
-        {
-            public readonly string FilePath;
-            public readonly string OriginalPath;
-            public readonly DateTime Created;
-
-            public ParsedConflictFileInfo(string filePath, string originalPath, DateTime created)
-            {
-                this.FilePath = filePath;
-                this.OriginalPath = originalPath;
-                this.Created = created;
             }
         }
     }

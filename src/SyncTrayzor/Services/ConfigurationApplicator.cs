@@ -88,6 +88,8 @@ namespace SyncTrayzor.Services
 
             this.updateManager.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
             this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
+
+            this.conflictFileWatcher.IsEnabled = configuration.EnableConflictFileMonitoring;
         }
 
         private void OnDataLoaded()
