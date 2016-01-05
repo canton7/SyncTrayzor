@@ -6,28 +6,11 @@ using System.Linq;
 
 namespace SyncTrayzor.Services
 {
-    public class FileChangeDetectedEventArgs : EventArgs
-    {
-        public string Path { get; }
-        public bool FileExists { get; }
-
-        public FileChangeDetectedEventArgs(string path, bool fileExists)
-        {
-            this.Path = path;
-            this.FileExists = fileExists;
-        }
-    }
-
     public interface IWatchedFolderMonitor
     {
         IEnumerable<string> WatchedFolderIDs { get; set; }
         TimeSpan BackoffInterval { get; set; }
         TimeSpan FolderExistenceCheckingInterval { get; set; }
-
-        /// <summary>
-        /// Raised when anything changes; unfiltered
-        /// </summary>
-        event EventHandler<FileChangeDetectedEventArgs> FileChangeDetected;
     }
 
     public class WatchedFolderMonitor : IWatchedFolderMonitor
@@ -54,8 +37,6 @@ namespace SyncTrayzor.Services
 
         public TimeSpan BackoffInterval { get; set; }
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
-
-        public event EventHandler<FileChangeDetectedEventArgs> FileChangeDetected;
 
         public WatchedFolderMonitor(ISyncThingManager syncThingManager)
         {
@@ -100,9 +81,6 @@ namespace SyncTrayzor.Services
         private bool WatcherPreviewDirectoryChanged(Folder folder, PreviewDirectoryChangedEventArgs e)
         {
             var subPath = e.SubPath;
-
-            // ConflictFileWatcher relies on this
-            this.FileChangeDetected?.Invoke(this, new FileChangeDetectedEventArgs(Path.Combine(e.DirectoryPath, e.SubPath), e.FileExists));
 
             // Is it a syncthing temp/special path?
             if (specialPaths.Any(x => subPath.StartsWith(x)))

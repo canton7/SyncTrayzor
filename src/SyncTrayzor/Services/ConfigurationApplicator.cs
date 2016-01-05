@@ -1,6 +1,7 @@
 ﻿using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
+using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
@@ -19,6 +20,7 @@ namespace SyncTrayzor.Services
         private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
         private readonly IUpdateManager updateManager;
+        private readonly IConflictFileWatcher conflictFileWatcher;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
@@ -27,7 +29,8 @@ namespace SyncTrayzor.Services
             ISyncThingManager syncThingManager,
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
-            IUpdateManager updateManager)
+            IUpdateManager updateManager,
+            IConflictFileWatcher conflictFileWatcher)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
@@ -38,6 +41,7 @@ namespace SyncTrayzor.Services
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
             this.updateManager = updateManager;
+            this.conflictFileWatcher = conflictFileWatcher;
 
             this.syncThingManager.DataLoaded += (o, e) => this.OnDataLoaded();
             this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
@@ -47,6 +51,8 @@ namespace SyncTrayzor.Services
         {
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
+
+            this.conflictFileWatcher.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
             this.syncThingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
 
