@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SyncTrayzor.SyncThing.ApiClient;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace SyncTrayzor.SyncThing
@@ -58,13 +59,22 @@ namespace SyncTrayzor.SyncThing
             set { lock (this.ignoresLock) { this._ignores = value; } }
         }
 
-        public Folder(string folderId, string path, FolderSyncState syncState, FolderIgnores ignores)
+        private readonly object statusLock = new object();
+        private FolderStatus _status;
+        public FolderStatus Status
+        {
+            get {  lock(this.statusLock) { return this._status; } }
+            set {  lock(this.statusLock) { this._status = value; } }
+        }
+
+        public Folder(string folderId, string path, FolderSyncState syncState, FolderIgnores ignores, FolderStatus status)
         {
             this.FolderId = folderId;
             this.Path = path;
             this.SyncState = syncState;
             this.syncingPaths = new HashSet<string>();
             this._ignores = ignores;
+            this._status = status;
         }
 
         public bool IsSyncingPath(string path)

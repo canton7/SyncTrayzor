@@ -18,6 +18,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
         event EventHandler<ConfigSavedEventArgs> ConfigSaved;
+        event EventHandler<FolderStatusChangedEventArgs> FolderStatusChanged;
         event EventHandler EventsSkipped;
     }
 
@@ -38,6 +39,7 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
         public event EventHandler<ConfigSavedEventArgs> ConfigSaved;
+        public event EventHandler<FolderStatusChangedEventArgs> FolderStatusChanged;
         public event EventHandler EventsSkipped;
 
         public SyncThingEventWatcher(SynchronizedTransientWrapper<ISyncThingApiClient> apiClient)
@@ -149,6 +151,11 @@ namespace SyncTrayzor.SyncThing.EventWatcher
             this.ConfigSaved?.Invoke(this, new ConfigSavedEventArgs(config));
         }
 
+        private void OnFolderSummaryChanged(string folderId, FolderStatus summary)
+        {
+            this.FolderStatusChanged?.Invoke(this, new FolderStatusChangedEventArgs(folderId, summary));
+        }
+
         private void OnEventsSkipped()
         {
             this.EventsSkipped?.Invoke(this, EventArgs.Empty);
@@ -214,6 +221,11 @@ namespace SyncTrayzor.SyncThing.EventWatcher
         public void Accept(ConfigSavedEvent evt)
         {
             this.OnConfigSaved(evt.Data);
+        }
+
+        public void Accept(FolderSummaryEvent evt)
+        {
+            this.OnFolderSummaryChanged(evt.Data.Folder, evt.Data.Summary);
         }
 
         #endregion

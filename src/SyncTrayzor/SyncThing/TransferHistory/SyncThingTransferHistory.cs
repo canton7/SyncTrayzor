@@ -192,9 +192,9 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             this.OnTransferStateChanged(fileTransfer);
         }
 
-        private void SyncStateChanged(object sender, FolderSyncStateChangeEventArgs e)
+        private void SyncStateChanged(object sender, FolderSyncStateChangedEventArgs e)
         {
-            var folderId = e.Folder.FolderId;
+            var folderId = e.FolderId;
 
             if (e.PrevSyncState == FolderSyncState.Syncing)
             {

@@ -23,6 +23,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
             { EventType.DeviceDisconnected, typeof(DeviceDisconnectedEvent) },
             { EventType.DownloadProgress, typeof(DownloadProgressEvent) },
             { EventType.ConfigSaved, typeof(ConfigSavedEvent) },
+            { EventType.FolderSummary, typeof(FolderSummaryEvent) }
         };
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
