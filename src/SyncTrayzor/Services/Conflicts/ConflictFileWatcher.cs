@@ -85,13 +85,21 @@ namespace SyncTrayzor.Services.Conflicts
         {
             this.StopWatchers();
 
-            if (!this.IsEnabled)
-                return;
+            if (this.IsEnabled)
+            {
+                var folders = this.syncThingManager.Folders.FetchAll();
 
-            var folders = this.syncThingManager.Folders.FetchAll();
-
-            this.StartWatchers(folders);
-            await this.ScanFoldersAsync(folders);
+                this.StartWatchers(folders);
+                await this.ScanFoldersAsync(folders);
+            }
+            else
+            {
+                lock (this.conflictFileOptionsLock)
+                {
+                    this.conflictFileOptions.Clear();
+                }
+                this.RefreshConflictedFiles();
+            }
         }
         
         private void RefreshConflictedFiles()

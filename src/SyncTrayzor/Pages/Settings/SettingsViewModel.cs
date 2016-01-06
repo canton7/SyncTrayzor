@@ -52,6 +52,7 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> ObfuscateDeviceIDs { get; }
         public SettingItem<bool> UseComputerCulture { get; }
         public SettingItem<bool> DisableHardwareRendering { get; }
+        public SettingItem<bool> EnableConflictFileMonitoring { get; }
 
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
@@ -113,6 +114,7 @@ namespace SyncTrayzor.Pages.Settings
             this.UseComputerCulture.RequiresSyncTrayzorRestart = true;
             this.DisableHardwareRendering = this.CreateBasicSettingItem(x => x.DisableHardwareRendering);
             this.DisableHardwareRendering.RequiresSyncTrayzorRestart = true;
+            this.EnableConflictFileMonitoring = this.CreateBasicSettingItem(x => x.EnableConflictFileMonitoring);
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);

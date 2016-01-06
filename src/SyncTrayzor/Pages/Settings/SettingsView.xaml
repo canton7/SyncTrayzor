@@ -48,6 +48,8 @@
                                       Content="{l:Loc SettingsView_UseComputerCulture}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding DisableHardwareRendering.Value}"
                                       Content="{l:Loc SettingsView_DisableHardwareRendering}"/>
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding EnableConflictFileMonitoring.Value}"
+                                      Content="{l:Loc SettingsView_EnableConflictFileMonitoring}"/>
                         </DockPanel>
                     </GroupBox>
                           
