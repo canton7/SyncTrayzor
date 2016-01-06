@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Pages.BarAlerts
 {
-    public class BarAlertsViewModel : Conductor<IBarAlert>.Collection.AllActive, IDisposable
+    public class BarAlertsViewModel : Conductor<IBarAlert>.Collection.AllActive
     {
         private readonly IAlertsManager alertsManager;
         private readonly Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory;
@@ -23,12 +23,21 @@ namespace SyncTrayzor.Pages.BarAlerts
             this.alertsManager = alertsManager;
             this.conflictResolutionViewModelFactory = conflictResolutionViewModelFactory;
             this.windowManager = windowManager;
+        }
 
+        protected override void OnInitialActivate()
+        {
             this.alertsManager.AlertsStateChanged += this.AlertsStateChanged;
+            this.Load();
         }
 
         private void AlertsStateChanged(object sender, EventArgs e)
         {
+            this.Load();
+        }
+
+        private void Load()
+        { 
             this.Items.Clear();
 
             var conflictedFilesCount = this.alertsManager.ConflictedFiles.Count;
@@ -53,7 +62,7 @@ namespace SyncTrayzor.Pages.BarAlerts
             this.windowManager.ShowDialog(vm);
         }
 
-        public void Dispose()
+        protected override void OnClose()
         {
             this.alertsManager.AlertsStateChanged -= this.AlertsStateChanged;
         }
