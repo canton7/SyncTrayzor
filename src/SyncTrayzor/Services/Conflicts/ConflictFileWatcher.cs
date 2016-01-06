@@ -1,4 +1,5 @@
-﻿using Pri.LongPath;
+﻿using NLog;
+using Pri.LongPath;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.Conflicts
 {
-    public interface IConflictFileWatcher
+    public interface IConflictFileWatcher : IDisposable
     {
         bool IsEnabled { get; set; }
         List<string> ConflictedFiles { get; }
@@ -19,17 +20,22 @@ namespace SyncTrayzor.Services.Conflicts
         event EventHandler ConflictedFilesChanged;
     }
 
-    public class ConflictFileWatcher : IConflictFileWatcher, IDisposable
+    public class ConflictFileWatcher : IConflictFileWatcher
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private const string versionsFolder = ".stversions";
-        private const string conflictFileMarker = ".sync-conflict-";
-        private const string conflictFilePattern = "*.sync-conflict-*";
 
         private readonly ISyncThingManager syncThingManager;
         private readonly IConflictFileManager conflictFileManager;
 
         private readonly object conflictedFilesLock = new object();
-        private readonly HashSet<string> conflictedFiles = new HashSet<string>();
+        // Contains all of the unique conflicted files, resolved from conflictFileOptions
+        private List<string> conflictedFiles = new List<string>();
+
+        private readonly object conflictFileOptionsLock = new object();
+        // Contains all of the .sync-conflict files found
+        private readonly HashSet<string> conflictFileOptions = new HashSet<string>();
 
         private readonly List<FileWatcher> fileWatchers = new List<FileWatcher>();
 
@@ -87,6 +93,30 @@ namespace SyncTrayzor.Services.Conflicts
             this.StartWatchers(folders);
             await this.ScanFoldersAsync(folders);
         }
+        
+        private void RefreshConflictedFiles()
+        {
+            var conflictFiles = new HashSet<string>();
+
+            lock (this.conflictFileOptionsLock)
+            {
+                foreach (var conflictedFile in this.conflictFileOptions)
+                {
+                    ParsedConflictFileInfo parsedConflictFileInfo;
+                    if (this.conflictFileManager.TryFindBaseFileForConflictFile(conflictedFile, out parsedConflictFileInfo))
+                    {
+                        conflictFiles.Add(parsedConflictFileInfo.OriginalPath);
+                    }
+                }
+            }
+
+            lock (this.conflictedFilesLock)
+            {
+                this.conflictedFiles = conflictFiles.ToList();
+            }
+
+            this.ConflictedFilesChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         private void StopWatchers()
         {
@@ -102,7 +132,9 @@ namespace SyncTrayzor.Services.Conflicts
         {
             foreach (var folder in folders)
             {
-                var watcher = new FileWatcher(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, conflictFilePattern);
+                logger.Debug("Starting watcher for folder: {0}", folder.FolderId);
+
+                var watcher = new FileWatcher(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
                 watcher.FileChanged += this.FileChanged;
                 this.fileWatchers.Add(watcher);
             }
@@ -115,28 +147,20 @@ namespace SyncTrayzor.Services.Conflicts
 
             var fullPath = Path.Combine(e.Directory, e.Path);
 
-            // TODO: This needs more work
-            // We don't handle it being deleted properly. We need ot see whether there are *any* conflict
-            // files for this file. Maybe keep a collection of file -> conflicts? We'll have to handle failure
-            // to find the base path properly...
-
-            // Can we find an original file for it?
-            ParsedConflictFileInfo parsedConflictFileInfo;
-            if (!this.conflictFileManager.TryFindBaseFileForConflictFile(fullPath, out parsedConflictFileInfo))
-                return;
+            logger.Debug("Conflict file changed: {0} FileExists: {0}", fullPath, e.FileExists);
 
             bool changed;
 
-            lock (this.conflictedFilesLock)
+            lock (this.conflictFileOptionsLock)
             {
                 if (e.FileExists)
-                    changed = this.conflictedFiles.Add(parsedConflictFileInfo.OriginalPath);
+                    changed = this.conflictFileOptions.Add(fullPath);
                 else
-                    changed = this.conflictedFiles.Remove(parsedConflictFileInfo.OriginalPath);
+                    changed = this.conflictFileOptions.Remove(fullPath);
             }
 
             if (changed)
-                this.ConflictedFilesChanged?.Invoke(this, EventArgs.Empty);
+                this.RefreshConflictedFiles();
         }
 
         private async Task ScanFoldersAsync(IReadOnlyCollection<Folder> folders)
@@ -154,27 +178,32 @@ namespace SyncTrayzor.Services.Conflicts
                 this.scanCts = new CancellationTokenSource();
                 try
                 {
-                    HashSet<string> oldConflictedFiles;
-                    lock (this.conflictedFilesLock)
+                    HashSet<string> oldConflictFileOptions;
+                    lock (this.conflictFileOptionsLock)
                     {
-                        oldConflictedFiles = new HashSet<string>(this.conflictedFiles);
-                        this.conflictedFiles.Clear();
+                        oldConflictFileOptions = new HashSet<string>(this.conflictFileOptions);
+                        this.conflictFileOptions.Clear();
                     }
 
                     foreach (var folder in folders)
                     {
+                        logger.Debug("Scanning folder {0} for conflict files", folder.FolderId);
+
                         await this.conflictFileManager.FindConflicts(folder.Path, this.scanCts.Token).SubscribeAsync(conflict =>
                         {
-                            lock (this.conflictedFilesLock)
+                            lock (this.conflictFileOptionsLock)
                             {
-                                this.conflictedFiles.Add(Path.Combine(folder.Path, conflict.File.FilePath));
+                                foreach (var conflictOptions in conflict.Conflicts)
+                                {
+                                    this.conflictFileOptions.Add(Path.Combine(folder.Path, conflictOptions.FilePath));
+                                }
                             }
                         });
                     }
 
-                    lock (this.conflictedFilesLock)
+                    lock (this.conflictFileOptionsLock)
                     {
-                        conflictedFilesChanged = !this.conflictedFiles.SetEquals(oldConflictedFiles);
+                        conflictedFilesChanged = !this.conflictFileOptions.SetEquals(oldConflictFileOptions);
                     }
 
                 }
@@ -185,7 +214,7 @@ namespace SyncTrayzor.Services.Conflicts
             }
 
             if (conflictedFilesChanged)
-                this.ConflictedFilesChanged?.Invoke(this, EventArgs.Empty);
+                this.RefreshConflictedFiles();
         }
 
         public void Dispose()

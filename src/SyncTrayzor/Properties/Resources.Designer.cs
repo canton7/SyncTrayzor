@@ -268,6 +268,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have {0:p:1 conflicted file|{} conflicted files}..
+        /// </summary>
+        public static string ConflictsAlertView_AlertText {
+            get {
+                return ResourceManager.GetString("ConflictsAlertView_AlertText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resolve them now..
+        /// </summary>
+        public static string ConflictsAlertView_ResolveLink {
+            get {
+                return ResourceManager.GetString("ConflictsAlertView_ResolveLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string ConsoleView_ClearButton {

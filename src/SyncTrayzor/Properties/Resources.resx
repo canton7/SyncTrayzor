@@ -833,4 +833,13 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConflictResolutionView_Dialog_Failed_Title" xml:space="preserve">
     <value>Operation Failed</value>
   </data>
+  <data name="ConflictsAlertView_AlertText" xml:space="preserve">
+    <value>You have {0:p:1 conflicted file|{} conflicted files}.</value>
+    <comment>Text shown at the start of the alert bar, when the user has conflicted files.
+{0}: The number of conflicts</comment>
+  </data>
+  <data name="ConflictsAlertView_ResolveLink" xml:space="preserve">
+    <value>Resolve them now.</value>
+    <comment>Clickable link shown next to ConflictsAlertView_AlertText, allowing the user to resolve the conflicts.</comment>
+  </data>
 </root>

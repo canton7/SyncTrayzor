@@ -51,6 +51,9 @@ namespace SyncTrayzor.Pages.ConflictResolution
                     this.NotifyOfPropertyChange(nameof(this.Conflicts));
                     this.NotifyOfPropertyChange(nameof(this.IsLoadingAndNoConflictsFound));
                     this.NotifyOfPropertyChange(nameof(this.HasFinishedLoadingAndNoConflictsFound));
+
+                    if (this.SelectedConflict == null && this.Conflicts.Count > 0)
+                        this.SelectedConflict = this.Conflicts[0];
                 }
             };
         }

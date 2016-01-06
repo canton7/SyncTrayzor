@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Services;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,17 @@ namespace SyncTrayzor.Pages.BarAlerts
     public class BarAlertsViewModel : Conductor<IBarAlert>.Collection.AllActive, IDisposable
     {
         private readonly IAlertsManager alertsManager;
+        private readonly Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory;
+        private readonly IWindowManager windowManager;
 
-        public BarAlertsViewModel(IAlertsManager alertsManager)
+        public BarAlertsViewModel(
+            IAlertsManager alertsManager,
+            Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory,
+            IWindowManager windowManager)
         {
             this.alertsManager = alertsManager;
+            this.conflictResolutionViewModelFactory = conflictResolutionViewModelFactory;
+            this.windowManager = windowManager;
 
             this.alertsManager.AlertsStateChanged += this.AlertsStateChanged;
         }
@@ -28,7 +36,17 @@ namespace SyncTrayzor.Pages.BarAlerts
 
             var conflictedFilesCount = this.alertsManager.ConflictedFiles.Count;
             if (conflictedFilesCount > 0)
-                this.Items.Add(new ConflictsAlertViewModel(conflictedFilesCount));
+            {
+                var vm = new ConflictsAlertViewModel(conflictedFilesCount);
+                vm.OpenConflictResolverClicked += (o, e2) => this.OpenConflictResolver();
+                this.Items.Add(vm);
+            }
+        }
+
+        private void OpenConflictResolver()
+        {
+            var vm = this.conflictResolutionViewModelFactory();
+            this.windowManager.ShowDialog(vm);
         }
 
         public void Dispose()

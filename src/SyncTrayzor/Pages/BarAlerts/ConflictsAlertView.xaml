@@ -3,11 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:s="https://github.com/canton7/Stylet"
              xmlns:local="clr-namespace:SyncTrayzor.Pages.BarAlerts"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:ConflictsAlertViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock Text="{Binding NumConflicts, StringFormat='You have {0} conflicts'}"/>
-    </Grid>
+    <StackPanel Orientation="Horizontal" Margin="5,0">
+        <TextBlock Text="{l:Loc ConflictsAlertView_AlertText, ValueBinding={Binding NumConflicts}}" FontWeight="Bold"/>
+        <TextBlock Margin="5,0,0,0">
+            <Hyperlink Command="{s:Action OpenConflictResolver}" Foreground="Black">
+                <TextBlock Text="{l:Loc ConflictsAlertView_ResolveLink}"/>
+            </Hyperlink>
+        </TextBlock>
+    </StackPanel>
 </UserControl>
