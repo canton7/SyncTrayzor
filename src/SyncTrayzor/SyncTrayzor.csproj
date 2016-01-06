@@ -157,6 +157,7 @@
     <Compile Include="Pages\BarAlerts\AlertSeverity.cs" />
     <Compile Include="Pages\BarAlerts\AlertSeverityToBackgroundColorConverter.cs" />
     <Compile Include="Pages\BarAlerts\ConflictsAlertViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\FailedTransfersAlertViewModel.cs" />
     <Compile Include="Pages\BarAlerts\IBarAlert.cs" />
     <Compile Include="Pages\BarAlerts\BarAlertsViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingVersionInformation.cs" />
+    <Compile Include="SyncThing\TransferHistory\FailingTransfer.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransfer.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransferChangedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransferStatus.cs" />
@@ -376,6 +378,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\BarAlerts\ConflictsAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\FailedTransfersAlertView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

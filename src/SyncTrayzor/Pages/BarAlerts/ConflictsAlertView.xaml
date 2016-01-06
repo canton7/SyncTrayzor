@@ -9,11 +9,11 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:ConflictsAlertViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel Orientation="Horizontal" Margin="5,0">
-        <TextBlock Text="{l:Loc ConflictsAlertView_AlertText, ValueBinding={Binding NumConflicts}}" FontWeight="Bold"/>
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{l:Loc BarAlertsView_Conflict_AlertText, ValueBinding={Binding NumConflicts}}" FontWeight="Bold"/>
         <TextBlock Margin="5,0,0,0">
             <Hyperlink Command="{s:Action OpenConflictResolver}" Foreground="Black">
-                <TextBlock Text="{l:Loc ConflictsAlertView_ResolveLink}"/>
+                <TextBlock Text="{l:Loc BarAlertsView_Conflict_ResolveLink}"/>
             </Hyperlink>
         </TextBlock>
     </StackPanel>

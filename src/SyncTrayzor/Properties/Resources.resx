@@ -833,16 +833,25 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConflictResolutionView_Dialog_Failed_Title" xml:space="preserve">
     <value>Operation Failed</value>
   </data>
-  <data name="ConflictsAlertView_AlertText" xml:space="preserve">
+  <data name="BarAlertsView_Conflict_AlertText" xml:space="preserve">
     <value>You have {0:p:1 conflicted file|{} conflicted files}.</value>
     <comment>Text shown at the start of the alert bar, when the user has conflicted files.
 {0}: The number of conflicts</comment>
   </data>
-  <data name="ConflictsAlertView_ResolveLink" xml:space="preserve">
+  <data name="BarAlertsView_Conflict_ResolveLink" xml:space="preserve">
     <value>Resolve now.</value>
     <comment>Clickable link shown next to ConflictsAlertView_AlertText, allowing the user to resolve the conflicts.</comment>
   </data>
   <data name="SettingsView_EnableConflictFileMonitoring" xml:space="preserve">
     <value>Alert me of conflicted files</value>
+  </data>
+  <data name="BarAlertsView_FailedTransfer_AlertText" xml:space="preserve">
+    <value>The following folders have failing file transfers: {0:l:{}|, }.</value>
+    <comment>Text show in a bar alert at the top of the screen when there are 1 or more folders with failing transfers. 
+{0}: List of folders with failing file transfers</comment>
+  </data>
+  <data name="BarAlertsView_FailedTransfer_Details" xml:space="preserve">
+    <value>Please see the Syncthing GUI or Console for clues.</value>
+    <comment>Text shown to the right of BarAlertsView_FailedTransfer_AlertText, in non-bold text</comment>
   </data>
 </root>

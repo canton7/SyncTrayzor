@@ -29,16 +29,20 @@ namespace SyncTrayzor.Pages.BarAlerts
 
         private void AlertsStateChanged(object sender, EventArgs e)
         {
-            foreach (var vm in this.Items.OfType<ConflictsAlertViewModel>().ToList())
-            {
-                this.Items.Remove(vm);
-            }
+            this.Items.Clear();
 
             var conflictedFilesCount = this.alertsManager.ConflictedFiles.Count;
             if (conflictedFilesCount > 0)
             {
                 var vm = new ConflictsAlertViewModel(conflictedFilesCount);
                 vm.OpenConflictResolverClicked += (o, e2) => this.OpenConflictResolver();
+                this.Items.Add(vm);
+            }
+
+            var foldersWithFailedTransferFiles = this.alertsManager.FoldersWithFailedTransferFiles;
+            if (foldersWithFailedTransferFiles.Count > 0)
+            {
+                var vm = new FailedTransfersAlertViewModel(foldersWithFailedTransferFiles);
                 this.Items.Add(vm);
             }
         }

@@ -41,7 +41,7 @@ namespace SyncTrayzor.Design
             var inProgressTransfer1 = new FileTransfer("folder", "path.txt", ItemChangedItemType.File, ItemChangedActionType.Update);
             inProgressTransfer1.SetDownloadProgress(5*1024*1024, 100*1024*1024);
 
-            var inProgressTransfer2 = new FileTransfer("folder", "path", ItemChangedItemType.Folder, ItemChangedActionType.Update);
+            var inProgressTransfer2 = new FileTransfer("folder", "path", ItemChangedItemType.Dir, ItemChangedActionType.Update);
 
             this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer1));
             this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTransfer2));

@@ -133,6 +133,42 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have {0:p:1 conflicted file|{} conflicted files}..
+        /// </summary>
+        public static string BarAlertsView_Conflict_AlertText {
+            get {
+                return ResourceManager.GetString("BarAlertsView_Conflict_AlertText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resolve now..
+        /// </summary>
+        public static string BarAlertsView_Conflict_ResolveLink {
+            get {
+                return ResourceManager.GetString("BarAlertsView_Conflict_ResolveLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following folders have failing file transfers: {0:l:{}|, }..
+        /// </summary>
+        public static string BarAlertsView_FailedTransfer_AlertText {
+            get {
+                return ResourceManager.GetString("BarAlertsView_FailedTransfer_AlertText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please see the Syncthing GUI or Console for clues..
+        /// </summary>
+        public static string BarAlertsView_FailedTransfer_Details {
+            get {
+                return ResourceManager.GetString("BarAlertsView_FailedTransfer_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose.
         /// </summary>
         public static string ConflictResolutionView_Button_Choose {
@@ -264,24 +300,6 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_Title {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You have {0:p:1 conflicted file|{} conflicted files}..
-        /// </summary>
-        public static string ConflictsAlertView_AlertText {
-            get {
-                return ResourceManager.GetString("ConflictsAlertView_AlertText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resolve now..
-        /// </summary>
-        public static string ConflictsAlertView_ResolveLink {
-            get {
-                return ResourceManager.GetString("ConflictsAlertView_ResolveLink", resourceCulture);
             }
         }
         

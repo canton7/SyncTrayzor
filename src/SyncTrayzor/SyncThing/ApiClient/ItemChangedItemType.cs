@@ -8,6 +8,6 @@ namespace SyncTrayzor.SyncThing.ApiClient
         Unknown,
 
         File,
-        Folder,
+        Dir,
     }
 }

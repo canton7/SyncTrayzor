@@ -11,9 +11,10 @@
     <ItemsControl ItemsSource="{Binding Items}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Grid Background="{Binding Severity, Converter={x:Static local:AlertSeverityToBackgroundColorConverter.Instance}}">
-                    <ContentControl Margin="3,5" s:View.Model="{Binding}"/>
-                </Grid>
+                <Border BorderBrush="LightGray" BorderThickness="0,0,0,1"
+                        Background="{Binding Severity, Converter={x:Static local:AlertSeverityToBackgroundColorConverter.Instance}}">
+                    <ContentControl Margin="8,5" s:View.Model="{Binding}"/>
+                </Border>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
