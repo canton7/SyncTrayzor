@@ -11,6 +11,7 @@ namespace SyncTrayzor.Services
     public interface IAlertsManager
     {
         event EventHandler AlertsStateChanged;
+        bool AnyAlerts { get; }
 
         List<string> ConflictedFiles { get; }
     }
@@ -19,6 +20,8 @@ namespace SyncTrayzor.Services
     {
         private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly SynchronizedEventDispatcher eventDispatcher;
+
+        public bool AnyAlerts => this.ConflictedFiles.Count > 0;
 
         public List<string> ConflictedFiles => this.conflictFileWatcher.ConflictedFiles;
 

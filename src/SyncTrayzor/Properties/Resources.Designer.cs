@@ -277,7 +277,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resolve them now..
+        ///   Looks up a localized string similar to Resolve now..
         /// </summary>
         public static string ConflictsAlertView_ResolveLink {
             get {

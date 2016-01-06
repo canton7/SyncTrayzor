@@ -16,6 +16,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly ISyncThingManager syncThingManager;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
+        private readonly IAlertsManager alertsManager;
 
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
@@ -28,6 +29,8 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncThingState SyncThingState { get; set; }
 
+        public bool SyncThingAlert => this.alertsManager.AnyAlerts;
+
         public bool SyncThingStarted => this.SyncThingState == SyncThingState.Running;
 
         public bool SyncThingSyncing { get; private set; }
@@ -37,12 +40,14 @@ namespace SyncTrayzor.NotifyIcon
             ISyncThingManager syncThingManager,
             Func<SettingsViewModel> settingsViewModelFactory,
             IProcessStartProvider processStartProvider,
+            IAlertsManager alertsManager,
             FileTransfersTrayViewModel fileTransfersViewModel)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.processStartProvider = processStartProvider;
+            this.alertsManager = alertsManager;
             this.FileTransfersViewModel = fileTransfersViewModel;
 
             this.syncThingManager.StateChanged += (o, e) =>
@@ -65,6 +70,8 @@ namespace SyncTrayzor.NotifyIcon
                     .Select(x => new FolderViewModel(x, this.processStartProvider))
                     .OrderBy(x => x.FolderId));
             };
+
+            this.alertsManager.AlertsStateChanged += (o, e) => this.NotifyOfPropertyChange(nameof(this.SyncThingAlert));
         }
 
         public void DoubleClick()

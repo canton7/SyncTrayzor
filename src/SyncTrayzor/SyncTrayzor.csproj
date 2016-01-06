@@ -516,6 +516,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Licenses\ListViewLayoutManager.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\alert_tray.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="Configs">
     <XslTransformation XmlInputPaths="App.config" XslInputPath="App.Installer.config.xslt" OutputPaths="$(OutputPath)$(RootNamespace).exe.Installer.config" />

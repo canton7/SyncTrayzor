@@ -839,7 +839,7 @@ Do you want to restart SyncTrayzor now?</value>
 {0}: The number of conflicts</comment>
   </data>
   <data name="ConflictsAlertView_ResolveLink" xml:space="preserve">
-    <value>Resolve them now.</value>
+    <value>Resolve now.</value>
     <comment>Clickable link shown next to ConflictsAlertView_AlertText, allowing the user to resolve the conflicts.</comment>
   </data>
   <data name="SettingsView_EnableConflictFileMonitoring" xml:space="preserve">
