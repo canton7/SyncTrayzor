@@ -53,6 +53,7 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> UseComputerCulture { get; }
         public SettingItem<bool> DisableHardwareRendering { get; }
         public SettingItem<bool> EnableConflictFileMonitoring { get; }
+        public SettingItem<bool> EnableFailedTransferAlerts { get; }
 
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
@@ -115,6 +116,7 @@ namespace SyncTrayzor.Pages.Settings
             this.DisableHardwareRendering = this.CreateBasicSettingItem(x => x.DisableHardwareRendering);
             this.DisableHardwareRendering.RequiresSyncTrayzorRestart = true;
             this.EnableConflictFileMonitoring = this.CreateBasicSettingItem(x => x.EnableConflictFileMonitoring);
+            this.EnableFailedTransferAlerts = this.CreateBasicSettingItem(x => x.EnableFailedTransferAlerts);
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);

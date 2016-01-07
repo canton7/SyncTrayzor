@@ -48,8 +48,6 @@
                                       Content="{l:Loc SettingsView_UseComputerCulture}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding DisableHardwareRendering.Value}"
                                       Content="{l:Loc SettingsView_DisableHardwareRendering}"/>
-                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding EnableConflictFileMonitoring.Value}"
-                                      Content="{l:Loc SettingsView_EnableConflictFileMonitoring}"/>
                         </DockPanel>
                     </GroupBox>
                           
@@ -63,6 +61,20 @@
                                 </CheckBox>
                             </Grid>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
+                        </DockPanel>
+                    </GroupBox>
+
+                    <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_Alerts}">
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5" TextWrapping="Wrap"
+                                           Text="{l:Loc SettingsView_Alerts_Description}"
+                                           Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
+                            </Grid>
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding EnableConflictFileMonitoring.Value}"
+                                      Content="{l:Loc SettingsView_EnableConflictFileMonitoring}"/>
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding EnableFailedTransferAlerts.Value}"
+                                      Content="{l:Loc SettingsView_EnableFailedTransferAlerts}"/>
                         </DockPanel>
                     </GroupBox>
 

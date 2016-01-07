@@ -854,4 +854,13 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Please see the Syncthing GUI or Console for clues.</value>
     <comment>Text shown to the right of BarAlertsView_FailedTransfer_AlertText, in non-bold text</comment>
   </data>
+  <data name="SettingsView_Alerts_Description" xml:space="preserve">
+    <value>Alerts are shown in a bar at the top of SyncTrayzor, and show a warning triangle on the tray icon.</value>
+  </data>
+  <data name="SettingsView_EnableFailedTransferAlerts" xml:space="preserve">
+    <value>Alert of failed file transfers</value>
+  </data>
+  <data name="SettingsView_Section_Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
 </root>

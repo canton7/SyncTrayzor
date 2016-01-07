@@ -21,6 +21,7 @@ namespace SyncTrayzor.Services
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
         private readonly IUpdateManager updateManager;
         private readonly IConflictFileWatcher conflictFileWatcher;
+        private readonly IAlertsManager alertsManager;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
@@ -30,7 +31,8 @@ namespace SyncTrayzor.Services
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
             IUpdateManager updateManager,
-            IConflictFileWatcher conflictFileWatcher)
+            IConflictFileWatcher conflictFileWatcher,
+            IAlertsManager alertsManager)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
@@ -42,6 +44,7 @@ namespace SyncTrayzor.Services
             this.watchedFolderMonitor = watchedFolderMonitor;
             this.updateManager = updateManager;
             this.conflictFileWatcher = conflictFileWatcher;
+            this.alertsManager = alertsManager;
 
             this.syncThingManager.DataLoaded += (o, e) => this.OnDataLoaded();
             this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
@@ -90,6 +93,9 @@ namespace SyncTrayzor.Services
             this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
 
             this.conflictFileWatcher.IsEnabled = configuration.EnableConflictFileMonitoring;
+
+            this.alertsManager.EnableConflictedFileAlerts = configuration.EnableConflictFileMonitoring;
+            this.alertsManager.EnableFailedTransferAlerts = configuration.EnableFailedTransferAlerts;
         }
 
         private void OnDataLoaded()

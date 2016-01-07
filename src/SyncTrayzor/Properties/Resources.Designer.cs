@@ -702,6 +702,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alerts are shown in a bar at the top of SyncTrayzor, and show a warning triangle on the tray icon..
+        /// </summary>
+        public static string SettingsView_Alerts_Description {
+            get {
+                return ResourceManager.GetString("SettingsView_Alerts_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to API Key:.
         /// </summary>
         public static string SettingsView_ApiKey {
@@ -743,6 +752,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_EnableConflictFileMonitoring {
             get {
                 return ResourceManager.GetString("SettingsView_EnableConflictFileMonitoring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alert of failed file transfers.
+        /// </summary>
+        public static string SettingsView_EnableFailedTransferAlerts {
+            get {
+                return ResourceManager.GetString("SettingsView_EnableFailedTransferAlerts", resourceCulture);
             }
         }
         
@@ -855,6 +873,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Section_Advanced {
             get {
                 return ResourceManager.GetString("SettingsView_Section_Advanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alerts.
+        /// </summary>
+        public static string SettingsView_Section_Alerts {
+            get {
+                return ResourceManager.GetString("SettingsView_Section_Alerts", resourceCulture);
             }
         }
         
