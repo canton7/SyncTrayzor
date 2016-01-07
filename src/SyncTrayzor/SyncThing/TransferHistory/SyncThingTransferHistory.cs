@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SyncTrayzor.SyncThing.TransferHistory
 {
-    public interface ISyncThingTransferHistory
+    public interface ISyncThingTransferHistory : IDisposable
     {
         event EventHandler<FileTransferChangedEventArgs> TransferStateChanged;
         event EventHandler<FileTransferChangedEventArgs> TransferStarted;
@@ -259,6 +259,14 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private void OnFolderSynchronizationFinished(string folderId, List<FileTransfer> fileTransfers)
         {
             this.eventDispatcher.Raise(this.FolderSynchronizationFinished, new FolderSynchronizationFinishedEventArgs(folderId, fileTransfers));
+        }
+
+        public void Dispose()
+        {
+            this.eventWatcher.ItemStarted -= this.ItemStarted;
+            this.eventWatcher.ItemFinished -= this.ItemFinished;
+            this.eventWatcher.ItemDownloadProgressChanged -= this.ItemDownloadProgressChanged;
+            this.folderManager.SyncStateChanged -= this.SyncStateChanged;
         }
 
         private struct FolderPathKey : IEquatable<FolderPathKey>

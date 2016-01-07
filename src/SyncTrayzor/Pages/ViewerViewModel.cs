@@ -12,7 +12,7 @@ using SyncTrayzor.Properties;
 
 namespace SyncTrayzor.Pages
 {
-    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler
+    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
@@ -50,11 +50,7 @@ namespace SyncTrayzor.Pages
             var configuration = this.configurationProvider.Load();
             this.zoomLevel = configuration.SyncthingWebBrowserZoomLevel;
 
-            this.syncThingManager.StateChanged += (o, e) =>
-            {
-                this.syncThingState = e.NewState;
-                this.RefreshBrowser();
-            };
+            this.syncThingManager.StateChanged += this.SyncThingStateChanged;
 
             this.callback = new JavascriptCallbackObject(this.OpenFolder);
 
@@ -65,7 +61,18 @@ namespace SyncTrayzor.Pages
             });
 
             this.SetCulture(configuration);
-            configurationProvider.ConfigurationChanged += (o, e) => this.SetCulture(e.NewConfiguration);
+            configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
+        }
+
+        private void SyncThingStateChanged(object sender, SyncThingStateChangedEventArgs e)
+        {
+            this.syncThingState = e.NewState;
+            this.RefreshBrowser();
+        }
+
+        private void ConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        {
+            this.SetCulture(e.NewConfiguration);
         }
 
         private void SetCulture(Configuration configuration)
@@ -256,6 +263,12 @@ namespace SyncTrayzor.Pages
         {
             this.processStartProvider.StartDetached(targetUrl);
             return true;
+        }
+
+        public void Dispose()
+        {
+            this.syncThingManager.StateChanged -= this.SyncThingStateChanged;
+            this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
         }
 
         private class JavascriptCallbackObject

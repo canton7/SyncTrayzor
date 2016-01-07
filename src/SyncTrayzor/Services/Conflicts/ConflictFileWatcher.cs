@@ -78,7 +78,12 @@ namespace SyncTrayzor.Services.Conflicts
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
 
-            this.syncThingManager.Folders.FoldersChanged += (o, e) => this.Reset();
+            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+        }
+
+        private void FoldersChanged(object sender, EventArgs e)
+        {
+            this.Reset();
         }
 
         private async void Reset()
@@ -228,6 +233,7 @@ namespace SyncTrayzor.Services.Conflicts
         public void Dispose()
         {
             this.StopWatchers();
+            this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
         }
     }
 }

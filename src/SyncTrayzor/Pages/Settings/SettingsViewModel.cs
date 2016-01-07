@@ -105,8 +105,6 @@ namespace SyncTrayzor.Pages.Settings
             this.applicationPathsProvider = applicationPathsProvider;
             this.syncThingManager = syncThingManager;
 
-            this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
-
             this.MinimizeToTray = this.CreateBasicSettingItem(x => x.MinimizeToTray);
             this.NotifyOfNewVersions = this.CreateBasicSettingItem(x => x.NotifyOfNewVersions);
             this.CloseToTray = this.CreateBasicSettingItem(x => x.CloseToTray);
@@ -151,7 +149,6 @@ namespace SyncTrayzor.Pages.Settings
                 }, new SyncThingCommandLineFlagsValidator());
             this.SyncThingCommandLineFlags.RequiresSyncthingRestart = true;
 
-
             this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
                 x => KeyValueStringParser.Format(x.SyncthingEnvironmentalVariables),
                 (x, v) =>
@@ -171,9 +168,6 @@ namespace SyncTrayzor.Pages.Settings
             {
                 settingItem.LoadValue(configuration);
             }
-
-            if (syncThingManager.State == SyncThingState.Running && syncThingManager.IsDataLoaded)
-                this.LoadFromSyncthingStartupData();
 
             foreach (var folderSetting in this.FolderSettings)
             {
@@ -221,6 +215,19 @@ namespace SyncTrayzor.Pages.Settings
 
             this.UpdateAreAllFoldersWatched();
             this.UpdateAreAllFoldersNotified();
+        }
+
+        protected override void OnInitialActivate()
+        {
+            if (syncThingManager.State == SyncThingState.Running && syncThingManager.IsDataLoaded)
+                this.LoadFromSyncthingStartupData();
+            else
+                this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
+        }
+
+        protected override void OnClose()
+        {
+            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
 
         private void SyncthingDataLoaded(object sender, EventArgs e)
@@ -379,11 +386,6 @@ namespace SyncTrayzor.Pages.Settings
         public void SelectLoggingTab()
         {
             this.SelectedTabIndex = loggingTabIndex;
-        }
-
-        protected override void OnClose()
-        {
-            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
     }
 }

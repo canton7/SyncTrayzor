@@ -18,7 +18,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         }
     }
 
-    public interface IUpdateManager
+    public interface IUpdateManager : IDisposable
     {
         event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         Version LatestIgnoredVersion { get; set; }
@@ -268,6 +268,12 @@ namespace SyncTrayzor.Services.UpdateManagement
             var variantHandler = this.updateVariantHandlerFactory();
             var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, variantHandler.VariantName);
             return updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
+        }
+
+        public void Dispose()
+        {
+            this.applicationState.ResumeFromSleep -= this.ResumeFromSleep;
+            this.applicationWindowState.RootWindowActivated -= this.RootWindowActivated;
         }
     }
 }

@@ -260,5 +260,12 @@ namespace SyncTrayzor
             // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
             this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            // Probably need to make Stylet to this...
+            ScreenExtensions.TryDispose(this.RootViewModel);
+        }
     }
 }

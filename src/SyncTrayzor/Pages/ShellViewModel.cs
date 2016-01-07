@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace SyncTrayzor.Pages
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : Screen, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
@@ -178,6 +178,12 @@ namespace SyncTrayzor.Pages
                 this.windowManager.ShowWindow(this);
 
             this.ActivateObservable.Next(true);
+        }
+
+        public void Dispose()
+        {
+            this.Viewer.Dispose();
+            this.Console.Dispose();
         }
     }
 }

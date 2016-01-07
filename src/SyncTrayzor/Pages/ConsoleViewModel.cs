@@ -8,7 +8,7 @@ using SyncTrayzor.Pages.Settings;
 
 namespace SyncTrayzor.Pages
 {
-    public class ConsoleViewModel : Screen
+    public class ConsoleViewModel : Screen, IDisposable
     {
         private const int maxLogMessages = 1500;
 
@@ -33,29 +33,33 @@ namespace SyncTrayzor.Pages
 
             // Display log messages 100ms after the previous message, or every 500ms if they're arriving thick and fast
             this.logMessagesBuffer = new Buffer<string>(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(500));
-            this.logMessagesBuffer.Delivered += (o, e) =>
-            {
-                foreach (var message in e.Items)
-                {
-                    this.LogMessages.Enqueue(message);
-                    if (this.LogMessages.Count > maxLogMessages)
-                        this.LogMessages.Dequeue();
-                }
+            this.logMessagesBuffer.Delivered += this.LogMessageDelivered;
 
-                if (!this.LogPaused)
-                    this.NotifyOfPropertyChange(() => this.LogMessages);
-            };
-
-            this.syncThingManager.MessageLogged += (o, e) =>
-            {
-                this.logMessagesBuffer.Add(e.LogMessage);
-            };
+            this.syncThingManager.MessageLogged += this.SyncThingMessageLogged;
 
             this.Bind(s => s.LogPaused, (o, e) =>
             {
                 if (!e.NewValue)
                     this.NotifyOfPropertyChange(() => this.LogMessages);
             });
+        }
+
+        private void LogMessageDelivered(object sender, BufferDeliveredEventArgs<string> e)
+        {
+            foreach (var message in e.Items)
+            {
+                this.LogMessages.Enqueue(message);
+                if (this.LogMessages.Count > maxLogMessages)
+                    this.LogMessages.Dequeue();
+            }
+
+            if (!this.LogPaused)
+                this.NotifyOfPropertyChange(() => this.LogMessages);
+        }
+
+        private void SyncThingMessageLogged(object sender, MessageLoggedEventArgs e)
+        {
+            this.logMessagesBuffer.Add(e.LogMessage);
         }
 
         public void ClearLog()
@@ -69,6 +73,11 @@ namespace SyncTrayzor.Pages
             var vm = this.settingsViewModelFactory();
             vm.SelectLoggingTab();
             this.windowManager.ShowDialog(vm);
+        }
+
+        public void Dispose()
+        {
+            this.syncThingManager.MessageLogged -= this.SyncThingMessageLogged;
         }
     }
 }

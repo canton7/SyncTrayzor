@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SyncTrayzor.Services
 {
-    public interface IWatchedFolderMonitor
+    public interface IWatchedFolderMonitor : IDisposable
     {
         IEnumerable<string> WatchedFolderIDs { get; set; }
         TimeSpan BackoffInterval { get; set; }
@@ -41,8 +41,19 @@ namespace SyncTrayzor.Services
         public WatchedFolderMonitor(ISyncThingManager syncThingManager)
         {
             this.syncThingManager = syncThingManager;
-            this.syncThingManager.Folders.FoldersChanged += (o, e) => this.Reset();
-            this.syncThingManager.StateChanged += (o, e) => this.Reset();
+
+            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+            this.syncThingManager.StateChanged += this.StateChanged;
+        }
+
+        private void FoldersChanged(object sender, EventArgs e)
+        {
+            this.Reset();
+        }
+
+        private void StateChanged(object sender, SyncThingStateChangedEventArgs e)
+        {
+            this.Reset();
         }
 
         private void Reset()
@@ -117,6 +128,12 @@ namespace SyncTrayzor.Services
                 return;
 
             this.syncThingManager.ScanAsync(folder.FolderId, subPath.Replace(Path.DirectorySeparatorChar, '/'));
+        }
+
+        public void Dispose()
+        {
+            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+            this.syncThingManager.StateChanged += this.StateChanged;
         }
     }
 }

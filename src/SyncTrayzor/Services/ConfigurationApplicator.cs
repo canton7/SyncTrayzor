@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SyncTrayzor.Services
 {
-    public class ConfigurationApplicator
+    public class ConfigurationApplicator : IDisposable
     {
         private readonly IConfigurationProvider configurationProvider;
 
@@ -35,7 +35,7 @@ namespace SyncTrayzor.Services
             IAlertsManager alertsManager)
         {
             this.configurationProvider = configurationProvider;
-            this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
+            this.configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
 
             this.pathsProvider = pathsProvider;
             this.notifyIconManager = notifyIconManager;
@@ -46,8 +46,18 @@ namespace SyncTrayzor.Services
             this.conflictFileWatcher = conflictFileWatcher;
             this.alertsManager = alertsManager;
 
-            this.syncThingManager.DataLoaded += (o, e) => this.OnDataLoaded();
-            this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
+            this.syncThingManager.DataLoaded += this.OnDataLoaded;
+            this.updateManager.VersionIgnored += this.VersionIgnored;
+        }
+
+        private void ConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        {
+            this.ApplyNewConfiguration(e.NewConfiguration);
+        }
+
+        private void VersionIgnored(object sender, VersionIgnoredEventArgs e)
+        {
+            this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
         }
 
         public void ApplyConfiguration()
@@ -98,7 +108,7 @@ namespace SyncTrayzor.Services
             this.alertsManager.EnableFailedTransferAlerts = configuration.EnableFailedTransferAlerts;
         }
 
-        private void OnDataLoaded()
+        private void OnDataLoaded(object sender, EventArgs e)
         {
             this.configurationProvider.AtomicLoadAndSave(c =>
             {
@@ -116,6 +126,13 @@ namespace SyncTrayzor.Services
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
+        }
+
+        public void Dispose()
+        {
+            this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
+            this.syncThingManager.DataLoaded -= this.OnDataLoaded;
+            this.updateManager.VersionIgnored -= this.VersionIgnored;
         }
     }
 }

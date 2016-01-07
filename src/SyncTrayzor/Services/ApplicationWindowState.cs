@@ -4,7 +4,7 @@ using System;
 
 namespace SyncTrayzor.Services
 {
-    public interface IApplicationWindowState
+    public interface IApplicationWindowState : IDisposable
     {
         event EventHandler<ActivationEventArgs> RootWindowActivated;
         event EventHandler<DeactivationEventArgs> RootWindowDeactivated;
@@ -26,26 +26,26 @@ namespace SyncTrayzor.Services
         {
             this.rootViewModel = rootViewModel;
 
-            this.rootViewModel.Activated += (o, e) => this.OnRootWindowActivated(e);
-            this.rootViewModel.Deactivated += (o, e) => this.OnRootWindowDeactivated(e);
-            this.rootViewModel.Closed += (o, e) => this.OnRootWindowClosed(e);
+            this.rootViewModel.Activated += this.OnRootWindowActivated;
+            this.rootViewModel.Deactivated += this.OnRootWindowDeactivated;
+            this.rootViewModel.Closed += this.OnRootWindowClosed;
         }
 
         public event EventHandler<ActivationEventArgs> RootWindowActivated;
         public event EventHandler<DeactivationEventArgs> RootWindowDeactivated;
         public event EventHandler<CloseEventArgs> RootWindowClosed;
 
-        private void OnRootWindowActivated(ActivationEventArgs e)
+        private void OnRootWindowActivated(object sender, ActivationEventArgs e)
         {
             this.RootWindowActivated?.Invoke(this, e);
         }
 
-        private void OnRootWindowDeactivated(DeactivationEventArgs e)
+        private void OnRootWindowDeactivated(object sender, DeactivationEventArgs e)
         {
             this.RootWindowDeactivated?.Invoke(this, e);
         }
 
-        private void OnRootWindowClosed(CloseEventArgs e)
+        private void OnRootWindowClosed(object sender, CloseEventArgs e)
         {
             this.RootWindowClosed?.Invoke(this, e);
         }
@@ -60,6 +60,13 @@ namespace SyncTrayzor.Services
         public void EnsureInForeground()
         {
             this.rootViewModel.EnsureInForeground();
+        }
+
+        public void Dispose()
+        {
+            this.rootViewModel.Activated -= this.OnRootWindowActivated;
+            this.rootViewModel.Deactivated -= this.OnRootWindowDeactivated;
+            this.rootViewModel.Closed -= this.OnRootWindowClosed;
         }
     }
 }
