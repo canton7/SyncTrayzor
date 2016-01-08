@@ -306,8 +306,6 @@ namespace SyncTrayzor.NotifyIcon
             this.syncThingManager.TransferHistory.FolderSynchronizationFinished -= this.FolderSynchronizationFinished;
             this.syncThingManager.DeviceConnected -= this.DeviceConnected;
             this.syncThingManager.DeviceDisconnected -= this.DeviceDisconnected;
-
-            this.Dispose();
         }
     }
 }
