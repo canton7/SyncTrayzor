@@ -11,7 +11,6 @@ using SyncTrayzor.Localization;
 using System.Windows;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
-using System.Windows.Controls;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {

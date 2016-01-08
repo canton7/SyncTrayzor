@@ -216,6 +216,7 @@
     <Compile Include="SyncThing\ApiClient\DebugFacilitiesSettings.cs" />
     <Compile Include="SyncThing\ApiClient\DefaultingStringEnumConverter.cs" />
     <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\FolderErrorsEvent.cs" />
     <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
     <Compile Include="SyncThing\ApiClient\FolderSummaryEvent.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
@@ -227,8 +228,10 @@
     <Compile Include="SyncThing\DebugFacilities\DebugFacility.cs" />
     <Compile Include="SyncThing\DebugFacilities\SyncThingDebugFacilitiesManager.cs" />
     <Compile Include="SyncThing\EventWatcher\ConfigSavedEventArgs.cs" />
+    <Compile Include="SyncThing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="SyncThing\FolderErrorsChangedEventArgs.cs" />
     <Compile Include="SyncThing\FreePortFinder.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />

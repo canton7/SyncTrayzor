@@ -22,6 +22,7 @@ namespace SyncTrayzor.SyncThing
         event EventHandler FoldersChanged;
         event EventHandler<FolderSyncStateChangedEventArgs> SyncStateChanged;
         event EventHandler<FolderStatusChangedEventArgs> StatusChanged;
+        event EventHandler<FolderErrorsChangedEventArgs> FolderErrorsChanged;
     }
 
     public class SyncThingFolderManager : ISyncThingFolderManager
@@ -37,6 +38,7 @@ namespace SyncTrayzor.SyncThing
         public event EventHandler FoldersChanged;
         public event EventHandler<FolderSyncStateChangedEventArgs> SyncStateChanged;
         public event EventHandler<FolderStatusChangedEventArgs> StatusChanged;
+        public event EventHandler<FolderErrorsChangedEventArgs> FolderErrorsChanged;
 
         // Folders is a ConcurrentDictionary, which suffices for most access
         // However, it is sometimes set outright (in the case of an initial load or refresh), so we need this lock
@@ -64,6 +66,7 @@ namespace SyncTrayzor.SyncThing
             this.eventWatcher.FolderStatusChanged += (o, e) => this.FolderStatusChanged(e.FolderId, e.FolderStatus);
             this.eventWatcher.ItemStarted += (o, e) => this.ItemStarted(e.Folder, e.Item);
             this.eventWatcher.ItemFinished += (o, e) => this.ItemFinished(e.Folder, e.Item);
+            this.eventWatcher.FolderErrorsChanged += (o, e) => this.FolderErrorsChangedEvt(e.FolderId, e.Errors);
         }
 
         public bool TryFetchById(string folderId, out Folder folder)
@@ -247,6 +250,17 @@ namespace SyncTrayzor.SyncThing
             folder.RemoveSyncingPath(item);
         }
 
+        private void FolderErrorsChangedEvt(string folderId, List<FolderErrorData> errors)
+        {
+            Folder folder;
+            if (!this.folders.TryGetValue(folderId, out folder))
+                return; // Don't know about it
+
+            var folderErrors = errors.Select(x => new FolderError(x.Error, x.Path)).ToList();
+            folder.SetFolderErrors(folderErrors);
+            this.OnFolderErrorsChanged(folder, folderErrors);
+        }
+
         private void FolderSyncStateChanged(SyncStateChangedEventArgs e)
         {
             Folder folder;
@@ -254,6 +268,12 @@ namespace SyncTrayzor.SyncThing
                 return; // We don't know about this folder
 
             folder.SyncState = e.SyncState;
+
+            if (e.SyncState == FolderSyncState.Syncing)
+            {
+                folder.ClearFolderErrors();
+                this.OnFolderErrorsChanged(folder, new List<FolderError>());
+            }
 
             this.OnSyncStateChanged(folder, e.PrevSyncState, e.SyncState);
         }
@@ -282,6 +302,11 @@ namespace SyncTrayzor.SyncThing
         private void OnStatusChanged(Folder folder, FolderStatus folderStatus)
         {
             this.eventDispatcher.Raise(this.StatusChanged, new FolderStatusChangedEventArgs(folder.FolderId, folderStatus));
+        }
+
+        private void OnFolderErrorsChanged(Folder folder, List<FolderError> folderErrors)
+        {
+            this.eventDispatcher.Raise(this.FolderErrorsChanged, new FolderErrorsChangedEventArgs(folder.FolderId, folderErrors));
         }
     }
 }
