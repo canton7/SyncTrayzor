@@ -11,6 +11,7 @@ using SyncTrayzor.Localization;
 using System.Windows;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
+using System.Windows.Controls;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
@@ -121,7 +122,14 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.loadingCts.Cancel();
         }
 
-        public void ConflictFileDoubleClick()
+        public void ListViewDoubleClick(object sender, RoutedEventArgs e)
+        {
+            // Check that we were called on a row, not on a header
+            if ((e.OriginalSource as FrameworkElement)?.DataContext is ConflictViewModel)
+                this.ShowFileInFolder();
+        }
+
+        public void ShowFileInFolder()
         {
             this.processStartProvider.ShowInExplorer(this.SelectedConflict.FilePath);
         }
@@ -137,7 +145,6 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public void ChooseConflictFile(ConflictOptionViewModel conflictOption)
         {
-            // Call into the service... Don't do this now for testing
             if (!this.ResolveConflict(this.SelectedConflict.ConflictSet, conflictOption.ConflictOption.FilePath))
                 return;
 

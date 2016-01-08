@@ -863,4 +863,7 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_Section_Alerts" xml:space="preserve">
     <value>Alerts</value>
   </data>
+  <data name="ConflictResolutionView_Button_ShowInFolder" xml:space="preserve">
+    <value>Show in Folder</value>
+  </data>
 </root>
