@@ -1,7 +1,9 @@
 SyncTrayzor [![Build status](https://ci.appveyor.com/api/projects/status/pwa4mpy4066okxyu?svg=true)](https://ci.appveyor.com/project/canton7/synctrayzor)
 ===========
 
-[Download and install SyncTrayzor now](#installation).
+\[[Download and install SyncTrayzor now](#installation)\]
+\[[Something went wrong!](#something-went-wrong)\]
+\[[Buy me a beer!](#buy-me-a-beer)\]
 
 
 Introduction
@@ -14,15 +16,20 @@ Features include:
 
  - Has a built-in web browser, so you don't need to fire up an external browser.
  - Optionally starts on login, so you don't need to set up Syncthing as a service.
- - Has drop-box style file download. progress window
+ - Has drop-box style file download / progress window
+ - Tray icon indicates when synchronization is occurring.
+ - Alerts you when:
+    - You have file conflicts
+    - One of your folders is out of sync
+    - Folders finish syncing
+    - Devices connect / disconnect
  - Can watch your folders for changes, so you don't have to poll them frequently:
     - Syncthing on its own has to poll your folders, in order to see if any files have changed.
     - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
     - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
     - Folder watching respects the ignores configured in Syncthing.
- - Tray icon indicates when synchronization is occurring.
- - Optional tray messages when folders have finished syncing.
- - Contains translations for 13 languages.
+ - Has a tool to help you resolve file conflicts
+ - Contains translations for many languages
 
 
 ![Screenshot](readme/screenshot.png)
@@ -63,6 +70,15 @@ Contributing
 Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.com/canton7/SyncTrayzor/wiki/Localization).
 
 Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
+
+
+Buy me a beer
+-------------
+
+I develop SyncTrayzor in my free time because I enjoy it.
+SyncTrayzor will never become paid-for.
+However, if you find SyncTrayzor useful, please consider [buying me a beer](https://synctrayzor.antonymale.co.uk/donate).
+Thanks!
 
 
 Will SyncTrayzor phone home / give away my secrets / etc?
