@@ -178,6 +178,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show in Folder.
+        /// </summary>
+        public static string ConflictResolutionView_Button_ShowInFolder {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Button_ShowInFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resolving this conflict failed: {0}.
         /// </summary>
         public static string ConflictResolutionView_Dialog_Failed_Message {

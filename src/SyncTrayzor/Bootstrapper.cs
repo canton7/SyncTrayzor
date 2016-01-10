@@ -263,9 +263,9 @@ namespace SyncTrayzor
 
         public override void Dispose()
         {
-            base.Dispose();
             // Probably need to make Stylet to this...
             ScreenExtensions.TryDispose(this.RootViewModel);
+            base.Dispose();
         }
     }
 }

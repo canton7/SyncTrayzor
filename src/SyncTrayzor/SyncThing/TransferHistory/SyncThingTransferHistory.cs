@@ -165,10 +165,16 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                 {
                     this.currentlyFailingTransfers.Remove(key);
                 }
-                else if (!this.currentlyFailingTransfers.ContainsKey(key))
+                else
                 {
-                    this.currentlyFailingTransfers.Add(key, new FailingTransfer(fileTransfer.FolderId, fileTransfer.Path, error));
-                    isNewError = true;
+                    FailingTransfer failingTransfer;
+                    if (!this.currentlyFailingTransfers.TryGetValue(key, out failingTransfer) || failingTransfer.Error != error)
+                    {
+                        // Remove will only do something in the case that the failure existed, but the error changed
+                        this.currentlyFailingTransfers.Remove(key);
+                        this.currentlyFailingTransfers.Add(key, new FailingTransfer(fileTransfer.FolderId, fileTransfer.Path, error));
+                        isNewError = true;
+                    }
                 }
 
                 fileTransfer.SetComplete(error, isNewError);

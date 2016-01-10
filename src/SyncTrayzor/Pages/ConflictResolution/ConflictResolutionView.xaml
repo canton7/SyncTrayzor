@@ -17,10 +17,6 @@
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="FolderId"/>
             </CollectionViewSource.GroupDescriptions>
-            <CollectionViewSource.SortDescriptions>
-                <!-- Default sort, until the user clicks a column -->
-                <scm:SortDescription PropertyName="FileName" Direction="Ascending"/>
-            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <Style x:Key="SectionBorderStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#828790"/>
@@ -36,7 +32,7 @@
         </DockPanel>
 
         <Button DockPanel.Dock="Bottom"
-                Margin="10"
+                Margin="10,10,0,10"
                 HorizontalAlignment="Right"
                 Command="{s:Action Close}"
                 Style="{StaticResource DialogButton}"
@@ -74,10 +70,15 @@
                     <Button Grid.Row="1" Grid.Column="2"
                                 HorizontalAlignment="Left"
                                 Style="{StaticResource Value}"
+                                Padding="5,0"
                                 Command="{s:Action ChooseOriginal}"
                                 CommandParameter="{Binding SelectedConflict}"
                                 Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
                 </Grid>
+
+                <Button DockPanel.Dock="Bottom" Margin="0,8,0,5" Padding="7,2"
+                        HorizontalAlignment="Left"
+                        Command="{s:Action ShowFileInFolder}" Content="{l:Loc ConflictResolutionView_Button_ShowInFolder}"/>
 
                 <ListView x:Name="SelectConflictOptions"
                           ItemsSource="{Binding SelectedConflict.ConflictOptions}"
@@ -102,6 +103,7 @@
                                         <StackPanel>
                                             <Button Command="{s:Action ChooseConflictFile}"
                                                     CommandParameter="{Binding}"
+                                                    Padding="5,0"
                                                     Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
                                         </StackPanel>
                                     </DataTemplate>
@@ -135,24 +137,30 @@
                           ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
                           SelectedItem="{Binding SelectedConflict}"
                           SelectionMode="Single"
-                          MouseDoubleClick="{s:Action ConflictFileDoubleClick}"
-                          BorderThickness="0">
+                          MouseDoubleClick="{s:Action ListViewDoubleClick}"
+                          BorderThickness="0"
+                          MinHeight="10">
                     <i:Interaction.Behaviors>
                         <xaml:GridViewSortByBehaviour/>
                     </i:Interaction.Behaviors>
                     <ListView.Resources>
                         <Style TargetType="GridViewColumnHeader">
                             <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            <Setter Property="Padding" Value="5,0"/>
                         </Style>
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_File}"
-                                            xaml:GridViewSortBy.SortByKey="FileName">
+                            <GridViewColumn xaml:GridViewSortBy.SortByKey="FileName"
+                                            xaml:GridViewSortBy.IsInitiallySorted="True">
+                                <!-- Need a proper header for this, for the initial sort -->
+                                <GridViewColumnHeader>
+                                    <TextBlock Text="{l:Loc ConflictResolutionView_Header_File}"/>
+                                </GridViewColumnHeader>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Width="15" Height="15" Margin="0,0,5,0"
+                                            <Image Width="15" Height="15" Margin="5,0,5,0"
                                                    Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
                                             <TextBlock Text="{Binding FileName}"/>
                                         </StackPanel>
