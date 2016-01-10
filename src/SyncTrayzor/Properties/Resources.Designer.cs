@@ -70,6 +70,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please buy me a beer!.
+        /// </summary>
+        public static string AboutView_Donate_Link {
+            get {
+                return ResourceManager.GetString("AboutView_Donate_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find SyncTrayzor useful?.
+        /// </summary>
+        public static string AboutView_Donate_Text {
+            get {
+                return ResourceManager.GetString("AboutView_Donate_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Download Page.
         /// </summary>
         public static string AboutView_DownloadNewVersion {

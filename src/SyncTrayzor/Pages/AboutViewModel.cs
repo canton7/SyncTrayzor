@@ -12,6 +12,9 @@ namespace SyncTrayzor.Pages
 {
     public class AboutViewModel : Screen
     {
+        // Not in the app.config, in case some sysadmin wants to change it
+        private const string donateUrl = "https://synctrayzor.antonymale.co.uk/donate";
+
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IUpdateManager updateManager;
@@ -91,6 +94,11 @@ namespace SyncTrayzor.Pages
             var vm = this.thirdPartyComponentsViewModelFactory();
             this.windowManager.ShowDialog(vm);
             this.RequestClose(true);
+        }
+
+        public void BuyMeABeer()
+        {
+            this.processStartProvider.StartDetached(donateUrl);
         }
 
         public void Close()

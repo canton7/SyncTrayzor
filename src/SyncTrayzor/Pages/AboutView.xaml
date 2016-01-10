@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
-        Height="300" Width="250"
+        Height="400" Width="250"
         WindowStyle="None" SizeToContent="Height"
         ShowInTaskbar="False">
     <Window.Resources>
@@ -26,16 +26,29 @@
         <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5" Text="{l:Loc AboutView_ReleasedLicense}"/>
 
         <Grid DockPanel.Dock="Top">
-            <TextBlock DockPanel.Dock="Top" Margin="0,5" Text="{l:Loc TranslatorAttributation}" TextWrapping="Wrap"
+            <TextBlock Margin="0,5" Text="{l:Loc TranslatorAttributation}" TextWrapping="Wrap"
                        Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"
                        Visibility="{Binding ShowTranslatorAttributation, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
         </Grid>
 
+        <TextBlock DockPanel.Dock="Top"
+                   TextAlignment="Center"
+                   FontSize="14"
+                   Margin="0,25"
+                   TextWrapping="Wrap"
+                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
+            <TextBlock Text="{l:Loc AboutView_Donate_Text}"/><LineBreak/>
+            <Hyperlink Command="{s:Action BuyMeABeer}">
+                <TextBlock Text="{l:Loc AboutView_Donate_Link}"/>
+            </Hyperlink>
+        </TextBlock>
+        
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>
             </Hyperlink>
         </TextBlock>
+        
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowLicenses}">
                 <TextBlock Text="{l:Loc AboutView_ShowOtherLicenses}"/>
