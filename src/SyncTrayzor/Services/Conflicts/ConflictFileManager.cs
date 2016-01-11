@@ -85,6 +85,7 @@ namespace SyncTrayzor.Services.Conflicts
     public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
+        private const string stVersionsFolder = ".stversions";
         private static readonly Regex conflictRegex =
             new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(?<suffix>.*)(?<extension>\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -134,7 +135,7 @@ namespace SyncTrayzor.Services.Conflicts
                 conflictLookup.Clear();
                 var directory = stack.Pop();
 
-                foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
+                foreach (var fileName in this.TryGetFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                 {
                     var filePath = Path.Combine(directory, fileName);
 
@@ -161,15 +162,43 @@ namespace SyncTrayzor.Services.Conflicts
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 
-                foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
+                foreach (var subDirectory in this.TryGetDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
                 {
-                    if (subDirectory == ".stversions")
+                    if (subDirectory == stVersionsFolder)
                         continue;
 
                     stack.Push(Path.Combine(directory, subDirectory));
 
                     cancellationToken.ThrowIfCancellationRequested();
                 }
+            }
+        }
+
+        private IEnumerable<string> TryGetFiles(string path, string searchPattern, System.IO.SearchOption searchOption)
+        {
+            try
+            {
+                // Can't use EnumerateFiles, as Pri.LongPath throws the first time it's enumerated
+                return this.filesystemProvider.GetFiles(path, searchPattern, searchOption);
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Failed to enumerate files in folder {path}: {e.Message}", e);
+                return Enumerable.Empty<string>();
+            }
+        }
+
+        private IEnumerable<string> TryGetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption)
+        {
+            try
+            {
+                // Can't use EnumerateDirectories, as Pri.LongPath throws the first time it's enumerated
+                return this.filesystemProvider.GetDirectories(path, searchPattern, searchOption);
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Failed to enumerate directories in folder {path}: {e.Message}", e);
+                return Enumerable.Empty<string>();
             }
         }
 

@@ -26,6 +26,7 @@ namespace SyncTrayzor.Services
         string ReadAllText(string path);
         string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
         string[] GetDirectories(string path);
+        string[] GetDirectories(string path, string searchPattern, SearchOption searchOption);
         IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
         IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
     }
@@ -78,6 +79,8 @@ namespace SyncTrayzor.Services
         public string[] GetFiles(string path, string searchPattern, SearchOption searchOption) => Pri.LongPath.Directory.GetFiles(path, searchPattern, searchOption);
 
         public string[] GetDirectories(string path) => Pri.LongPath.Directory.GetDirectories(path);
+
+        public string[] GetDirectories(string path, string searchPattern, SearchOption searchOption) => Pri.LongPath.Directory.GetDirectories(path, searchPattern, searchOption);
 
         public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
             => Pri.LongPath.Directory.EnumerateFiles(path, searchPattern, searchOption);
