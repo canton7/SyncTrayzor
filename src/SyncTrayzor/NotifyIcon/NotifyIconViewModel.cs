@@ -10,12 +10,13 @@ using System.Windows.Input;
 
 namespace SyncTrayzor.NotifyIcon
 {
-    public class NotifyIconViewModel : PropertyChangedBase
+    public class NotifyIconViewModel : PropertyChangedBase, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
+        private readonly IAlertsManager alertsManager;
 
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
@@ -28,6 +29,8 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncThingState SyncThingState { get; set; }
 
+        public bool SyncThingAlert => this.alertsManager.AnyAlerts;
+
         public bool SyncThingStarted => this.SyncThingState == SyncThingState.Running;
 
         public bool SyncThingSyncing { get; private set; }
@@ -37,34 +40,48 @@ namespace SyncTrayzor.NotifyIcon
             ISyncThingManager syncThingManager,
             Func<SettingsViewModel> settingsViewModelFactory,
             IProcessStartProvider processStartProvider,
+            IAlertsManager alertsManager,
             FileTransfersTrayViewModel fileTransfersViewModel)
         {
             this.windowManager = windowManager;
             this.syncThingManager = syncThingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.processStartProvider = processStartProvider;
+            this.alertsManager = alertsManager;
             this.FileTransfersViewModel = fileTransfersViewModel;
 
-            this.syncThingManager.StateChanged += (o, e) =>
-            {
-                this.SyncThingState = e.NewState;
-                if (e.NewState != SyncThingState.Running)
-                    this.SyncThingSyncing = false; // Just make sure we reset this...
-            };
+            this.syncThingManager.StateChanged += this.StateChanged;
             this.SyncThingState = this.syncThingManager.State;
 
-            this.syncThingManager.TotalConnectionStatsChanged += (o, e) =>
-            {
-                var stats = e.TotalConnectionStats;
-                this.SyncThingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
-            };
+            this.syncThingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
+            this.syncThingManager.DataLoaded += this.DataLoaded;
 
-            this.syncThingManager.DataLoaded += (o, e) =>
-            {
-                this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.Folders.FetchAll()
+            this.alertsManager.AlertsStateChanged += this.AlertsStateChanged;
+        }
+
+        private void StateChanged(object sender, SyncThingStateChangedEventArgs e)
+        {
+            this.SyncThingState = e.NewState;
+            if (e.NewState != SyncThingState.Running)
+                this.SyncThingSyncing = false; // Just make sure we reset this..
+        }
+
+        private void TotalConnectionStatsChanged(object sender, ConnectionStatsChangedEventArgs e)
+        {
+            var stats = e.TotalConnectionStats;
+            this.SyncThingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
+        }
+
+        private void DataLoaded(object sender, EventArgs e)
+        {
+            this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.Folders.FetchAll()
                     .Select(x => new FolderViewModel(x, this.processStartProvider))
                     .OrderBy(x => x.FolderId));
-            };
+        }
+
+        private void AlertsStateChanged(object sender, EventArgs e)
+        {
+            this.NotifyOfPropertyChange(nameof(this.SyncThingAlert));
         }
 
         public void DoubleClick()
@@ -116,6 +133,16 @@ namespace SyncTrayzor.NotifyIcon
         private void OnWindowCloseRequested() => this.WindowCloseRequested?.Invoke(this, EventArgs.Empty);
 
         private void OnExitRequested() => this.ExitRequested?.Invoke(this, EventArgs.Empty);
+
+        public void Dispose()
+        {
+            this.syncThingManager.StateChanged -= this.StateChanged;
+
+            this.syncThingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
+            this.syncThingManager.DataLoaded -= this.DataLoaded;
+
+            this.alertsManager.AlertsStateChanged -= this.AlertsStateChanged;
+        }
     }
 
     // Slightly hacky, as we can't use s:Action in a style setter...

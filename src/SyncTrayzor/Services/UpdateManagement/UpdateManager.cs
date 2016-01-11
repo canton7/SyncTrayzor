@@ -18,7 +18,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         }
     }
 
-    public interface IUpdateManager
+    public interface IUpdateManager : IDisposable
     {
         event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         Version LatestIgnoredVersion { get; set; }
@@ -39,6 +39,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly IUpdateCheckerFactory updateCheckerFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IUpdatePromptProvider updatePromptProvider;
+        private readonly IAssemblyProvider assemblyProvider;
         private readonly Func<IUpdateVariantHandler> updateVariantHandlerFactory;
         private readonly DispatcherTimer promptTimer;
 
@@ -46,6 +47,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private DateTime lastCheckedTime;
         private CancellationTokenSource toastCts;
+        private bool remindLaterActive;
 
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
@@ -72,6 +74,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             IUpdateCheckerFactory updateCheckerFactory,
             IProcessStartProvider processStartProvider,
             IUpdatePromptProvider updatePromptProvider,
+            IAssemblyProvider assemblyProvider,
             Func<IUpdateVariantHandler> updateVariantHandlerFactory)
         {
             this.applicationState = applicationState;
@@ -80,6 +83,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.updateCheckerFactory = updateCheckerFactory;
             this.processStartProvider = processStartProvider;
             this.updatePromptProvider = updatePromptProvider;
+            this.assemblyProvider = assemblyProvider;
             this.updateVariantHandlerFactory = updateVariantHandlerFactory;
 
             this.promptTimer = new DispatcherTimer();
@@ -87,10 +91,10 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             // Strategy time:
             // We'll prompt the user a fixed period after the computer starts up / resumes from sleep
+            // (this is handled by CheckForUpdates being set to true, if appropriate, by another part of the application)
             // We'll also check on a fixed interval since this point
-            // We'll also check when the application is restored from tray
+            // If 'remind me later' is active, we'll also check when the application is restored from tray
 
-            this.applicationState.Startup += this.ApplicationStartup;
             this.applicationState.ResumeFromSleep += this.ResumeFromSleep;
             this.applicationWindowState.RootWindowActivated += this.RootWindowActivated;
         }
@@ -111,15 +115,14 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
-        private async void ApplicationStartup(object sender, EventArgs e)
-        {
-            await this.CheckForUpdatesAsync();
-        }
-
         private async void ResumeFromSleep(object sender, EventArgs e)
         {
             if (this.UpdateCheckDue())
+            {
+                // We often wake up before the network does. Give the network some time to sort itself out
+                await Task.Delay(TimeSpan.FromSeconds(60));
                 await this.CheckForUpdatesAsync();
+            }
         }
 
         private async void RootWindowActivated(object sender, ActivationEventArgs e)
@@ -127,8 +130,9 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.toastCts != null)
                 this.toastCts.Cancel();
 
-            // Always check on root window activated
-            await this.CheckForUpdatesAsync();
+            // If the user clicked 'remind me later', check on root window activated
+            if (this.remindLaterActive)
+                await this.CheckForUpdatesAsync();
         }
 
         private async void PromptTimerElapsed(object sender, EventArgs e)
@@ -182,7 +186,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 VersionPromptResult promptResult;
                 if (this.applicationState.HasMainWindow)
                 {
-                    promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                    promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                 }
                 else
                 {
@@ -193,30 +197,31 @@ namespace SyncTrayzor.Services.UpdateManagement
                     try
                     {
                         this.toastCts = new CancellationTokenSource();
-                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, this.toastCts.Token);
+                        promptResult = await this.updatePromptProvider.ShowToast(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac, this.toastCts.Token);
                         this.toastCts = null;
 
                         // Special case
                         if (promptResult == VersionPromptResult.ShowMoreDetails)
                         {
                             this.applicationWindowState.EnsureInForeground();
-                            promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                            promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                         }
                     }
                     catch (OperationCanceledException)
                     {
                         this.toastCts = null;
                         logger.Info("Update toast cancelled. Moving to a dialog");
-                        promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall);
+                        promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                     }
                 }
 
+                this.remindLaterActive = false;
                 switch (promptResult)
                 {
                     case VersionPromptResult.InstallNow:
                         Debug.Assert(variantHandler.CanAutoInstall);
                         logger.Info("Auto-installing {0}", checkResult.NewVersion);
-                        variantHandler.AutoInstall();
+                        variantHandler. AutoInstall(this.PathToRestartApplication());
                         break;
 
                     case VersionPromptResult.Download:
@@ -230,6 +235,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                         break;
 
                     case VersionPromptResult.RemindLater:
+                        this.remindLaterActive = true;
                         logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
                         break;
 
@@ -248,11 +254,26 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
+        private string PathToRestartApplication()
+        {
+            var path = $"\"{this.assemblyProvider.Location}\"";
+            if (!this.applicationState.HasMainWindow)
+                path += " -minimized";
+
+            return path;
+        }
+
         public Task<VersionCheckResults> CheckForAcceptableUpdateAsync()
         {
             var variantHandler = this.updateVariantHandlerFactory();
             var updateChecker = this.updateCheckerFactory.CreateUpdateChecker(this.UpdateCheckApiUrl, variantHandler.VariantName);
             return updateChecker.CheckForAcceptableUpdateAsync(this.LatestIgnoredVersion);
+        }
+
+        public void Dispose()
+        {
+            this.applicationState.ResumeFromSleep -= this.ResumeFromSleep;
+            this.applicationWindowState.RootWindowActivated -= this.RootWindowActivated;
         }
     }
 }

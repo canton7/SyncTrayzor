@@ -416,13 +416,9 @@ Details on each component, and its license text, are shown below.</value>
     <value>Oops! Something went badly wrong.
 SyncTrayzor is going to have to close. Sorry about that</value>
   </data>
-  <data name="UnhandledExceptionView_LogFileLocation_Post" xml:space="preserve">
-    <value />
-    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately after the log path</comment>
-  </data>
-  <data name="UnhandledExceptionView_LogFileLocation_Pre" xml:space="preserve">
-    <value>You may be asked to provide a log file. You can find this in:</value>
-    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file, and gives the path. This text appears immediately before the log path</comment>
+  <data name="UnhandledExceptionView_LogFileLocation_Description" xml:space="preserve">
+    <value>You may be asked to provide a log file.</value>
+    <comment>When an unhandled exception occurs, the user is informed that they may have to provide a log file</comment>
   </data>
   <data name="UnhandledExceptionView_PleaseOpenIssue_Post" xml:space="preserve">
     <value>and include the following information:</value>
@@ -744,5 +740,136 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="ConsoleView_Title" xml:space="preserve">
     <value>Syncthing Console</value>
+  </data>
+  <data name="SettingsView_Logging_Explanation" xml:space="preserve">
+    <value>Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead.</value>
+  </data>
+  <data name="SettingsView_Logging_Unavailable" xml:space="preserve">
+    <value>Syncthing Debug Facilities unavailable. Please start Syncthing.</value>
+  </data>
+  <data name="SettingsView_Tab_Logging" xml:space="preserve">
+    <value>Logging + STTRACE</value>
+  </data>
+  <data name="SettingsView_Validation_SetSttraceInTab" xml:space="preserve">
+    <value>Set STTRACE in the 'Logging + STTRACE' tab</value>
+    <comment>Shown when the user attempts to enter an STTRACE value in the 'Syncthing Environmental Variables' box. They should use the tab with the heading 'Logging +STTRACE' instead.</comment>
+  </data>
+  <data name="ConsoleView_SettingsButton" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="UnhandledExceptionView_LogFileLocation_Link" xml:space="preserve">
+    <value>You can find SyncTrayzor's log file here.</value>
+    <comment>Clickable text to open the location of the log file</comment>
+  </data>
+  <data name="SettingsView_Logging_ShowSyncthingLog" xml:space="preserve">
+    <value>Show Syncthing Log File</value>
+    <comment>Text on button which will open Explorer at the location of Syncthing's log file</comment>
+  </data>
+  <data name="SettingsView_Logging_ShowSyncTrayzorLog" xml:space="preserve">
+    <value>Show SyncTrayzor Log File</value>
+    <comment>Text on button which will open Explorer at the location of SyncTrayzor's log file</comment>
+  </data>
+  <data name="ConflictResolutionView_Button_Choose" xml:space="preserve">
+    <value>Choose</value>
+    <comment>Button shown next to each conflicted file, allowing the user to choose that version of the file as the one they want to keep (and deleting the other versions)</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_ConflictCreated" xml:space="preserve">
+    <value>Conflict Created</value>
+    <comment>Header shown above the list of times at which each confliction version of the file was created, and is shown when the user selects a conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_ConflictingFileName" xml:space="preserve">
+    <value>Conflicting File Name</value>
+    <comment>Header shown above a list of file names of each conflicting version of the file, and is shown when the user selects a conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_File" xml:space="preserve">
+    <value>File</value>
+    <comment>Header shown above the filename of each conflicted file in the main body of the window</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_Folder" xml:space="preserve">
+    <value>Folder</value>
+    <comment>Header shown above the folder containing each conflicted file in the main body of the window</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_LastModified" xml:space="preserve">
+    <value>Last Modified</value>
+    <comment>Header shown above the 'Last Modified' column. This is used both in the main body (to show when the original file in the conflict was last modified), and above each version of the conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Header_OriginalFile" xml:space="preserve">
+    <value>Original File</value>
+    <comment>Header shown above the 'Original File' entry, which contains the name of the original file in the conflict, and is shown when the user selects a conflict</comment>
+  </data>
+  <data name="ConflictResolutionView_Scanning_CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text on the 'Cancel' button, shown next to the 'Scanning' progress bar at the top of the page when scanning is in progress</comment>
+  </data>
+  <data name="ConflictResolutionView_Scanning_Label" xml:space="preserve">
+    <value>Scanning...</value>
+    <comment>Text shown next to the 'Scanning' progress bar at the top of the page, when scanning is in progress</comment>
+  </data>
+  <data name="ConflictResolutionView_Status_NoConflicts" xml:space="preserve">
+    <value>No conflicts found. Good job!</value>
+    <comment>Text shown in the main body of the window when we've finished scanning for conflicts, and didn't find any</comment>
+  </data>
+  <data name="ConflictResolutionView_Status_Scanning" xml:space="preserve">
+    <value>No conflicts found (yet)...</value>
+    <comment>Text shown in the main body of the window when we're scanning for conflicts, but haven't yet found any</comment>
+  </data>
+  <data name="ConflictResolutionView_Status_SyncthingNotRunning" xml:space="preserve">
+    <value>Syncthing is not running. Please start Syncthing.</value>
+    <comment>Text shown in the main body of the window when Syncthing isn't running (which means that we can't start scanning for conflicts)</comment>
+  </data>
+  <data name="ConflictResolutionView_Title" xml:space="preserve">
+    <value>Conflict Resolver</value>
+    <comment>Shown in the title bar of the Conflict Resolver window</comment>
+  </data>
+  <data name="ShellView_Menu_File_ConflictResolver" xml:space="preserve">
+    <value>_Conflict Resolver</value>
+  </data>
+  <data name="ConflictResolutionView_Dialog_Failed_Message" xml:space="preserve">
+    <value>Resolving this conflict failed: {0}</value>
+    <comment>Content of the dialog shown when resolving a conflict failed.
+
+{0}: Exception message</comment>
+  </data>
+  <data name="ConflictResolutionView_Dialog_Failed_Title" xml:space="preserve">
+    <value>Operation Failed</value>
+  </data>
+  <data name="BarAlertsView_Conflict_AlertText" xml:space="preserve">
+    <value>You have {0:p:1 conflicted file|{} conflicted files}.</value>
+    <comment>Text shown at the start of the alert bar, when the user has conflicted files.
+{0}: The number of conflicts</comment>
+  </data>
+  <data name="BarAlertsView_Conflict_ResolveLink" xml:space="preserve">
+    <value>Resolve now.</value>
+    <comment>Clickable link shown next to ConflictsAlertView_AlertText, allowing the user to resolve the conflicts.</comment>
+  </data>
+  <data name="SettingsView_EnableConflictFileMonitoring" xml:space="preserve">
+    <value>Alert me of conflicted files</value>
+  </data>
+  <data name="BarAlertsView_FailedTransfer_AlertText" xml:space="preserve">
+    <value>The following folders have failing file transfers: {0:l:{}|, }.</value>
+    <comment>Text show in a bar alert at the top of the screen when there are 1 or more folders with failing transfers. 
+{0}: List of folders with failing file transfers</comment>
+  </data>
+  <data name="BarAlertsView_FailedTransfer_Details" xml:space="preserve">
+    <value>Please see the Syncthing GUI or Console for clues.</value>
+    <comment>Text shown to the right of BarAlertsView_FailedTransfer_AlertText, in non-bold text</comment>
+  </data>
+  <data name="SettingsView_Alerts_Description" xml:space="preserve">
+    <value>Alerts are shown in a bar at the top of SyncTrayzor, and show a warning triangle on the tray icon.</value>
+  </data>
+  <data name="SettingsView_EnableFailedTransferAlerts" xml:space="preserve">
+    <value>Alert of failed file transfers</value>
+  </data>
+  <data name="SettingsView_Section_Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
+  <data name="ConflictResolutionView_Button_ShowInFolder" xml:space="preserve">
+    <value>Show in Folder</value>
+  </data>
+  <data name="AboutView_Donate_Link" xml:space="preserve">
+    <value>Please buy me a beer!</value>
+  </data>
+  <data name="AboutView_Donate_Text" xml:space="preserve">
+    <value>Find SyncTrayzor useful?</value>
   </data>
 </root>

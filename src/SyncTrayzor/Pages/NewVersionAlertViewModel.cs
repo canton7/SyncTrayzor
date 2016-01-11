@@ -8,6 +8,7 @@ namespace SyncTrayzor.Pages
         public bool CanInstall { get; set; }
         public Version Version { get; set; }
         public string Changelog { get; set; }
+        public bool ShowUacBadge { get; set; }
 
         public bool DontRemindMe { get; private set; }
 

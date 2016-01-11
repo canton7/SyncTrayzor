@@ -13,5 +13,7 @@
         void Accept(DeviceDisconnectedEvent evt);
         void Accept(DownloadProgressEvent evt);
         void Accept(ConfigSavedEvent evt);
+        void Accept(FolderSummaryEvent evt);
+        void Accept(FolderErrorsEvent evt);
     }
 }

@@ -10,8 +10,9 @@ namespace SyncTrayzor.Services
         void Start(string filename);
         void Start(string filename, string arguments);
         void StartDetached(string filename);
-        void StartDetached(string filename, string arguments);
+        void StartDetached(string filename, string arguments, string launchAfterFinished = null);
         void StartElevatedDetached(string filename, string arguments, string launchAfterFinished = null);
+        void ShowInExplorer(string filePath);
     }
 
     public class ProcessStartProvider : IProcessStartProvider
@@ -42,12 +43,13 @@ namespace SyncTrayzor.Services
             this.StartDetached(filename, null);
         }
 
-        public void StartDetached(string filename, string arguments)
+        public void StartDetached(string filename, string arguments, string launchAfterFinished = null)
         {
             if (arguments == null)
                 arguments = String.Empty;
 
-            var formattedArguments = $"--shell -- \"{filename}\" {arguments}";
+            var launch = launchAfterFinished == null ? null : String.Format("--launch=\"{0}\"", launchAfterFinished.Replace("\"", "\\\""));
+            var formattedArguments = $"--shell {launch} -- \"{filename}\" {arguments}";
 
             logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
             var startInfo = new ProcessStartInfo()
@@ -81,5 +83,7 @@ namespace SyncTrayzor.Services
 
             Process.Start(startInfo);
         }
+
+        public void ShowInExplorer(string filePath) => this.StartDetached("explorer.exe", $"/select, \"{filePath}\"");
     }
 }

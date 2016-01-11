@@ -18,8 +18,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
     public interface IUpdatePromptProvider
     {
-        VersionPromptResult ShowDialog(VersionCheckResults checkResults, bool canAutoInstall);
-        Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, CancellationToken cancellationToken);
+        VersionPromptResult ShowDialog(VersionCheckResults checkResults, bool canAutoInstall, bool requiresUac);
+        Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, bool requiresUac, CancellationToken cancellationToken);
     }
 
     public class UpdatePromptProvider : IUpdatePromptProvider
@@ -41,12 +41,13 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.upgradeAvailableToastViewModelFactory = upgradeAvailableToastViewModelFactory;
         }
 
-        public VersionPromptResult ShowDialog(VersionCheckResults checkResults, bool canAutoInstall)
+        public VersionPromptResult ShowDialog(VersionCheckResults checkResults, bool canAutoInstall, bool requiresUac)
         {
             var vm = this.newVersionAlertViewModelFactory();
             vm.Changelog = checkResults.ReleaseNotes;
             vm.Version = checkResults.NewVersion;
             vm.CanInstall = canAutoInstall;
+            vm.ShowUacBadge = requiresUac;
             var dialogResult = this.windowManager.ShowDialog(vm);
 
             if (dialogResult == true)
@@ -56,11 +57,12 @@ namespace SyncTrayzor.Services.UpdateManagement
             return VersionPromptResult.RemindLater;
         }
 
-        public async Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, CancellationToken cancellationToken)
+        public async Task<VersionPromptResult> ShowToast(VersionCheckResults checkResults, bool canAutoInstall, bool requiresUac, CancellationToken cancellationToken)
         {
             var vm = this.upgradeAvailableToastViewModelFactory();
             vm.Version = checkResults.NewVersion;
             vm.CanInstall = canAutoInstall;
+            vm.ShowUacBadge = requiresUac;
 
             var dialogResult = await this.notifyIconManager.ShowBalloonAsync(vm, cancellationToken: cancellationToken);
 

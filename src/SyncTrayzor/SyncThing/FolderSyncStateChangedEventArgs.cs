@@ -2,15 +2,15 @@
 
 namespace SyncTrayzor.SyncThing
 {
-    public class FolderSyncStateChangeEventArgs : EventArgs
+    public class FolderSyncStateChangedEventArgs : EventArgs
     {
-        public Folder Folder { get; }
+        public string FolderId { get; }
         public FolderSyncState PrevSyncState { get; }
         public FolderSyncState SyncState { get; }
 
-        public FolderSyncStateChangeEventArgs(Folder folder, FolderSyncState prevSyncState, FolderSyncState syncState)
+        public FolderSyncStateChangedEventArgs(string folderId, FolderSyncState prevSyncState, FolderSyncState syncState)
         {
-            this.Folder = folder;
+            this.FolderId = folderId;
             this.PrevSyncState = prevSyncState;
             this.SyncState = syncState;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SyncTrayzor.SyncThing.ApiClient;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace SyncTrayzor.SyncThing
@@ -34,42 +35,70 @@ namespace SyncTrayzor.SyncThing
         }
     }
 
+    public class FolderError
+    {
+        public string Error { get; }
+        public string Path { get; }
+
+        public FolderError(string error, string path)
+        {
+            this.Error = error;
+            this.Path = path;
+        }
+    }
+
     public class Folder
     {
+        private readonly object syncRoot = new object();
+
         public string FolderId { get; }
         public string Path { get; }
 
-        private readonly object syncStateLock = new object();
         private FolderSyncState _syncState;
         public FolderSyncState SyncState
         {
-            get { lock (this.syncStateLock) { return this._syncState; } }
-            set { lock (this.syncStateLock) { this._syncState = value; } }
+            get { lock (this.syncRoot) { return this._syncState; } }
+            set { lock (this.syncRoot) { this._syncState = value; } }
         }
 
-        private readonly object syncingPathsLock = new object();
         private HashSet<string> syncingPaths { get; set; }
 
-        private readonly object ignoresLock = new object();
         private FolderIgnores _ignores;
         public FolderIgnores Ignores
         {
-            get { lock (this.ignoresLock) { return this._ignores; } }
-            set { lock (this.ignoresLock) { this._ignores = value; } }
+            get { lock (this.syncRoot) { return this._ignores; } }
+            set { lock (this.syncRoot) { this._ignores = value; } }
         }
 
-        public Folder(string folderId, string path, FolderSyncState syncState, FolderIgnores ignores)
+        private FolderStatus _status;
+        public FolderStatus Status
+        {
+            get {  lock(this.syncRoot) { return this._status; } }
+            set {  lock(this.syncRoot) { this._status = value; } }
+        }
+
+        private readonly List<FolderError> _folderErrorsList = new List<FolderError>();
+        private readonly IReadOnlyList<FolderError> _folderErrors;
+        public IReadOnlyList<FolderError> FolderErrors
+        {
+            get {  lock(this.syncRoot) { return this._folderErrors; } }
+        }
+
+
+        public Folder(string folderId, string path, FolderSyncState syncState, FolderIgnores ignores, FolderStatus status)
         {
             this.FolderId = folderId;
             this.Path = path;
             this.SyncState = syncState;
             this.syncingPaths = new HashSet<string>();
             this._ignores = ignores;
+            this._status = status;
+            this._folderErrors = this._folderErrorsList.AsReadOnly();
         }
 
         public bool IsSyncingPath(string path)
         {
-            lock (this.syncingPathsLock)
+            lock (this.syncRoot)
             {
                 return this.syncingPaths.Contains(path);
             }
@@ -77,7 +106,7 @@ namespace SyncTrayzor.SyncThing
 
         public void AddSyncingPath(string path)
         {
-            lock (this.syncingPathsLock)
+            lock (this.syncRoot)
             {
                 this.syncingPaths.Add(path);
             }
@@ -85,9 +114,26 @@ namespace SyncTrayzor.SyncThing
 
         public void RemoveSyncingPath(string path)
         {
-            lock (this.syncingPathsLock)
+            lock (this.syncRoot)
             {
                 this.syncingPaths.Remove(path);
+            }
+        }
+
+        public void SetFolderErrors(IEnumerable<FolderError> folderErrors)
+        {
+            lock (this.syncRoot)
+            {
+                this._folderErrorsList.Clear();
+                this._folderErrorsList.AddRange(folderErrors);
+            }
+        }
+
+        public void ClearFolderErrors()
+        {
+            lock (this.syncRoot)
+            {
+                this._folderErrorsList.Clear();
             }
         }
     }

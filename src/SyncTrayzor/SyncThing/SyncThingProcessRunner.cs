@@ -37,6 +37,7 @@ namespace SyncTrayzor.SyncThing
         string HostAddress { get; set; }
         string CustomHomeDir { get; set; }
         List<string> CommandLineFlags { get; set; }
+        List<string> DebugFacilities { get; set; }
         IDictionary<string, string> EnvironmentalVariables { get; set; }
         bool DenyUpgrade { get; set; }
         SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
@@ -55,6 +56,7 @@ namespace SyncTrayzor.SyncThing
     public class SyncThingProcessRunner : ISyncThingProcessRunner
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger syncthingLogger = LogManager.GetLogger("Syncthing");
         private static readonly string[] defaultArguments = new[] { "-no-browser", "-no-restart" };
         // Leave just the first set of digits, removing everything after it
         private static readonly Regex deviceIdHideRegex = new Regex(@"-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}-[0-9A-Z]{7}");
@@ -75,6 +77,7 @@ namespace SyncTrayzor.SyncThing
         public string HostAddress { get; set; }
         public string CustomHomeDir { get; set; }
         public List<string> CommandLineFlags { get; set; } = new List<string>();
+        public List<string> DebugFacilities { get; set; } = new List<string>();
         public IDictionary<string, string> EnvironmentalVariables { get; set; } = new Dictionary<string, string>();
         public bool DenyUpgrade { get; set; }
         public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
@@ -115,6 +118,9 @@ namespace SyncTrayzor.SyncThing
 
             if (this.DenyUpgrade)
                 processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
+            if (this.DebugFacilities.Count > 0)
+                processStartInfo.EnvironmentVariables["STTRACE"] = String.Join(",", this.DebugFacilities);
+
             foreach (var kvp in this.EnvironmentalVariables)
             {
                 processStartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
@@ -247,6 +253,7 @@ namespace SyncTrayzor.SyncThing
         private void OnMessageLogged(string logMessage)
         {
             logger.Debug(logMessage);
+            syncthingLogger.Info(logMessage);
             this.MessageLogged?.Invoke(this, new MessageLoggedEventArgs(logMessage));
         }
 

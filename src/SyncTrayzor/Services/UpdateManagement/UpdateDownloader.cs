@@ -11,7 +11,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IUpdateDownloader
     {
-        Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version);
+        Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version, string downloadedFileNameTemplate);
     }
 
     public class UpdateDownloader : IUpdateDownloader
@@ -19,7 +19,6 @@ namespace SyncTrayzor.Services.UpdateManagement
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private static readonly TimeSpan fileMaxAge = TimeSpan.FromDays(3); // Arbitrary, but long
-        private const string updateDownloadFileName = "SyncTrayzorUpdate-{0}.exe";
         private const string sham1sumDownloadFileName = "sha1sum-{0}.txt.asc";
 
         private readonly string downloadsDir;
@@ -33,10 +32,10 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.installerVerifier = installerVerifier;
         }
 
-        public async Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version)
+        public async Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version, string downloadedFileNameTemplate)
         {
             var sha1sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sham1sumDownloadFileName, version.ToString(3)));
-            var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(updateDownloadFileName, version.ToString(3)));
+            var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(downloadedFileNameTemplate, version.ToString(3)));
 
             var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, () =>
                 {

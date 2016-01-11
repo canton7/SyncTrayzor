@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
+using System.IO;
 
 namespace SyncTrayzor.Pages.Settings
 {
@@ -20,16 +21,30 @@ namespace SyncTrayzor.Pages.Settings
         public bool IsNotified { get; set; }
     }
 
+    public class DebugFacilitySetting : PropertyChangedBase
+    {
+        public bool IsEnabled { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     public class SettingsViewModel : Screen
     {
+        // We can be opened directly on this tab. All of the layout is done in xaml, so this is
+        // the neatest way we can select it...
+        private const int loggingTabIndex = 3;
+
         private readonly IConfigurationProvider configurationProvider;
         private readonly IAutostartProvider autostartProvider;
         private readonly IWindowManager windowManager;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IAssemblyProvider assemblyProvider;
         private readonly IApplicationState applicationState;
+        private readonly IApplicationPathsProvider applicationPathsProvider;
         private readonly ISyncThingManager syncThingManager;
         private readonly List<SettingItem> settings = new List<SettingItem>();
+
+        public int SelectedTabIndex { get; set; }
 
         public SettingItem<bool> MinimizeToTray { get; }
         public SettingItem<bool> CloseToTray { get; }
@@ -37,6 +52,8 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> ObfuscateDeviceIDs { get; }
         public SettingItem<bool> UseComputerCulture { get; }
         public SettingItem<bool> DisableHardwareRendering { get; }
+        public SettingItem<bool> EnableConflictFileMonitoring { get; }
+        public SettingItem<bool> EnableFailedTransferAlerts { get; }
 
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
@@ -65,7 +82,9 @@ namespace SyncTrayzor.Pages.Settings
         private bool updatingFolderSettings;
         public bool? AreAllFoldersWatched { get; set; }
         public bool? AreAllFoldersNotified { get; set; }
-        public BindableCollection<FolderSettings> FolderSettings { get;  }
+        public BindableCollection<FolderSettings> FolderSettings { get; } = new BindableCollection<FolderSettings>();
+
+        public BindableCollection<DebugFacilitySetting> SyncthingDebugFacilities { get; } = new BindableCollection<DebugFacilitySetting>();
 
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
@@ -74,6 +93,7 @@ namespace SyncTrayzor.Pages.Settings
             IProcessStartProvider processStartProvider,
             IAssemblyProvider assemblyProvider,
             IApplicationState applicationState,
+            IApplicationPathsProvider applicationPathsProvider,
             ISyncThingManager syncThingManager)
         {
             this.configurationProvider = configurationProvider;
@@ -82,6 +102,7 @@ namespace SyncTrayzor.Pages.Settings
             this.processStartProvider = processStartProvider;
             this.assemblyProvider = assemblyProvider;
             this.applicationState = applicationState;
+            this.applicationPathsProvider = applicationPathsProvider;
             this.syncThingManager = syncThingManager;
 
             this.MinimizeToTray = this.CreateBasicSettingItem(x => x.MinimizeToTray);
@@ -92,6 +113,8 @@ namespace SyncTrayzor.Pages.Settings
             this.UseComputerCulture.RequiresSyncTrayzorRestart = true;
             this.DisableHardwareRendering = this.CreateBasicSettingItem(x => x.DisableHardwareRendering);
             this.DisableHardwareRendering.RequiresSyncTrayzorRestart = true;
+            this.EnableConflictFileMonitoring = this.CreateBasicSettingItem(x => x.EnableConflictFileMonitoring);
+            this.EnableFailedTransferAlerts = this.CreateBasicSettingItem(x => x.EnableFailedTransferAlerts);
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);
@@ -126,7 +149,6 @@ namespace SyncTrayzor.Pages.Settings
                 }, new SyncThingCommandLineFlagsValidator());
             this.SyncThingCommandLineFlags.RequiresSyncthingRestart = true;
 
-
             this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
                 x => KeyValueStringParser.Format(x.SyncthingEnvironmentalVariables),
                 (x, v) =>
@@ -145,17 +167,6 @@ namespace SyncTrayzor.Pages.Settings
             foreach (var settingItem in this.settings)
             {
                 settingItem.LoadValue(configuration);
-            }
-
-            this.FolderSettings = new BindableCollection<FolderSettings>();
-            if (syncThingManager.State == SyncThingState.Running)
-            {
-                this.FolderSettings.AddRange(configuration.Folders.OrderByDescending(x => x.ID).Select(x => new FolderSettings()
-                {
-                    FolderName = x.ID,
-                    IsWatched = x.IsWatched,
-                    IsNotified = x.NotificationsEnabled,
-                }));
             }
 
             foreach (var folderSetting in this.FolderSettings)
@@ -204,6 +215,47 @@ namespace SyncTrayzor.Pages.Settings
 
             this.UpdateAreAllFoldersWatched();
             this.UpdateAreAllFoldersNotified();
+        }
+
+        protected override void OnInitialActivate()
+        {
+            if (syncThingManager.State == SyncThingState.Running && syncThingManager.IsDataLoaded)
+                this.LoadFromSyncthingStartupData();
+            else
+                this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
+        }
+
+        protected override void OnClose()
+        {
+            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
+        }
+
+        private void SyncthingDataLoaded(object sender, EventArgs e)
+        {
+            this.LoadFromSyncthingStartupData();
+        }
+
+        private void LoadFromSyncthingStartupData()
+        {
+            var configuration = this.configurationProvider.Load();
+
+            this.FolderSettings.Clear();
+            this.FolderSettings.AddRange(configuration.Folders.OrderByDescending(x => x.ID).Select(x => new FolderSettings()
+            {
+                FolderName = x.ID,
+                IsWatched = x.IsWatched,
+                IsNotified = x.NotificationsEnabled,
+            }));
+            this.NotifyOfPropertyChange(nameof(this.FolderSettings));
+
+            this.SyncthingDebugFacilities.Clear();
+            this.SyncthingDebugFacilities.AddRange(syncThingManager.DebugFacilities.DebugFacilities.Select(x => new DebugFacilitySetting()
+            {
+                IsEnabled = x.IsEnabled,
+                Name = x.Name,
+                Description = x.Description,
+            }));
+            this.NotifyOfPropertyChange(nameof(this.SyncthingDebugFacilities));
         }
 
         private SettingItem<T> CreateBasicSettingItem<T>(Expression<Func<Configuration, T>> accessExpression, IValidator<SettingItem<T>> validator = null)
@@ -262,6 +314,9 @@ namespace SyncTrayzor.Pages.Settings
         public bool CanSave => this.settings.All(x => !x.HasErrors);
         public void Save()
         {
+            bool debugFacilitiesRequiresRestart = !this.syncThingManager.DebugFacilities.SupportsRestartlessUpdate &&
+                !new HashSet<string>(this.syncThingManager.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name)).SetEquals(this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
+
             this.configurationProvider.AtomicLoadAndSave(configuration =>
             {
                 foreach (var settingItem in this.settings)
@@ -270,6 +325,8 @@ namespace SyncTrayzor.Pages.Settings
                 }
 
                 configuration.Folders = this.FolderSettings.Select(x => new FolderConfiguration(x.FolderName, x.IsWatched, x.IsNotified)).ToList();
+                // The ConfigurationApplicator will propagate this to the DebugFacilitiesManager
+                configuration.SyncthingDebugFacilities = this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             });
 
             if (this.autostartProvider.CanWrite)
@@ -290,7 +347,8 @@ namespace SyncTrayzor.Pages.Settings
                     this.applicationState.Shutdown();
                 }
             }
-            else if (this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart) && this.syncThingManager.State == SyncThingState.Running)
+            else if ((this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart) || debugFacilitiesRequiresRestart) &&
+                this.syncThingManager.State == SyncThingState.Running)
             {
                 var result = this.windowManager.ShowMessageBox(
                     Resources.SettingsView_RestartSyncthing_Message,
@@ -313,6 +371,21 @@ namespace SyncTrayzor.Pages.Settings
         public void Cancel()
         {
             this.RequestClose(false);
+        }
+
+        public void ShowSyncthingLogFile()
+        {
+            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "syncthing.log"));
+        }
+
+        public void ShowSyncTrayzorLogFile()
+        {
+            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
+        }
+
+        public void SelectLoggingTab()
+        {
+            this.SelectedTabIndex = loggingTabIndex;
         }
     }
 }

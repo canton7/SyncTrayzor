@@ -12,21 +12,22 @@
         <xaml:ActivateBehaviour ActivateObservable="{Binding ActivateObservable}"/>
     </i:Interaction.Behaviors>
     <Window.InputBindings>
-        <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlUp}" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
-        <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlDown}" Command="{s:Action BrowserZoomOut}" s:View.ActionTarget="{Binding}"/>
+        <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlUp}" Command="{s:Action BrowserZoomIn}"/>
+        <MouseBinding Gesture="{x:Static xaml:MouseWheelGesture.CtrlDown}" Command="{s:Action BrowserZoomOut}"/>
         <!-- Lots of different sorts of + and - on the keyboard: gotta catch em all! -->
-        <KeyBinding Key="OemPlus" Modifiers="Control+Shift" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
-        <KeyBinding Key="OemPlus" Modifiers="Control" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
-        <KeyBinding Key="Add" Modifiers="Control" Command="{s:Action BrowserZoomIn}" s:View.ActionTarget="{Binding}"/>
-        <KeyBinding Key="OemMinus" Modifiers="Control" Command="{s:Action BrowserZoomOut}" s:View.ActionTarget="{Binding}"/>
-        <KeyBinding Key="Subtract" Modifiers="Control" Command="{s:Action BrowserZoomOut}" s:View.ActionTarget="{Binding}"/>
-        <KeyBinding Key="D0" Modifiers="Control" Command="{s:Action BrowserZoomReset}" s:View.ActionTarget="{Binding}"/>
-        <KeyBinding Key="NumPad0" Modifiers="Control" Command="{s:Action BrowserZoomReset}" s:View.ActionTarget="{Binding}"/>
+        <KeyBinding Key="OemPlus" Modifiers="Control+Shift" Command="{s:Action BrowserZoomIn}"/>
+        <KeyBinding Key="OemPlus" Modifiers="Control" Command="{s:Action BrowserZoomIn}"/>
+        <KeyBinding Key="Add" Modifiers="Control" Command="{s:Action BrowserZoomIn}"/>
+        <KeyBinding Key="OemMinus" Modifiers="Control" Command="{s:Action BrowserZoomOut}"/>
+        <KeyBinding Key="Subtract" Modifiers="Control" Command="{s:Action BrowserZoomOut}"/>
+        <KeyBinding Key="D0" Modifiers="Control" Command="{s:Action BrowserZoomReset}"/>
+        <KeyBinding Key="NumPad0" Modifiers="Control" Command="{s:Action BrowserZoomReset}"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{l:Loc ShellView_Menu_File}">
                 <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_File_ConflictResolver}" Command="{s:Action ShowConflictResolver}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
             </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
@@ -52,6 +53,7 @@
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
                 <RowDefinition>
                     <i:Interaction.Behaviors>
@@ -66,11 +68,13 @@
                 </RowDefinition>
             </Grid.RowDefinitions>
 
-            <ContentControl Grid.Row="0" s:View.Model="{Binding Viewer}"/>
+            <ContentControl Grid.Row="0" s:View.Model="{Binding BarAlerts}"/>
+            
+            <ContentControl Grid.Row="1" s:View.Model="{Binding Viewer}"/>
 
-            <GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="True" ResizeDirection="Rows"/>
+            <GridSplitter Grid.Row="2" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="True" ResizeDirection="Rows"/>
 
-            <ContentControl Grid.Row="2" s:View.Model="{Binding Console}"/>
+            <ContentControl Grid.Row="3" s:View.Model="{Binding Console}"/>
         </Grid>
     </DockPanel>
 </Window>

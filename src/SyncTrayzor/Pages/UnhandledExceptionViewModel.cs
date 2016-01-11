@@ -4,11 +4,13 @@ using SyncTrayzor.Services.Config;
 using System;
 using System.Drawing;
 using System.Text;
+using System.IO;
 
 namespace SyncTrayzor.Pages
 {
     public class UnhandledExceptionViewModel : Screen
     {
+        private readonly IApplicationPathsProvider applicationPathsProvider;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IAssemblyProvider assemblyProvider;
 
@@ -20,7 +22,6 @@ namespace SyncTrayzor.Pages
         {
             get { return this.GenerateErrorMessage(); }
         }
-        public string LogFilePath { get; }
         public Icon Icon
         {
             get { return SystemIcons.Error; }
@@ -28,11 +29,11 @@ namespace SyncTrayzor.Pages
 
         public UnhandledExceptionViewModel(IApplicationPathsProvider applicationPathsProvider, IProcessStartProvider processStartProvider, IAssemblyProvider assemblyProvider)
         {
+            this.applicationPathsProvider = applicationPathsProvider;
             this.processStartProvider = processStartProvider;
             this.assemblyProvider = assemblyProvider;
 
             this.IssuesUrl = Properties.Settings.Default.IssuesUrl;
-            this.LogFilePath = applicationPathsProvider.LogFilePath;
         }
 
         private string GenerateErrorMessage()
@@ -52,6 +53,11 @@ namespace SyncTrayzor.Pages
         public void ShowIssues()
         {
             this.processStartProvider.StartDetached(this.IssuesUrl);
+        }
+
+        public void OpenLogFilePath()
+        {
+            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
         }
 
         public void Close()

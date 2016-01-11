@@ -7,6 +7,7 @@ using SyncTrayzor.Pages;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
+using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.SyncThing.ApiClient;
@@ -60,6 +61,9 @@ namespace SyncTrayzor
             builder.Bind<IInstallerCertificateVerifier>().To<InstallerCertificateVerifier>().InSingletonScope();
             builder.Bind<IProcessStartProvider>().To<ProcessStartProvider>().InSingletonScope();
             builder.Bind<IFilesystemProvider>().To<FilesystemProvider>().InSingletonScope();
+            builder.Bind<IConflictFileManager>().To<ConflictFileManager>(); // Could be singleton... Not often used
+            builder.Bind<IConflictFileWatcher>().To<ConflictFileWatcher>().InSingletonScope();
+            builder.Bind<IAlertsManager>().To<AlertsManager>().InSingletonScope();
             builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
             builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
@@ -72,7 +76,7 @@ namespace SyncTrayzor
                 Trace.Assert(false);
 
             builder.Bind(typeof(IModelValidator<>)).To(typeof(FluentModelValidator<>));
-            builder.Bind(typeof(IValidator<>)).ToAllImplementations(this.Assemblies);
+            builder.Bind(typeof(IValidator<>)).ToAllImplementations();
         }
 
         protected override void Configure()
@@ -174,6 +178,8 @@ namespace SyncTrayzor
 
             logger.Debug("Cleaning up config folder path");
             this.Container.Get<ConfigFolderCleaner>().Clean();
+
+            this.Container.Get<IConflictFileWatcher>();
         }
 
         private void OnAppDomainUnhandledException(UnhandledExceptionEventArgs e)
@@ -253,6 +259,13 @@ namespace SyncTrayzor
 
             // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
             this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
+        }
+
+        public override void Dispose()
+        {
+            // Probably need to make Stylet to this...
+            ScreenExtensions.TryDispose(this.RootViewModel);
+            base.Dispose();
         }
     }
 }

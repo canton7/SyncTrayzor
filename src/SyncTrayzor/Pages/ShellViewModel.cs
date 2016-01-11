@@ -1,4 +1,6 @@
 ﻿using Stylet;
+using SyncTrayzor.Pages.BarAlerts;
+using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
@@ -10,7 +12,7 @@ using System.Windows;
 
 namespace SyncTrayzor.Pages
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : Screen, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
@@ -18,6 +20,7 @@ namespace SyncTrayzor.Pages
         private readonly IConfigurationProvider configurationProvider;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly Func<AboutViewModel> aboutViewModelFactory;
+        private readonly Func<ConflictResolutionViewModel> confictResolutionViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
 
         public bool ShowConsole { get; set; }
@@ -26,6 +29,7 @@ namespace SyncTrayzor.Pages
         public SlimObservable<bool> ActivateObservable { get; } = new SlimObservable<bool>();
         public ConsoleViewModel Console { get; }
         public ViewerViewModel Viewer { get; }
+        public BarAlertsViewModel BarAlerts { get; }
 
         public SyncThingState SyncThingState { get; private set; }
 
@@ -36,8 +40,10 @@ namespace SyncTrayzor.Pages
             IConfigurationProvider configurationProvider,
             ConsoleViewModel console,
             ViewerViewModel viewer,
+            BarAlertsViewModel barAlerts,
             Func<SettingsViewModel> settingsViewModelFactory,
             Func<AboutViewModel> aboutViewModelFactory,
+            Func<ConflictResolutionViewModel> confictResolutionViewModelFactory,
             IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
@@ -46,14 +52,17 @@ namespace SyncTrayzor.Pages
             this.configurationProvider = configurationProvider;
             this.Console = console;
             this.Viewer = viewer;
+            this.BarAlerts = barAlerts;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.aboutViewModelFactory = aboutViewModelFactory;
+            this.confictResolutionViewModelFactory = confictResolutionViewModelFactory;
             this.processStartProvider = processStartProvider;
 
             var configuration = this.configurationProvider.Load();
 
             this.Console.ConductWith(this);
             this.Viewer.ConductWith(this);
+            this.BarAlerts.ConductWith(this);
 
             this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
             this.syncThingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
@@ -116,6 +125,12 @@ namespace SyncTrayzor.Pages
             this.windowManager.ShowDialog(vm);
         }
 
+        public void ShowConflictResolver()
+        {
+            var vm = this.confictResolutionViewModelFactory();
+            this.windowManager.ShowDialog(vm);
+        }
+
         public bool CanZoomBrowser => this.SyncThingState == SyncThingState.Running;
 
         public void BrowserZoomIn()
@@ -162,7 +177,13 @@ namespace SyncTrayzor.Pages
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
 
-            this.ActivateObservable.Publish(true);
+            this.ActivateObservable.Next(true);
+        }
+
+        public void Dispose()
+        {
+            this.Viewer.Dispose();
+            this.Console.Dispose();
         }
     }
 }

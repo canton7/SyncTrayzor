@@ -42,5 +42,11 @@ namespace SyncTrayzor.SyncThing.ApiClient
 
         [Get("/rest/db/status")]
         Task<FolderStatus> FetchFolderStatusAsync(string folder, CancellationToken cancellationToken);
+
+        [Get("/rest/system/debug")]
+        Task<DebugFacilitiesSettings> FetchDebugFacilitiesAsync();
+
+        [Post("/rest/system/debug")]
+        Task SetDebugFacilitiesAsync(string enable, string disable);
     }
 }

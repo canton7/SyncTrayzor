@@ -12,6 +12,9 @@ namespace SyncTrayzor.Pages
 {
     public class AboutViewModel : Screen
     {
+        // Not in the app.config, in case some sysadmin wants to change it
+        private const string donateUrl = "https://synctrayzor.antonymale.co.uk/donate";
+
         private readonly IWindowManager windowManager;
         private readonly ISyncThingManager syncThingManager;
         private readonly IUpdateManager updateManager;
@@ -46,13 +49,20 @@ namespace SyncTrayzor.Pages
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = Properties.Settings.Default.HomepageUrl;
 
-            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
-            this.syncThingManager.DataLoaded += (o, e) =>
-            {
-                this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.Version;
-            };
+            this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
+            this.LoadSyncthingVersion();
 
             this.CheckForNewerVersionAsync();
+        }
+
+        private void SyncthingDataLoaded(object sender, EventArgs e)
+        {
+            this.LoadSyncthingVersion();
+        }
+
+        private void LoadSyncthingVersion()
+        {
+            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ShortVersion;
         }
 
         private async void CheckForNewerVersionAsync()
@@ -86,9 +96,19 @@ namespace SyncTrayzor.Pages
             this.RequestClose(true);
         }
 
+        public void BuyMeABeer()
+        {
+            this.processStartProvider.StartDetached(donateUrl);
+        }
+
         public void Close()
         {
             this.RequestClose(true);
+        }
+
+        protected override void OnClose()
+        {
+            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
     }
 }

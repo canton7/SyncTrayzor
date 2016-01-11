@@ -70,6 +70,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please buy me a beer!.
+        /// </summary>
+        public static string AboutView_Donate_Link {
+            get {
+                return ResourceManager.GetString("AboutView_Donate_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find SyncTrayzor useful?.
+        /// </summary>
+        public static string AboutView_Donate_Text {
+            get {
+                return ResourceManager.GetString("AboutView_Donate_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Download Page.
         /// </summary>
         public static string AboutView_DownloadNewVersion {
@@ -133,6 +151,186 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have {0:p:1 conflicted file|{} conflicted files}..
+        /// </summary>
+        public static string BarAlertsView_Conflict_AlertText {
+            get {
+                return ResourceManager.GetString("BarAlertsView_Conflict_AlertText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resolve now..
+        /// </summary>
+        public static string BarAlertsView_Conflict_ResolveLink {
+            get {
+                return ResourceManager.GetString("BarAlertsView_Conflict_ResolveLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following folders have failing file transfers: {0:l:{}|, }..
+        /// </summary>
+        public static string BarAlertsView_FailedTransfer_AlertText {
+            get {
+                return ResourceManager.GetString("BarAlertsView_FailedTransfer_AlertText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please see the Syncthing GUI or Console for clues..
+        /// </summary>
+        public static string BarAlertsView_FailedTransfer_Details {
+            get {
+                return ResourceManager.GetString("BarAlertsView_FailedTransfer_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose.
+        /// </summary>
+        public static string ConflictResolutionView_Button_Choose {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Button_Choose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show in Folder.
+        /// </summary>
+        public static string ConflictResolutionView_Button_ShowInFolder {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Button_ShowInFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resolving this conflict failed: {0}.
+        /// </summary>
+        public static string ConflictResolutionView_Dialog_Failed_Message {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Dialog_Failed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation Failed.
+        /// </summary>
+        public static string ConflictResolutionView_Dialog_Failed_Title {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Dialog_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conflict Created.
+        /// </summary>
+        public static string ConflictResolutionView_Header_ConflictCreated {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_ConflictCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conflicting File Name.
+        /// </summary>
+        public static string ConflictResolutionView_Header_ConflictingFileName {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_ConflictingFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        public static string ConflictResolutionView_Header_File {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder.
+        /// </summary>
+        public static string ConflictResolutionView_Header_Folder {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Modified.
+        /// </summary>
+        public static string ConflictResolutionView_Header_LastModified {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_LastModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original File.
+        /// </summary>
+        public static string ConflictResolutionView_Header_OriginalFile {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_OriginalFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string ConflictResolutionView_Scanning_CancelButton {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Scanning_CancelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning....
+        /// </summary>
+        public static string ConflictResolutionView_Scanning_Label {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Scanning_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No conflicts found. Good job!.
+        /// </summary>
+        public static string ConflictResolutionView_Status_NoConflicts {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Status_NoConflicts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No conflicts found (yet)....
+        /// </summary>
+        public static string ConflictResolutionView_Status_Scanning {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Status_Scanning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing is not running. Please start Syncthing..
+        /// </summary>
+        public static string ConflictResolutionView_Status_SyncthingNotRunning {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Status_SyncthingNotRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conflict Resolver.
+        /// </summary>
+        public static string ConflictResolutionView_Title {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string ConsoleView_ClearButton {
@@ -147,6 +345,15 @@ namespace SyncTrayzor.Properties {
         public static string ConsoleView_PauseButton {
             get {
                 return ResourceManager.GetString("ConsoleView_PauseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string ConsoleView_SettingsButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_SettingsButton", resourceCulture);
             }
         }
         
@@ -522,6 +729,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alerts are shown in a bar at the top of SyncTrayzor, and show a warning triangle on the tray icon..
+        /// </summary>
+        public static string SettingsView_Alerts_Description {
+            get {
+                return ResourceManager.GetString("SettingsView_Alerts_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to API Key:.
         /// </summary>
         public static string SettingsView_ApiKey {
@@ -554,6 +770,60 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_DisableHardwareRendering {
             get {
                 return ResourceManager.GetString("SettingsView_DisableHardwareRendering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alert me of conflicted files.
+        /// </summary>
+        public static string SettingsView_EnableConflictFileMonitoring {
+            get {
+                return ResourceManager.GetString("SettingsView_EnableConflictFileMonitoring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alert of failed file transfers.
+        /// </summary>
+        public static string SettingsView_EnableFailedTransferAlerts {
+            get {
+                return ResourceManager.GetString("SettingsView_EnableFailedTransferAlerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead..
+        /// </summary>
+        public static string SettingsView_Logging_Explanation {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_Explanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Syncthing Log File.
+        /// </summary>
+        public static string SettingsView_Logging_ShowSyncthingLog {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_ShowSyncthingLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show SyncTrayzor Log File.
+        /// </summary>
+        public static string SettingsView_Logging_ShowSyncTrayzorLog {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_ShowSyncTrayzorLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syncthing Debug Facilities unavailable. Please start Syncthing..
+        /// </summary>
+        public static string SettingsView_Logging_Unavailable {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_Unavailable", resourceCulture);
             }
         }
         
@@ -630,6 +900,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Section_Advanced {
             get {
                 return ResourceManager.GetString("SettingsView_Section_Advanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alerts.
+        /// </summary>
+        public static string SettingsView_Section_Alerts {
+            get {
+                return ResourceManager.GetString("SettingsView_Section_Alerts", resourceCulture);
             }
         }
         
@@ -841,6 +1120,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logging + STTRACE.
+        /// </summary>
+        public static string SettingsView_Tab_Logging {
+            get {
+                return ResourceManager.GetString("SettingsView_Tab_Logging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Syncthing.
         /// </summary>
         public static string SettingsView_Tab_Syncthing {
@@ -900,6 +1188,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Validation_NotShouldBeEmpty {
             get {
                 return ResourceManager.GetString("SettingsView_Validation_NotShouldBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set STTRACE in the &apos;Logging + STTRACE&apos; tab.
+        /// </summary>
+        public static string SettingsView_Validation_SetSttraceInTab {
+            get {
+                return ResourceManager.GetString("SettingsView_Validation_SetSttraceInTab", resourceCulture);
             }
         }
         
@@ -992,6 +1289,15 @@ namespace SyncTrayzor.Properties {
         public static string ShellView_Menu_File {
             get {
                 return ResourceManager.GetString("ShellView_Menu_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Conflict Resolver.
+        /// </summary>
+        public static string ShellView_Menu_File_ConflictResolver {
+            get {
+                return ResourceManager.GetString("ShellView_Menu_File_ConflictResolver", resourceCulture);
             }
         }
         
@@ -1493,20 +1799,20 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to You may be asked to provide a log file..
         /// </summary>
-        public static string UnhandledExceptionView_LogFileLocation_Post {
+        public static string UnhandledExceptionView_LogFileLocation_Description {
             get {
-                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Post", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You may be asked to provide a log file. You can find this in:.
+        ///   Looks up a localized string similar to You can find SyncTrayzor&apos;s log file here..
         /// </summary>
-        public static string UnhandledExceptionView_LogFileLocation_Pre {
+        public static string UnhandledExceptionView_LogFileLocation_Link {
             get {
-                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Pre", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionView_LogFileLocation_Link", resourceCulture);
             }
         }
         

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SyncTrayzor.SyncThing.TransferHistory
 {
-    public interface ISyncThingTransferHistory
+    public interface ISyncThingTransferHistory : IDisposable
     {
         event EventHandler<FileTransferChangedEventArgs> TransferStateChanged;
         event EventHandler<FileTransferChangedEventArgs> TransferStarted;
@@ -17,6 +17,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
         IEnumerable<FileTransfer> CompletedTransfers { get; }
         IEnumerable<FileTransfer> InProgressTransfers { get; }
+        IEnumerable<FailingTransfer> FailingTransfers { get; }
     }
 
     public class SyncThingTransferHistory : ISyncThingTransferHistory
@@ -36,7 +37,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private readonly Queue<FileTransfer> completedTransfers = new Queue<FileTransfer>();
 
         private readonly Dictionary<FolderPathKey, FileTransfer> inProgressTransfers = new Dictionary<FolderPathKey, FileTransfer>();
-        private readonly HashSet<FolderPathKey> currentlyFailingTransfers = new HashSet<FolderPathKey>();
+        private readonly Dictionary<FolderPathKey, FailingTransfer> currentlyFailingTransfers = new Dictionary<FolderPathKey, FailingTransfer>();
 
         // Collection of stuff synchronized recently. Keyed on folder. Cleared when that folder finished synchronizing
         private readonly Dictionary<string, List<FileTransfer>> recentlySynchronized = new Dictionary<string, List<FileTransfer>>();
@@ -64,6 +65,17 @@ namespace SyncTrayzor.SyncThing.TransferHistory
                 lock (this.transfersLock)
                 {
                     return this.inProgressTransfers.Values.ToArray();
+                }
+            }
+        }
+
+        public IEnumerable<FailingTransfer> FailingTransfers
+        {
+            get
+            {
+                lock (this.transfersLock)
+                {
+                    return this.currentlyFailingTransfers.Values.ToArray();
                 }
             }
         }
@@ -109,7 +121,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         {
             logger.Debug("Item started. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
             // We only care about files or folders - no metadata please!
-            if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Folder) ||
+            if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Dir) ||
                 (e.Action != ItemChangedActionType.Update && e.Action != ItemChangedActionType.Delete))
             {
                 return;
@@ -122,7 +134,7 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         {
             logger.Debug("Item finished. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
 
-            if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Folder) ||
+            if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Dir) ||
                 (e.Action != ItemChangedActionType.Update && e.Action != ItemChangedActionType.Delete))
             {
                 return;
@@ -150,9 +162,20 @@ namespace SyncTrayzor.SyncThing.TransferHistory
 
                 bool isNewError = false;
                 if (error == null)
+                {
                     this.currentlyFailingTransfers.Remove(key);
+                }
                 else
-                    isNewError = this.currentlyFailingTransfers.Add(key);
+                {
+                    FailingTransfer failingTransfer;
+                    if (!this.currentlyFailingTransfers.TryGetValue(key, out failingTransfer) || failingTransfer.Error != error)
+                    {
+                        // Remove will only do something in the case that the failure existed, but the error changed
+                        this.currentlyFailingTransfers.Remove(key);
+                        this.currentlyFailingTransfers.Add(key, new FailingTransfer(fileTransfer.FolderId, fileTransfer.Path, error));
+                        isNewError = true;
+                    }
+                }
 
                 fileTransfer.SetComplete(error, isNewError);
                 this.inProgressTransfers.Remove(key);
@@ -192,9 +215,9 @@ namespace SyncTrayzor.SyncThing.TransferHistory
             this.OnTransferStateChanged(fileTransfer);
         }
 
-        private void SyncStateChanged(object sender, FolderSyncStateChangeEventArgs e)
+        private void SyncStateChanged(object sender, FolderSyncStateChangedEventArgs e)
         {
-            var folderId = e.Folder.FolderId;
+            var folderId = e.FolderId;
 
             if (e.PrevSyncState == FolderSyncState.Syncing)
             {
@@ -242,6 +265,14 @@ namespace SyncTrayzor.SyncThing.TransferHistory
         private void OnFolderSynchronizationFinished(string folderId, List<FileTransfer> fileTransfers)
         {
             this.eventDispatcher.Raise(this.FolderSynchronizationFinished, new FolderSynchronizationFinishedEventArgs(folderId, fileTransfers));
+        }
+
+        public void Dispose()
+        {
+            this.eventWatcher.ItemStarted -= this.ItemStarted;
+            this.eventWatcher.ItemFinished -= this.ItemFinished;
+            this.eventWatcher.ItemDownloadProgressChanged -= this.ItemDownloadProgressChanged;
+            this.folderManager.SyncStateChanged -= this.SyncStateChanged;
         }
 
         private struct FolderPathKey : IEquatable<FolderPathKey>

@@ -122,13 +122,14 @@
       <HintPath>..\packages\SmartFormat.NET.1.6.1.0\lib\net40\SmartFormat.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stylet, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stylet.1.1.5\lib\net45\Stylet.dll</HintPath>
+    <Reference Include="Stylet, Version=1.1.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stylet.1.1.11\lib\net45\Stylet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Serialization" />
@@ -153,6 +154,15 @@
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
+    <Compile Include="Pages\BarAlerts\AlertSeverity.cs" />
+    <Compile Include="Pages\BarAlerts\AlertSeverityToBackgroundColorConverter.cs" />
+    <Compile Include="Pages\BarAlerts\ConflictsAlertViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\FailedTransfersAlertViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\IBarAlert.cs" />
+    <Compile Include="Pages\BarAlerts\BarAlertsViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
@@ -171,6 +181,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\AlertsManager.cs" />
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
@@ -180,7 +191,10 @@
     <Compile Include="Services\Config\SyncThingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />
+    <Compile Include="Services\Conflicts\ConflictFileManager.cs" />
+    <Compile Include="Services\Conflicts\ConflictFileWatcher.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
+    <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
@@ -199,19 +213,27 @@
     <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
     <Compile Include="Services\UserActivityMonitor.cs" />
     <Compile Include="SyncThing\ApiClient\ConfigSavedEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\DebugFacilitiesSettings.cs" />
     <Compile Include="SyncThing\ApiClient\DefaultingStringEnumConverter.cs" />
     <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
+    <Compile Include="SyncThing\ApiClient\FolderErrorsEvent.cs" />
     <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
+    <Compile Include="SyncThing\ApiClient\FolderSummaryEvent.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ISyncThingApi.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
     <Compile Include="SyncThing\ApiClient\SyncThingApiClient.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedActionType.cs" />
     <Compile Include="SyncThing\ApiClient\ItemChangedItemType.cs" />
+    <Compile Include="SyncThing\DebugFacilities\DebugFacility.cs" />
+    <Compile Include="SyncThing\DebugFacilities\SyncThingDebugFacilitiesManager.cs" />
     <Compile Include="SyncThing\EventWatcher\ConfigSavedEventArgs.cs" />
+    <Compile Include="SyncThing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="SyncThing\FolderErrorsChangedEventArgs.cs" />
     <Compile Include="SyncThing\FreePortFinder.cs" />
+    <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingDidNotStartCorrectlyException.cs" />
@@ -267,9 +289,9 @@
     <Compile Include="SyncThing\EventWatcher\DeviceDisconnectedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\Folder.cs" />
-    <Compile Include="SyncThing\FolderSyncStateChangeEventArgs.cs" />
+    <Compile Include="SyncThing\FolderSyncStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
+    <Compile Include="SyncThing\FolderStatusChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
     <Compile Include="SyncThing\SyncThingConnectionsWatcher.cs" />
     <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcher.cs" />
@@ -279,6 +301,8 @@
     <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
     <Compile Include="SyncThing\SyncThingState.cs" />
     <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
+    <Compile Include="SyncThing\SyncThingVersionInformation.cs" />
+    <Compile Include="SyncThing\TransferHistory\FailingTransfer.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransfer.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransferChangedEventArgs.cs" />
     <Compile Include="SyncThing\TransferHistory\FileTransferStatus.cs" />
@@ -293,9 +317,11 @@
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\FormatUtils.cs" />
     <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
+    <Compile Include="Utils\ListExtensions.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
     <Compile Include="Utils\PathEx.cs" />
     <Compile Include="Utils\PgpClearsignUtilities.cs" />
+    <Compile Include="Utils\RecycleBinDeleter.cs" />
     <Compile Include="Utils\SafeSyncthingExtensions.cs" />
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
@@ -306,6 +332,7 @@
     <Compile Include="Xaml\ActivateBehaviour.cs" />
     <Compile Include="Xaml\CultureAwareBinding.cs" />
     <Compile Include="Xaml\GridLengthToAbsoluteConverter.cs" />
+    <Compile Include="Xaml\GridViewSortByBehaviour.cs" />
     <Compile Include="Xaml\MouseWheelGesture.cs" />
     <Compile Include="Xaml\NoSizeBelowScreenBehaviour.cs" />
     <Compile Include="Xaml\PopupConductorBehaviour.cs" />
@@ -347,6 +374,22 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NotifyIcon\TaskbarIconResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\BarAlertsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\ConflictsAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\FailedTransfersAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ConflictResolution\ConflictResolutionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -393,6 +436,10 @@
     <Page Include="Pages\ViewerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\BoringListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Xaml\PassiveListView.xaml">
       <SubType>Designer</SubType>
@@ -480,6 +527,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Licenses\ListViewLayoutManager.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\alert_tray.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="Configs">

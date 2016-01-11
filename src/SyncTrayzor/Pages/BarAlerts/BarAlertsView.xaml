@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.BarAlerts.BarAlertsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:local="clr-namespace:SyncTrayzor.Pages.BarAlerts"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance local:BarAlertsViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <ItemsControl ItemsSource="{Binding Items}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Border BorderBrush="LightGray" BorderThickness="0,0,0,1"
+                        Background="{Binding Severity, Converter={x:Static local:AlertSeverityToBackgroundColorConverter.Instance}}">
+                    <ContentControl Margin="8,5" s:View.Model="{Binding}"/>
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

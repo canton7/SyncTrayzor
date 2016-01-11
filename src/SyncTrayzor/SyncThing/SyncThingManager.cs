@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using SyncTrayzor.SyncThing.DebugFacilities;
 
 namespace SyncTrayzor.SyncThing
 {
@@ -41,9 +42,10 @@ namespace SyncTrayzor.SyncThing
         TimeSpan SyncthingConnectTimeout { get; set; }
         DateTime StartedTime { get; }
         DateTime LastConnectivityEventTime { get; }
-        SyncthingVersion Version { get; }
+        SyncThingVersionInformation Version { get; }
         ISyncThingFolderManager Folders { get; }
         ISyncThingTransferHistory TransferHistory { get; }
+        ISyncThingDebugFacilitiesManager DebugFacilities { get; }
 
         Task StartAsync();
         Task StopAsync();
@@ -139,7 +141,7 @@ namespace SyncTrayzor.SyncThing
             set { lock (this.devicesLock) this._devices = value; }
         }
 
-        public SyncthingVersion Version { get; private set; }
+        public SyncThingVersionInformation Version { get; private set; }
 
         private readonly SyncThingFolderManager _folders;
         public ISyncThingFolderManager Folders
@@ -151,6 +153,12 @@ namespace SyncTrayzor.SyncThing
         public ISyncThingTransferHistory TransferHistory
         {
             get { return this._transferHistory; }
+        }
+
+        private SyncThingDebugFacilitiesManager _debugFacilities;
+        public ISyncThingDebugFacilitiesManager DebugFacilities
+        {
+            get { return this._debugFacilities; }
         }
 
         public SyncThingManager(
@@ -181,6 +189,7 @@ namespace SyncTrayzor.SyncThing
 
             this._folders = new SyncThingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
             this._transferHistory = new SyncThingTransferHistory(this.eventWatcher, this._folders);
+            this._debugFacilities = new SyncThingDebugFacilitiesManager(this.apiClient);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
@@ -354,7 +363,7 @@ namespace SyncTrayzor.SyncThing
             }
             catch (ApiException e)
             {
-                var msg = $"Refit Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
+                var msg = $"RestEase Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
                 logger.Error(msg, e);
                 throw new SyncThingDidNotStartCorrectlyException(msg, e);
             }
@@ -412,6 +421,7 @@ namespace SyncTrayzor.SyncThing
             this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
             this.processRunner.CommandLineFlags = this.SyncthingCommandLineFlags;
             this.processRunner.EnvironmentalVariables = this.SyncthingEnvironmentalVariables;
+            this.processRunner.DebugFacilities = this.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
             this.processRunner.SyncthingPriorityLevel = this.SyncthingPriorityLevel;
             this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;
@@ -422,7 +432,16 @@ namespace SyncTrayzor.SyncThing
             // Catch restart cases, and re-start the API
             // This isn't ideal, as we don't get to nicely propagate any exceptions to the UI
             if (isRestart)
-                await this.StartClientAsync();
+            {
+                try
+                {
+                    await this.StartClientAsync();
+                }
+                catch (SyncThingDidNotStartCorrectlyException)
+                {
+                    // We've already logged this
+                }
+            }
         }
 
         private void ProcessStopped(SyncThingExitStatus exitStatus)
@@ -446,21 +465,24 @@ namespace SyncTrayzor.SyncThing
             cancellationToken.ThrowIfCancellationRequested();
             var apiClient = this.apiClient.GetAsserted();
 
-            var systemTask = apiClient.FetchSystemInfoAsync();
-            var versionTask = apiClient.FetchVersionAsync();
+            var syncthingVersionTask = apiClient.FetchVersionAsync();
+            var systemInfoTask = apiClient.FetchSystemInfoAsync();
+
+            await Task.WhenAll(syncthingVersionTask, systemInfoTask);
+
+            this.systemInfo = systemInfoTask.Result;
+            var syncthingVersion = syncthingVersionTask.Result;
+
+            this.Version = new SyncThingVersionInformation(syncthingVersion.Version, syncthingVersion.LongVersion);
             
             cancellationToken.ThrowIfCancellationRequested();
 
-            await Task.WhenAll(systemTask, versionTask);
+            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync(this.Version.ParsedVersion);
+            var configDataLoadTask = this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
+
+            await Task.WhenAll(debugFacilitiesLoadTask, configDataLoadTask);
 
             cancellationToken.ThrowIfCancellationRequested();
-
-            this.systemInfo = systemTask.Result;
-            await this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            this.Version = versionTask.Result;
             
             this.StartedTime = DateTime.UtcNow;
             this.IsDataLoaded = true;

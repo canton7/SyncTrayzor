@@ -1,6 +1,7 @@
 ﻿using SyncTrayzor.NotifyIcon;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
+using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.SyncThing;
 using SyncTrayzor.Utils;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace SyncTrayzor.Services
 {
-    public class ConfigurationApplicator
+    public class ConfigurationApplicator : IDisposable
     {
         private readonly IConfigurationProvider configurationProvider;
 
@@ -19,6 +20,8 @@ namespace SyncTrayzor.Services
         private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
         private readonly IUpdateManager updateManager;
+        private readonly IConflictFileWatcher conflictFileWatcher;
+        private readonly IAlertsManager alertsManager;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
@@ -27,10 +30,12 @@ namespace SyncTrayzor.Services
             ISyncThingManager syncThingManager,
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
-            IUpdateManager updateManager)
+            IUpdateManager updateManager,
+            IConflictFileWatcher conflictFileWatcher,
+            IAlertsManager alertsManager)
         {
             this.configurationProvider = configurationProvider;
-            this.configurationProvider.ConfigurationChanged += (o, e) => this.ApplyNewConfiguration(e.NewConfiguration);
+            this.configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
 
             this.pathsProvider = pathsProvider;
             this.notifyIconManager = notifyIconManager;
@@ -38,15 +43,29 @@ namespace SyncTrayzor.Services
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
             this.updateManager = updateManager;
+            this.conflictFileWatcher = conflictFileWatcher;
+            this.alertsManager = alertsManager;
 
-            this.syncThingManager.DataLoaded += (o, e) => this.LoadFolders();
-            this.updateManager.VersionIgnored += (o, e) => this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
+            this.syncThingManager.DataLoaded += this.OnDataLoaded;
+            this.updateManager.VersionIgnored += this.VersionIgnored;
+        }
+
+        private void ConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        {
+            this.ApplyNewConfiguration(e.NewConfiguration);
+        }
+
+        private void VersionIgnored(object sender, VersionIgnoredEventArgs e)
+        {
+            this.configurationProvider.AtomicLoadAndSave(config => config.LatestNotifiedVersion = e.IgnoredVersion);
         }
 
         public void ApplyConfiguration()
         {
             this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
+
+            this.conflictFileWatcher.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
             this.syncThingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
 
@@ -76,16 +95,29 @@ namespace SyncTrayzor.Services
             this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
             this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
+            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
             this.updateManager.LatestIgnoredVersion = configuration.LatestNotifiedVersion;
             this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
+
+            this.conflictFileWatcher.IsEnabled = configuration.EnableConflictFileMonitoring;
+
+            this.alertsManager.EnableConflictedFileAlerts = configuration.EnableConflictFileMonitoring;
+            this.alertsManager.EnableFailedTransferAlerts = configuration.EnableFailedTransferAlerts;
         }
 
-        private void LoadFolders()
+        private void OnDataLoaded(object sender, EventArgs e)
         {
-            var configuration = this.configurationProvider.Load();
+            this.configurationProvider.AtomicLoadAndSave(c =>
+            {
+                this.LoadFolders(c);
+            });
+        }
+
+        private void LoadFolders(Configuration configuration)
+        {
             var folderIds = this.syncThingManager.Folders.FetchAll().Select(x => x.FolderId).ToList();
 
             foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
@@ -94,8 +126,13 @@ namespace SyncTrayzor.Services
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
+        }
 
-            this.configurationProvider.Save(configuration);
+        public void Dispose()
+        {
+            this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
+            this.syncThingManager.DataLoaded -= this.OnDataLoaded;
+            this.updateManager.VersionIgnored -= this.VersionIgnored;
         }
     }
 }

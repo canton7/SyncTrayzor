@@ -1,9 +1,6 @@
 ﻿using NLog;
-using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Timers;
 using Path = Pri.LongPath.Path;
 
@@ -25,34 +22,32 @@ namespace SyncTrayzor.Services
     {
         public bool Cancel { get; set; }
 
-        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath)
-            : base(directoryPath, subPath) { }
+        public bool FileExists { get; }
+
+        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath, bool fileExists)
+            : base(directoryPath, subPath)
+        {
+            this.FileExists = fileExists;
+        }
     }
 
-    public class DirectoryWatcher : IDisposable
+    public class DirectoryWatcher : FileWatcher
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly string directory;
-
         private readonly Timer backoffTimer;
-        private readonly Timer existenceCheckingTimer;
 
         private readonly object currentNotifyingSubPathLock = new object();
         private string currentNotifyingSubPath;
-        private FileSystemWatcher watcher;
 
         public event EventHandler<PreviewDirectoryChangedEventArgs> PreviewDirectoryChanged;
         public event EventHandler<DirectoryChangedEventArgs> DirectoryChanged;
 
         public DirectoryWatcher(string directory, TimeSpan backoffInterval, TimeSpan existenceCheckingInterval)
+            : base(FileWatcherMode.All, directory, existenceCheckingInterval)
         {
             if (backoffInterval.Ticks < 0)
-                throw new ArgumentException("backoffInterval must be > 0");
-
-            this.directory = directory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-
-            this.watcher = this.TryToCreateWatcher(this.directory);
+                throw new ArgumentException("backoffInterval must be >= 0");
 
             this.backoffTimer = new Timer()
             {
@@ -69,115 +64,13 @@ namespace SyncTrayzor.Services
                 }
                 this.OnDirectoryChanged(currentNotifyingSubPath);
             };
-
-            this.existenceCheckingTimer = new Timer()
-            {
-                AutoReset = true,
-                Interval = existenceCheckingInterval.TotalMilliseconds,
-                Enabled = true,
-            };
-            this.existenceCheckingTimer.Elapsed += (o, e) => this.CheckExistence();
         }
 
-        private FileSystemWatcher TryToCreateWatcher(string directory)
+        public override void OnFileChanged(string subPath, bool fileExists)
         {
-            try
-            {
-                var watcher = new FileSystemWatcher()
-                {
-                    Path = directory,
-                    Filter = "*.*",
-                    IncludeSubdirectories = true,
-                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
-                };
+            base.OnFileChanged(subPath, fileExists);
 
-                watcher.Changed += OnChangedOrCreated;
-                watcher.Created += OnChangedOrCreated;
-                watcher.Deleted += OnDeleted;
-                watcher.Renamed += OnRenamed;
-
-                watcher.EnableRaisingEvents = true;
-
-                return watcher;
-            }
-            catch (ArgumentException)
-            {
-                logger.Warn("Watcher for {0} couldn't be created: path doesn't exist", this.directory);
-                // The path doesn't exist. That's fine, the existenceCheckingTimer will try and
-                // re-create us shortly if needs be
-                return null;
-            }
-            catch (FileNotFoundException e)
-            {
-                // This can happen if e.g. the user points us towards 'My Documents' on Vista+, and we get an
-                // 'Error reading the xxx directory'
-                logger.Warn($"Watcher for {this.directory} couldn't be created: {e.Message}", e);
-                // We'll try again soon
-                return null;
-            }
-        }
-
-        private void OnDeleted(object source, FileSystemEventArgs e)
-        {
-            this.PathChanged(e.FullPath, fileExists: false);
-        }
-
-        private void OnChangedOrCreated(object source, FileSystemEventArgs e)
-        {
-            this.PathChanged(e.FullPath, fileExists: true);
-        }
-
-        private void OnRenamed(object source, RenamedEventArgs e)
-        {
-            this.PathChanged(e.FullPath, fileExists: true);
-            // Irritatingly, e.OldFullPath will throw an exception if the path is longer than the windows max
-            // (but e.FullPath is fine).
-            // So, construct it from e.FullPath and e.OldName
-            // Note that we're using Pri.LongPath to get a Path.GetDirectoryName implementation that can handle
-            // long paths
-
-            // Apparently Path.GetDirectoryName(e.FullPath) or Path.GetFileName(e.OldName) can return null, see #112
-            // Not sure why this might be, but let's work around it...
-            var oldFullPathDirectory = Path.GetDirectoryName(e.FullPath);
-            var oldFileName = Path.GetFileName(e.OldName);
-
-            if (oldFullPathDirectory == null)
-            {
-                logger.Warn("OldFullPathDirectory is null. Not sure why... e.FullPath: {0}", e.FullPath);
-                return;
-            }
-            
-            if (oldFileName == null)
-            {
-                logger.Warn("OldFileName is null. Not sure why... e.OldName: {0}", e.OldName);
-                return;
-            }
-
-            var oldFullPath = Path.Combine(oldFullPathDirectory, oldFileName);
-
-            this.PathChanged(oldFullPath, fileExists: false);
-        }
-
-        private void PathChanged(string path, bool fileExists)
-        {
-            // First, we need to convert to a long path, just in case anyone's using the short path
-            // We can't do this if we don't expect the file to exist any more...
-            // There's also a chance that the file no longer exists. Catch that exception.
-            // If a short path is renamed or deleted, then we do our best with it in a bit, by removing the short bits
-            // If short path segments are used in the base directory path in this case, tough.
-            if (fileExists)
-                path = this.GetLongPathName(path);
-
-            if (!path.StartsWith(this.directory))
-                return;
-
-            var subPath = path.Substring(this.directory.Length);
-
-            // If it contains a tilde, then it's a short path that squeezed through GetLongPath above
-            // (e.g. because it was a deletion), then strip it back to the first component without an ~
-            subPath = this.StripShortPathSegments(subPath);
-
-            if (this.OnPreviewDirectoryChanged(subPath))
+            if (this.OnPreviewDirectoryChanged(subPath, fileExists))
                 return;
 
             this.backoffTimer.Stop();
@@ -190,30 +83,6 @@ namespace SyncTrayzor.Services
             }
 
             this.backoffTimer.Start();
-        }
-
-        private string GetLongPathName(string path)
-        {
-            try
-            {
-                path = PathEx.GetLongPathName(path);
-            }
-            catch (FileNotFoundException e)
-            {
-                logger.Warn($"Path {path} changed, but it doesn't exist any more", e);
-            }
-
-            return path;
-        }
-
-        private string StripShortPathSegments(string path)
-        {
-            if (!path.Contains('~'))
-                return path;
-
-            var parts = path.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
-            var filteredPaths = parts.TakeWhile(x => !x.Contains('~'));
-            return String.Join(Path.DirectorySeparatorChar.ToString(), filteredPaths);
         }
 
         private string FindCommonPrefix(string path1, string path2)
@@ -233,31 +102,15 @@ namespace SyncTrayzor.Services
             return String.Join(Path.DirectorySeparatorChar.ToString(), result);
         }
 
-        private void CheckExistence()
-        {
-            var exists = Directory.Exists(this.directory);
-            if (exists && this.watcher == null)
-            {
-                logger.Info("Path {0} appeared. Creating watcher", this.directory);
-                this.watcher = this.TryToCreateWatcher(this.directory);
-            }
-            else if (!exists && this.watcher != null)
-            {
-                logger.Info("Path {0} disappeared. Destroying watcher", this.directory);
-                this.watcher.Dispose();
-                this.watcher = null;
-            }
-        }
-
         // Return true to cancel
-        private bool OnPreviewDirectoryChanged(string subPath)
+        private bool OnPreviewDirectoryChanged(string subPath, bool fileExists)
         {
             var handler = this.PreviewDirectoryChanged;
             if (handler != null)
             {
-                var ea = new PreviewDirectoryChangedEventArgs(this.directory, subPath);
+                var ea = new PreviewDirectoryChangedEventArgs(this.Directory, subPath, fileExists);
                 handler(this, ea);
-                logger.Trace("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.directory, subPath), ea.Cancel);
+                logger.Trace("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.Directory, subPath), ea.Cancel);
                 return ea.Cancel;
             }
             return false;
@@ -265,23 +118,16 @@ namespace SyncTrayzor.Services
 
         private void OnDirectoryChanged(string subPath)
         {
-            logger.Info("Path Changed: {0}", Path.Combine(this.directory, subPath));
-            this.DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(this.directory, subPath));
+            logger.Info("Path Changed: {0}", Path.Combine(this.Directory, subPath));
+            this.DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(this.Directory, subPath));
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            if (this.watcher != null)
-            {
-                this.watcher.EnableRaisingEvents = false;
-                this.watcher.Dispose();
-            }
+            base.Dispose();
 
             this.backoffTimer.Stop();
             this.backoffTimer.Dispose();
-
-            this.existenceCheckingTimer.Stop();
-            this.existenceCheckingTimer.Dispose();
         }
     }
 }

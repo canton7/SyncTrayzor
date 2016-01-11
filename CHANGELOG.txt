@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.1.0
+-------
+
+ - Log Syncthing's output (#162).
+ - Add a Settings tab to enable Syncthing debug facilities without setting STTRACE or restarting (#175).
+ - Alerts system: show warning triangle on tray icon, and alerts at the top of SyncTrayzor, when there
+   are failed file transfers or conflicted files.
+ - Add a tool to find and help resolve file conflicts (under File -> Conflict Resolver).
+ - Add support for one-click upgrades for Portable installations.
+ - Improve 'Syncthing Console' (#82).
+ - Improve update check schedule (#184).
+
 v1.0.32
 -------
 

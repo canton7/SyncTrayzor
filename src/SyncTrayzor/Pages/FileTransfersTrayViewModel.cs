@@ -54,7 +54,7 @@ namespace SyncTrayzor.Pages
             this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
             this.FullPath = this.FileTransfer.Path;
             this.FolderId = this.FileTransfer.FolderId;
-            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Folder);
+            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Dir);
             this.WasDeleted = this.FileTransfer.ActionType == ItemChangedActionType.Delete;
 
             this.UpdateState();
@@ -214,8 +214,8 @@ namespace SyncTrayzor.Pages
             if (fileTransfer.ActionType == ItemChangedActionType.Update)
             {
                 if (fileTransfer.ItemType == ItemChangedItemType.File)
-                    this.processStartProvider.StartDetached("explorer.exe", $"/select, \"{ Path.Combine(folder.Path, fileTransfer.Path)}\"");
-                else if (fileTransfer.ItemType == ItemChangedItemType.Folder)
+                    this.processStartProvider.ShowInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
+                else if (fileTransfer.ItemType == ItemChangedItemType.Dir)
                     this.processStartProvider.StartDetached("explorer.exe", Path.Combine(folder.Path, fileTransfer.Path));
             }
         }
