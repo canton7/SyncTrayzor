@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.1.1
+------
+
+ - Fix crash if we fail to look for conflicted files in a path (#191, #193)
+ - Fix crash if the user manually specifies a UNC prefix on a folder (#192)
+
 v1.1.0
 -------
 
