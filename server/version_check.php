@@ -65,19 +65,20 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.0' => [
+   '1.1.1' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.0/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.0/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.1/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.1/SyncTrayzorSetup-x86.exe',
          ],
-      ],      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.0/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.0',
-      'release_notes' => "- Log Syncthing's output (#162).\n- Add a Settings tab to enable Syncthing debug facilities without setting STTRACE or restarting (#175).\n- Alerts system: show warning triangle on tray icon, and alerts at the top of SyncTrayzor, when there\n  are failed file transfers or conflicted files.\n- Add a tool to find and help resolve file conflicts (under File -> Conflict Resolver).\n- Add support for one-click upgrades for Portable installations.\n- Improve 'Syncthing Console' (#82).\n- Improve update check schedule (#184).",
+      ],      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.1/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.1',
+      'release_notes' => "- Log Syncthing's output (#162).\n- Add a Settings tab to enable Syncthing debug facilities without setting STTRACE or restarting (#175).\n- Alerts system: show warning triangle on tray icon, and alerts at the top of SyncTrayzor, when there\n  are failed file transfers or conflicted files.\n- Add a tool to find and help resolve file conflicts (under File -> Conflict Resolver).\n- Add support for one-click upgrades for Portable installations.\n- Improve 'Syncthing Console' (#82).\n- Improve update check schedule (#184).\n- Fix crash if the user manually specifies a UNC prefix on a folder (#192).",
    ]
 ];
 
 $upgrades = [
+   '1.1.0' => ['to' => 'latest', 'formatter' => '3', 'overrides' => ['release_notes' => "- Fix crash if we fail to look for conflicted files in a path (#191, #193)\n- Fix crash if the user manually specifies a UNC prefix on a folder (#192)"]],
    '1.0.32' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.31' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.30' => ['to' => 'latest', 'formatter' => '3'],

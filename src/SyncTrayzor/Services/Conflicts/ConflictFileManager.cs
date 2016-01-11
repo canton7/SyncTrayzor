@@ -85,6 +85,7 @@ namespace SyncTrayzor.Services.Conflicts
     public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
+        private const string stVersionsFolder = ".stversions";
         private static readonly Regex conflictRegex =
             new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(?<suffix>.*)(?<extension>\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -124,6 +125,8 @@ namespace SyncTrayzor.Services.Conflicts
             // all conflict files. Therefore we need to do this directory by directory, and flush out the cache
             // or conflicts after each directory.
 
+            logger.Debug("Looking for conflicts in {0}", basePath);
+
             var conflictLookup = new Dictionary<string, List<ParsedConflictFileInfo>>();
             var stack = new Stack<string>();
             stack.Push(basePath);
@@ -134,7 +137,7 @@ namespace SyncTrayzor.Services.Conflicts
                 conflictLookup.Clear();
                 var directory = stack.Pop();
 
-                foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
+                foreach (var fileName in this.TryGetFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                 {
                     var filePath = Path.Combine(directory, fileName);
 
@@ -161,15 +164,55 @@ namespace SyncTrayzor.Services.Conflicts
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 
-                foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
+                foreach (var subDirectory in this.TryGetDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
                 {
-                    if (subDirectory == ".stversions")
+                    if (subDirectory == stVersionsFolder)
                         continue;
 
                     stack.Push(Path.Combine(directory, subDirectory));
 
                     cancellationToken.ThrowIfCancellationRequested();
                 }
+            }
+        }
+
+        private IEnumerable<string> TryGetFiles(string path, string searchPattern, System.IO.SearchOption searchOption)
+        {
+            try
+            {
+                // Can't use EnumerateFiles, as Pri.LongPath throws the first time it's enumerated
+                return this.filesystemProvider.GetFiles(path, searchPattern, searchOption);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Expected with reparse points, etc
+                logger.Warn($"UnauthorizedAccessException when trying to enumerate files in folder {path}");
+                return Enumerable.Empty<string>();
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Failed to enumerate files in folder {path}: {e.GetType().Name} {e.Message}", e);
+                return Enumerable.Empty<string>();
+            }
+        }
+
+        private IEnumerable<string> TryGetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption)
+        {
+            try
+            {
+                // Can't use EnumerateDirectories, as Pri.LongPath throws the first time it's enumerated
+                return this.filesystemProvider.GetDirectories(path, searchPattern, searchOption);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Expected with reparse points, etc
+                logger.Warn($"UnauthorizedAccessException when trying to enumerate directories in folder {path}");
+                return Enumerable.Empty<string>();
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Failed to enumerate directories in folder {path}: {e.GetType().Name} {e.Message}", e);
+                return Enumerable.Empty<string>();
             }
         }
 
@@ -200,18 +243,26 @@ namespace SyncTrayzor.Services.Conflicts
             // 'suffix' might be a versioner thing (~date-time), or it might be something added by another tool...
             // Try searching for it, and if that fails go without
 
-            var withSuffix = Path.Combine(directory, prefix + suffix + extension);
-            if (this.filesystemProvider.FileExists(withSuffix))
+            try
             {
-                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withSuffix, dateCreated);
-                return true;
-            }
+                var withSuffix = Path.Combine(directory, prefix + suffix + extension);
+                if (this.filesystemProvider.FileExists(withSuffix))
+                {
+                    parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withSuffix, dateCreated);
+                    return true;
+                }
 
-            var withoutSuffix = Path.Combine(directory, prefix + extension);
-            if (this.filesystemProvider.FileExists(withoutSuffix))
+                var withoutSuffix = Path.Combine(directory, prefix + extension);
+                if (this.filesystemProvider.FileExists(withoutSuffix))
+                {
+                    parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withoutSuffix, dateCreated);
+                    return true;
+                }
+            }
+            catch (Exception e)
             {
-                parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withoutSuffix, dateCreated);
-                return true;
+                // We're in the path to return false at this point
+                logger.Error($"Failed to look for base file for conflict file {filePath}: {e.Message}", e);
             }
 
             parsedConflictFileInfo = default(ParsedConflictFileInfo);

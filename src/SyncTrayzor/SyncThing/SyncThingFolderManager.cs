@@ -28,6 +28,7 @@ namespace SyncTrayzor.SyncThing
     public class SyncThingFolderManager : ISyncThingFolderManager
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const string uncPrefix = @"\\?\";
 
         private readonly SynchronizedEventDispatcher eventDispatcher;
 
@@ -165,6 +166,9 @@ namespace SyncTrayzor.SyncThing
                     var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
                     var status = await this.FetchFolderStatusAsync(folder.ID, cancellationToken);
                     var path = folder.Path;
+                    // Strip off UNC prefix, if they're put it on
+                    if (path.StartsWith(uncPrefix))
+                        path = path.Substring(uncPrefix.Length);
                     if (path.StartsWith("~"))
                         path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
