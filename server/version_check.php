@@ -65,26 +65,20 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.0.32' => [
+   '1.1.0' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.0/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.0/SyncTrayzorSetup-x86.exe',
          ],
-      ],
-      'portable' => [
-         'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorPortable-x64.zip',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/SyncTrayzorPortable-x86.zip',
-         ],
-      ],
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.0.32/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.0.32',
-      'release_notes' => "- Fix rare crash when trying to save the config file",
+      ],      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.0/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.0',
+      'release_notes' => "- Log Syncthing's output (#162).\n- Add a Settings tab to enable Syncthing debug facilities without setting STTRACE or restarting (#175).\n- Alerts system: show warning triangle on tray icon, and alerts at the top of SyncTrayzor, when there\n  are failed file transfers or conflicted files.\n- Add a tool to find and help resolve file conflicts (under File -> Conflict Resolver).\n- Add support for one-click upgrades for Portable installations.\n- Improve 'Syncthing Console' (#82).\n- Improve update check schedule (#184).",
    ]
 ];
 
 $upgrades = [
+   '1.0.32' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.31' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.30' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.29' => ['to' => 'latest', 'formatter' => '3'],
@@ -134,7 +128,26 @@ $response_formatters = [
 
       return $data;
    },
+   // Portable versions don't know how to handle directl downloads (or it's broken...)
    '3' => function($arch, $variant, $to_version, $to_version_info, $overrides)
+   {
+      $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
+
+      $data = [
+         'version' => $to_version,
+         'release_page_url' => $to_version_info['release_page_url'],
+         'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
+      ];
+
+      if ($variant == 'installed')
+      {
+         $data['direct_download_url'] = get_with_wildcard($variant_info['direct_download_url'], $arch);
+         $data['sha1sum_download_url'] =  $to_version_info['sha1sum_download_url'];
+      }
+
+      return $data;
+   },
+   '4' => function($arch, $variant, $to_version, $to_version_info, $overrides)
    {
       $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
 
