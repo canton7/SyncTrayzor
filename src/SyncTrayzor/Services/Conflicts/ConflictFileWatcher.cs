@@ -31,11 +31,12 @@ namespace SyncTrayzor.Services.Conflicts
         private readonly IConflictFileManager conflictFileManager;
         private readonly IFileWatcherFactory fileWatcherFactory;
 
-        private readonly object conflictedFilesLock = new object();
+        // Locks both conflictedFiles and conflictFileOptions
+        private readonly object conflictFileRecordsLock = new object();
+
         // Contains all of the unique conflicted files, resolved from conflictFileOptions
         private List<string> conflictedFiles = new List<string>();
 
-        private readonly object conflictFileOptionsLock = new object();
         // Contains all of the .sync-conflict files found
         private readonly HashSet<string> conflictFileOptions = new HashSet<string>();
 
@@ -51,7 +52,7 @@ namespace SyncTrayzor.Services.Conflicts
         {
             get
             {
-                lock (this.conflictedFilesLock)
+                lock (this.conflictFileRecordsLock)
                 {
                     return this.conflictedFiles.ToList();
                 }
@@ -133,11 +134,13 @@ namespace SyncTrayzor.Services.Conflicts
             }
             else
             {
-                lock (this.conflictFileOptionsLock)
+                lock (this.conflictFileRecordsLock)
                 {
                     this.conflictFileOptions.Clear();
+
+                    // This will re-acquire the lock, but it's recursive
+                    this.RefreshConflictedFiles();
                 }
-                this.RefreshConflictedFiles();
             }
         }
         
@@ -147,7 +150,7 @@ namespace SyncTrayzor.Services.Conflicts
 
             var conflictFiles = new HashSet<string>();
 
-            lock (this.conflictFileOptionsLock)
+            lock (this.conflictFileRecordsLock)
             {
                 foreach (var conflictedFile in this.conflictFileOptions)
                 {
@@ -157,10 +160,7 @@ namespace SyncTrayzor.Services.Conflicts
                         conflictFiles.Add(parsedConflictFileInfo.OriginalPath);
                     }
                 }
-            }
 
-            lock (this.conflictedFilesLock)
-            {
                 this.conflictedFiles = conflictFiles.ToList();
             }
 
@@ -200,7 +200,7 @@ namespace SyncTrayzor.Services.Conflicts
 
             bool changed;
 
-            lock (this.conflictFileOptionsLock)
+            lock (this.conflictFileRecordsLock)
             {
                 if (e.FileExists)
                     changed = this.conflictFileOptions.Add(fullPath);
@@ -225,12 +225,7 @@ namespace SyncTrayzor.Services.Conflicts
                 this.scanCts = new CancellationTokenSource();
                 try
                 {
-                    HashSet<string> oldConflictFileOptions;
-                    lock (this.conflictFileOptionsLock)
-                    {
-                        oldConflictFileOptions = new HashSet<string>(this.conflictFileOptions);
-                        this.conflictFileOptions.Clear();
-                    }
+                    var newConflictFileOptions = new HashSet<string>();
 
                     foreach (var folder in folders)
                     {
@@ -238,21 +233,26 @@ namespace SyncTrayzor.Services.Conflicts
 
                         await this.conflictFileManager.FindConflicts(folder.Path, this.scanCts.Token).SubscribeAsync(conflict =>
                         {
-                            lock (this.conflictFileOptionsLock)
+                            foreach (var conflictOptions in conflict.Conflicts)
                             {
-                                foreach (var conflictOptions in conflict.Conflicts)
-                                {
-                                    this.conflictFileOptions.Add(Path.Combine(folder.Path, conflictOptions.FilePath));
-                                }
+                                newConflictFileOptions.Add(Path.Combine(folder.Path, conflictOptions.FilePath));
                             }
                         });
                     }
 
                     // If we get aborted, we won't refresh the conflicted files: it'll get done again in a minute anyway
                     bool conflictedFilesChanged;
-                    lock (this.conflictFileOptionsLock)
+                    lock (this.conflictFileRecordsLock)
                     {
-                        conflictedFilesChanged = !this.conflictFileOptions.SetEquals(oldConflictFileOptions);
+                        conflictedFilesChanged = !this.conflictFileOptions.SetEquals(newConflictFileOptions);
+                        if (conflictedFilesChanged)
+                        {
+                            this.conflictFileOptions.Clear();
+                            foreach (var file in newConflictFileOptions)
+                            {
+                                this.conflictFileOptions.Add(file);
+                            }
+                        }
                     }
 
                     if (conflictedFilesChanged)
