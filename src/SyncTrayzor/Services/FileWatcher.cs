@@ -196,7 +196,7 @@ namespace SyncTrayzor.Services
             {
                 path = PathEx.GetLongPathName(path);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 logger.Warn($"Path {path} changed, but it doesn't exist any more");
             }

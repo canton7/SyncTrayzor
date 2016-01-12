@@ -77,7 +77,13 @@ namespace SyncTrayzor.Services.Conflicts
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
 
+            this.syncThingManager.StateChanged += this.SyncThingStateChanged;
             this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+        }
+
+        private void SyncThingStateChanged(object sender, SyncThingStateChangedEventArgs e)
+        {
+            this.Reset();
         }
 
         private void FoldersChanged(object sender, EventArgs e)
@@ -89,7 +95,7 @@ namespace SyncTrayzor.Services.Conflicts
         {
             this.StopWatchers();
 
-            if (this.IsEnabled)
+            if (this.IsEnabled && this.syncThingManager.State == SyncThingState.Running)
             {
                 var folders = this.syncThingManager.Folders.FetchAll();
 
@@ -154,7 +160,7 @@ namespace SyncTrayzor.Services.Conflicts
 
         private void FileChanged(object sender, FileChangedEventArgs e)
         {
-            if (e.Path.StartsWith(versionsFolder))
+            if (e.Path.StartsWith(versionsFolder) || Path.GetFileName(e.Path).StartsWith("~syncthing~"))
                 return;
 
             var fullPath = Path.Combine(e.Directory, e.Path);
@@ -236,6 +242,7 @@ namespace SyncTrayzor.Services.Conflicts
         public void Dispose()
         {
             this.StopWatchers();
+            this.syncThingManager.StateChanged -= this.SyncThingStateChanged;
             this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
         }
     }
