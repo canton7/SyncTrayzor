@@ -40,6 +40,7 @@ namespace SyncTrayzor.Services.Conflicts
         // Contains all of the .sync-conflict files found
         private readonly HashSet<string> conflictFileOptions = new HashSet<string>();
 
+        private readonly object fileWatchersLock = new object();
         private readonly List<FileWatcher> fileWatchers = new List<FileWatcher>();
 
         private readonly SemaphoreSlim scanLock = new SemaphoreSlim(1, 1);
@@ -137,10 +138,8 @@ namespace SyncTrayzor.Services.Conflicts
                 lock (this.conflictFileRecordsLock)
                 {
                     this.conflictFileOptions.Clear();
-
-                    // This will re-acquire the lock, but it's recursive
-                    this.RefreshConflictedFiles();
                 }
+                this.RefreshConflictedFiles();
             }
         }
         
@@ -169,23 +168,29 @@ namespace SyncTrayzor.Services.Conflicts
 
         private void StopWatchers()
         {
-            foreach (var watcher in this.fileWatchers)
+            lock (this.fileWatchersLock)
             {
-                watcher.Dispose();
-            }
+                foreach (var watcher in this.fileWatchers)
+                {
+                    watcher.Dispose();
+                }
 
-            this.fileWatchers.Clear();
+                this.fileWatchers.Clear();
+            }
         }
 
         private void StartWatchers(IReadOnlyCollection<Folder> folders)
         {
-            foreach (var folder in folders)
+            lock (this.fileWatchersLock)
             {
-                logger.Debug("Starting watcher for folder: {0}", folder.FolderId);
+                foreach (var folder in folders)
+                {
+                    logger.Debug("Starting watcher for folder: {0}", folder.FolderId);
 
-                var watcher = this.fileWatcherFactory.Create(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
-                watcher.FileChanged += this.FileChanged;
-                this.fileWatchers.Add(watcher);
+                    var watcher = this.fileWatcherFactory.Create(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
+                    watcher.FileChanged += this.FileChanged;
+                    this.fileWatchers.Add(watcher);
+                }
             }
         }
 
