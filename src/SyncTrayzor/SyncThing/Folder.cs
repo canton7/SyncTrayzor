@@ -8,6 +8,7 @@ namespace SyncTrayzor.SyncThing
     {
         Syncing,
         Idle,
+        Error,
     }
 
     public class FolderIgnores
@@ -15,6 +16,13 @@ namespace SyncTrayzor.SyncThing
         public IReadOnlyList<string> IgnorePatterns { get; }
         public IReadOnlyList<Regex> IncludeRegex { get; }
         public IReadOnlyList<Regex> ExcludeRegex { get; }
+
+        public FolderIgnores()
+        {
+            this.IgnorePatterns = EmptyList<string>.Instance;
+            this.IncludeRegex = EmptyList<Regex>.Instance;
+            this.ExcludeRegex = EmptyList<Regex>.Instance;
+        }
 
         public FolderIgnores(List<string> ignores, List<string> patterns)
         {
@@ -32,6 +40,11 @@ namespace SyncTrayzor.SyncThing
 
             this.IncludeRegex = includeRegex.AsReadOnly();
             this.ExcludeRegex = excludeRegex.AsReadOnly();
+        }
+
+        private static class EmptyList<T>
+        {
+            public static IReadOnlyList<T> Instance = new List<T>().AsReadOnly();
         }
     }
 

@@ -47,12 +47,20 @@ namespace SyncTrayzor.Services
             this.directoryWatcherFactory = directoryWatcherFactory;
 
             this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+            this.syncThingManager.Folders.SyncStateChanged += this.FolderSyncStateChanged;
             this.syncThingManager.StateChanged += this.StateChanged;
         }
 
         private void FoldersChanged(object sender, EventArgs e)
         {
             this.Reset();
+        }
+
+        private void FolderSyncStateChanged(object sender, FolderSyncStateChangedEventArgs e)
+        {
+            // Don't monitor failed folders, and pick up on unfailed folders
+            if (e.SyncState == FolderSyncState.Error || e.PrevSyncState == FolderSyncState.Error)
+                this.Reset();
         }
 
         private void StateChanged(object sender, SyncThingStateChangedEventArgs e)
@@ -81,7 +89,7 @@ namespace SyncTrayzor.Services
 
             foreach (var folder in folders)
             {
-                if (!this._watchedFolders.Contains(folder.FolderId))
+                if (!this._watchedFolders.Contains(folder.FolderId) || folder.SyncState == FolderSyncState.Error)
                     continue;
 
                 var watcher = this.directoryWatcherFactory.Create(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
@@ -136,8 +144,9 @@ namespace SyncTrayzor.Services
 
         public void Dispose()
         {
-            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
-            this.syncThingManager.StateChanged += this.StateChanged;
+            this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
+            this.syncThingManager.Folders.SyncStateChanged -= this.FolderSyncStateChanged;
+            this.syncThingManager.StateChanged -= this.StateChanged;
         }
     }
 }

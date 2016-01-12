@@ -232,6 +232,7 @@
     <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
     <Compile Include="SyncThing\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="SyncThing\FolderStateTransformer.cs" />
     <Compile Include="SyncThing\FreePortFinder.cs" />
     <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
     <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />
