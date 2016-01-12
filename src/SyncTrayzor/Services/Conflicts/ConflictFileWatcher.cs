@@ -180,7 +180,8 @@ namespace SyncTrayzor.Services.Conflicts
             if (folders.Count == 0)
                 return;
 
-            bool conflictedFilesChanged;
+            // If we get aborted, we won't refresh the conflicted files: it'll get done again in a minute anyway
+            bool conflictedFilesChanged = false;
 
             // We're not re-entrant. There's a CTS which will abort the previous invocation, but we'll need to wait
             // until that happens
@@ -219,12 +220,15 @@ namespace SyncTrayzor.Services.Conflicts
                     }
 
                 }
+                catch (OperationCanceledException) { }
+                catch (AggregateException e) when (e.InnerException is OperationCanceledException) { }
                 finally
                 {
                     this.scanCts = null;
                 }
             }
 
+            // This involves invoking an event, so we don't want to do it from inside a lock
             if (conflictedFilesChanged)
                 this.RefreshConflictedFiles();
         }
