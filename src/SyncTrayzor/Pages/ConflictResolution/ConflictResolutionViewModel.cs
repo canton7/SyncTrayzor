@@ -19,7 +19,10 @@ namespace SyncTrayzor.Pages.ConflictResolution
         private readonly ISyncThingManager syncThingManager;
         private readonly IConflictFileManager conflictFileManager;
         private readonly IProcessStartProvider processStartProvider;
+        private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly IWindowManager windowManager;
+
+        private bool wasConflictFileWatcherEnabled;
 
         private CancellationTokenSource loadingCts { get; set; }
 
@@ -35,11 +38,13 @@ namespace SyncTrayzor.Pages.ConflictResolution
             ISyncThingManager syncThingManager,
             IConflictFileManager conflictFileManager,
             IProcessStartProvider processStartProvider,
+            IConflictFileWatcher conflictFileWatcher,
             IWindowManager windowManager)
         {
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
             this.processStartProvider = processStartProvider;
+            this.conflictFileWatcher = conflictFileWatcher;
             this.windowManager = windowManager;
 
             this.Conflicts.CollectionChanged += (o, e) =>
@@ -66,6 +71,10 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         protected override void OnInitialActivate()
         {
+            // This is hacky
+            this.wasConflictFileWatcherEnabled = this.conflictFileWatcher.IsEnabled;
+            this.conflictFileWatcher.IsEnabled = false;
+
             if (this.syncThingManager.State != SyncThingState.Running || !this.syncThingManager.IsDataLoaded)
             {
                 this.IsSyncthingStopped = true;
@@ -81,6 +90,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         protected override void OnClose()
         {
             this.loadingCts?.Cancel();
+            if (this.wasConflictFileWatcherEnabled)
+                this.conflictFileWatcher.IsEnabled = true;
             this.syncThingManager.DataLoaded -= this.SyncThingDataLoaded;
         }
 
