@@ -14,6 +14,8 @@ namespace SyncTrayzor.Services.Conflicts
     {
         bool IsEnabled { get; set; }
         List<string> ConflictedFiles { get; }
+
+        TimeSpan BackoffInterval { get; set; }
         TimeSpan FolderExistenceCheckingInterval { get; set; }
 
         event EventHandler ConflictedFilesChanged;
@@ -27,6 +29,7 @@ namespace SyncTrayzor.Services.Conflicts
 
         private readonly ISyncThingManager syncThingManager;
         private readonly IConflictFileManager conflictFileManager;
+        private readonly IFileWatcherFactory fileWatcherFactory;
 
         private readonly object conflictedFilesLock = new object();
         // Contains all of the unique conflicted files, resolved from conflictFileOptions
@@ -40,6 +43,9 @@ namespace SyncTrayzor.Services.Conflicts
 
         private readonly SemaphoreSlim scanLock = new SemaphoreSlim(1, 1);
         private CancellationTokenSource scanCts;
+
+        private readonly object backoffTimerLock = new object();
+        private readonly System.Timers.Timer backoffTimer;
 
         public List<string> ConflictedFiles
         {
@@ -66,19 +72,32 @@ namespace SyncTrayzor.Services.Conflicts
             }
         }
 
+        public TimeSpan BackoffInterval { get; set; } =  TimeSpan.FromSeconds(10); // Need a default here
+
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
 
         public event EventHandler ConflictedFilesChanged;
 
         public ConflictFileWatcher(
             ISyncThingManager syncThingManager,
-            IConflictFileManager conflictFileManager)
+            IConflictFileManager conflictFileManager,
+            IFileWatcherFactory fileWatcherFactory)
         {
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
+            this.fileWatcherFactory = fileWatcherFactory;
 
             this.syncThingManager.StateChanged += this.SyncThingStateChanged;
             this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+
+            this.backoffTimer = new System.Timers.Timer() // Interval will be set when it's started
+            {
+                AutoReset = false,
+            };
+            this.backoffTimer.Elapsed += (o, e) =>
+            {
+                this.RefreshConflictedFiles();
+            };
         }
 
         private void SyncThingStateChanged(object sender, SyncThingStateChangedEventArgs e)
@@ -89,6 +108,16 @@ namespace SyncTrayzor.Services.Conflicts
         private void FoldersChanged(object sender, EventArgs e)
         {
             this.Reset();
+        }
+
+        private void RestartBackoffTimer()
+        {
+            lock (this.backoffTimerLock)
+            {
+                this.backoffTimer.Stop();
+                this.backoffTimer.Interval = this.BackoffInterval.TotalMilliseconds;
+                this.backoffTimer.Start();
+            }
         }
 
         private async void Reset()
@@ -114,6 +143,8 @@ namespace SyncTrayzor.Services.Conflicts
         
         private void RefreshConflictedFiles()
         {
+            logger.Info("Refreshing conflicted files");
+
             var conflictFiles = new HashSet<string>();
 
             lock (this.conflictFileOptionsLock)
@@ -152,7 +183,7 @@ namespace SyncTrayzor.Services.Conflicts
             {
                 logger.Debug("Starting watcher for folder: {0}", folder.FolderId);
 
-                var watcher = new FileWatcher(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
+                var watcher = this.fileWatcherFactory.Create(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
                 watcher.FileChanged += this.FileChanged;
                 this.fileWatchers.Add(watcher);
             }
@@ -178,16 +209,13 @@ namespace SyncTrayzor.Services.Conflicts
             }
 
             if (changed)
-                this.RefreshConflictedFiles();
+                this.RestartBackoffTimer();
         }
 
         private async Task ScanFoldersAsync(IReadOnlyCollection<Folder> folders)
         {
             if (folders.Count == 0)
                 return;
-
-            // If we get aborted, we won't refresh the conflicted files: it'll get done again in a minute anyway
-            bool conflictedFilesChanged = false;
 
             // We're not re-entrant. There's a CTS which will abort the previous invocation, but we'll need to wait
             // until that happens
@@ -220,10 +248,15 @@ namespace SyncTrayzor.Services.Conflicts
                         });
                     }
 
+                    // If we get aborted, we won't refresh the conflicted files: it'll get done again in a minute anyway
+                    bool conflictedFilesChanged;
                     lock (this.conflictFileOptionsLock)
                     {
                         conflictedFilesChanged = !this.conflictFileOptions.SetEquals(oldConflictFileOptions);
                     }
+
+                    if (conflictedFilesChanged)
+                        this.RestartBackoffTimer();
 
                 }
                 catch (OperationCanceledException) { }
@@ -233,10 +266,6 @@ namespace SyncTrayzor.Services.Conflicts
                     this.scanCts = null;
                 }
             }
-
-            // This involves invoking an event, so we don't want to do it from inside a lock
-            if (conflictedFilesChanged)
-                this.RefreshConflictedFiles();
         }
 
         public void Dispose()
@@ -244,6 +273,8 @@ namespace SyncTrayzor.Services.Conflicts
             this.StopWatchers();
             this.syncThingManager.StateChanged -= this.SyncThingStateChanged;
             this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
+            this.backoffTimer.Stop();
+            this.backoffTimer.Dispose();
         }
     }
 }

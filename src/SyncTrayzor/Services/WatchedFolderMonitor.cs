@@ -18,7 +18,10 @@ namespace SyncTrayzor.Services
         // Paths we don't alert Syncthing about
         private static readonly string ignoresFilePath = ".stignore";
         private static readonly string[] specialPaths = new[] { ".stversions", ".stfolder", "~syncthing~", ".syncthing." };
+
         private readonly ISyncThingManager syncThingManager;
+        private readonly IDirectoryWatcherFactory directoryWatcherFactory;
+
         private readonly List<DirectoryWatcher> directoryWatchers = new List<DirectoryWatcher>();
 
         private List<string> _watchedFolders;
@@ -38,9 +41,10 @@ namespace SyncTrayzor.Services
         public TimeSpan BackoffInterval { get; set; }
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
 
-        public WatchedFolderMonitor(ISyncThingManager syncThingManager)
+        public WatchedFolderMonitor(ISyncThingManager syncThingManager, IDirectoryWatcherFactory directoryWatcherFactory)
         {
             this.syncThingManager = syncThingManager;
+            this.directoryWatcherFactory = directoryWatcherFactory;
 
             this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
             this.syncThingManager.StateChanged += this.StateChanged;
@@ -80,7 +84,7 @@ namespace SyncTrayzor.Services
                 if (!this._watchedFolders.Contains(folder.FolderId))
                     continue;
 
-                var watcher = new DirectoryWatcher(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
+                var watcher = this.directoryWatcherFactory.Create(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
                 watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.WatcherPreviewDirectoryChanged(folder, e);
                 watcher.DirectoryChanged += (o, e) => this.WatcherDirectoryChanged(folder, e.SubPath);
 

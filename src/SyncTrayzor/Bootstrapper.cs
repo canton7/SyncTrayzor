@@ -67,6 +67,8 @@ namespace SyncTrayzor
             builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
             builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
+            builder.Bind<IFileWatcherFactory>().To<FileWatcherFactory>();
+            builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
 
             if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();

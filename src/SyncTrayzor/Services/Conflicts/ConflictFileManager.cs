@@ -238,7 +238,18 @@ namespace SyncTrayzor.Services.Conflicts
             var suffix = parsed.Groups["suffix"].Value;
             var extension = parsed.Groups["extension"].Value;
 
-            var dateCreated = new DateTime(year, month, day, hours, mins, secs, DateTimeKind.Local);
+            DateTime dateCreated;
+            try
+            {
+                dateCreated = new DateTime(year, month, day, hours, mins, secs, DateTimeKind.Local);
+            }
+            catch (ArgumentException e)
+            {
+                // 31st Feb, etc
+                logger.Error($"Failed to parse DateTime for file path {filePath}", e);
+                parsedConflictFileInfo = default(ParsedConflictFileInfo);
+                return false;
+            }
 
             // 'suffix' might be a versioner thing (~date-time), or it might be something added by another tool...
             // Try searching for it, and if that fails go without

@@ -31,6 +31,26 @@ namespace SyncTrayzor.Services
         }
     }
 
+    public interface IDirectoryWatcherFactory
+    {
+        DirectoryWatcher Create(string directory, TimeSpan backoffInterval, TimeSpan existenceCheckingInterval);
+    }
+
+    public class DirectoryWatcherFactory : IDirectoryWatcherFactory
+    {
+        private readonly IFilesystemProvider filesystem;
+
+        public DirectoryWatcherFactory(IFilesystemProvider filesystem)
+        {
+            this.filesystem = filesystem;
+        }
+
+        public DirectoryWatcher Create(string directory, TimeSpan backoffInterval, TimeSpan existenceCheckingInterval)
+        {
+            return new DirectoryWatcher(this.filesystem, directory, backoffInterval, existenceCheckingInterval);
+        }
+    }
+
     public class DirectoryWatcher : FileWatcher
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -43,8 +63,8 @@ namespace SyncTrayzor.Services
         public event EventHandler<PreviewDirectoryChangedEventArgs> PreviewDirectoryChanged;
         public event EventHandler<DirectoryChangedEventArgs> DirectoryChanged;
 
-        public DirectoryWatcher(string directory, TimeSpan backoffInterval, TimeSpan existenceCheckingInterval)
-            : base(FileWatcherMode.All, directory, existenceCheckingInterval)
+        public DirectoryWatcher(IFilesystemProvider filesystem, string directory, TimeSpan backoffInterval, TimeSpan existenceCheckingInterval)
+            : base(filesystem, FileWatcherMode.All, directory, existenceCheckingInterval)
         {
             if (backoffInterval.Ticks < 0)
                 throw new ArgumentException("backoffInterval must be >= 0");
@@ -87,6 +107,10 @@ namespace SyncTrayzor.Services
 
         private string FindCommonPrefix(string path1, string path2)
         {
+            // Easy...
+            if (path1 == path2)
+                return path1;
+
             var parts1 = path1.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
             var parts2 = path2.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
 
