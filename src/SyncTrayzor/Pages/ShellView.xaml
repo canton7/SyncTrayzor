@@ -22,6 +22,7 @@
         <KeyBinding Key="Subtract" Modifiers="Control" Command="{s:Action BrowserZoomOut}"/>
         <KeyBinding Key="D0" Modifiers="Control" Command="{s:Action BrowserZoomReset}"/>
         <KeyBinding Key="NumPad0" Modifiers="Control" Command="{s:Action BrowserZoomReset}"/>
+        <KeyBinding Key="F5" Command="{s:Action RefreshBrowser}"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
