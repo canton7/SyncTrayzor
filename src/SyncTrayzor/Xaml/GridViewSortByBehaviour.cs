@@ -137,13 +137,15 @@ namespace SyncTrayzor.Xaml
             if (propertyName == null)
                 return;
 
+            // So AdornerLayer.GetAdornerLayer can apparently sometimes return null, even though we're calling it from
+            // the Loaded event. Maybe it's because the Window hasn't yet fully loaded? Don't crash in this case
+            // anyway: we won't show the little arrow, but that's not the end of the world.
+
             if (this.lastColumnHeader != null && this.lastAdorner != null)
-            {
-                AdornerLayer.GetAdornerLayer(this.lastColumnHeader).Remove(this.lastAdorner);
-            }
+                AdornerLayer.GetAdornerLayer(this.lastColumnHeader)?.Remove(this.lastAdorner);
 
             var adorner = new GridViewSortAdorner(header, direction);
-            AdornerLayer.GetAdornerLayer(header).Add(adorner);
+            AdornerLayer.GetAdornerLayer(header)?.Add(adorner);
 
             var collectionView = CollectionViewSource.GetDefaultView(this.AssociatedObject.ItemsSource);
 
