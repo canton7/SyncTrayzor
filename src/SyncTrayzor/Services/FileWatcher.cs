@@ -198,7 +198,7 @@ namespace SyncTrayzor.Services
             }
             catch (FileNotFoundException e)
             {
-                logger.Warn($"Path {path} changed, but it doesn't exist any more", e);
+                logger.Warn($"Path {path} changed, but it doesn't exist any more");
             }
 
             return path;

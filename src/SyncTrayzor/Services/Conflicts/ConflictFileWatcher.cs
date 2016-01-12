@@ -159,7 +159,7 @@ namespace SyncTrayzor.Services.Conflicts
 
             var fullPath = Path.Combine(e.Directory, e.Path);
 
-            logger.Debug("Conflict file changed: {0} FileExists: {0}", fullPath, e.FileExists);
+            logger.Debug("Conflict file changed: {0} FileExists: {1}", fullPath, e.FileExists);
 
             bool changed;
 
