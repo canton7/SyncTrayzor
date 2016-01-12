@@ -174,7 +174,7 @@ namespace SyncTrayzor
 
             var logger = LogManager.GetCurrentClassLogger();
             var assembly = this.Container.Get<IAssemblyProvider>();
-            logger.Debug("SyncTrazor version {0} ({1}) started at {2}", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location);
+            logger.Debug("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
 
             logger.Debug("Cleaning up config folder path");
             this.Container.Get<ConfigFolderCleaner>().Clean();

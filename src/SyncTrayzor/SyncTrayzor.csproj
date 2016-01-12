@@ -312,6 +312,7 @@
     <Compile Include="Utils\AtomicFileStream.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
+    <Compile Include="Utils\DotNetVersionFinder.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\EnvVarTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
