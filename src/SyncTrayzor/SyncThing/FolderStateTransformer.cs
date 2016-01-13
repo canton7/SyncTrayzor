@@ -11,6 +11,7 @@ namespace SyncTrayzor.SyncThing
         private static readonly Dictionary<string, FolderSyncState> folderSyncStateLookup = new Dictionary<string, FolderSyncState>()
         {
             { "syncing", FolderSyncState.Syncing },
+            { "scanning", FolderSyncState.Scanning },
             { "idle", FolderSyncState.Idle },
             { "error", FolderSyncState.Error },
         };

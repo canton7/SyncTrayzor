@@ -7,6 +7,7 @@ namespace SyncTrayzor.SyncThing
     public enum FolderSyncState
     {
         Syncing,
+        Scanning,
         Idle,
         Error,
     }
