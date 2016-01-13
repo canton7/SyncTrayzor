@@ -66,15 +66,23 @@ namespace PortableInstaller
                 if (destinationExists)
                 {
                     movedDestinationPath = GenerateBackupDestinationPath(destinationPath);
-                    Console.WriteLine($"Moving {destinationPath} to {movedDestinationPath}");
-                    try
+                    while (true)
                     {
-                        Directory.Move(destinationPath, movedDestinationPath);
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine($"!! Unable to move {destinationPath} to {movedDestinationPath}. Your files have not been altered.");
-                        throw;
+                        Console.WriteLine($"Moving {destinationPath} to {movedDestinationPath}");
+                        try
+                        {
+                            Directory.Move(destinationPath, movedDestinationPath);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine($"!! Unable to move {destinationPath} to {movedDestinationPath} ({e.GetType().Name} {e.Message})");
+                            Console.WriteLine($"!! Please make sure that {destinationPath}, or any of the files inside it, aren't open.");
+                            Console.WriteLine($"!! Press any key to try again, or Ctrl-C to abort the upgrade.");
+                            Console.WriteLine($"!! If you abort the upgrade, none of your files will be modified.");
+                            Console.ReadKey();
+                        }
                     }
                 }
 
@@ -85,6 +93,7 @@ namespace PortableInstaller
                 }
                 catch (Exception)
                 {
+                    Console.WriteLine();
                     Console.WriteLine($"!! Unable to move {sourcePath} to {destinationPath}. Your copy of SyncTrayzor is at {sourcePath}.");
                     throw;
                 }
@@ -95,6 +104,7 @@ namespace PortableInstaller
                     var destDataFolder = Path.Combine(destinationPath, "data");
                     if (Directory.Exists(sourceDataFolder))
                     {
+                        Console.WriteLine();
                         Console.WriteLine($"Copying data folder {sourceDataFolder} to {destDataFolder}...");
                         try
                         {
@@ -102,12 +112,14 @@ namespace PortableInstaller
                         }
                         catch (Exception)
                         {
+                            Console.WriteLine();
                             Console.WriteLine($"!! Unable to copy {sourceDataFolder} to {destDataFolder}. Your copy of SyncTrayzor is at {movedDestinationPath}, and will still work.");
                             throw;
                         }
                     }
                     else
                     {
+                        Console.WriteLine();
                         Console.WriteLine($"!! Could not find source data folder {sourceDataFolder}, so not copying. If you have ever started SyncTrayzor from {movedDestinationPath}, this is an error: please manually copy your 'data' folder from whereever it is to {destDataFolder}");
                         pauseAtEnd = true;
                     }
@@ -124,7 +136,8 @@ namespace PortableInstaller
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Unable to increase install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
+                            Console.WriteLine();
+                            Console.WriteLine($"!! Unable to increase install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
                             pauseAtEnd = true;
                         }
                     }
@@ -137,7 +150,8 @@ namespace PortableInstaller
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Unable to set install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
+                            Console.WriteLine();
+                            Console.WriteLine($"!! Unable to set install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
                             pauseAtEnd = true;
                         }
                     }
@@ -149,6 +163,7 @@ namespace PortableInstaller
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine();
                         Console.WriteLine($"!! Unable to delete your old installation at {movedDestinationPath} ({e.GetType().Name} {e.Message}). Your new installation is at {destinationPath}, and should be fully functional. Please double-check, and manually delete {movedDestinationPath}.");
                         pauseAtEnd = true;
                     }
@@ -156,6 +171,7 @@ namespace PortableInstaller
 
                 if (pauseAtEnd)
                 {
+                    Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine("One or more warnings occurred. Please review the messages above, and take any appropriate action.");
                     Console.WriteLine("Press any key to continue (this will restart SyncTrayzor)");

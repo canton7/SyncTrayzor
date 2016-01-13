@@ -112,9 +112,6 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             await Task.Run(() => ZipFile.ExtractToDirectory(zipPath, destinationDir));
 
-            // Touch the folder, so we (or someone else!) doesn't delete when cleaning up
-            this.filesystem.SetLastAccessTimeUtc(destinationDir, DateTime.UtcNow);
-
             // We expect a single folder inside the extracted dir, called e.g. SyncTrayzorPortable-x86
             var children = this.filesystem.GetDirectories(destinationDir);
             if (children.Length != 1)
