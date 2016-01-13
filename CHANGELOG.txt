@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v1.1.2
+------
+
+ - Handle folders with missing markers again (#187)
+ - Don't crash in some cases on .NET 4.5 when the conflict editor is completed (#199)
+ - Don't crash if the ConflictFileWatcher is aborted (#200, #202)
+ - Don't show conflicts alerts bar if Syncthing isn't running
+ - Improve conflict file monitoring (should remove inaccuracies)
+ - Don't fail if there's a link loop when scanning for conflicted files (#195)
+ - Add 'Size' field to the conflict resolver (#194)
+ - Add setting to control whether conflict files are deleted to the recycle bin
+ - Pressing F5 will fresh the browser
+ - Fix the portable installation procedure (sorry portable users: you'll have to manually upgrade
+   one last time).
+
 v1.1.1
 ------
 
