@@ -65,20 +65,22 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.1' => [
+   '1.1.2' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.1/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.1/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.2/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.2/SyncTrayzorSetup-x86.exe',
          ],
-      ],      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.1/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.1',
-      'release_notes' => "- Log Syncthing's output (#162).\n- Add a Settings tab to enable Syncthing debug facilities without setting STTRACE or restarting (#175).\n- Alerts system: show warning triangle on tray icon, and alerts at the top of SyncTrayzor, when there\n  are failed file transfers or conflicted files.\n- Add a tool to find and help resolve file conflicts (under File -> Conflict Resolver).\n- Add support for one-click upgrades for Portable installations.\n- Improve 'Syncthing Console' (#82).\n- Improve update check schedule (#184).\n- Fix crash if the user manually specifies a UNC prefix on a folder (#192).",
+      ],      
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.2/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.2',
+      'release_notes' => "- Handle folders with missing markers again (#187)\n- Don't crash in some cases on .NET 4.5 when the conflict editor is completed (#199)\n- Don't crash if the ConflictFileWatcher is aborted (#200, #202)\n- Don't show conflicts alerts bar if Syncthing isn't running\n- Improve conflict file monitoring (should remove inaccuracies)\n- Don't fail if there's a link loop when scanning for conflicted files (#195)\n- Add 'Size' field to the conflict resolver (#194)\n- Add setting to control whether conflict files are deleted to the recycle bin\n- Pressing F5 will fresh the browser\n- Fix the portable installation procedure (sorry portable users: you'll have to manually upgrade\n  one last time).",
    ]
 ];
 
 $upgrades = [
-   '1.1.0' => ['to' => 'latest', 'formatter' => '3', 'overrides' => ['release_notes' => "- Fix crash if we fail to look for conflicted files in a path (#191, #193)\n- Fix crash if the user manually specifies a UNC prefix on a folder (#192)"]],
+   '1.1.1' => ['to' => 'latest', 'formatter' => '3'],
+   '1.1.0' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.32' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.31' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.30' => ['to' => 'latest', 'formatter' => '3'],
