@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="UpdateApiUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://syncthing.antonymale.co.uk/version-check</Value>
+      <Value Profile="(Default)">http://synctrayzor.antonymale.co.uk/version-check</Value>
     </Setting>
     <Setting Name="HomepageUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://github.com/canton7/SyncTrayzor</Value>

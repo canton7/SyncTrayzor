@@ -17,7 +17,7 @@ namespace SyncTrayzor.Utils
                 order++;
                 bytes = bytes / 1024;
             }
-            var placesFmtString = new String('0', decimalPlaces);
+            var placesFmtString = (order > 0) ? new String('0', decimalPlaces) : String.Empty;
             return String.Format("{0:0." + placesFmtString + "}{1}", bytes, sizes[order]);
         }
 

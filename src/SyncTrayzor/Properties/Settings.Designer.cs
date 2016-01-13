@@ -25,7 +25,7 @@ namespace SyncTrayzor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://syncthing.antonymale.co.uk/version-check")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://synctrayzor.antonymale.co.uk/version-check")]
         public string UpdateApiUrl {
             get {
                 return ((string)(this["UpdateApiUrl"]));

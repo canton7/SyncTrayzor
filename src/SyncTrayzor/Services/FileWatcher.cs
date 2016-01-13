@@ -30,10 +30,31 @@ namespace SyncTrayzor.Services
         }
     }
 
+    public interface IFileWatcherFactory
+    {
+        FileWatcher Create(FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval, string filter = "*.*");
+    }
+
+    public class FileWatcherFactory : IFileWatcherFactory
+    {
+        private readonly IFilesystemProvider filesystem;
+
+        public FileWatcherFactory(IFilesystemProvider filesystem)
+        {
+            this.filesystem = filesystem;
+        }
+
+        public FileWatcher Create(FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval, string filter = "*.*")
+        {
+            return new FileWatcher(this.filesystem, mode, directory, existenceCheckingInterval, filter);
+        }
+    }
+
     public class FileWatcher : IDisposable
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private readonly IFilesystemProvider filesystem;
         private readonly FileWatcherMode mode;
         private readonly string filter;
         protected readonly string Directory;
@@ -43,8 +64,9 @@ namespace SyncTrayzor.Services
 
         public event EventHandler<FileChangedEventArgs> FileChanged;
 
-        public FileWatcher(FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval, string filter = "*.*")
+        public FileWatcher(IFilesystemProvider filesystem, FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval, string filter = "*.*")
         {
+            this.filesystem = filesystem;
             this.mode = mode;
             this.filter = filter;
             this.Directory = directory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
@@ -74,11 +96,11 @@ namespace SyncTrayzor.Services
 
                 if (this.mode.HasFlag(FileWatcherMode.ContentChanged))
                 {
-                    watcher.Changed += this.OnChangedOrCreated;
+                    watcher.Changed += this.OnChanged;
                 }
                 if (this.mode.HasFlag(FileWatcherMode.CreatedOrDeleted))
                 {
-                    watcher.Created += this.OnChangedOrCreated;
+                    watcher.Created += this.OnCreated;
                     watcher.Deleted += this.OnDeleted;
                     watcher.Renamed += this.OnRenamed;
                 }
@@ -125,7 +147,24 @@ namespace SyncTrayzor.Services
             this.PathChanged(e.FullPath, fileExists: false);
         }
 
-        private void OnChangedOrCreated(object source, FileSystemEventArgs e)
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            // We don't want to raise Changed events on directories - those are file creations or deletions.
+            // Creations will pop up in OnCreated, deletions in OnDeletion.
+            // We do however want to handle file changes
+
+            try
+            {
+                if (this.filesystem.FileExists(e.FullPath))
+                    this.PathChanged(e.FullPath, fileExists: true);
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"Failed to see whether file/dir {e.FullPath} exists", ex);
+            }
+        }
+
+        private void OnCreated(object source, FileSystemEventArgs e)
         {
             this.PathChanged(e.FullPath, fileExists: true);
         }
@@ -196,9 +235,9 @@ namespace SyncTrayzor.Services
             {
                 path = PathEx.GetLongPathName(path);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
-                logger.Warn($"Path {path} changed, but it doesn't exist any more", e);
+                logger.Warn($"Path {path} changed, but it doesn't exist any more");
             }
 
             return path;

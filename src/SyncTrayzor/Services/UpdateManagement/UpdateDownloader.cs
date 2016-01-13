@@ -83,7 +83,14 @@ namespace SyncTrayzor.Services.UpdateManagement
                     if (initialValidationResult.Item1)
                     {
                         // Touch the file, so we (or someone else!) doesn't delete when cleaning up
-                        this.filesystemProvider.SetLastAccessTimeUtc(downloadPath, DateTime.UtcNow);
+                        try
+                        {
+                            this.filesystemProvider.SetLastAccessTimeUtc(downloadPath, DateTime.UtcNow);
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Warn($"Failed to set last access time on {downloadPath}", e);
+                        }
 
                         // EXIT POINT
                         return initialValidationResult;
@@ -167,6 +174,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private void CleanUpUnusedFiles()
         {
+            // TODO: Delete extracted portable dir?
+
             var threshold = DateTime.UtcNow - fileMaxAge;
 
             foreach (var file in this.filesystemProvider.GetFiles(this.downloadsDir))

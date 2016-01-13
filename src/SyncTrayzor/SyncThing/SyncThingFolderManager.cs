@@ -99,7 +99,7 @@ namespace SyncTrayzor.SyncThing
             if (!this.folders.TryGetValue(folderId, out folder))
                 return;
 
-            var ignores = await this.apiClient.Value.FetchIgnoresAsync(folderId);
+            var ignores = await this.apiClient.Value.FetchIgnoresAsync(folderId, CancellationToken.None);
             folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
         }
 
@@ -163,8 +163,13 @@ namespace SyncTrayzor.SyncThing
                 .DistinctBy(x => x.ID)
                 .Select(async folder =>
                 {
-                    var ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
                     var status = await this.FetchFolderStatusAsync(folder.ID, cancellationToken);
+                    var syncState = FolderStateTransformer.SyncStateFromStatus(status.State);
+
+                    Ignores ignores = null;
+                    if (syncState != FolderSyncState.Error)
+                        ignores = await this.FetchFolderIgnoresAsync(folder.ID, cancellationToken);
+
                     var path = folder.Path;
                     // Strip off UNC prefix, if they're put it on
                     if (path.StartsWith(uncPrefix))
@@ -172,62 +177,32 @@ namespace SyncTrayzor.SyncThing
                     if (path.StartsWith("~"))
                         path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
-                    return new Folder(folder.ID, path, SyncStateFromStatus(status), new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns), status);
+                    var folderIgnores = (ignores == null) ? new FolderIgnores() : new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
+
+                    return new Folder(folder.ID, path, syncState, folderIgnores, status);
                 });
 
             cancellationToken.ThrowIfCancellationRequested();
 
             var folders = await Task.WhenAll(folderConstructionTasks);
-            return folders;
-        }
-
-        private static FolderSyncState SyncStateFromStatus(FolderStatus status)
-        {
-            return status.State == "syncing" ? FolderSyncState.Syncing : FolderSyncState.Idle;
+            var actualFolders = folders.Where(x => x != null);
+            return actualFolders;
         }
 
         private async Task<Ignores> FetchFolderIgnoresAsync(string folderId, CancellationToken cancellationToken)
         {
-            // Until startup is complete, these can return a 500.
-            // There's no sensible way to determine when startup *is* complete, so we just have to keep trying...
-
-            // Again, there's the possibility that we've just abort the API...
-            ISyncThingApiClient apiClient;
-            lock (this.apiClient.LockObject)
+            // This will 500 if there's an error. Return null if that's the case
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                apiClient = this.apiClient.UnsynchronizedValue;
-                if (apiClient == null)
-                    throw new InvalidOperationException("ApiClient must not be null");
+                var ignores = await this.apiClient.Value.FetchIgnoresAsync(folderId, cancellationToken);
+                return ignores;
             }
-
-            Ignores ignores = null;
-            // We used to time out after an absolute time here. However, there's the possiblity of going to sleep
-            // halfway through polling, which throws things off. Therefore use a number of iterations
-            var numRetries = this.ignoresFetchTimeout.TotalSeconds; // Each iteration is a second
-            for (var retriesCount = 0; retriesCount < numRetries; retriesCount++)
+            catch (ApiException e)
             {
-                try
-                {
-                    ignores = await apiClient.FetchIgnoresAsync(folderId);
-                    // No need to log: ApiClient did that for us
-                    break;
-                }
-                catch (ApiException e)
-                {
-                    logger.Debug("Attempting to fetch folder {0}, but received status {1}", folderId, e.StatusCode);
-                    if (e.StatusCode != HttpStatusCode.InternalServerError)
-                        throw;
-                }
-
-                await Task.Delay(1000, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
+                if (e.StatusCode == HttpStatusCode.InternalServerError)
+                    return null;
+                throw;
             }
-
-            if (ignores == null)
-                throw new SyncThingDidNotStartCorrectlyException($"Unable to fetch ignores for folder {folderId}. Syncthing returned 500 after {this.ignoresFetchTimeout}");
-
-            return ignores;
         }
 
         private async Task<FolderStatus> FetchFolderStatusAsync(string folderId, CancellationToken cancellationToken)
@@ -265,7 +240,7 @@ namespace SyncTrayzor.SyncThing
             this.OnFolderErrorsChanged(folder, folderErrors);
         }
 
-        private void FolderSyncStateChanged(SyncStateChangedEventArgs e)
+        private async void FolderSyncStateChanged(SyncStateChangedEventArgs e)
         {
             Folder folder;
             if (!this.folders.TryGetValue(e.FolderId, out folder))
@@ -277,6 +252,15 @@ namespace SyncTrayzor.SyncThing
             {
                 folder.ClearFolderErrors();
                 this.OnFolderErrorsChanged(folder, new List<FolderError>());
+            }
+            else if (e.SyncState == FolderSyncState.Error)
+            {
+                folder.Ignores = new FolderIgnores(); 
+            }
+            else if (e.PrevSyncState == FolderSyncState.Error)
+            {
+                var ignores = await this.FetchFolderIgnoresAsync(e.FolderId, CancellationToken.None);
+                folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
             }
 
             this.OnSyncStateChanged(folder, e.PrevSyncState, e.SyncState);

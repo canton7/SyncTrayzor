@@ -77,9 +77,9 @@ namespace SyncTrayzor.SyncThing.ApiClient
             return version;
         }
 
-        public async Task<Ignores> FetchIgnoresAsync(string folderId)
+        public async Task<Ignores> FetchIgnoresAsync(string folderId, CancellationToken cancellationToken)
         {
-            var ignores = await this.api.FetchIgnoresAsync(folderId);
+            var ignores = await this.api.FetchIgnoresAsync(folderId, cancellationToken);
             logger.Debug("Fetched ignores for folderid {0}: {1}", folderId, ignores);
             return ignores;
         }

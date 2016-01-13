@@ -67,6 +67,8 @@ namespace SyncTrayzor
             builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
             builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
+            builder.Bind<IFileWatcherFactory>().To<FileWatcherFactory>();
+            builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
 
             if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
@@ -146,6 +148,8 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Resources.Generic_Dialog_OK },
                 { MessageBoxResult.Yes, Resources.Generic_Dialog_Yes },
             };
+
+            RecycleBinDeleter.Logger = s => LogManager.GetLogger(typeof(RecycleBinDeleter).FullName).Error(s);
         }
 
         protected override void Launch()
@@ -174,7 +178,7 @@ namespace SyncTrayzor
 
             var logger = LogManager.GetCurrentClassLogger();
             var assembly = this.Container.Get<IAssemblyProvider>();
-            logger.Debug("SyncTrazor version {0} ({1}) started at {2}", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location);
+            logger.Debug("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
 
             logger.Debug("Cleaning up config folder path");
             this.Container.Get<ConfigFolderCleaner>().Clean();

@@ -29,6 +29,7 @@ namespace SyncTrayzor.Services
         string[] GetDirectories(string path, string searchPattern, SearchOption searchOption);
         IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
         IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+        long GetFileSize(string path);
     }
 
     public class FilesystemProvider : IFilesystemProvider
@@ -87,5 +88,7 @@ namespace SyncTrayzor.Services
 
         public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
             => Pri.LongPath.Directory.EnumerateDirectories(path, searchPattern, searchOption);
+
+        public long GetFileSize(string path) => new Pri.LongPath.FileInfo(path).Length;
     }
 }

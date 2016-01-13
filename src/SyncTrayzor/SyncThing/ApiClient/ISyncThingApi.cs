@@ -35,7 +35,7 @@ namespace SyncTrayzor.SyncThing.ApiClient
         Task<SyncthingVersion> FetchVersionAsync();
 
         [Get("/rest/db/ignores")]
-        Task<Ignores> FetchIgnoresAsync(string folder);
+        Task<Ignores> FetchIgnoresAsync(string folder, CancellationToken cancellationToken);
 
         [Post("/rest/system/restart")]
         Task RestartAsync();

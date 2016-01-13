@@ -872,4 +872,10 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="AboutView_Donate_Text" xml:space="preserve">
     <value>Find SyncTrayzor useful?</value>
   </data>
+  <data name="ConflictResolutionView_DeleteToRecycleBin" xml:space="preserve">
+    <value>Move deleted files to the recycle bin, rather than deleting permanently</value>
+  </data>
+  <data name="ConflictResolutionView_Header_Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
 </root>

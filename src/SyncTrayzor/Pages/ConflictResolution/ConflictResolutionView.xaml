@@ -47,6 +47,7 @@
                         <ColumnDefinition Width="{Binding View.Columns[0].ActualWidth, ElementName=SelectConflictOptions}"/>
                         <ColumnDefinition Width="{Binding View.Columns[1].ActualWidth, ElementName=SelectConflictOptions}"/>
                         <ColumnDefinition Width="{Binding View.Columns[2].ActualWidth, ElementName=SelectConflictOptions}"/>
+                        <ColumnDefinition Width="{Binding View.Columns[3].ActualWidth, ElementName=SelectConflictOptions}"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -64,10 +65,12 @@
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_OriginalFile}"/>
                     <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_LastModified}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_Size}"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Value}" Text="{Binding SelectedConflict.FileName}"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding SelectedConflict.LastModified}"/>
-                    <Button Grid.Row="1" Grid.Column="2"
+                    <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding SelectedConflict.Size}"/>
+                    <Button Grid.Row="1" Grid.Column="3"
                                 HorizontalAlignment="Left"
                                 Style="{StaticResource Value}"
                                 Padding="5,0"
@@ -75,6 +78,10 @@
                                 CommandParameter="{Binding SelectedConflict}"
                                 Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
                 </Grid>
+
+                <CheckBox DockPanel.Dock="Bottom" Margin="0,5"
+                          IsChecked="{Binding DeleteToRecycleBin}"
+                          Content="{l:Loc ConflictResolutionView_DeleteToRecycleBin}"/>
 
                 <Button DockPanel.Dock="Bottom" Margin="0,8,0,5" Padding="7,2"
                         HorizontalAlignment="Left"
@@ -94,9 +101,16 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn
-                                Header="{l:Loc ConflictResolutionView_Header_ConflictCreated}"
-                                DisplayMemberBinding="{Binding DateCreated}"/>
+                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ConflictCreated}"
+                                            DisplayMemberBinding="{Binding DateCreated}"/>
+                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_Size}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <!-- The size in the 'Original File' table may be smaller - hack by adding padding here (which does make it look better anyway) -->
+                                        <TextBlock Margin="0,0,20,0" Text="{Binding Size}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

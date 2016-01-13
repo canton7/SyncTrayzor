@@ -18,7 +18,10 @@ namespace SyncTrayzor.Services
         // Paths we don't alert Syncthing about
         private static readonly string ignoresFilePath = ".stignore";
         private static readonly string[] specialPaths = new[] { ".stversions", ".stfolder", "~syncthing~", ".syncthing." };
+
         private readonly ISyncThingManager syncThingManager;
+        private readonly IDirectoryWatcherFactory directoryWatcherFactory;
+
         private readonly List<DirectoryWatcher> directoryWatchers = new List<DirectoryWatcher>();
 
         private List<string> _watchedFolders;
@@ -38,17 +41,26 @@ namespace SyncTrayzor.Services
         public TimeSpan BackoffInterval { get; set; }
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
 
-        public WatchedFolderMonitor(ISyncThingManager syncThingManager)
+        public WatchedFolderMonitor(ISyncThingManager syncThingManager, IDirectoryWatcherFactory directoryWatcherFactory)
         {
             this.syncThingManager = syncThingManager;
+            this.directoryWatcherFactory = directoryWatcherFactory;
 
             this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+            this.syncThingManager.Folders.SyncStateChanged += this.FolderSyncStateChanged;
             this.syncThingManager.StateChanged += this.StateChanged;
         }
 
         private void FoldersChanged(object sender, EventArgs e)
         {
             this.Reset();
+        }
+
+        private void FolderSyncStateChanged(object sender, FolderSyncStateChangedEventArgs e)
+        {
+            // Don't monitor failed folders, and pick up on unfailed folders
+            if (e.SyncState == FolderSyncState.Error || e.PrevSyncState == FolderSyncState.Error)
+                this.Reset();
         }
 
         private void StateChanged(object sender, SyncThingStateChangedEventArgs e)
@@ -77,10 +89,10 @@ namespace SyncTrayzor.Services
 
             foreach (var folder in folders)
             {
-                if (!this._watchedFolders.Contains(folder.FolderId))
+                if (!this._watchedFolders.Contains(folder.FolderId) || folder.SyncState == FolderSyncState.Error)
                     continue;
 
-                var watcher = new DirectoryWatcher(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
+                var watcher = this.directoryWatcherFactory.Create(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);
                 watcher.PreviewDirectoryChanged += (o, e) => e.Cancel = this.WatcherPreviewDirectoryChanged(folder, e);
                 watcher.DirectoryChanged += (o, e) => this.WatcherDirectoryChanged(folder, e.SubPath);
 
@@ -132,8 +144,9 @@ namespace SyncTrayzor.Services
 
         public void Dispose()
         {
-            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
-            this.syncThingManager.StateChanged += this.StateChanged;
+            this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
+            this.syncThingManager.Folders.SyncStateChanged -= this.FolderSyncStateChanged;
+            this.syncThingManager.StateChanged -= this.StateChanged;
         }
     }
 }

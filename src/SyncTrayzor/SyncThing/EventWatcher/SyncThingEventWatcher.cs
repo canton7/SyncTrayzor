@@ -184,8 +184,8 @@ namespace SyncTrayzor.SyncThing.EventWatcher
 
         public void Accept(StateChangedEvent evt)
         {
-            var oldState = evt.Data.From == "syncing" ? FolderSyncState.Syncing : FolderSyncState.Idle;
-            var state = evt.Data.To == "syncing" ? FolderSyncState.Syncing : FolderSyncState.Idle;
+            var oldState = FolderStateTransformer.SyncStateFromStatus(evt.Data.From);
+            var state = FolderStateTransformer.SyncStateFromStatus(evt.Data.To);
             this.OnSyncStateChanged(evt.Data.Folder, oldState, state);
         }
 

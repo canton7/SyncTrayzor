@@ -205,6 +205,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move deleted files to the recycle bin, rather than deleting permanently.
+        /// </summary>
+        public static string ConflictResolutionView_DeleteToRecycleBin {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_DeleteToRecycleBin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resolving this conflict failed: {0}.
         /// </summary>
         public static string ConflictResolutionView_Dialog_Failed_Message {
@@ -273,6 +282,15 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_Header_OriginalFile {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_Header_OriginalFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string ConflictResolutionView_Header_Size {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_Size", resourceCulture);
             }
         }
         
