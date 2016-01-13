@@ -37,7 +37,9 @@ namespace SyncTrayzor.Services.UpdateManagement
             var sha1sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sham1sumDownloadFileName, version.ToString(3)));
             var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(downloadedFileNameTemplate, version.ToString(3)));
 
-            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, () =>
+            // Always re-download the sha1sums file - it's small, and lets me change the contents of a download (if the hash changes, it will
+            // re-download the installer).
+            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, true, () =>
                 {
                     Stream sha1sumContents;
                     var passed = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath, out sha1sumContents);
@@ -50,7 +52,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 if (sha1sumOutcome.Item1)
                 {
-                    updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(updateUrl, version, updateDownloadPath, () =>
+                    updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(updateUrl, version, updateDownloadPath, false, () =>
                     {
                         var updateUri = new Uri(updateUrl);
                         // Make sure this is rewound - we might read from it multiple times
@@ -66,7 +68,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             return updateSucceeded ? updateDownloadPath : null;
         }
 
-        private async Task<Tuple<bool, T>> DownloadAndVerifyFileAsync<T>(string url, Version version, string downloadPath, Func<Tuple<bool, T>> verifier)
+        private async Task<Tuple<bool, T>> DownloadAndVerifyFileAsync<T>(string url, Version version, string downloadPath, bool deleteIfExists, Func<Tuple<bool, T>> verifier)
         {
             // This really needs refactoring to not be multiple-return...
 
@@ -76,7 +78,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 this.filesystemProvider.CreateDirectory(this.downloadsDir);
 
                 // Someone downloaded it already? Oh good. Let's see if it's corrupt or not...
-                if (this.filesystemProvider.FileExists(downloadPath))
+                if (this.filesystemProvider.FileExists(downloadPath) && !deleteIfExists)
                 {
                     logger.Info("Skipping download as file {0} already exists", downloadPath);
                     var initialValidationResult = verifier();
@@ -97,7 +99,8 @@ namespace SyncTrayzor.Services.UpdateManagement
                     }
                     else
                     {
-                        logger.Info("Actually, it's corrupt. Re-downloading");
+                        if (!deleteIfExists)
+                            logger.Info("Actually, it's corrupt. Re-downloading");
                         this.filesystemProvider.DeleteFile(downloadPath);
                     }
                 }
