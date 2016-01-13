@@ -14,11 +14,13 @@ namespace SyncTrayzor.Services.Conflicts
     {
         public string FilePath { get; }
         public DateTime LastModified { get; }
+        public long SizeBytes { get; }
 
-        public ConflictFile(string filePath, DateTime lastModified)
+        public ConflictFile(string filePath, DateTime lastModified, long sizeBytes)
         {
             this.FilePath = filePath;
             this.LastModified = lastModified;
+            this.SizeBytes = sizeBytes;
         }
 
         public override string ToString()
@@ -33,12 +35,14 @@ namespace SyncTrayzor.Services.Conflicts
         public DateTime LastModified { get; }
 
         public DateTime Created { get; }
+        public long SizeBytes { get; }
 
-        public ConflictOption(string filePath, DateTime lastModified, DateTime created)
+        public ConflictOption(string filePath, DateTime lastModified, DateTime created, long sizeBytes)
         {
             this.FilePath = filePath;
             this.LastModified = lastModified;
             this.Created = created;
+            this.SizeBytes = sizeBytes;
         }
 
         public override string ToString()
@@ -164,8 +168,8 @@ namespace SyncTrayzor.Services.Conflicts
 
                 foreach (var kvp in conflictLookup)
                 {
-                    var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key));
-                    var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created)).ToList();
+                    var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key), this.filesystemProvider.GetFileSize(kvp.Key));
+                    var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created, this.filesystemProvider.GetFileSize(x.FilePath))).ToList();
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 

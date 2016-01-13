@@ -1,5 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Services.Conflicts;
+using SyncTrayzor.Utils;
 using System;
 using System.IO;
 
@@ -13,6 +14,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public DateTime DateCreated => this.ConflictOption.Created;
         public DateTime LastModified => this.ConflictOption.LastModified;
+        public string Size => FormatUtils.BytesToHuman(this.ConflictOption.SizeBytes, 1);
 
         public ConflictOptionViewModel(ConflictOption conflictOption)
         {

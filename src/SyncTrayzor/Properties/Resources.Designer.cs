@@ -286,6 +286,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string ConflictResolutionView_Header_Size {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_Header_Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string ConflictResolutionView_Scanning_CancelButton {

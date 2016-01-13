@@ -27,6 +27,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public BindableCollection<ConflictOptionViewModel> ConflictOptions { get; }
 
         public Icon Icon { get; }
+
+        public string Size => FormatUtils.BytesToHuman(this.ConflictSet.File.SizeBytes, 1);
         
 
         public ConflictViewModel(ConflictSet conflictSet, string folderName)
