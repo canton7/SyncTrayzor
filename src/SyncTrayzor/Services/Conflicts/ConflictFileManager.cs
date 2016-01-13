@@ -78,7 +78,7 @@ namespace SyncTrayzor.Services.Conflicts
         string ConflictPattern { get; }
 
         IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
-        void ResolveConflict(ConflictSet conflictSet, string chosenFilePath);
+        void ResolveConflict(ConflictSet conflictSet, string chosenFilePath, bool deleteToRecycleBin);
         bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo);
     }
 
@@ -272,7 +272,7 @@ namespace SyncTrayzor.Services.Conflicts
             return false;
         }
 
-        public void ResolveConflict(ConflictSet conflictSet, string chosenFilePath)
+        public void ResolveConflict(ConflictSet conflictSet, string chosenFilePath, bool deleteToRecycleBin)
         {
             if (chosenFilePath != conflictSet.File.FilePath && !conflictSet.Conflicts.Any(x => x.FilePath == chosenFilePath))
                 throw new ArgumentException("chosenPath does not exist inside conflictSet");
@@ -282,13 +282,13 @@ namespace SyncTrayzor.Services.Conflicts
                 foreach (var file in conflictSet.Conflicts)
                 {
                     logger.Debug("Deleting {0}", file);
-                    this.filesystemProvider.DeleteFileToRecycleBin(file.FilePath);
+                    this.DeleteFile(file.FilePath, deleteToRecycleBin);
                 }
             }
             else
             {
                 logger.Debug("Deleting {0}", conflictSet.File.FilePath);
-                this.filesystemProvider.DeleteFileToRecycleBin(conflictSet.File.FilePath);
+                this.DeleteFile(conflictSet.File.FilePath, deleteToRecycleBin);
 
                 foreach (var file in conflictSet.Conflicts)
                 {
@@ -296,12 +296,20 @@ namespace SyncTrayzor.Services.Conflicts
                         continue;
 
                     logger.Debug("Deleting {0}", file.FilePath);
-                    this.filesystemProvider.DeleteFileToRecycleBin(file.FilePath);
+                    this.DeleteFile(file.FilePath, deleteToRecycleBin);
                 }
 
                 logger.Debug("Renaming {0} to {1}", chosenFilePath, conflictSet.File.FilePath);
                 this.filesystemProvider.MoveFile(chosenFilePath, conflictSet.File.FilePath);
             }
+        }
+
+        private void DeleteFile(string path, bool deleteToRecycleBin)
+        {
+            if (deleteToRecycleBin)
+                this.filesystemProvider.DeleteFileToRecycleBin(path);
+            else
+                this.filesystemProvider.DeleteFile(path);
         }
 
         private struct SearchDirectory

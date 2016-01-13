@@ -68,6 +68,8 @@ namespace SyncTrayzor.Services.Config
         [XmlArrayItem("DebugFacility")]
         public List<string> SyncthingDebugFacilities { get; set; }
 
+        public bool ConflictResolverDeletesToRecycleBin { get; set; }
+
         public Configuration()
         {
             // Default configuration is for a portable setup.
@@ -100,6 +102,7 @@ namespace SyncTrayzor.Services.Config
             this.EnableFailedTransferAlerts = true;
             this.EnableConflictFileMonitoring = true;
             this.SyncthingDebugFacilities = new List<string>();
+            this.ConflictResolverDeletesToRecycleBin = true;
         }
 
         public Configuration(Configuration other)
@@ -132,6 +135,7 @@ namespace SyncTrayzor.Services.Config
             this.EnableFailedTransferAlerts = other.EnableFailedTransferAlerts;
             this.EnableConflictFileMonitoring = other.EnableConflictFileMonitoring;
             this.SyncthingDebugFacilities = other.SyncthingDebugFacilities;
+            this.ConflictResolverDeletesToRecycleBin = other.ConflictResolverDeletesToRecycleBin;
         }
 
         public override string ToString()
@@ -146,7 +150,8 @@ namespace SyncTrayzor.Services.Config
                 $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingPath={this.SyncthingPath} " +
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
                 $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
-                $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}]>";
+                $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+
+                $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin}>";
         }
     }
 }

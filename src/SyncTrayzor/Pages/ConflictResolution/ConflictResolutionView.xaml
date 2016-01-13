@@ -76,6 +76,10 @@
                                 Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
                 </Grid>
 
+                <CheckBox DockPanel.Dock="Bottom" Margin="0,5"
+                          IsChecked="{Binding DeleteToRecycleBin}"
+                          Content="{l:Loc ConflictResolutionView_DeleteToRecycleBin}"/>
+
                 <Button DockPanel.Dock="Bottom" Margin="0,8,0,5" Padding="7,2"
                         HorizontalAlignment="Left"
                         Command="{s:Action ShowFileInFolder}" Content="{l:Loc ConflictResolutionView_Button_ShowInFolder}"/>

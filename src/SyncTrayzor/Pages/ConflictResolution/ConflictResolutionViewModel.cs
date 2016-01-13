@@ -11,6 +11,7 @@ using SyncTrayzor.Localization;
 using System.Windows;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
@@ -21,6 +22,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
         private readonly IProcessStartProvider processStartProvider;
         private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly IWindowManager windowManager;
+        private readonly IConfigurationProvider configurationProvider;
 
         private bool wasConflictFileWatcherEnabled;
 
@@ -32,6 +34,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public bool HasFinishedLoadingAndNoConflictsFound => !this.IsSyncthingStopped && !this.IsLoading && this.Conflicts.Count == 0;
         public bool IsSyncthingStopped { get; private set; }
 
+        public bool DeleteToRecycleBin { get; set; }
+
         public ConflictViewModel SelectedConflict { get; set; }
 
         public ConflictResolutionViewModel(
@@ -39,13 +43,18 @@ namespace SyncTrayzor.Pages.ConflictResolution
             IConflictFileManager conflictFileManager,
             IProcessStartProvider processStartProvider,
             IConflictFileWatcher conflictFileWatcher,
-            IWindowManager windowManager)
+            IWindowManager windowManager,
+            IConfigurationProvider configurationProvider)
         {
             this.syncThingManager = syncThingManager;
             this.conflictFileManager = conflictFileManager;
             this.processStartProvider = processStartProvider;
             this.conflictFileWatcher = conflictFileWatcher;
+            this.configurationProvider = configurationProvider;
             this.windowManager = windowManager;
+
+            this.DeleteToRecycleBin = this.configurationProvider.Load().ConflictResolverDeletesToRecycleBin;
+            this.Bind(s => s.DeleteToRecycleBin, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.ConflictResolverDeletesToRecycleBin = e.NewValue));
 
             this.Conflicts.CollectionChanged += (o, e) =>
             {
@@ -168,7 +177,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
             // This can happen e.g. if the file chosen no longer exists
             try
             {
-                this.conflictFileManager.ResolveConflict(conflictSet, filePath);
+                this.conflictFileManager.ResolveConflict(conflictSet, filePath, this.DeleteToRecycleBin);
                 return true;
             }
             catch (IOException e)
