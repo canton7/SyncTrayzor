@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using NLog;
 
 namespace SyncTrayzor.Utils
 {
     // Thanks to http://stackoverflow.com/a/3282481/1086121
     public static class RecycleBinDeleter
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        public static Action<string> Logger = s => Trace.WriteLine(s);
 
         /// <summary>
         /// Possible flags for the SHFileOperation method.
@@ -106,7 +106,7 @@ namespace SyncTrayzor.Utils
                 int result = NativeMethods.SHFileOperation(ref fs);
                 if (result != 0)
                 {
-                    logger.Error("Delete file operation on {0} failed with error {1}", path, result);
+                    Logger(String.Format("Delete file operation on {0} failed with error {1}", path, result));
                     return false;
                 }
                 return true;

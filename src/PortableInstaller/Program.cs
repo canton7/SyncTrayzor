@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyncTrayzor.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,8 @@ namespace PortableInstaller
     {
         static int Main(string[] args)
         {
+            RecycleBinDeleter.Logger = s => Console.WriteLine("!! " + s);
+
             if (args.Length != 4)
             {
                 Console.WriteLine("You should not invoke this executable directly. It is used as part of the automatic upgrade process for portable installations.");
@@ -139,10 +142,10 @@ namespace PortableInstaller
                         }
                     }
 
-                    Console.WriteLine($"Deleting {movedDestinationPath}");
+                    Console.WriteLine($"Deleting {movedDestinationPath} (to the recycle bin)");
                     try
                     {
-                        Directory.Delete(movedDestinationPath, true);
+                        RecycleBinDeleter.Delete(movedDestinationPath);
                     }
                     catch (Exception e)
                     {

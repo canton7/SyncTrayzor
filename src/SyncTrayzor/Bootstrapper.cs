@@ -148,6 +148,8 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Resources.Generic_Dialog_OK },
                 { MessageBoxResult.Yes, Resources.Generic_Dialog_Yes },
             };
+
+            RecycleBinDeleter.Logger = s => LogManager.GetLogger(typeof(RecycleBinDeleter).FullName).Error(s);
         }
 
         protected override void Launch()
