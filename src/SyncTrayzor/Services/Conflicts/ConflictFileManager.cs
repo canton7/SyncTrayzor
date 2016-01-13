@@ -139,25 +139,28 @@ namespace SyncTrayzor.Services.Conflicts
                 var searchDirectory = stack.Pop();
                 var directory = searchDirectory.Directory;
 
-                foreach (var fileName in this.TryGetFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
+                this.TryFilesystemOperation(() =>
                 {
-                    var filePath = Path.Combine(directory, fileName);
-
-                    ParsedConflictFileInfo conflictFileInfo;
-                    // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
-                    if (!this.TryFindBaseFileForConflictFile(filePath, out conflictFileInfo))
-                        continue;
-
-                    List<ParsedConflictFileInfo> existingConflicts;
-                    if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out existingConflicts))
+                    foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                     {
-                        existingConflicts = new List<ParsedConflictFileInfo>();
-                        conflictLookup.Add(conflictFileInfo.OriginalPath, existingConflicts);
-                    }
-                    existingConflicts.Add(conflictFileInfo);
+                        var filePath = Path.Combine(directory, fileName);
 
-                    cancellationToken.ThrowIfCancellationRequested();
-                }
+                        ParsedConflictFileInfo conflictFileInfo;
+                        // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
+                        if (!this.TryFindBaseFileForConflictFile(filePath, out conflictFileInfo))
+                            continue;
+
+                        List<ParsedConflictFileInfo> existingConflicts;
+                        if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out existingConflicts))
+                        {
+                            existingConflicts = new List<ParsedConflictFileInfo>();
+                            conflictLookup.Add(conflictFileInfo.OriginalPath, existingConflicts);
+                        }
+                        existingConflicts.Add(conflictFileInfo);
+
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+                }, directory, "directories");
 
                 foreach (var kvp in conflictLookup)
                 {
@@ -168,15 +171,18 @@ namespace SyncTrayzor.Services.Conflicts
 
                 if (searchDirectory.Depth < maxSearchDepth)
                 {
-                    foreach (var subDirectory in this.TryGetDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
+                    this.TryFilesystemOperation(() =>
                     {
-                        if (subDirectory == stVersionsFolder)
-                            continue;
+                        foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
+                        {
+                            if (subDirectory == stVersionsFolder)
+                                continue;
 
-                        stack.Push(new SearchDirectory(Path.Combine(directory, subDirectory), searchDirectory.Depth + 1));
+                            stack.Push(new SearchDirectory(Path.Combine(directory, subDirectory), searchDirectory.Depth + 1));
 
-                        cancellationToken.ThrowIfCancellationRequested();
-                    }
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                    }, directory, "files");
                 }
                 else
                 {
@@ -185,43 +191,20 @@ namespace SyncTrayzor.Services.Conflicts
             }
         }
 
-        private IEnumerable<string> TryGetFiles(string path, string searchPattern, System.IO.SearchOption searchOption)
+        private void TryFilesystemOperation(Action action, string path, string itemType)
         {
             try
             {
-                // Can't use EnumerateFiles, as Pri.LongPath throws the first time it's enumerated
-                return this.filesystemProvider.GetFiles(path, searchPattern, searchOption);
+                action();
             }
             catch (UnauthorizedAccessException)
             {
                 // Expected with reparse points, etc
-                logger.Warn($"UnauthorizedAccessException when trying to enumerate files in folder {path}");
-                return Enumerable.Empty<string>();
+                logger.Warn($"UnauthorizedAccessException when trying to enumerate {itemType} in folder {path}");
             }
             catch (Exception e)
             {
-                logger.Error($"Failed to enumerate files in folder {path}: {e.GetType().Name} {e.Message}", e);
-                return Enumerable.Empty<string>();
-            }
-        }
-
-        private IEnumerable<string> TryGetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption)
-        {
-            try
-            {
-                // Can't use EnumerateDirectories, as Pri.LongPath throws the first time it's enumerated
-                return this.filesystemProvider.GetDirectories(path, searchPattern, searchOption);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // Expected with reparse points, etc
-                logger.Warn($"UnauthorizedAccessException when trying to enumerate directories in folder {path}");
-                return Enumerable.Empty<string>();
-            }
-            catch (Exception e)
-            {
-                logger.Error($"Failed to enumerate directories in folder {path}: {e.GetType().Name} {e.Message}", e);
-                return Enumerable.Empty<string>();
+                logger.Error($"Failed to enumerate {itemType} in folder {path}: {e.GetType().Name} {e.Message}", e);
             }
         }
 

@@ -234,7 +234,7 @@ namespace SyncTrayzor.Services.Conflicts
 
                     foreach (var folder in folders)
                     {
-                        logger.Debug("Scanning folder {0} for conflict files", folder.FolderId);
+                        logger.Debug("Scanning folder {0} ({1}) for conflict files", folder.FolderId, folder.Path);
 
                         await this.conflictFileManager.FindConflicts(folder.Path, this.scanCts.Token).SubscribeAsync(conflict =>
                         {
