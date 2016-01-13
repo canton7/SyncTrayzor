@@ -89,6 +89,7 @@ namespace SyncTrayzor.Services.Conflicts
         private static readonly Regex conflictRegex =
             new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(?<suffix>.*)(?<extension>\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const int maxSearchDepth = 255; // Loosely based on the max path length (a bit over)
 
         private readonly IFilesystemProvider filesystemProvider;
 
@@ -128,14 +129,15 @@ namespace SyncTrayzor.Services.Conflicts
             logger.Debug("Looking for conflicts in {0}", basePath);
 
             var conflictLookup = new Dictionary<string, List<ParsedConflictFileInfo>>();
-            var stack = new Stack<string>();
-            stack.Push(basePath);
+            var stack = new Stack<SearchDirectory>();
+            stack.Push(new SearchDirectory(basePath, 0));
             while (stack.Count > 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
                 conflictLookup.Clear();
-                var directory = stack.Pop();
+                var searchDirectory = stack.Pop();
+                var directory = searchDirectory.Directory;
 
                 foreach (var fileName in this.TryGetFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                 {
@@ -164,14 +166,21 @@ namespace SyncTrayzor.Services.Conflicts
                     subject.Next(new ConflictSet(file, conflicts));
                 }
 
-                foreach (var subDirectory in this.TryGetDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
+                if (searchDirectory.Depth < maxSearchDepth)
                 {
-                    if (subDirectory == stVersionsFolder)
-                        continue;
+                    foreach (var subDirectory in this.TryGetDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
+                    {
+                        if (subDirectory == stVersionsFolder)
+                            continue;
 
-                    stack.Push(Path.Combine(directory, subDirectory));
+                        stack.Push(new SearchDirectory(Path.Combine(directory, subDirectory), searchDirectory.Depth + 1));
 
-                    cancellationToken.ThrowIfCancellationRequested();
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+                }
+                else
+                {
+                    logger.Warn($"Max search depth of {maxSearchDepth} exceeded with path {directory}. Not proceeding further.");
                 }
             }
         }
@@ -309,6 +318,18 @@ namespace SyncTrayzor.Services.Conflicts
 
                 logger.Debug("Renaming {0} to {1}", chosenFilePath, conflictSet.File.FilePath);
                 this.filesystemProvider.MoveFile(chosenFilePath, conflictSet.File.FilePath);
+            }
+        }
+
+        private struct SearchDirectory
+        {
+            public readonly string Directory;
+            public readonly int Depth;
+
+            public SearchDirectory(string directory, int depth)
+            {
+                this.Directory = directory;
+                this.Depth = depth;
             }
         }
     }
