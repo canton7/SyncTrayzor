@@ -225,6 +225,7 @@ namespace SyncTrayzor
                     // Don't "crash"
                     e.Handled = true;
                     this.Application.Shutdown();
+                    return;
                 }
 
                 var configurationException = e.Exception as BadConfigurationException;
@@ -243,6 +244,22 @@ namespace SyncTrayzor
                     // Don't "crash"
                     e.Handled = true;
                     this.Application.Shutdown();
+                    return;
+                }
+
+                var couldNotSaveConfigurationException = e.Exception as CouldNotSaveConfigurationExeption;
+                if (couldNotSaveConfigurationException != null)
+                {
+                    var msg = $"Could not save configuration file.\n\n" +
+                        $"{couldNotSaveConfigurationException.InnerException.GetType().Name}: {couldNotSaveConfigurationException.InnerException.Message}.\n\n" +
+                        $"Please close any other programs which may be using this file.";
+
+                    windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Don't "crash"
+                    e.Handled = true;
+                    this.Application.Shutdown();
+                    return;
                 }
 
                 var vm = this.Container.Get<UnhandledExceptionViewModel>();
