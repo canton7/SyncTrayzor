@@ -878,4 +878,7 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConflictResolutionView_Header_Size" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="ConflictResolutionView_ChooseDescription" xml:space="preserve">
+    <value>Please choose the version of the file you want to keep. The other versions will be deleted.</value>
+  </data>
 </root>

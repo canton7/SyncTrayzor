@@ -205,6 +205,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please choose the version of the file you want to keep. The other versions will be deleted..
+        /// </summary>
+        public static string ConflictResolutionView_ChooseDescription {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move deleted files to the recycle bin, rather than deleting permanently.
         /// </summary>
         public static string ConflictResolutionView_DeleteToRecycleBin {
