@@ -84,12 +84,17 @@ namespace SyncTrayzor.Services.Conflicts
         IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
         void ResolveConflict(ConflictSet conflictSet, string chosenFilePath, bool deleteToRecycleBin);
         bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo);
+        bool IsPathIgnored(string path);
+        bool IsFileIgnored(string path);
     }
 
     public class ConflictFileManager : IConflictFileManager
     {
         private const string conflictPattern = "*.sync-conflict-*";
+
         private const string stVersionsFolder = ".stversions";
+        private const string syncthingSpecialFileMarker = "~syncthing~";
+
         private static readonly Regex conflictRegex =
             new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(?<suffix>.*)(?<extension>\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -123,6 +128,16 @@ namespace SyncTrayzor.Services.Conflicts
             return subject;
         }
 
+        public bool IsPathIgnored(string path)
+        {
+            return path.EndsWith("\\" + stVersionsFolder) || path.Contains("\\" + stVersionsFolder + "\\");
+        }
+
+        public bool IsFileIgnored(string path)
+        {
+            return Path.GetFileName(path).Contains(syncthingSpecialFileMarker);
+        }
+
         private void FindConflictsImpl(string basePath, SlimObservable<ConflictSet> subject, CancellationToken cancellationToken)
         {
             // We may find may conflict files for each conflict, and we need to group them.
@@ -145,9 +160,10 @@ namespace SyncTrayzor.Services.Conflicts
 
                 this.TryFilesystemOperation(() =>
                 {
-                    foreach (var fileName in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
+                    foreach (var filePath in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                     {
-                        var filePath = Path.Combine(directory, fileName);
+                        if (this.IsFileIgnored(filePath))
+                            continue;
 
                         ParsedConflictFileInfo conflictFileInfo;
                         // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
@@ -179,10 +195,10 @@ namespace SyncTrayzor.Services.Conflicts
                     {
                         foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
                         {
-                            if (subDirectory == stVersionsFolder)
+                            if (IsPathIgnored(subDirectory))
                                 continue;
 
-                            stack.Push(new SearchDirectory(Path.Combine(directory, subDirectory), searchDirectory.Depth + 1));
+                            stack.Push(new SearchDirectory(subDirectory, searchDirectory.Depth + 1));
 
                             cancellationToken.ThrowIfCancellationRequested();
                         }

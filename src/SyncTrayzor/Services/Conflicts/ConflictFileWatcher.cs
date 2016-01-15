@@ -188,26 +188,29 @@ namespace SyncTrayzor.Services.Conflicts
                     logger.Debug("Starting watcher for folder: {0}", folder.FolderId);
 
                     var watcher = this.fileWatcherFactory.Create(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
-                    watcher.FileChanged += this.FileChanged;
+                    watcher.PathChanged += this.PathChanged;
                     this.fileWatchers.Add(watcher);
                 }
             }
         }
 
-        private void FileChanged(object sender, FileChangedEventArgs e)
+        private void PathChanged(object sender, PathChangedEventArgs e)
         {
-            if (e.Path.StartsWith(versionsFolder) || Path.GetFileName(e.Path).StartsWith("~syncthing~"))
+            if (e.IsDirectory)
                 return;
 
             var fullPath = Path.Combine(e.Directory, e.Path);
 
-            logger.Debug("Conflict file changed: {0} FileExists: {1}", fullPath, e.FileExists);
+            if (this.conflictFileManager.IsPathIgnored(fullPath) || this.conflictFileManager.IsFileIgnored(fullPath))
+                return;
+
+            logger.Debug("Conflict file changed: {0} FileExists: {1}", fullPath, e.PathExists);
 
             bool changed;
 
             lock (this.conflictFileRecordsLock)
             {
-                if (e.FileExists)
+                if (e.PathExists)
                     changed = this.conflictFileOptions.Add(fullPath);
                 else
                     changed = this.conflictFileOptions.Remove(fullPath);
