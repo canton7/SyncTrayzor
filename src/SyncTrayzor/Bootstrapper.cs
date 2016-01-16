@@ -81,9 +81,10 @@ namespace SyncTrayzor
             builder.Bind(typeof(IValidator<>)).ToAllImplementations();
         }
 
+        private MeteredNetworkManager costManager;
         protected override void Configure()
         {
-            new MeteredNetworkManager();
+            this.costManager = new MeteredNetworkManager();
 
             // Have to set the log path before anything else
             var pathConfiguration = Settings.Default.PathConfiguration;
