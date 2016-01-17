@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +19,45 @@ namespace SyncTrayzor.Services
 
         public MeteredNetworkManager()
         {
+            //var sockaddrParsed = sockaddr_in6.FromString("[fe80::21e:6ff:fea4:fdfd%2]", 56259);
+
+            var sockAddr = new NLM_SOCKADDR() { data = new byte[128] };
+            //var handle = GCHandle.Alloc(sockAddr.data, GCHandleType.Pinned);
+            //try
+            //{
+            //    Marshal.StructureToPtr(sockaddrParsed, handle.AddrOfPinnedObject(), false);
+            //}
+            //finally
+            //{
+            //    handle.Free();
+            //}
+
+            var uri = new Uri("tcp://[fe80::21e:6ff:fea4:fdfd%Wireless Network Connection]:56259");
+            var hostWithScope = uri.DnsSafeHost; // IdnHost is preferred in .NET 4.6
+            var hostWithScopeParts = hostWithScope.Split('%');
+
+            var network = NetworkInterface.GetAllNetworkInterfaces().First(x => x.Name == hostWithScopeParts[1]);
+            var scopeId = network.GetIPProperties().GetIPv6Properties().GetScopeId(ScopeLevel.Interface);
+
+            var properties = IPGlobalProperties.GetIPGlobalProperties();
+
+            var ip = IPAddress.Parse(uri.Host);
+
+
+            using (var writer = new BinaryWriter(new MemoryStream(sockAddr.data)))
+            {
+                // AF_INT6
+                writer.Write((ushort)23);
+                // Port
+                writer.Write((ushort)22000);
+                // Flow Info
+                writer.Write((uint)0);
+                // Address
+                writer.Write(ip.GetAddressBytes());
+                // Scope ID
+                writer.Write((uint)scopeId);
+            }
+
             this.networkListManager = new NetworkListManagerClass();
             //this.networkListManager.ConnectionCostChanged += NetworkListManager_ConnectionCostChanged;
             this.networkListManager.CostChanged += NetworkListManager_CostChanged;
@@ -27,7 +70,7 @@ namespace SyncTrayzor.Services
             //    Debug.WriteLine(connection);
             //}
             uint cost;
-            var sockAddr = new NLM_SOCKADDR() { data = new byte[128] };
+
             // Seems to be compatible with SOCKADDR_STORAGE, which in turn is compatible with SOCKADDR_IN
             //// AF_INET
             //sockAddr.data[0] = 2;
@@ -80,9 +123,6 @@ namespace SyncTrayzor.Services
             //sockAddr.data[27] = 0xa4;
 
 
-            var sockaddr = sockaddr_in6.FromString("fe80::21e:6ff:fea4:fdfd", 54223);
-
-
             networkListManager.GetCost(out cost, ref sockAddr);
             NLM_DATAPLAN_STATUS dataplan;
             networkListManager.GetDataPlanStatus(out dataplan, ref sockAddr);
@@ -111,202 +151,16 @@ namespace SyncTrayzor.Services
             throw new NotImplementedException();
         }
 
-        [StructLayout(LayoutKind.Explicit, Size = 28)]
-        internal struct sockaddr_in6
-        {
-            [FieldOffset(0)]
-            internal ADDRESS_FAMILIES sin6_family;
-            [FieldOffset(2)]
-            internal ushort sin6_port;
-            [FieldOffset(4)]
-            internal uint sin6_flowinfo;
-            [FieldOffset(8)]
-            internal in6_addr sin6_addr;
-            [FieldOffset(24)]
-            internal uint sin6_scope_id;
-
-            internal string Host
-            {
-                get
-                {
-                    var local = this;
-                    var length = (uint)256;
-                    var builder = new StringBuilder((int)length);
-
-                    WSAData data;
-                    WSAStartup(2, out data);
-                    WSAAddressToString(ref local, (uint)Marshal.SizeOf(local), IntPtr.Zero, builder,
-                                  ref length);
-                    WSACleanup();
-
-                    return builder.ToString().Split(':')[0];
-                }
-
-            }
-
-            internal string Port
-            {
-                get
-                {
-                    var local = this;
-                    var length = (uint)256;
-                    var builder = new StringBuilder((int)length);
-
-                    var data = new WSAData();
-                    WSAStartup(2, out data);
-                    WSAAddressToString(ref local, (uint)Marshal.SizeOf(local), IntPtr.Zero, builder,
-                                  ref length);
-                    WSACleanup();
-
-                    return builder.ToString().Split(':')[1];
-                }
-
-            }
-
-            internal static sockaddr_in6 FromString(string host, int port)
-            {
-                var sockaddr = new sockaddr_in6();
-                var lpAddressLength = Marshal.SizeOf(sockaddr);
-                WSAStringToAddress(host + ":" + port, ADDRESS_FAMILIES.AF_INET6, IntPtr.Zero,
-                                  ref sockaddr, ref lpAddressLength);
-                return sockaddr;
-            }
-        }
-
         internal enum ADDRESS_FAMILIES : short
         {
-            /// <summary>
-            /// Unspecified [value = 0].
-            /// </summary>
-            AF_UNSPEC = 0,
-            /// <summary>
-            /// Local to host (pipes, portals) [value = 1].
-            /// </summary>
-            AF_UNIX = 1,
             /// <summary>
             /// Internetwork: UDP, TCP, etc [value = 2].
             /// </summary>
             AF_INET = 2,
             /// <summary>
-            /// Arpanet imp addresses [value = 3].
-            /// </summary>
-            AF_IMPLINK = 3,
-            /// <summary>
-            /// Pup protocols: e.g. BSP [value = 4].
-            /// </summary>
-            AF_PUP = 4,
-            /// <summary>
-            /// Mit CHAOS protocols [value = 5].
-            /// </summary>
-            AF_CHAOS = 5,
-            /// <summary>
-            /// XEROX NS protocols [value = 6].
-            /// </summary>
-            AF_NS = 6,
-            /// <summary>
-            /// IPX protocols: IPX, SPX, etc [value = 6].
-            /// </summary>
-            AF_IPX = 6,
-            /// <summary>
-            /// ISO protocols [value = 7].
-            /// </summary>
-            AF_ISO = 7,
-            /// <summary>
-            /// OSI is ISO [value = 7].
-            /// </summary>
-            AF_OSI = 7,
-            /// <summary>
-            /// european computer manufacturers [value = 8].
-            /// </summary>
-            AF_ECMA = 8,
-            /// <summary>
-            /// datakit protocols [value = 9].
-            /// </summary>
-            AF_DATAKIT = 9,
-            /// <summary>
-            /// CCITT protocols, X.25 etc [value = 10].
-            /// </summary>
-            AF_CCITT = 10,
-            /// <summary>
-            /// IBM SNA [value = 11].
-            /// </summary>
-            AF_SNA = 11,
-            /// <summary>
-            /// DECnet [value = 12].
-            /// </summary>
-            AF_DECnet = 12,
-            /// <summary>
-            /// Direct data link interface [value = 13].
-            /// </summary>
-            AF_DLI = 13,
-            /// <summary>
-            /// LAT [value = 14].
-            /// </summary>
-            AF_LAT = 14,
-            /// <summary>
-            /// NSC Hyperchannel [value = 15].
-            /// </summary>
-            AF_HYLINK = 15,
-            /// <summary>
-            /// AppleTalk [value = 16].
-            /// </summary>
-            AF_APPLETALK = 16,
-            /// <summary>
-            /// NetBios-style addresses [value = 17].
-            /// </summary>
-            AF_NETBIOS = 17,
-            /// <summary>
-            /// VoiceView [value = 18].
-            /// </summary>
-            AF_VOICEVIEW = 18,
-            /// <summary>
-            /// Protocols from Firefox [value = 19].
-            /// </summary>
-            AF_FIREFOX = 19,
-            /// <summary>
-            /// Somebody is using this! [value = 20].
-            /// </summary>
-            AF_UNKNOWN1 = 20,
-            /// <summary>
-            /// Banyan [value = 21].
-            /// </summary>
-            AF_BAN = 21,
-            /// <summary>
-            /// Native ATM Services [value = 22].
-            /// </summary>
-            AF_ATM = 22,
-            /// <summary>
             /// Internetwork Version 6 [value = 23].
             /// </summary>
             AF_INET6 = 23,
-            /// <summary>
-            /// Microsoft Wolfpack [value = 24].
-            /// </summary>
-            AF_CLUSTER = 24,
-            /// <summary>
-            /// IEEE 1284.4 WG AF [value = 25].
-            /// </summary>
-            AF_12844 = 25,
-            /// <summary>
-            /// IrDA [value = 26].
-            /// </summary>
-            AF_IRDA = 26,
-            /// <summary>
-            /// Network Designers OSI &amp; gateway enabled protocols [value = 28].
-            /// </summary>
-            AF_NETDES = 28,
-            /// <summary>
-            /// [value = 29].
-            /// </summary>
-            AF_TCNPROCESS = 29,
-            /// <summary>
-            /// [value = 30].
-            /// </summary>
-            AF_TCNMESSAGE = 30,
-            /// <summary>
-            /// [value = 31].
-            /// </summary>
-            AF_ICLFXBM = 31
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -384,24 +238,122 @@ namespace SyncTrayzor.Services
             internal short Word_7;
         }
 
+        [StructLayout(LayoutKind.Explicit, Size = 28)]
+        internal struct sockaddr_in6
+        {
+            [FieldOffset(0)]
+            internal ADDRESS_FAMILIES sin6_family;
+            [FieldOffset(2)]
+            internal ushort sin6_port;
+            [FieldOffset(4)]
+            internal uint sin6_flowinfo;
+            [FieldOffset(8)]
+            internal in6_addr sin6_addr;
+            [FieldOffset(24)]
+            internal uint sin6_scope_id;
+
+            internal string Host
+            {
+                get
+                {
+                    var local = this;
+                    var length = (uint)256;
+                    var builder = new StringBuilder((int)length);
+
+                    var data = new WSAData();
+                    WSAStartup(2, out data);
+                    WSAAddressToString(ref local, (uint)Marshal.SizeOf(local), IntPtr.Zero, builder,
+                                  ref length);
+                    WSACleanup();
+
+                    return builder.ToString().Split(':')[0];
+                }
+
+            }
+
+            internal string Port
+            {
+                get
+                {
+                    var local = this;
+                    var length = (uint)256;
+                    var builder = new StringBuilder((int)length);
+
+                    var data = new WSAData();
+                    WSAStartup(2, out data);
+                    WSAAddressToString(ref local, (uint)Marshal.SizeOf(local), IntPtr.Zero, builder,
+                                  ref length);
+                    WSACleanup();
+
+                    return builder.ToString().Split(':')[1];
+                }
+
+            }
+
+            internal static sockaddr_in6 FromString(string host, int port)
+            {
+                var sockaddr = new sockaddr_in6();
+                var data = new WSAData();
+                var startupResult = WSAStartup(2, out data);
+                if (startupResult > 0)
+                {
+                    var err = WSAGetLastError();
+                }
+                var lpAddressLength = Marshal.SizeOf(sockaddr);
+                var result = WSAStringToAddress(host + ":" + port, ADDRESS_FAMILIES.AF_INET6, IntPtr.Zero,
+                                  ref sockaddr, ref lpAddressLength);
+                if (result > 0)
+                {
+                    var e = new Win32Exception();
+                    var err = WSAGetLastError();
+                }
+                return sockaddr;
+            }
+        }
+
+        [StructLayout(LayoutKind.Explicit, Size = 28)]
+        internal struct sockaddr_in6_UNSAFE
+        {
+            [FieldOffset(0)]
+            internal ADDRESS_FAMILIES sin6_family;
+            [FieldOffset(2)]
+            internal ushort sin6_port;
+            [FieldOffset(4)]
+            internal uint sin6_flowinfo;
+            [FieldOffset(8)]
+            internal in6_addr sin6_addr;
+            [FieldOffset(24)]
+            internal uint sin6_scope_id;
+
+            internal static sockaddr_in6 FromString(string host, int port)
+            {
+                var sockaddr = new sockaddr_in6();
+                var lpAddressLength = Marshal.SizeOf(sockaddr);
+                var result = WSAStringToAddress(host + ":" + port, ADDRESS_FAMILIES.AF_INET6, IntPtr.Zero,
+                                  ref sockaddr, ref lpAddressLength);
+
+                return sockaddr;
+            }
+        }
+
         [DllImport("ws2_32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern Int32 WSAStartup(Int16 wVersionRequested, out WSAData wsaData);
 
         [DllImport("Ws2_32.dll", CharSet = CharSet.Unicode, EntryPoint = "WSAAddressToStringW")]
-        static extern uint WSAAddressToString(ref sockaddr_in6 lpsaAddress, uint dwAddressLength, IntPtr lpProtocolInfo,
-        StringBuilder lpszAddressString, ref uint lpdwAddressStringLength);
+        static extern uint WSAAddressToString(ref sockaddr_in6 lpsaAddress, uint dwAddressLength, IntPtr lpProtocolInfo, StringBuilder lpszAddressString, ref uint lpdwAddressStringLength);
 
         [DllImport("ws2_32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern Int32 WSACleanup();
 
-        [DllImport("Ws2_32.dll",
-              CharSet = CharSet.Unicode,
-              EntryPoint = "WSAStringToAddressW")]
+        [DllImport("Ws2_32.dll", SetLastError = true)]
         static extern uint WSAStringToAddress(
-                      string AddressString,
-                      ADDRESS_FAMILIES AddressFamily,
-                      IntPtr lpProtocolInfo,
-                      ref sockaddr_in6 pAddr,
-                      ref int lpAddressLength);
+                  string AddressString,
+                  ADDRESS_FAMILIES AddressFamily,
+                  IntPtr lpProtocolInfo,
+                  ref sockaddr_in6 pAddr,
+                  ref int lpAddressLength);
+
+        [DllImport("ws2_32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern Int32 WSAGetLastError();
     }
 }
