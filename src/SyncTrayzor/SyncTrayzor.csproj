@@ -202,7 +202,9 @@
     <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
-    <Compile Include="Services\MeteredNetworkManager.cs" />
+    <Compile Include="Services\Metering\NetworkCostManager.cs" />
+    <Compile Include="Services\Metering\Sandbox.cs" />
+    <Compile Include="Services\Metering\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />

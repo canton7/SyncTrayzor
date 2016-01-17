@@ -11,13 +11,13 @@ using System.Text;
 using System.Threading.Tasks;
 using NETWORKLIST;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Metering
 {
-    public class MeteredNetworkManager
+    public class Sandbox
     {
         private NetworkListManagerClass networkListManager;
 
-        public MeteredNetworkManager()
+        public Sandbox()
         {
             //var sockaddrParsed = sockaddr_in6.FromString("[fe80::21e:6ff:fea4:fdfd%2]", 56259);
 
@@ -36,12 +36,19 @@ namespace SyncTrayzor.Services
             var hostWithScope = uri.DnsSafeHost; // IdnHost is preferred in .NET 4.6
             var hostWithScopeParts = hostWithScope.Split('%');
 
-            var network = NetworkInterface.GetAllNetworkInterfaces().First(x => x.Name == hostWithScopeParts[1]);
-            var scopeId = network.GetIPProperties().GetIPv6Properties().GetScopeId(ScopeLevel.Interface);
-
-            var properties = IPGlobalProperties.GetIPGlobalProperties();
-
             var ip = IPAddress.Parse(uri.Host);
+
+            long scopeId;
+            if (hostWithScope.Length > 1)
+            {
+                var scopeLevel = ip.IsIPv6SiteLocal ? ScopeLevel.Site : ScopeLevel.Interface;
+                var network = NetworkInterface.GetAllNetworkInterfaces().First(x => x.Name == hostWithScopeParts[1]);
+                scopeId = network.GetIPProperties().GetIPv6Properties().GetScopeId(scopeLevel);
+            }
+            else
+            {
+                scopeId = 0;
+            }
 
 
             using (var writer = new BinaryWriter(new MemoryStream(sockAddr.data)))
@@ -49,19 +56,19 @@ namespace SyncTrayzor.Services
                 // AF_INT6
                 writer.Write((ushort)23);
                 // Port
-                writer.Write((ushort)22000);
+                writer.Write((ushort)0);
                 // Flow Info
                 writer.Write((uint)0);
                 // Address
                 writer.Write(ip.GetAddressBytes());
                 // Scope ID
-                writer.Write((uint)scopeId);
+                writer.Write((ulong)scopeId);
             }
 
             this.networkListManager = new NetworkListManagerClass();
-            //this.networkListManager.ConnectionCostChanged += NetworkListManager_ConnectionCostChanged;
+            this.networkListManager.ConnectionCostChanged += NetworkListManager_ConnectionCostChanged;
             this.networkListManager.CostChanged += NetworkListManager_CostChanged;
-            //this.networkListManager.DataPlanStatusChanged += NetworkListManager_DataPlanStatusChanged;
+            this.networkListManager.DataPlanStatusChanged += NetworkListManager_DataPlanStatusChanged;
 
             //var connections = this.networkListManager.GetNetworkConnections();
 

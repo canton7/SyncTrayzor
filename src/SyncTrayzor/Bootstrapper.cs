@@ -22,6 +22,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using SyncTrayzor.Services.Metering;
 
 namespace SyncTrayzor
 {
@@ -81,10 +82,10 @@ namespace SyncTrayzor
             builder.Bind(typeof(IValidator<>)).ToAllImplementations();
         }
 
-        private MeteredNetworkManager costManager;
         protected override void Configure()
         {
-            this.costManager = new MeteredNetworkManager();
+            var costManager = new NetworkCostManager();
+            var result = costManager.IsConnectionMetered(SyncthingAddressParser.Parse("127.0.0.1:56478"));
 
             // Have to set the log path before anything else
             var pathConfiguration = Settings.Default.PathConfiguration;
