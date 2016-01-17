@@ -32,6 +32,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
         FolderErrors,
         RelayStateChanged,
         ExternalPortMappingChanged,
-        FolderScanProgress
+        FolderScanProgress,
+        DevicePaused,
+        DeviceResumed,
     }
 }

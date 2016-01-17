@@ -19,5 +19,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task<FolderStatus> FetchFolderStatusAsync(string folderId, CancellationToken cancellationToken);
         Task<DebugFacilitiesSettings> FetchDebugFacilitiesAsync();
         Task SetDebugFacilitiesAsync(IEnumerable<string> enable, IEnumerable<string> disable);
+        Task PauseDeviceAsync(string deviceId);
+        Task ResumeDeviceAsync(string deviceId);
     }
 }

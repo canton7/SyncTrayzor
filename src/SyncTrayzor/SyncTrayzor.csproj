@@ -223,6 +223,8 @@
     <Compile Include="Syncthing\ApiClient\ConfigSavedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\DebugFacilitiesSettings.cs" />
     <Compile Include="Syncthing\ApiClient\DefaultingStringEnumConverter.cs" />
+    <Compile Include="Syncthing\ApiClient\DevicePausedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceResumedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\DownloadProgressEvent.cs" />
     <Compile Include="Syncthing\ApiClient\FolderErrorsEvent.cs" />
     <Compile Include="Syncthing\ApiClient\FolderStatus.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="Syncthing\FolderStateTransformer.cs" />
     <Compile Include="Syncthing\FreePortFinder.cs" />
     <Compile Include="Syncthing\SyncStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\SyncthingDeviceManager.cs" />
     <Compile Include="Syncthing\SyncthingHttpClientHandler.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
     <Compile Include="Syncthing\SyncthingDidNotStartCorrectlyException.cs" />

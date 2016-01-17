@@ -112,5 +112,17 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
             return this.api.SetDebugFacilitiesAsync(enabled, disabled);
         }
+
+        public Task PauseDeviceAsync(string deviceId)
+        {
+            logger.Info("Pausing device {0}", deviceId);
+            return this.api.PauseDeviceAsync(deviceId);
+        }
+
+        public Task ResumeDeviceAsync(string deviceId)
+        {
+            logger.Info("Resuming device {0}", deviceId);
+            return this.api.ResumeDeviceAsync(deviceId);
+        }
     }
 }

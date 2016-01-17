@@ -24,7 +24,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
             { EventType.DownloadProgress, typeof(DownloadProgressEvent) },
             { EventType.ConfigSaved, typeof(ConfigSavedEvent) },
             { EventType.FolderSummary, typeof(FolderSummaryEvent) },
-            { EventType.FolderErrors, typeof(FolderErrorsEvent) }
+            { EventType.FolderErrors, typeof(FolderErrorsEvent) },
+            { EventType.DevicePaused, typeof(DevicePausedEvent) },
+            { EventType.DeviceResumed, typeof(DeviceResumedEvent) },
         };
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
