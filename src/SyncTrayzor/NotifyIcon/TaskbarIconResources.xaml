@@ -59,15 +59,15 @@
             <Style TargetType="tb:TaskbarIcon">
                 <Setter Property="ni:NotifyIconResolutionUtilities.IconSource" Value="{StaticResource TaskbarSyncing1Icon}"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding SyncThingAlert}" Value="True">
+                    <DataTrigger Binding="{Binding SyncthingAlert}" Value="True">
                         <Setter Property="ni:NotifyIconResolutionUtilities.IconSource" Value="{StaticResource TaskbarAlertIcon}"/>
                     </DataTrigger>
                     
-                    <DataTrigger Binding="{Binding SyncThingStarted}" Value="False">
+                    <DataTrigger Binding="{Binding SyncthingStarted}" Value="False">
                         <Setter Property="ni:NotifyIconResolutionUtilities.IconSource" Value="{StaticResource TaskbarStoppedIcon}"/>
                     </DataTrigger>
 
-                    <DataTrigger Binding="{Binding SyncThingSyncing}" Value="True">
+                    <DataTrigger Binding="{Binding SyncthingSyncing}" Value="True">
                         <DataTrigger.EnterActions>
                             <BeginStoryboard Storyboard="{StaticResource IconAnimation}" Name="IconAnimation"/>
                         </DataTrigger.EnterActions>

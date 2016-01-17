@@ -3,7 +3,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace SyncTrayzor.Services
 
         private readonly IApplicationPathsProvider pathsProvider;
         private readonly INotifyIconManager notifyIconManager;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IAutostartProvider autostartProvider;
         private readonly IWatchedFolderMonitor watchedFolderMonitor;
         private readonly IUpdateManager updateManager;
@@ -27,7 +27,7 @@ namespace SyncTrayzor.Services
             IConfigurationProvider configurationProvider,
             IApplicationPathsProvider pathsProvider,
             INotifyIconManager notifyIconManager,
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IAutostartProvider autostartProvider,
             IWatchedFolderMonitor watchedFolderMonitor,
             IUpdateManager updateManager,
@@ -39,14 +39,14 @@ namespace SyncTrayzor.Services
 
             this.pathsProvider = pathsProvider;
             this.notifyIconManager = notifyIconManager;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.autostartProvider = autostartProvider;
             this.watchedFolderMonitor = watchedFolderMonitor;
             this.updateManager = updateManager;
             this.conflictFileWatcher = conflictFileWatcher;
             this.alertsManager = alertsManager;
 
-            this.syncThingManager.DataLoaded += this.OnDataLoaded;
+            this.syncthingManager.DataLoaded += this.OnDataLoaded;
             this.updateManager.VersionIgnored += this.VersionIgnored;
         }
 
@@ -68,7 +68,7 @@ namespace SyncTrayzor.Services
             this.conflictFileWatcher.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
             this.conflictFileWatcher.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncThingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
+            this.syncthingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
 
             this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
             this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(Settings.Default.UpdateCheckIntervalSeconds);
@@ -85,18 +85,18 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
-            this.syncThingManager.PreferredAddress = new Uri("https://" + configuration.SyncthingAddress);
-            this.syncThingManager.ApiKey = configuration.SyncthingApiKey;
-            this.syncThingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
-            this.syncThingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
-            this.syncThingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
+            this.syncthingManager.PreferredAddress = new Uri("https://" + configuration.SyncthingAddress);
+            this.syncthingManager.ApiKey = configuration.SyncthingApiKey;
+            this.syncthingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
+            this.syncthingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
+            this.syncthingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
                 EnvVarTransformer.Transform(configuration.SyncthingCustomHomePath)
                 : null;
-            this.syncThingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
-            this.syncThingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
-            this.syncThingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
-            this.syncThingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
-            this.syncThingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
+            this.syncthingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
+            this.syncthingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
+            this.syncthingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
+            this.syncthingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
+            this.syncthingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 
@@ -119,7 +119,7 @@ namespace SyncTrayzor.Services
 
         private void LoadFolders(Configuration configuration)
         {
-            var folderIds = this.syncThingManager.Folders.FetchAll().Select(x => x.FolderId).ToList();
+            var folderIds = this.syncthingManager.Folders.FetchAll().Select(x => x.FolderId).ToList();
 
             foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
             {
@@ -132,7 +132,7 @@ namespace SyncTrayzor.Services
         public void Dispose()
         {
             this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
-            this.syncThingManager.DataLoaded -= this.OnDataLoaded;
+            this.syncthingManager.DataLoaded -= this.OnDataLoaded;
             this.updateManager.VersionIgnored -= this.VersionIgnored;
         }
     }

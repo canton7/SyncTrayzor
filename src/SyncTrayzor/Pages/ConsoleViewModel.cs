@@ -1,5 +1,5 @@
 using Stylet;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace SyncTrayzor.Pages
         private const int maxLogMessages = 1500;
 
         private readonly IWindowManager windowManager;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly Buffer<string> logMessagesBuffer;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
 
@@ -22,12 +22,12 @@ namespace SyncTrayzor.Pages
 
         public ConsoleViewModel(
             IWindowManager windowManager,
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IConfigurationProvider configurationProvider,
             Func<SettingsViewModel> settingsViewModelFactory)
         {
             this.windowManager = windowManager;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.LogMessages = new Queue<string>();
 
@@ -35,7 +35,7 @@ namespace SyncTrayzor.Pages
             this.logMessagesBuffer = new Buffer<string>(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(500));
             this.logMessagesBuffer.Delivered += this.LogMessageDelivered;
 
-            this.syncThingManager.MessageLogged += this.SyncThingMessageLogged;
+            this.syncthingManager.MessageLogged += this.SyncthingMessageLogged;
 
             this.Bind(s => s.LogPaused, (o, e) =>
             {
@@ -57,7 +57,7 @@ namespace SyncTrayzor.Pages
                 this.NotifyOfPropertyChange(() => this.LogMessages);
         }
 
-        private void SyncThingMessageLogged(object sender, MessageLoggedEventArgs e)
+        private void SyncthingMessageLogged(object sender, MessageLoggedEventArgs e)
         {
             this.logMessagesBuffer.Add(e.LogMessage);
         }
@@ -77,7 +77,7 @@ namespace SyncTrayzor.Pages
 
         public void Dispose()
         {
-            this.syncThingManager.MessageLogged -= this.SyncThingMessageLogged;
+            this.syncthingManager.MessageLogged -= this.SyncthingMessageLogged;
         }
     }
 }

@@ -2,9 +2,9 @@
 using Stylet;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
-using SyncTrayzor.SyncThing;
-using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.TransferHistory;
+using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
 using System.Drawing;
@@ -96,7 +96,7 @@ namespace SyncTrayzor.Pages
     {
         private const int initialCompletedTransfersToDisplay = 100;
 
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IProcessStartProvider processStartProvider;
 
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
@@ -119,9 +119,9 @@ namespace SyncTrayzor.Pages
             get { return this.HasCompletedTransfers || this.HasInProgressTransfers; }
         }
 
-        public FileTransfersTrayViewModel(ISyncThingManager syncThingManager, IProcessStartProvider processStartProvider)
+        public FileTransfersTrayViewModel(ISyncthingManager syncthingManager, IProcessStartProvider processStartProvider)
         {
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.processStartProvider = processStartProvider;
 
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
@@ -133,29 +133,29 @@ namespace SyncTrayzor.Pages
 
         protected override void OnActivate()
         {
-            foreach (var completedTransfer in this.syncThingManager.TransferHistory.CompletedTransfers.Take(initialCompletedTransfersToDisplay).Reverse())
+            foreach (var completedTransfer in this.syncthingManager.TransferHistory.CompletedTransfers.Take(initialCompletedTransfersToDisplay).Reverse())
             {
                 this.CompletedTransfers.Add(new FileTransferViewModel(completedTransfer));
             }
 
-            foreach (var inProgressTranser in this.syncThingManager.TransferHistory.InProgressTransfers.Where(x => x.Status == FileTransferStatus.InProgress).Reverse())
+            foreach (var inProgressTranser in this.syncthingManager.TransferHistory.InProgressTransfers.Where(x => x.Status == FileTransferStatus.InProgress).Reverse())
             {
                 this.InProgressTransfers.Add(new FileTransferViewModel(inProgressTranser));
             }
 
             // We start caring about samples when they're either finished, or have a progress update
-            this.syncThingManager.TransferHistory.TransferStateChanged += this.TransferStateChanged;
+            this.syncthingManager.TransferHistory.TransferStateChanged += this.TransferStateChanged;
 
-            this.UpdateConnectionStats(this.syncThingManager.TotalConnectionStats);
+            this.UpdateConnectionStats(this.syncthingManager.TotalConnectionStats);
 
-            this.syncThingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
+            this.syncthingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
         }
 
         protected override void OnDeactivate()
         {
-            this.syncThingManager.TransferHistory.TransferStateChanged -= this.TransferStateChanged;
+            this.syncthingManager.TransferHistory.TransferStateChanged -= this.TransferStateChanged;
 
-            this.syncThingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
+            this.syncthingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
 
             this.CompletedTransfers.Clear();
             this.InProgressTransfers.Clear();
@@ -189,7 +189,7 @@ namespace SyncTrayzor.Pages
             this.UpdateConnectionStats(e.TotalConnectionStats);
         }
 
-        private void UpdateConnectionStats(SyncThingConnectionStats connectionStats)
+        private void UpdateConnectionStats(SyncthingConnectionStats connectionStats)
         {
             if (connectionStats == null)
             {
@@ -207,7 +207,7 @@ namespace SyncTrayzor.Pages
         {
             var fileTransfer = fileTransferVm.FileTransfer;
             Folder folder;
-            if (!this.syncThingManager.Folders.TryFetchById(fileTransfer.FolderId, out folder))
+            if (!this.syncthingManager.Folders.TryFetchById(fileTransfer.FolderId, out folder))
                 return; // Huh? Nothing we can do about it...
 
             // Not sure of the best way to deal with deletions yet...

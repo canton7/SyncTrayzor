@@ -3,7 +3,7 @@ using Stylet;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -41,7 +41,7 @@ namespace SyncTrayzor.Pages.Settings
         private readonly IAssemblyProvider assemblyProvider;
         private readonly IApplicationState applicationState;
         private readonly IApplicationPathsProvider applicationPathsProvider;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly List<SettingItem> settings = new List<SettingItem>();
 
         public int SelectedTabIndex { get; set; }
@@ -59,14 +59,14 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
 
-        public SettingItem<bool> StartSyncThingAutomatically { get; }
+        public SettingItem<bool> StartSyncthingAutomatically { get; }
 
-        public BindableCollection<LabelledValue<SyncThingPriorityLevel>> PriorityLevels { get; }
-        public SettingItem<SyncThingPriorityLevel> SyncthingPriorityLevel { get; }
+        public BindableCollection<LabelledValue<SyncthingPriorityLevel>> PriorityLevels { get; }
+        public SettingItem<SyncthingPriorityLevel> SyncthingPriorityLevel { get; }
 
         public SettingItem<bool> SyncthingUseDefaultHome { get; }
-        public SettingItem<string> SyncThingAddress { get; }
-        public SettingItem<string> SyncThingApiKey { get; }
+        public SettingItem<string> SyncthingAddress { get; }
+        public SettingItem<string> SyncthingApiKey { get; }
 
         public bool CanReadAutostart { get; set; }
         public bool CanWriteAutostart { get; set; }
@@ -75,8 +75,8 @@ namespace SyncTrayzor.Pages.Settings
         public bool StartOnLogon { get; set; }
         public bool StartMinimized { get; set; }
         public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
-        public SettingItem<string> SyncThingCommandLineFlags { get; }
-        public SettingItem<string> SyncThingEnvironmentalVariables { get; }
+        public SettingItem<string> SyncthingCommandLineFlags { get; }
+        public SettingItem<string> SyncthingEnvironmentalVariables { get; }
         public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
         private bool updatingFolderSettings;
@@ -94,7 +94,7 @@ namespace SyncTrayzor.Pages.Settings
             IAssemblyProvider assemblyProvider,
             IApplicationState applicationState,
             IApplicationPathsProvider applicationPathsProvider,
-            ISyncThingManager syncThingManager)
+            ISyncthingManager syncthingManager)
         {
             this.configurationProvider = configurationProvider;
             this.autostartProvider = autostartProvider;
@@ -103,7 +103,7 @@ namespace SyncTrayzor.Pages.Settings
             this.assemblyProvider = assemblyProvider;
             this.applicationState = applicationState;
             this.applicationPathsProvider = applicationPathsProvider;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
 
             this.MinimizeToTray = this.CreateBasicSettingItem(x => x.MinimizeToTray);
             this.NotifyOfNewVersions = this.CreateBasicSettingItem(x => x.NotifyOfNewVersions);
@@ -120,15 +120,15 @@ namespace SyncTrayzor.Pages.Settings
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
 
-            this.StartSyncThingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
+            this.StartSyncthingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
             this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);
             this.SyncthingPriorityLevel.RequiresSyncthingRestart = true;
             this.SyncthingUseDefaultHome = this.CreateBasicSettingItem(x => !x.SyncthingUseCustomHome, (x, v) => x.SyncthingUseCustomHome = !v);
             this.SyncthingUseDefaultHome.RequiresSyncthingRestart = true;
-            this.SyncThingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncThingAddressValidator());
-            this.SyncThingAddress.RequiresSyncthingRestart = true;
-            this.SyncThingApiKey = this.CreateBasicSettingItem(x => x.SyncthingApiKey, new SyncThingApiKeyValidator());
-            this.SyncThingApiKey.RequiresSyncthingRestart = true;
+            this.SyncthingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncthingAddressValidator());
+            this.SyncthingAddress.RequiresSyncthingRestart = true;
+            this.SyncthingApiKey = this.CreateBasicSettingItem(x => x.SyncthingApiKey, new SyncthingApiKeyValidator());
+            this.SyncthingApiKey.RequiresSyncthingRestart = true;
 
             this.CanReadAutostart = this.autostartProvider.CanRead;
             this.CanWriteAutostart = this.autostartProvider.CanWrite;
@@ -139,25 +139,25 @@ namespace SyncTrayzor.Pages.Settings
                 this.StartMinimized = currentSetup.StartMinimized;
             }
 
-            this.SyncThingCommandLineFlags = this.CreateBasicSettingItem(
+            this.SyncthingCommandLineFlags = this.CreateBasicSettingItem(
                 x => String.Join(" ", x.SyncthingCommandLineFlags),
                 (x, v) =>
                 {
                     IEnumerable<KeyValuePair<string, string>> envVars;
                     KeyValueStringParser.TryParse(v, out envVars, mustHaveValue: false);
                     x.SyncthingCommandLineFlags = envVars.Select(item => KeyValueStringParser.FormatItem(item.Key, item.Value)).ToList();
-                }, new SyncThingCommandLineFlagsValidator());
-            this.SyncThingCommandLineFlags.RequiresSyncthingRestart = true;
+                }, new SyncthingCommandLineFlagsValidator());
+            this.SyncthingCommandLineFlags.RequiresSyncthingRestart = true;
 
-            this.SyncThingEnvironmentalVariables = this.CreateBasicSettingItem(
+            this.SyncthingEnvironmentalVariables = this.CreateBasicSettingItem(
                 x => KeyValueStringParser.Format(x.SyncthingEnvironmentalVariables),
                 (x, v) =>
                 {
                     IEnumerable<KeyValuePair<string, string>> envVars;
                     KeyValueStringParser.TryParse(v, out envVars);
                     x.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection(envVars);
-                }, new SyncThingEnvironmentalVariablesValidator());
-            this.SyncThingEnvironmentalVariables.RequiresSyncthingRestart = true;
+                }, new SyncthingEnvironmentalVariablesValidator());
+            this.SyncthingEnvironmentalVariables.RequiresSyncthingRestart = true;
 
             this.SyncthingDenyUpgrade = this.CreateBasicSettingItem(x => x.SyncthingDenyUpgrade);
             this.SyncthingDenyUpgrade.RequiresSyncthingRestart = true;
@@ -175,12 +175,12 @@ namespace SyncTrayzor.Pages.Settings
                 folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
             }
 
-            this.PriorityLevels = new BindableCollection<LabelledValue<SyncThingPriorityLevel>>()
+            this.PriorityLevels = new BindableCollection<LabelledValue<SyncthingPriorityLevel>>()
             {
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_AboveNormal, SyncThingPriorityLevel.AboveNormal),
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Normal, SyncThingPriorityLevel.Normal),
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_BelowNormal, SyncThingPriorityLevel.BelowNormal),
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Idle, SyncThingPriorityLevel.Idle),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_AboveNormal, SyncTrayzor.Services.Config.SyncthingPriorityLevel.AboveNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Normal, SyncTrayzor.Services.Config.SyncthingPriorityLevel.Normal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_BelowNormal, SyncTrayzor.Services.Config.SyncthingPriorityLevel.BelowNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Idle, SyncTrayzor.Services.Config.SyncthingPriorityLevel.Idle),
             };
 
             this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
@@ -219,15 +219,15 @@ namespace SyncTrayzor.Pages.Settings
 
         protected override void OnInitialActivate()
         {
-            if (syncThingManager.State == SyncThingState.Running && syncThingManager.IsDataLoaded)
+            if (syncthingManager.State == SyncthingState.Running && syncthingManager.IsDataLoaded)
                 this.LoadFromSyncthingStartupData();
             else
-                this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
+                this.syncthingManager.DataLoaded += this.SyncthingDataLoaded;
         }
 
         protected override void OnClose()
         {
-            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
+            this.syncthingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
 
         private void SyncthingDataLoaded(object sender, EventArgs e)
@@ -249,7 +249,7 @@ namespace SyncTrayzor.Pages.Settings
             this.NotifyOfPropertyChange(nameof(this.FolderSettings));
 
             this.SyncthingDebugFacilities.Clear();
-            this.SyncthingDebugFacilities.AddRange(syncThingManager.DebugFacilities.DebugFacilities.Select(x => new DebugFacilitySetting()
+            this.SyncthingDebugFacilities.AddRange(syncthingManager.DebugFacilities.DebugFacilities.Select(x => new DebugFacilitySetting()
             {
                 IsEnabled = x.IsEnabled,
                 Name = x.Name,
@@ -314,8 +314,8 @@ namespace SyncTrayzor.Pages.Settings
         public bool CanSave => this.settings.All(x => !x.HasErrors);
         public void Save()
         {
-            bool debugFacilitiesRequiresRestart = !this.syncThingManager.DebugFacilities.SupportsRestartlessUpdate &&
-                !new HashSet<string>(this.syncThingManager.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name)).SetEquals(this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
+            bool debugFacilitiesRequiresRestart = !this.syncthingManager.DebugFacilities.SupportsRestartlessUpdate &&
+                !new HashSet<string>(this.syncthingManager.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name)).SetEquals(this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
 
             this.configurationProvider.AtomicLoadAndSave(configuration =>
             {
@@ -348,7 +348,7 @@ namespace SyncTrayzor.Pages.Settings
                 }
             }
             else if ((this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart) || debugFacilitiesRequiresRestart) &&
-                this.syncThingManager.State == SyncThingState.Running)
+                this.syncthingManager.State == SyncthingState.Running)
             {
                 var result = this.windowManager.ShowMessageBox(
                     Resources.SettingsView_RestartSyncthing_Message,
@@ -365,7 +365,7 @@ namespace SyncTrayzor.Pages.Settings
 
         private async void RestartSyncthing()
         {
-            await this.syncThingManager.RestartAsync();
+            await this.syncthingManager.RestartAsync();
         }
 
         public void Cancel()

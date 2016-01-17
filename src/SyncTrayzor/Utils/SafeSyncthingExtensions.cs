@@ -1,7 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,11 +10,11 @@ namespace SyncTrayzor.Utils
 {
     public static class SafeSyncthingExtensions
     {
-        public static async Task StartWithErrorDialogAsync(this ISyncThingManager syncThingManager, IWindowManager windowManager)
+        public static async Task StartWithErrorDialogAsync(this ISyncthingManager syncthingManager, IWindowManager windowManager)
         {
             try
             {
-                await syncThingManager.StartAsync();
+                await syncthingManager.StartAsync();
             }
             catch (Win32Exception e)
             {
@@ -24,11 +24,11 @@ namespace SyncTrayzor.Utils
                 // Possibly "This program is blocked by group policy. For more information, contact your system administrator" caused
                 // by e.g. CryptoLocker?
                 windowManager.ShowMessageBox(
-                    Localizer.F(Resources.Dialog_SyncthingBlockedByGroupPolicy_Message, e.Message, syncThingManager.ExecutablePath),
+                    Localizer.F(Resources.Dialog_SyncthingBlockedByGroupPolicy_Message, e.Message, syncthingManager.ExecutablePath),
                     Resources.Dialog_SyncthingBlockedByGroupPolicy_Title,
                     MessageBoxButton.OK, icon: MessageBoxImage.Error);
             }
-            catch (SyncThingDidNotStartCorrectlyException e)
+            catch (SyncthingDidNotStartCorrectlyException e)
             {
                 windowManager.ShowMessageBox(
                     Localizer.F(Resources.Dialog_SyncthingDidNotStart_Message, e.Message),

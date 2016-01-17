@@ -9,9 +9,9 @@ using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
-using SyncTrayzor.SyncThing;
-using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -45,11 +45,11 @@ namespace SyncTrayzor
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
-            builder.Bind<ISyncThingApiClientFactory>().To<SyncThingApiClientFactory>();
-            builder.Bind<ISyncThingEventWatcherFactory>().To<SyncThingEventWatcherFactory>();
-            builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
-            builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
-            builder.Bind<ISyncThingConnectionsWatcherFactory>().To<SyncThingConnectionsWatcherFactory>();
+            builder.Bind<ISyncthingApiClientFactory>().To<SyncthingApiClientFactory>();
+            builder.Bind<ISyncthingEventWatcherFactory>().To<SyncthingEventWatcherFactory>();
+            builder.Bind<ISyncthingProcessRunner>().To<SyncthingProcessRunner>().InSingletonScope();
+            builder.Bind<ISyncthingManager>().To<SyncthingManager>().InSingletonScope();
+            builder.Bind<ISyncthingConnectionsWatcherFactory>().To<SyncthingConnectionsWatcherFactory>();
             builder.Bind<IFreePortFinder>().To<FreePortFinder>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
@@ -136,7 +136,7 @@ namespace SyncTrayzor
             this.Application.SessionEnding += (o, e) =>
             {
                 LogManager.GetCurrentClassLogger().Info("Shutting down: {0}", e.ReasonSessionEnding);
-                var manager = this.Container.Get<ISyncThingManager>();
+                var manager = this.Container.Get<ISyncthingManager>();
                 manager.StopAndWaitAsync().Wait(2000);
                 manager.Kill();
             };
@@ -201,7 +201,7 @@ namespace SyncTrayzor
             // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try
             {
-                this.Container.Get<ISyncThingManager>().StopAsync();
+                this.Container.Get<ISyncthingManager>().StopAsync();
             }
             catch { }
 
@@ -278,8 +278,8 @@ namespace SyncTrayzor
         {
             this.exiting = true;
 
-            // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
-            this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
+            // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncthingProcessRunning kills it dead
+            this.Container.Get<ISyncthingManager>().StopAsync().Wait(500);
         }
 
         public override void Dispose()

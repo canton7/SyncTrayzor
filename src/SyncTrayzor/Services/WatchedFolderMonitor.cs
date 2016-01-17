@@ -1,4 +1,4 @@
-﻿using SyncTrayzor.SyncThing;
+﻿using SyncTrayzor.Syncthing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +19,7 @@ namespace SyncTrayzor.Services
         private static readonly string ignoresFilePath = ".stignore";
         private static readonly string[] specialPaths = new[] { ".stversions", ".stfolder", "~syncthing~", ".syncthing." };
 
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IDirectoryWatcherFactory directoryWatcherFactory;
 
         private readonly List<DirectoryWatcher> directoryWatchers = new List<DirectoryWatcher>();
@@ -41,14 +41,14 @@ namespace SyncTrayzor.Services
         public TimeSpan BackoffInterval { get; set; }
         public TimeSpan FolderExistenceCheckingInterval { get; set; }
 
-        public WatchedFolderMonitor(ISyncThingManager syncThingManager, IDirectoryWatcherFactory directoryWatcherFactory)
+        public WatchedFolderMonitor(ISyncthingManager syncthingManager, IDirectoryWatcherFactory directoryWatcherFactory)
         {
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.directoryWatcherFactory = directoryWatcherFactory;
 
-            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
-            this.syncThingManager.Folders.SyncStateChanged += this.FolderSyncStateChanged;
-            this.syncThingManager.StateChanged += this.StateChanged;
+            this.syncthingManager.Folders.FoldersChanged += this.FoldersChanged;
+            this.syncthingManager.Folders.SyncStateChanged += this.FolderSyncStateChanged;
+            this.syncthingManager.StateChanged += this.StateChanged;
         }
 
         private void FoldersChanged(object sender, EventArgs e)
@@ -63,7 +63,7 @@ namespace SyncTrayzor.Services
                 this.Reset();
         }
 
-        private void StateChanged(object sender, SyncThingStateChangedEventArgs e)
+        private void StateChanged(object sender, SyncthingStateChangedEventArgs e)
         {
             this.Reset();
         }
@@ -80,10 +80,10 @@ namespace SyncTrayzor.Services
             }
             this.directoryWatchers.Clear();
 
-            if (this.syncThingManager.State != SyncThingState.Running)
+            if (this.syncthingManager.State != SyncthingState.Running)
                 return;
 
-            var folders = this.syncThingManager.Folders.FetchAll();
+            var folders = this.syncthingManager.Folders.FetchAll();
             if (folders == null)
                 return; // Folders haven't yet loaded
 
@@ -111,8 +111,8 @@ namespace SyncTrayzor.Services
 
             if (subPath == ignoresFilePath)
             {
-                // Extra: tell SyncThing to update its ignores list
-                this.syncThingManager.ReloadIgnoresAsync(folder.FolderId);
+                // Extra: tell Syncthing to update its ignores list
+                this.syncthingManager.ReloadIgnoresAsync(folder.FolderId);
                 return true;
             }
 
@@ -139,14 +139,14 @@ namespace SyncTrayzor.Services
             if (folder.SyncState == FolderSyncState.Syncing)
                 return;
 
-            this.syncThingManager.ScanAsync(folder.FolderId, subPath.Replace(Path.DirectorySeparatorChar, '/'));
+            this.syncthingManager.ScanAsync(folder.FolderId, subPath.Replace(Path.DirectorySeparatorChar, '/'));
         }
 
         public void Dispose()
         {
-            this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
-            this.syncThingManager.Folders.SyncStateChanged -= this.FolderSyncStateChanged;
-            this.syncThingManager.StateChanged -= this.StateChanged;
+            this.syncthingManager.Folders.FoldersChanged -= this.FoldersChanged;
+            this.syncthingManager.Folders.SyncStateChanged -= this.FolderSyncStateChanged;
+            this.syncthingManager.StateChanged -= this.StateChanged;
         }
     }
 }

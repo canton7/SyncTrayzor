@@ -37,7 +37,7 @@ namespace SyncTrayzor.Services.Config
         public EnvironmentalVariableCollection SyncthingEnvironmentalVariables { get; set; }
         public bool SyncthingUseCustomHome { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
-        public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
+        public SyncthingPriorityLevel SyncthingPriorityLevel { get; set; }
 
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
@@ -86,7 +86,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection();
             this.SyncthingUseCustomHome = true;
             this.SyncthingDenyUpgrade = false;
-            this.SyncthingPriorityLevel = SyncThingPriorityLevel.Normal;
+            this.SyncthingPriorityLevel = SyncthingPriorityLevel.Normal;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.ObfuscateDeviceIDs = true;

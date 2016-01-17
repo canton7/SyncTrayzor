@@ -38,7 +38,7 @@ namespace SyncTrayzor.Services.Config
 
             logger.Debug("ExePath: {0}", this.ExePath);
             logger.Debug("LogFilePath: {0}", this.LogFilePath);
-            logger.Debug("SyncThingBackupPath: {0}", this.SyncthingBackupPath);
+            logger.Debug("SyncthingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
             logger.Debug("ConfigurationFileBackupPath: {0}", this.ConfigurationFileBackupPath);
             logger.Debug("CefCachePath: {0}", this.CefCachePath);

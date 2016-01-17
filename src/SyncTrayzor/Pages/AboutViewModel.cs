@@ -4,7 +4,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.UpdateManagement;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using System;
 using System.Reflection;
 
@@ -16,7 +16,7 @@ namespace SyncTrayzor.Pages
         private const string donateUrl = "https://synctrayzor.antonymale.co.uk/donate";
 
         private readonly IWindowManager windowManager;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IUpdateManager updateManager;
         private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
@@ -34,14 +34,14 @@ namespace SyncTrayzor.Pages
 
         public AboutViewModel(
             IWindowManager windowManager,
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IConfigurationProvider configurationProvider,
             IUpdateManager updateManager,
             Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory,
             IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.updateManager = updateManager;
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
             this.processStartProvider = processStartProvider;
@@ -49,7 +49,7 @@ namespace SyncTrayzor.Pages
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = Properties.Settings.Default.HomepageUrl;
 
-            this.syncThingManager.DataLoaded += this.SyncthingDataLoaded;
+            this.syncthingManager.DataLoaded += this.SyncthingDataLoaded;
             this.LoadSyncthingVersion();
 
             this.CheckForNewerVersionAsync();
@@ -62,7 +62,7 @@ namespace SyncTrayzor.Pages
 
         private void LoadSyncthingVersion()
         {
-            this.SyncthingVersion = this.syncThingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncThingManager.Version.ShortVersion;
+            this.SyncthingVersion = this.syncthingManager.Version == null ? Resources.AboutView_UnknownVersion : this.syncthingManager.Version.ShortVersion;
         }
 
         private async void CheckForNewerVersionAsync()
@@ -108,7 +108,7 @@ namespace SyncTrayzor.Pages
 
         protected override void OnClose()
         {
-            this.syncThingManager.DataLoaded -= this.SyncthingDataLoaded;
+            this.syncthingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
     }
 }

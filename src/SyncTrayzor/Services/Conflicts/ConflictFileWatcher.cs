@@ -1,6 +1,6 @@
 ﻿using NLog;
 using Pri.LongPath;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace SyncTrayzor.Services.Conflicts
 
         private const string versionsFolder = ".stversions";
 
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IConflictFileManager conflictFileManager;
         private readonly IFileWatcherFactory fileWatcherFactory;
 
@@ -81,16 +81,16 @@ namespace SyncTrayzor.Services.Conflicts
         public event EventHandler ConflictedFilesChanged;
 
         public ConflictFileWatcher(
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IConflictFileManager conflictFileManager,
             IFileWatcherFactory fileWatcherFactory)
         {
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.conflictFileManager = conflictFileManager;
             this.fileWatcherFactory = fileWatcherFactory;
 
-            this.syncThingManager.StateChanged += this.SyncThingStateChanged;
-            this.syncThingManager.Folders.FoldersChanged += this.FoldersChanged;
+            this.syncthingManager.StateChanged += this.SyncthingStateChanged;
+            this.syncthingManager.Folders.FoldersChanged += this.FoldersChanged;
 
             this.backoffTimer = new System.Timers.Timer() // Interval will be set when it's started
             {
@@ -102,7 +102,7 @@ namespace SyncTrayzor.Services.Conflicts
             };
         }
 
-        private void SyncThingStateChanged(object sender, SyncThingStateChangedEventArgs e)
+        private void SyncthingStateChanged(object sender, SyncthingStateChangedEventArgs e)
         {
             this.Reset();
         }
@@ -126,9 +126,9 @@ namespace SyncTrayzor.Services.Conflicts
         {
             this.StopWatchers();
 
-            if (this.IsEnabled && this.syncThingManager.State == SyncThingState.Running)
+            if (this.IsEnabled && this.syncthingManager.State == SyncthingState.Running)
             {
-                var folders = this.syncThingManager.Folders.FetchAll();
+                var folders = this.syncthingManager.Folders.FetchAll();
 
                 this.StartWatchers(folders);
                 await this.ScanFoldersAsync(folders);
@@ -279,8 +279,8 @@ namespace SyncTrayzor.Services.Conflicts
         public void Dispose()
         {
             this.StopWatchers();
-            this.syncThingManager.StateChanged -= this.SyncThingStateChanged;
-            this.syncThingManager.Folders.FoldersChanged -= this.FoldersChanged;
+            this.syncthingManager.StateChanged -= this.SyncthingStateChanged;
+            this.syncthingManager.Folders.FoldersChanged -= this.FoldersChanged;
             this.backoffTimer.Stop();
             this.backoffTimer.Dispose();
         }

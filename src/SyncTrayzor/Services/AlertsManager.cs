@@ -1,5 +1,5 @@
 ﻿using SyncTrayzor.Services.Conflicts;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace SyncTrayzor.Services
 
     public class AlertsManager : IAlertsManager
     {
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly SynchronizedEventDispatcher eventDispatcher;
 
@@ -63,15 +63,15 @@ namespace SyncTrayzor.Services
             }
         }
 
-        public AlertsManager(ISyncThingManager syncThingManager, IConflictFileWatcher conflictFileWatcher)
+        public AlertsManager(ISyncthingManager syncthingManager, IConflictFileWatcher conflictFileWatcher)
         {
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.conflictFileWatcher = conflictFileWatcher;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
 
             this.ResetOutputs();
 
-            this.syncThingManager.Folders.FolderErrorsChanged += this.FolderErrorsChanged;
+            this.syncthingManager.Folders.FolderErrorsChanged += this.FolderErrorsChanged;
 
             this.conflictFileWatcher.ConflictedFilesChanged += this.ConflictFilesChanged;
         }
@@ -86,7 +86,7 @@ namespace SyncTrayzor.Services
 
         private void FolderErrorsChanged(object sender, FolderErrorsChangedEventArgs e)
         {
-            var folders = this.syncThingManager.Folders.FetchAll();
+            var folders = this.syncthingManager.Folders.FetchAll();
             this._foldersWithFailedTransferFiles.Replace(folders.Where(x => x.FolderErrors.Any()).Select(x => x.FolderId));
             this.eventDispatcher.Raise(this.AlertsStateChanged);
         }
@@ -99,7 +99,7 @@ namespace SyncTrayzor.Services
 
         public void Dispose()
         {
-            this.syncThingManager.Folders.FolderErrorsChanged -= this.FolderErrorsChanged;
+            this.syncthingManager.Folders.FolderErrorsChanged -= this.FolderErrorsChanged;
             this.conflictFileWatcher.ConflictedFilesChanged -= this.ConflictFilesChanged;
         }
 

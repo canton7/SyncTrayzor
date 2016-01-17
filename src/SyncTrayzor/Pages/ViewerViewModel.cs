@@ -1,5 +1,5 @@
 using Stylet;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ namespace SyncTrayzor.Pages
     public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IDisposable
     {
         private readonly IWindowManager windowManager;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IConfigurationProvider configurationProvider;
         private readonly IApplicationPathsProvider pathsProvider;
@@ -26,9 +26,9 @@ namespace SyncTrayzor.Pages
 
         public string Location { get; private set; }
         
-        private SyncThingState syncThingState { get; set; }
-        public bool ShowSyncThingStarting => this.syncThingState == SyncThingState.Starting;
-        public bool ShowSyncThingStopped => this.syncThingState == SyncThingState.Stopped;
+        private SyncthingState syncthingState { get; set; }
+        public bool ShowSyncthingStarting => this.syncthingState == SyncthingState.Starting;
+        public bool ShowSyncthingStopped => this.syncthingState == SyncthingState.Stopped;
 
         public ChromiumWebBrowser WebBrowser { get; set; }
 
@@ -36,13 +36,13 @@ namespace SyncTrayzor.Pages
 
         public ViewerViewModel(
             IWindowManager windowManager,
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IConfigurationProvider configurationProvider,
             IProcessStartProvider processStartProvider,
             IApplicationPathsProvider pathsProvider)
         {
             this.windowManager = windowManager;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.processStartProvider = processStartProvider;
             this.configurationProvider = configurationProvider;
             this.pathsProvider = pathsProvider;
@@ -50,7 +50,7 @@ namespace SyncTrayzor.Pages
             var configuration = this.configurationProvider.Load();
             this.zoomLevel = configuration.SyncthingWebBrowserZoomLevel;
 
-            this.syncThingManager.StateChanged += this.SyncThingStateChanged;
+            this.syncthingManager.StateChanged += this.SyncthingStateChanged;
 
             this.callback = new JavascriptCallbackObject(this.OpenFolder);
 
@@ -64,9 +64,9 @@ namespace SyncTrayzor.Pages
             configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
         }
 
-        private void SyncThingStateChanged(object sender, SyncThingStateChangedEventArgs e)
+        private void SyncthingStateChanged(object sender, SyncthingStateChangedEventArgs e)
         {
-            this.syncThingState = e.NewState;
+            this.syncthingState = e.NewState;
             this.RefreshBrowser();
         }
 
@@ -144,8 +144,8 @@ namespace SyncTrayzor.Pages
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
-            if (this.syncThingManager.State == SyncThingState.Running)
-                this.Location = this.syncThingManager.Address.NormalizeZeroHost().ToString();
+            if (this.syncthingManager.State == SyncthingState.Running)
+                this.Location = this.syncthingManager.Address.NormalizeZeroHost().ToString();
         }
 
         public void ZoomIn()
@@ -165,7 +165,7 @@ namespace SyncTrayzor.Pages
 
         private void ZoomTo(double zoomLevel)
         {
-            if (this.WebBrowser == null || this.syncThingState != SyncThingState.Running)
+            if (this.WebBrowser == null || this.syncthingState != SyncthingState.Running)
                 return;
 
             this.zoomLevel = zoomLevel;
@@ -176,7 +176,7 @@ namespace SyncTrayzor.Pages
         private void OpenFolder(string folderId)
         {
             Folder folder;
-            if (!this.syncThingManager.Folders.TryFetchById(folderId, out folder))
+            if (!this.syncthingManager.Folders.TryFetchById(folderId, out folder))
                 return;
 
             this.processStartProvider.StartDetached("explorer.exe", folder.Path);
@@ -197,7 +197,7 @@ namespace SyncTrayzor.Pages
 
         public async void Start()
         {
-            await this.syncThingManager.StartWithErrorDialogAsync(this.windowManager);
+            await this.syncthingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)
@@ -221,7 +221,7 @@ namespace SyncTrayzor.Pages
             // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
             // the new address (Which we do when Syncthing hits the 'running' State).
             // Therefore only open external browsers if Syncthing is actually running
-            if (this.syncThingManager.State == SyncThingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncThingManager.Address.NormalizeZeroHost().Host)
+            if (this.syncthingManager.State == SyncthingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncthingManager.Address.NormalizeZeroHost().Host)
             {
                 this.processStartProvider.StartDetached(request.Url);
                 return CefReturnValue.Cancel;
@@ -230,7 +230,7 @@ namespace SyncTrayzor.Pages
             // See https://github.com/canton7/SyncTrayzor/issues/13
             // and https://github.com/cefsharp/CefSharp/issues/534#issuecomment-60694502
             var headers = request.Headers;
-            headers["X-API-Key"] = this.syncThingManager.ApiKey;
+            headers["X-API-Key"] = this.syncthingManager.ApiKey;
             lock (this.cultureLock)
             {
                 if (this.culture != null)
@@ -267,7 +267,7 @@ namespace SyncTrayzor.Pages
 
         public void Dispose()
         {
-            this.syncThingManager.StateChanged -= this.SyncThingStateChanged;
+            this.syncthingManager.StateChanged -= this.SyncthingStateChanged;
             this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
         }
 

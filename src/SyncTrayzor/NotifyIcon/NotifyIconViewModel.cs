@@ -2,7 +2,7 @@
 using SyncTrayzor.Pages;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Services;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace SyncTrayzor.NotifyIcon
     public class NotifyIconViewModel : PropertyChangedBase, IDisposable
     {
         private readonly IWindowManager windowManager;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IAlertsManager alertsManager;
@@ -27,61 +27,61 @@ namespace SyncTrayzor.NotifyIcon
         public event EventHandler WindowCloseRequested;
         public event EventHandler ExitRequested;
 
-        public SyncThingState SyncThingState { get; set; }
+        public SyncthingState SyncthingState { get; set; }
 
-        public bool SyncThingAlert => this.alertsManager.AnyAlerts;
+        public bool SyncthingAlert => this.alertsManager.AnyAlerts;
 
-        public bool SyncThingStarted => this.SyncThingState == SyncThingState.Running;
+        public bool SyncthingStarted => this.SyncthingState == SyncthingState.Running;
 
-        public bool SyncThingSyncing { get; private set; }
+        public bool SyncthingSyncing { get; private set; }
 
         public NotifyIconViewModel(
             IWindowManager windowManager,
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             Func<SettingsViewModel> settingsViewModelFactory,
             IProcessStartProvider processStartProvider,
             IAlertsManager alertsManager,
             FileTransfersTrayViewModel fileTransfersViewModel)
         {
             this.windowManager = windowManager;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.processStartProvider = processStartProvider;
             this.alertsManager = alertsManager;
             this.FileTransfersViewModel = fileTransfersViewModel;
 
-            this.syncThingManager.StateChanged += this.StateChanged;
-            this.SyncThingState = this.syncThingManager.State;
+            this.syncthingManager.StateChanged += this.StateChanged;
+            this.SyncthingState = this.syncthingManager.State;
 
-            this.syncThingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
-            this.syncThingManager.DataLoaded += this.DataLoaded;
+            this.syncthingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
+            this.syncthingManager.DataLoaded += this.DataLoaded;
 
             this.alertsManager.AlertsStateChanged += this.AlertsStateChanged;
         }
 
-        private void StateChanged(object sender, SyncThingStateChangedEventArgs e)
+        private void StateChanged(object sender, SyncthingStateChangedEventArgs e)
         {
-            this.SyncThingState = e.NewState;
-            if (e.NewState != SyncThingState.Running)
-                this.SyncThingSyncing = false; // Just make sure we reset this..
+            this.SyncthingState = e.NewState;
+            if (e.NewState != SyncthingState.Running)
+                this.SyncthingSyncing = false; // Just make sure we reset this..
         }
 
         private void TotalConnectionStatsChanged(object sender, ConnectionStatsChangedEventArgs e)
         {
             var stats = e.TotalConnectionStats;
-            this.SyncThingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
+            this.SyncthingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
         }
 
         private void DataLoaded(object sender, EventArgs e)
         {
-            this.Folders = new BindableCollection<FolderViewModel>(this.syncThingManager.Folders.FetchAll()
+            this.Folders = new BindableCollection<FolderViewModel>(this.syncthingManager.Folders.FetchAll()
                     .Select(x => new FolderViewModel(x, this.processStartProvider))
                     .OrderBy(x => x.FolderId));
         }
 
         private void AlertsStateChanged(object sender, EventArgs e)
         {
-            this.NotifyOfPropertyChange(nameof(this.SyncThingAlert));
+            this.NotifyOfPropertyChange(nameof(this.SyncthingAlert));
         }
 
         public void DoubleClick()
@@ -105,22 +105,22 @@ namespace SyncTrayzor.NotifyIcon
             this.OnWindowCloseRequested();
         }
 
-        public bool CanStart => this.SyncThingState == SyncThingState.Stopped;
+        public bool CanStart => this.SyncthingState == SyncthingState.Stopped;
         public async void Start()
         {
-            await this.syncThingManager.StartWithErrorDialogAsync(this.windowManager);
+            await this.syncthingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
-        public bool CanStop => this.SyncThingState == SyncThingState.Running;
+        public bool CanStop => this.SyncthingState == SyncthingState.Running;
         public void Stop()
         {
-            this.syncThingManager.StopAsync();
+            this.syncthingManager.StopAsync();
         }
 
-        public bool CanRestart => this.SyncThingState == SyncThingState.Running;
+        public bool CanRestart => this.SyncthingState == SyncthingState.Running;
         public void Restart()
         {
-            this.syncThingManager.RestartAsync();
+            this.syncthingManager.RestartAsync();
         }
 
         public void Exit()
@@ -136,10 +136,10 @@ namespace SyncTrayzor.NotifyIcon
 
         public void Dispose()
         {
-            this.syncThingManager.StateChanged -= this.StateChanged;
+            this.syncthingManager.StateChanged -= this.StateChanged;
 
-            this.syncThingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
-            this.syncThingManager.DataLoaded -= this.DataLoaded;
+            this.syncthingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
+            this.syncthingManager.DataLoaded -= this.DataLoaded;
 
             this.alertsManager.AlertsStateChanged -= this.AlertsStateChanged;
         }
