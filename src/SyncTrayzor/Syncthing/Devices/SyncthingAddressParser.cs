@@ -35,8 +35,9 @@ namespace SyncTrayzor.Syncthing.Devices
 
         private static IPAddress ParseIPv6AddressScope(Uri uri, IPAddress ipWithoutScope)
         {
-            var idnHost = uri.DnsSafeHost; // IdnHost is preferred in .NET 4.6
-            var hostWithScopeParts = idnHost.Split('%');
+            // Sometimes this can be escaped, sometimes not
+            var idnHost = WebUtility.UrlDecode(uri.DnsSafeHost); // IdnHost is preferred in .NET 4.6
+            var hostWithScopeParts = idnHost.Split(new[] { '%' }, 2);
 
             // Did they provide a scope?
             IPAddress ipWithScope;
@@ -50,7 +51,8 @@ namespace SyncTrayzor.Syncthing.Devices
                 {
 
                     var scopeLevel = ipWithoutScope.IsIPv6SiteLocal ? ScopeLevel.Site : ScopeLevel.Interface;
-                    var network = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(x => x.Name == scopeName);
+                    // I've seen Go produce ID and Name
+                    var network = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(x => x.Id == scopeName || x.Name == scopeName);
 
                     if (network == null)
                         throw new FormatException($"Unable to find an interface with name {scopeName}");
