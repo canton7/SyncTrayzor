@@ -3,6 +3,7 @@ using SyncTrayzor.Pages;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;

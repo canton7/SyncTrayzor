@@ -12,7 +12,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.Syncthing
+namespace SyncTrayzor.Syncthing.Folders
 {
     public interface ISyncthingFolderManager
     {
@@ -164,7 +164,7 @@ namespace SyncTrayzor.Syncthing
                 .Select(async folder =>
                 {
                     var status = await this.FetchFolderStatusAsync(folder.ID, cancellationToken);
-                    var syncState = FolderStateTransformer.SyncStateFromStatus(status.State);
+                    var syncState = FolderStateTransformer.SyncStateFromString(status.State);
 
                     Ignores ignores = null;
                     if (syncState != FolderSyncState.Error)
@@ -246,24 +246,25 @@ namespace SyncTrayzor.Syncthing
             if (!this.folders.TryGetValue(e.FolderId, out folder))
                 return; // We don't know about this folder
 
-            folder.SyncState = e.SyncState;
+            var syncState = FolderStateTransformer.SyncStateFromString(e.SyncState);
+            folder.SyncState = syncState;
 
-            if (e.SyncState == FolderSyncState.Syncing)
+            if (syncState == FolderSyncState.Syncing)
             {
                 folder.ClearFolderErrors();
                 this.OnFolderErrorsChanged(folder, new List<FolderError>());
             }
-            else if (e.SyncState == FolderSyncState.Error)
+            else if (syncState == FolderSyncState.Error)
             {
                 folder.Ignores = new FolderIgnores(); 
             }
-            else if (e.PrevSyncState == FolderSyncState.Error)
+            else if (syncState == FolderSyncState.Error)
             {
                 var ignores = await this.FetchFolderIgnoresAsync(e.FolderId, CancellationToken.None);
                 folder.Ignores = new FolderIgnores(ignores.IgnorePatterns, ignores.RegexPatterns);
             }
 
-            this.OnSyncStateChanged(folder, e.PrevSyncState, e.SyncState);
+            this.OnSyncStateChanged(folder, FolderStateTransformer.SyncStateFromString(e.PrevSyncState), syncState);
         }
 
         private void FolderStatusChanged(string folderId, FolderStatus folderStatus)

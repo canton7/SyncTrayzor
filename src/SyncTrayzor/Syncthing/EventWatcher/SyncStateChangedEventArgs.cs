@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace SyncTrayzor.Syncthing
+namespace SyncTrayzor.Syncthing.EventWatcher
 {
     public class SyncStateChangedEventArgs : EventArgs
     {
         public string FolderId { get; }
-        public FolderSyncState PrevSyncState { get; }
-        public FolderSyncState SyncState { get; }
+        public string PrevSyncState { get; }
+        public string SyncState { get; }
 
-        public SyncStateChangedEventArgs(string folderId, FolderSyncState prevSyncState, FolderSyncState syncState)
+        public SyncStateChangedEventArgs(string folderId, string prevSyncState, string syncState)
         {
             this.FolderId = folderId;
             this.PrevSyncState = prevSyncState;

@@ -1,5 +1,6 @@
 ﻿using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;

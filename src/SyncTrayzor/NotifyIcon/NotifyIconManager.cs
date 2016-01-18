@@ -5,6 +5,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
 using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.Devices;
 using SyncTrayzor.Syncthing.TransferHistory;
 using System;
 using System.Collections.Generic;
@@ -103,8 +104,8 @@ namespace SyncTrayzor.NotifyIcon
             this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
             this.syncthingManager.TransferHistory.FolderSynchronizationFinished += this.FolderSynchronizationFinished;
-            this.syncthingManager.DeviceConnected += this.DeviceConnected;
-            this.syncthingManager.DeviceDisconnected += this.DeviceDisconnected;
+            this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
+            this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
         }
 
         private void ApplicationStartup(object sender, EventArgs e)
@@ -304,8 +305,8 @@ namespace SyncTrayzor.NotifyIcon
             this.applicationWindowState.RootWindowClosed -= this.RootViewModelClosed;
 
             this.syncthingManager.TransferHistory.FolderSynchronizationFinished -= this.FolderSynchronizationFinished;
-            this.syncthingManager.DeviceConnected -= this.DeviceConnected;
-            this.syncthingManager.DeviceDisconnected -= this.DeviceDisconnected;
+            this.syncthingManager.Devices.DeviceConnected -= this.DeviceConnected;
+            this.syncthingManager.Devices.DeviceDisconnected -= this.DeviceDisconnected;
         }
     }
 }

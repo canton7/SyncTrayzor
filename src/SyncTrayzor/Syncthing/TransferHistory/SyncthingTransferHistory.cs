@@ -1,6 +1,7 @@
 ﻿using NLog;
 using SyncTrayzor.Syncthing.ApiClient;
 using SyncTrayzor.Syncthing.EventWatcher;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;

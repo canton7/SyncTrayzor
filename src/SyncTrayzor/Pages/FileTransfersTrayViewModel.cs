@@ -4,6 +4,7 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
 using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;

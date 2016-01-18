@@ -1,7 +1,7 @@
 ﻿using SyncTrayzor.Syncthing.ApiClient;
 using System;
 
-namespace SyncTrayzor.Syncthing
+namespace SyncTrayzor.Syncthing.EventWatcher
 {
     public class FolderStatusChangedEventArgs : EventArgs
     {

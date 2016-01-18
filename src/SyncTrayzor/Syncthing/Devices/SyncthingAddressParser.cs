@@ -4,12 +4,12 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace SyncTrayzor.Services.Metering
+namespace SyncTrayzor.Syncthing.Devices
 {
     public static class SyncthingAddressParser
     {
         // input includes the port
-        public static IPAddress Parse(string input)
+        public static IPEndPoint Parse(string input)
         {
             // Syncthing can give us ipv6 addresses with scopes, e.g. "[fe80::21e:6ff:fea4:fdfd%Wireless Network Connection]:56478"
             // However, the scope is the name of the adapter, not the adapter's scope id (which the winapi stuff needs)
@@ -24,10 +24,13 @@ namespace SyncTrayzor.Services.Metering
             if (!IPAddress.TryParse(uri.Host, out ipWithoutScope))
                 throw new FormatException($"Unable to parse URI host {uri.Host} into an IPAddress");
 
+            IPAddress ipWithScope;
             if (ipWithoutScope.AddressFamily == AddressFamily.InterNetwork)
-                return ipWithoutScope;
+                ipWithScope = ipWithoutScope;
             else
-                return ParseIPv6AddressScope(uri, ipWithoutScope);
+                ipWithScope = ParseIPv6AddressScope(uri, ipWithoutScope);
+
+            return new IPEndPoint(ipWithScope, uri.Port);
         }
 
         private static IPAddress ParseIPv6AddressScope(Uri uri, IPAddress ipWithoutScope)

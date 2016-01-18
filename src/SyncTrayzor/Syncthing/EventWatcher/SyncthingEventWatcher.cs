@@ -117,7 +117,7 @@ namespace SyncTrayzor.Syncthing.EventWatcher
             }, cancellationToken);
         }
 
-        private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)
+        private void OnSyncStateChanged(string folderId, string oldState, string syncState)
         {
             this.SyncStateChanged?.Invoke(this, new SyncStateChangedEventArgs(folderId, oldState, syncState));
         }
@@ -198,8 +198,8 @@ namespace SyncTrayzor.Syncthing.EventWatcher
 
         public void Accept(StateChangedEvent evt)
         {
-            var oldState = FolderStateTransformer.SyncStateFromStatus(evt.Data.From);
-            var state = FolderStateTransformer.SyncStateFromStatus(evt.Data.To);
+            var oldState = evt.Data.From;
+            var state = evt.Data.To;
             this.OnSyncStateChanged(evt.Data.Folder, oldState, state);
         }
 

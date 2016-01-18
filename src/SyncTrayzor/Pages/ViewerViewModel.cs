@@ -9,6 +9,7 @@ using SyncTrayzor.Services.Config;
 using System.Threading;
 using SyncTrayzor.Services;
 using SyncTrayzor.Properties;
+using SyncTrayzor.Syncthing.Folders;
 
 namespace SyncTrayzor.Pages
 {

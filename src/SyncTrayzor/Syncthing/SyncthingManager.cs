@@ -6,13 +6,14 @@ using SyncTrayzor.Syncthing.EventWatcher;
 using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using SyncTrayzor.Syncthing.DebugFacilities;
+using SyncTrayzor.Syncthing.Devices;
+using SyncTrayzor.Syncthing.Folders;
 
 namespace SyncTrayzor.Syncthing
 {
@@ -26,8 +27,6 @@ namespace SyncTrayzor.Syncthing
         SyncthingConnectionStats TotalConnectionStats { get; }
         event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
         event EventHandler ProcessExitedWithError;
-        event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
-        event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
@@ -44,6 +43,7 @@ namespace SyncTrayzor.Syncthing
         DateTime LastConnectivityEventTime { get; }
         SyncthingVersionInformation Version { get; }
         ISyncthingFolderManager Folders { get; }
+        ISyncthingDeviceManager Devices { get; }
         ISyncthingTransferHistory TransferHistory { get; }
         ISyncthingDebugFacilitiesManager DebugFacilities { get; }
 
@@ -53,9 +53,6 @@ namespace SyncTrayzor.Syncthing
         Task RestartAsync();
         void Kill();
         void KillAllSyncthingProcesses();
-
-        bool TryFetchDeviceById(string deviceId, out Device device);
-        IReadOnlyCollection<Device> FetchAllDevices();
 
         Task ScanAsync(string folderId, string subPath);
         Task ReloadIgnoresAsync(string folderId);
@@ -107,8 +104,6 @@ namespace SyncTrayzor.Syncthing
         public event EventHandler DataLoaded;
         public event EventHandler<SyncthingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
-        public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
-        public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
         private readonly object totalConnectionStatsLock = new object();
         private SyncthingConnectionStats _totalConnectionStats;
@@ -133,33 +128,19 @@ namespace SyncTrayzor.Syncthing
         public bool SyncthingHideDeviceIds { get; set; }
         public TimeSpan SyncthingConnectTimeout { get; set; }
 
-        private readonly object devicesLock = new object();
-        private ConcurrentDictionary<string, Device> _devices = new ConcurrentDictionary<string, Device>();
-        public ConcurrentDictionary<string, Device> devices
-        {
-            get { lock (this.devicesLock) { return this._devices; } }
-            set { lock (this.devicesLock) this._devices = value; }
-        }
-
         public SyncthingVersionInformation Version { get; private set; }
 
         private readonly SyncthingFolderManager _folders;
-        public ISyncthingFolderManager Folders
-        {
-            get { return this._folders; }
-        }
+        public ISyncthingFolderManager Folders => this._folders;
+
+        private readonly SyncthingDeviceManager _devices;
+        public ISyncthingDeviceManager Devices => this._devices;
 
         private readonly ISyncthingTransferHistory _transferHistory;
-        public ISyncthingTransferHistory TransferHistory
-        {
-            get { return this._transferHistory; }
-        }
+        public ISyncthingTransferHistory TransferHistory => this._transferHistory;
 
         private SyncthingDebugFacilitiesManager _debugFacilities;
-        public ISyncthingDebugFacilitiesManager DebugFacilities
-        {
-            get { return this._debugFacilities; }
-        }
+        public ISyncthingDebugFacilitiesManager DebugFacilities => this._debugFacilities;
 
         public SyncthingManager(
             ISyncthingProcessRunner processRunner,
@@ -179,8 +160,8 @@ namespace SyncTrayzor.Syncthing
             this.apiClient = new SynchronizedTransientWrapper<ISyncthingApiClient>(this.apiClientsLock);
 
             this.eventWatcher = eventWatcherFactory.CreateEventWatcher(this.apiClient);
-            this.eventWatcher.DeviceConnected += (o, e) => this.OnDeviceConnected(e);
-            this.eventWatcher.DeviceDisconnected += (o, e) => this.OnDeviceDisconnected(e);
+            this.eventWatcher.DeviceConnected += (o, e) => this.LastConnectivityEventTime = DateTime.UtcNow;
+            this.eventWatcher.DeviceDisconnected += (o, e) => this.LastConnectivityEventTime = DateTime.UtcNow;
             this.eventWatcher.ConfigSaved += (o, e) => this.ReloadConfigDataAsync();
             this.eventWatcher.EventsSkipped += (o, e) => this.ReloadConfigDataAsync();
 
@@ -188,6 +169,7 @@ namespace SyncTrayzor.Syncthing
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
             this._folders = new SyncthingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
+            this._devices = new SyncthingDeviceManager(this.apiClient, this.eventWatcher);
             this._transferHistory = new SyncthingTransferHistory(this.eventWatcher, this._folders);
             this._debugFacilities = new SyncthingDebugFacilitiesManager(this.apiClient);
 
@@ -275,16 +257,6 @@ namespace SyncTrayzor.Syncthing
         {
             this.processRunner.KillAllSyncthingProcesses();
         }  
-
-        public bool TryFetchDeviceById(string deviceId, out Device device)
-        {
-            return this.devices.TryGetValue(deviceId, out device);
-        }
-
-        public IReadOnlyCollection<Device> FetchAllDevices()
-        {
-            return new List<Device>(this.devices.Values).AsReadOnly();
-        }
 
         public Task ScanAsync(string folderId, string subPath)
         {
@@ -493,29 +465,18 @@ namespace SyncTrayzor.Syncthing
         {
             var apiClient = this.apiClient.GetAsserted();
 
-            var configTask = apiClient.FetchConfigAsync();
-            var connectionsTask = apiClient.FetchConnectionsAsync();
+            var config = await apiClient.FetchConfigAsync();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await Task.WhenAll(configTask, connectionsTask);
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            // We can potentially see duplicate devices (if the user set their config file that way). Ignore them.
-            var devices = configTask.Result.Devices.DistinctBy(x => x.DeviceID).Select(device =>
-            {
-                var deviceObj = new Device(device.DeviceID, device.Name);
-                ItemConnectionData connectionData;
-                if (connectionsTask.Result.DeviceConnections.TryGetValue(device.DeviceID, out connectionData))
-                    deviceObj.SetConnected(connectionData.Address);
-                return deviceObj;
-            });
-            this.devices = new ConcurrentDictionary<string, Device>(devices.Select(x => new KeyValuePair<string, Device>(x.DeviceId, x)));
+            var devicesTask = this._devices.LoadDevicesAsync(config);
+            Task foldersTask;
 
             if (isReload)
-                await this._folders.ReloadFoldersAsync(configTask.Result, tilde, cancellationToken);
+                foldersTask = this._folders.ReloadFoldersAsync(config, tilde, cancellationToken);
             else
-                await this._folders.LoadFoldersAsync(configTask.Result, tilde, cancellationToken);
+                foldersTask = this._folders.LoadFoldersAsync(config, tilde, cancellationToken);
+
+            await Task.WhenAll(devicesTask, foldersTask);
         }
 
         private async void ReloadConfigDataAsync()
@@ -537,36 +498,6 @@ namespace SyncTrayzor.Syncthing
             { }
             catch (ApiException)
             { }
-        }
-
-        private void OnDeviceConnected(EventWatcher.DeviceConnectedEventArgs e)
-        {
-            Device device;
-            if (!this.devices.TryGetValue(e.DeviceId, out device))
-            {
-                logger.Warn("Unexpected device connected: {0}, address {1}. It wasn't fetched when we fetched our config", e.DeviceId, e.Address);
-                return; // Not expecting this device! It wasn't in the config...
-            }
-
-            device.SetConnected(e.Address);
-            this.LastConnectivityEventTime = DateTime.UtcNow;
-
-            this.eventDispatcher.Raise(this.DeviceConnected, new DeviceConnectedEventArgs(device));
-        }
-
-        private void OnDeviceDisconnected(EventWatcher.DeviceDisconnectedEventArgs e)
-        {
-            Device device;
-            if (!this.devices.TryGetValue(e.DeviceId, out device))
-            {
-                logger.Warn("Unexpected device connected: {0}, error {1}. It wasn't fetched when we fetched our config", e.DeviceId, e.Error);
-                return; // Not expecting this device! It wasn't in the config...
-            }
-
-            device.SetDisconnected();
-            this.LastConnectivityEventTime = DateTime.UtcNow;
-
-            this.eventDispatcher.Raise(this.DeviceDisconnected, new DeviceDisconnectedEventArgs(device));
         }
 
         private void OnMessageLogged(string logMessage)

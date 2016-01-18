@@ -1,6 +1,7 @@
 ﻿using NLog;
 using Pri.LongPath;
 using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
