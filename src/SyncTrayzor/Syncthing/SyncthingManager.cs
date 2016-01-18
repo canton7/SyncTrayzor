@@ -468,15 +468,14 @@ namespace SyncTrayzor.Syncthing
             var config = await apiClient.FetchConfigAsync();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var devicesTask = this._devices.LoadDevicesAsync(config);
-            Task foldersTask;
-
             if (isReload)
-                foldersTask = this._folders.ReloadFoldersAsync(config, tilde, cancellationToken);
+            {
+                await Task.WhenAll(this._folders.ReloadFoldersAsync(config, tilde, cancellationToken), this._devices.ReloadDevicesAsync(config, cancellationToken));
+            }
             else
-                foldersTask = this._folders.LoadFoldersAsync(config, tilde, cancellationToken);
-
-            await Task.WhenAll(devicesTask, foldersTask);
+            {
+                await Task.WhenAll(this._folders.LoadFoldersAsync(config, tilde, cancellationToken), this._devices.LoadDevicesAsync(config, cancellationToken));
+            }
         }
 
         private async void ReloadConfigDataAsync()

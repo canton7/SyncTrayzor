@@ -29,7 +29,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task<SystemInfo> FetchSystemInfoAsync();
 
         [Get("/rest/system/connections")]
-        Task<Connections> FetchConnectionsAsync();
+        Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken);
 
         [Get("/rest/system/version")]
         Task<SyncthingVersion> FetchVersionAsync();

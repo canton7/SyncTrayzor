@@ -204,6 +204,7 @@
     <Compile Include="Services\IpcCommsServer.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
     <Compile Include="Services\Metering\Sandbox.cs" />
+    <Compile Include="Syncthing\Devices\DevicePauseState.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\SingleApplicationInstanceManager.cs" />

@@ -65,9 +65,11 @@ namespace SyncTrayzor.Syncthing.ApiClient
             return systemInfo;
         }
 
-        public Task<Connections> FetchConnectionsAsync()
+        public async Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken)
         {
-            return this.api.FetchConnectionsAsync();
+            var connections = await this.api.FetchConnectionsAsync(cancellationToken);
+            logger.Debug("Fetched connections: {0}", connections);
+            return connections;
         }
 
         public async Task<SyncthingVersion> FetchVersionAsync()

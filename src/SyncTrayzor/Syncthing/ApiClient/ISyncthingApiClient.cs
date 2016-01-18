@@ -12,7 +12,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task<Config> FetchConfigAsync();
         Task ScanAsync(string folderId, string subPath);
         Task<SystemInfo> FetchSystemInfoAsync();
-        Task<Connections> FetchConnectionsAsync();
+        Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken);
         Task<SyncthingVersion> FetchVersionAsync();
         Task<Ignores> FetchIgnoresAsync(string folderId, CancellationToken cancellationToken);
         Task RestartAsync();

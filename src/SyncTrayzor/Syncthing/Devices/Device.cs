@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace SyncTrayzor.Syncthing.Devices
 {
@@ -18,28 +19,47 @@ namespace SyncTrayzor.Syncthing.Devices
         public IPEndPoint Address
         {
             get { lock (this.syncRoot) { return this._address; } }
+            private set { lock(this.syncRoot) { this._address = value; } }
+        }
+
+        private DevicePauseState _pauseState;
+        public DevicePauseState PauseState
+        {
+            get { lock(this.syncRoot) { return this._pauseState; } }
+            private set { lock(this.syncRoot) { this._pauseState = value; } }
         }
 
         public Device(string deviceId, string name)
         {
             this.DeviceId = deviceId;
             this.Name = name;
+            this.PauseState = DevicePauseState.Running;
+        }
+
+        public void SetManuallyPaused()
+        {
+            this.PauseState = DevicePauseState.PausedByUs;
         }
 
         public void SetConnected(IPEndPoint address)
         {
-            lock (this.syncRoot)
-            {
-                this._address = address;
-            }
+            this.Address = address;
         }
 
         public void SetDisconnected()
         {
-            lock (this.syncRoot)
-            {
-                this._address = null;
-            }
+            this.Address = null;
+        }
+
+        public void SetPaused()
+        {
+            if (this.PauseState != DevicePauseState.PausedByUs)
+                this.PauseState = DevicePauseState.PausedByUser;
+        }
+
+        public void SetResumed()
+        {
+            this.PauseState = DevicePauseState.Running;
         }
     }
 }

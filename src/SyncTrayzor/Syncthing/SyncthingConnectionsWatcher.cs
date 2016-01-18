@@ -49,7 +49,7 @@ namespace SyncTrayzor.Syncthing
 
         protected override async Task PollAsync(CancellationToken cancellationToken)
         {
-            var connections = await this.apiClient.FetchConnectionsAsync();
+            var connections = await this.apiClient.FetchConnectionsAsync(cancellationToken);
 
             // We can be stopped in the time it takes this to complete
             cancellationToken.ThrowIfCancellationRequested();
