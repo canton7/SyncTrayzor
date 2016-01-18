@@ -3,6 +3,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using NETWORKLIST;
+using System.Runtime.InteropServices;
+using NLog;
 
 namespace SyncTrayzor.Services.Metering
 {
@@ -12,18 +14,38 @@ namespace SyncTrayzor.Services.Metering
         private const ushort AF_INET6 = 23;
         private const int sockaddrDataSize = 128;
 
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly NetworkListManagerClass networkListManager;
 
         public event EventHandler NetworkCostsChanged;
 
         public NetworkCostManager()
         {
-            this.networkListManager = new NetworkListManagerClass();
-            this.networkListManager.ConnectionCostChanged += this.ConnectionCostChanged;
+            try
+            {
+                var networkListManager = new NetworkListManagerClass();
+                networkListManager.ConnectionCostChanged += this.ConnectionCostChanged;
+
+                this.networkListManager = networkListManager;
+            }
+            catch (COMException e) when (e.HResult == -2147220992) // 0x80040200
+            {
+                // Expected if we're < Windows 8
+                logger.Info("Unable to load NetworkListManager: not supported");
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Failed to load network list manager: {e.Message}", e);
+            }
         }
 
         public bool IsConnectionMetered(IPAddress address)
         {
+            // < Windows 8? Always supported
+            if (this.networkListManager == null)
+                return false;
+
             var sockAddr = (address.AddressFamily == AddressFamily.InterNetwork) ?
                 CreateIpv4SockAddr(address) :
                 CreateIPv6SockAddr(address);
