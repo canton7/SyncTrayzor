@@ -43,6 +43,7 @@ namespace SyncTrayzor.Services.Metering
             this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
             this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
             this.costManager.NetworkCostsChanged += this.NetworkCostsChanged;
+            this.costManager.NetworksChanged += this.NetworksChanged;
         }
 
         private void DataLoaded(object sender, EventArgs e)
@@ -64,6 +65,12 @@ namespace SyncTrayzor.Services.Metering
         private void NetworkCostsChanged(object sender, EventArgs e)
         {
             logger.Info("Network costs changed. Updating devices");
+            this.Update();
+        }
+
+        private void NetworksChanged(object sender, EventArgs e)
+        {
+            logger.Info("Networks changed. Updating devices");
             this.Update();
         }
 
@@ -104,6 +111,7 @@ namespace SyncTrayzor.Services.Metering
             this.syncthingManager.Devices.DeviceConnected -= this.DeviceConnected;
             this.syncthingManager.Devices.DeviceDisconnected -= this.DeviceDisconnected;
             this.costManager.NetworkCostsChanged -= this.NetworkCostsChanged;
+            this.costManager.NetworksChanged -= this.NetworksChanged;
         }
     }
 }

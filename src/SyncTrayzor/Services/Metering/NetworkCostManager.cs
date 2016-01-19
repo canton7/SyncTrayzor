@@ -11,6 +11,7 @@ namespace SyncTrayzor.Services.Metering
     public interface INetworkCostManager
     {
         event EventHandler NetworkCostsChanged;
+        event EventHandler NetworksChanged;
 
         bool IsConnectionMetered(IPAddress address);
     }
@@ -26,6 +27,7 @@ namespace SyncTrayzor.Services.Metering
         private readonly NetworkListManagerClass networkListManager;
 
         public event EventHandler NetworkCostsChanged;
+        public event EventHandler NetworksChanged;
 
         public NetworkCostManager()
         {
@@ -33,6 +35,7 @@ namespace SyncTrayzor.Services.Metering
             {
                 var networkListManager = new NetworkListManagerClass();
                 networkListManager.ConnectionCostChanged += this.ConnectionCostChanged;
+                networkListManager.NetworkConnectivityChanged += this.NetworkConnectivityChanged;
 
                 this.networkListManager = networkListManager;
             }
@@ -109,6 +112,11 @@ namespace SyncTrayzor.Services.Metering
         private void ConnectionCostChanged(Guid connectionId, uint newCost)
         {
             this.NetworkCostsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void NetworkConnectivityChanged(Guid networkId, NLM_CONNECTIVITY newConnectivity)
+        {
+            this.NetworksChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
