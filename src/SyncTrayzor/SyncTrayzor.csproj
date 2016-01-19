@@ -208,7 +208,6 @@
     <Compile Include="Services\IpcCommsServer.cs" />
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
-    <Compile Include="Services\Metering\Sandbox.cs" />
     <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\DevicePauseState.cs" />
     <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
