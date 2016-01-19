@@ -19,6 +19,9 @@ namespace SyncTrayzor.Pages.BarAlerts
 
             switch (severity)
             {
+                case AlertSeverity.Info:
+                    return new SolidColorBrush(Color.FromArgb(125, 135, 206, 250));
+
                 case AlertSeverity.Warning:
                     return new SolidColorBrush(Color.FromArgb(125, 255, 255, 0));
 

@@ -165,6 +165,10 @@
     <Compile Include="Pages\BarAlerts\FailedTransfersAlertViewModel.cs" />
     <Compile Include="Pages\BarAlerts\IBarAlert.cs" />
     <Compile Include="Pages\BarAlerts\BarAlertsViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml.cs">
+      <DependentUpon>PausedDevicesFromMeteringView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
@@ -205,7 +209,9 @@
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
     <Compile Include="Services\Metering\Sandbox.cs" />
+    <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\DevicePauseState.cs" />
+    <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\SingleApplicationInstanceManager.cs" />
@@ -407,6 +413,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\BarAlerts\FailedTransfersAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

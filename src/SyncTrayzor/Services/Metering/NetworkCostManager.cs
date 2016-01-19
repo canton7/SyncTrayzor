@@ -52,7 +52,7 @@ namespace SyncTrayzor.Services.Metering
 
         public bool IsConnectionMetered(IPAddress address)
         {
-            // < Windows 8? Always supported
+            // < Windows 8? Never metered
             if (this.networkListManager == null)
                 return false;
 

@@ -10,7 +10,18 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <TextBlock TextWrapping="Wrap">
-            <TextBlock FontWeight="Bold" Text="{l:Loc BarAlertsView_FailedTransfer_AlertText, ValueBinding={Binding FailingFolders}}"/>
+            <TextBlock FontWeight="Bold">
+                <TextBlock.Text>
+                    <l:LocExtension Key="BarAlertsView_FailedTransfer_AlertText">
+                        <l:LocExtension.ValueBindings>
+                            <MultiBinding>
+                                <Binding Path="FailingFolders"/>
+                                <Binding Path="FailingFolders.Count"/>
+                            </MultiBinding>
+                        </l:LocExtension.ValueBindings>
+                    </l:LocExtension>
+                </TextBlock.Text>
+            </TextBlock>
             <TextBlock Margin="5,0,0,0" Text="{l:Loc BarAlertsView_FailedTransfer_Details}"/>
         </TextBlock>
     </Grid>

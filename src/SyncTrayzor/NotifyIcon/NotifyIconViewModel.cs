@@ -30,7 +30,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncthingState SyncthingState { get; set; }
 
-        public bool SyncthingAlert => this.alertsManager.AnyAlerts;
+        public bool SyncthingAlert => this.alertsManager.AnyWarnings;
 
         public bool SyncthingStarted => this.SyncthingState == SyncthingState.Running;
 

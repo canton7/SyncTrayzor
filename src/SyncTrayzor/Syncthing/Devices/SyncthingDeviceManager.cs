@@ -15,6 +15,8 @@ namespace SyncTrayzor.Syncthing.Devices
     {
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        event EventHandler<DevicePausedEventArgs> DevicePaused;
+        event EventHandler<DeviceResumedEventArgs> DeviceResumed;
 
         bool TryFetchById(string deviceId, out Device device);
         IReadOnlyCollection<Device> FetchDevices();
@@ -41,6 +43,8 @@ namespace SyncTrayzor.Syncthing.Devices
 
         public event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         public event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
+        public event EventHandler<DevicePausedEventArgs> DevicePaused;
+        public event EventHandler<DeviceResumedEventArgs> DeviceResumed;
 
         public SyncthingDeviceManager(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient, ISyncthingEventWatcher eventWatcher)
         {
@@ -175,7 +179,7 @@ namespace SyncTrayzor.Syncthing.Devices
             this.OnDeviceDisconnected(device);
         }
 
-        private void EventDevicePaused(object sender, DevicePausedEventArgs e)
+        private void EventDevicePaused(object sender, EventWatcher.DevicePausedEventArgs e)
         {
             Device device;
             if (!this.devices.TryGetValue(e.DeviceId, out device))
@@ -185,9 +189,11 @@ namespace SyncTrayzor.Syncthing.Devices
             }
 
             device.SetPaused();
+
+            this.OnDevicePaused(device);
         }
 
-        private void EventDeviceResumed(object sender, DeviceResumedEventArgs e)
+        private void EventDeviceResumed(object sender, EventWatcher.DeviceResumedEventArgs e)
         {
             Device device;
             if (!this.devices.TryGetValue(e.DeviceId, out device))
@@ -197,6 +203,8 @@ namespace SyncTrayzor.Syncthing.Devices
             }
 
             device.SetResumed();
+
+            this.OnDeviceResumed(device);
         }
 
         private void OnDeviceConnected(Device device)
@@ -207,6 +215,16 @@ namespace SyncTrayzor.Syncthing.Devices
         private void OnDeviceDisconnected(Device device)
         {
             this.eventDispatcher.Raise(this.DeviceDisconnected, new DeviceDisconnectedEventArgs(device));
+        }
+
+        private void OnDevicePaused(Device device)
+        {
+            this.eventDispatcher.Raise(this.DevicePaused, new DevicePausedEventArgs(device));
+        }
+
+        private void OnDeviceResumed(Device device)
+        {
+            this.eventDispatcher.Raise(this.DeviceResumed, new DeviceResumedEventArgs(device));
         }
     }
 }
