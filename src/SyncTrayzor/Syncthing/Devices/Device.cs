@@ -3,7 +3,7 @@ using System.Net;
 
 namespace SyncTrayzor.Syncthing.Devices
 {
-    public class Device
+    public class Device : IEquatable<Device>
     {
         private readonly object syncRoot = new object();
 
@@ -33,7 +33,7 @@ namespace SyncTrayzor.Syncthing.Devices
         {
             this.DeviceId = deviceId;
             this.Name = name;
-            this.PauseState = DevicePauseState.Running;
+            this.PauseState = DevicePauseState.Unpaused;
         }
 
         public void SetManuallyPaused()
@@ -59,7 +59,17 @@ namespace SyncTrayzor.Syncthing.Devices
 
         public void SetResumed()
         {
-            this.PauseState = DevicePauseState.Running;
+            this.PauseState = DevicePauseState.Unpaused;
+        }
+
+        public bool Equals(Device other)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (Object.ReferenceEquals(other, null))
+                return false;
+
+            return this.DeviceId == other.DeviceId;
         }
     }
 }

@@ -22,6 +22,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using SyncTrayzor.Services.Metering;
 
 namespace SyncTrayzor
 {
@@ -69,6 +70,8 @@ namespace SyncTrayzor
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
             builder.Bind<IFileWatcherFactory>().To<FileWatcherFactory>();
             builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
+            builder.Bind<INetworkCostManager>().To<NetworkCostManager>();
+            builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
 
             if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();

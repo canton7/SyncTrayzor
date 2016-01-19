@@ -8,7 +8,7 @@ namespace SyncTrayzor.Syncthing.Devices
 {
     public enum DevicePauseState
     {
-        Running,
+        Unpaused,
         PausedByUser,
         PausedByUs,
     }

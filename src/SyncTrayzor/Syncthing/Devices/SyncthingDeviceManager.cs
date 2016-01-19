@@ -16,8 +16,11 @@ namespace SyncTrayzor.Syncthing.Devices
         event EventHandler<DeviceConnectedEventArgs> DeviceConnected;
         event EventHandler<DeviceDisconnectedEventArgs> DeviceDisconnected;
 
-        bool TryFetchDeviceById(string deviceId, out Device device);
-        IReadOnlyCollection<Device> FetchAllDevices();
+        bool TryFetchById(string deviceId, out Device device);
+        IReadOnlyCollection<Device> FetchDevices();
+
+        Task PauseDeviceAsync(string deviceId);
+        Task ResumeDeviceAsync(string deviceId);
     }
 
     public class SyncthingDeviceManager : ISyncthingDeviceManager
@@ -51,12 +54,12 @@ namespace SyncTrayzor.Syncthing.Devices
             this.eventWatcher.DeviceResumed += this.EventDeviceResumed;
         }
 
-        public bool TryFetchDeviceById(string deviceId, out Device device)
+        public bool TryFetchById(string deviceId, out Device device)
         {
             return this.devices.TryGetValue(deviceId, out device);
         }
 
-        public IReadOnlyCollection<Device> FetchAllDevices()
+        public IReadOnlyCollection<Device> FetchDevices()
         {
             return new List<Device>(this.devices.Values).AsReadOnly();
         }
@@ -110,7 +113,8 @@ namespace SyncTrayzor.Syncthing.Devices
                 ItemConnectionData connectionData;
                 if (connections.DeviceConnections.TryGetValue(device.DeviceID, out connectionData))
                 {
-                    deviceObj.SetConnected(SyncthingAddressParser.Parse(connectionData.Address));
+                    if (connectionData.Connected && connectionData.Address != null)
+                        deviceObj.SetConnected(SyncthingAddressParser.Parse(connectionData.Address));
                     if (connectionData.Paused)
                         deviceObj.SetPaused();
                 }
@@ -129,7 +133,7 @@ namespace SyncTrayzor.Syncthing.Devices
                 return;
 
             device.SetManuallyPaused();
-            await this.apiClient.Value.PauseDeviceAsync(deviceId);
+            await this.apiClient.Value?.PauseDeviceAsync(deviceId);
 
         }
 
@@ -140,7 +144,7 @@ namespace SyncTrayzor.Syncthing.Devices
                 return;
 
             device.SetResumed();
-            await this.apiClient.Value.ResumeDeviceAsync(deviceId);
+            await this.apiClient.Value?.ResumeDeviceAsync(deviceId);
         }
 
         private void EventDeviceConnected(object sender, EventWatcher.DeviceConnectedEventArgs e)

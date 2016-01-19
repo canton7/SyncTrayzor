@@ -8,7 +8,14 @@ using NLog;
 
 namespace SyncTrayzor.Services.Metering
 {
-    public class NetworkCostManager
+    public interface INetworkCostManager
+    {
+        event EventHandler NetworkCostsChanged;
+
+        bool IsConnectionMetered(IPAddress address);
+    }
+
+    public class NetworkCostManager : INetworkCostManager
     {
         private const ushort AF_INET = 2;
         private const ushort AF_INET6 = 23;

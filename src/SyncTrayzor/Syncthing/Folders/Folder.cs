@@ -1,9 +1,10 @@
 ﻿using SyncTrayzor.Syncthing.ApiClient;
 using System.Collections.Generic;
+using System;
 
 namespace SyncTrayzor.Syncthing.Folders
 {
-    public class Folder
+    public class Folder : IEquatable<Folder>
     {
         private readonly object syncRoot = new object();
 
@@ -91,6 +92,26 @@ namespace SyncTrayzor.Syncthing.Folders
             {
                 this._folderErrorsList.Clear();
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Folder);
+        }
+
+        public bool Equals(Folder other)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (Object.ReferenceEquals(other, null))
+                return false;
+
+            return this.FolderId == other.FolderId;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.FolderId.GetHashCode();
         }
     }
 }

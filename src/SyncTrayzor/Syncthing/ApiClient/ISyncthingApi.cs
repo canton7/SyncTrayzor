@@ -50,9 +50,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task SetDebugFacilitiesAsync(string enable, string disable);
 
         [Post("/rest/system/pause")]
-        Task PauseDeviceAsync(string deviceId);
+        Task PauseDeviceAsync(string device);
 
         [Post("/rest/system/resume")]
-        Task ResumeDeviceAsync(string deviceId);
+        Task ResumeDeviceAsync(string device);
     }
 }
