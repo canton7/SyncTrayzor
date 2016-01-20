@@ -22,23 +22,17 @@ namespace SyncTrayzor.Syncthing.Devices
             private set { lock(this.syncRoot) { this._address = value; } }
         }
 
-        private DevicePauseState _pauseState;
-        public DevicePauseState PauseState
+        private bool _paused;
+        public bool Paused
         {
-            get { lock(this.syncRoot) { return this._pauseState; } }
-            private set { lock(this.syncRoot) { this._pauseState = value; } }
+            get { lock(this.syncRoot) { return this._paused; } }
+            private set { lock(this.syncRoot) { this._paused = value; } }
         }
 
         public Device(string deviceId, string name)
         {
             this.DeviceId = deviceId;
             this.Name = name;
-            this.PauseState = DevicePauseState.Unpaused;
-        }
-
-        public void SetManuallyPaused()
-        {
-            this.PauseState = DevicePauseState.PausedByUs;
         }
 
         public void SetConnected(IPEndPoint address)
@@ -53,13 +47,12 @@ namespace SyncTrayzor.Syncthing.Devices
 
         public void SetPaused()
         {
-            if (this.PauseState != DevicePauseState.PausedByUs)
-                this.PauseState = DevicePauseState.PausedByUser;
+            this.Paused = true;
         }
 
         public void SetResumed()
         {
-            this.PauseState = DevicePauseState.Unpaused;
+            this.Paused = false;
         }
 
         public bool Equals(Device other)

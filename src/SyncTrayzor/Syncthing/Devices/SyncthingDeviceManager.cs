@@ -93,10 +93,6 @@ namespace SyncTrayzor.Syncthing.Devices
                         changeNotifications.Add(() => this.OnDeviceConnected(device));
                     else if (existingDevice.IsConnected && !device.IsConnected)
                         changeNotifications.Add(() => this.OnDeviceDisconnected(device));
-
-                    // Avoid a change from PausedByUs -> PausedByUser
-                    if (existingDevice.PauseState == DevicePauseState.PausedByUs && device.PauseState == DevicePauseState.PausedByUser)
-                        device.SetManuallyPaused();
                 }
 
                 newDevices[device.DeviceId] = device;
@@ -141,7 +137,7 @@ namespace SyncTrayzor.Syncthing.Devices
             if (!this.devices.TryGetValue(deviceId, out device))
                 return;
 
-            device.SetManuallyPaused();
+            device.SetPaused();
             await this.apiClient.Value?.PauseDeviceAsync(deviceId);
 
         }

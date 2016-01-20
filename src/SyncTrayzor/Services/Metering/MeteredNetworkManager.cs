@@ -43,9 +43,12 @@ namespace SyncTrayzor.Services.Metering
 
         public bool IsSupportedByWindows => this.costManager.IsSupported;
 
-        private readonly object pausedDeviceIdsLock = new object();
-        private readonly HashSet<String> _pausedDeviceIds = new HashSet<string>();
+        private readonly object syncRoot = new object();
+
+        private readonly HashSet<string> _pausedDeviceIds = new HashSet<string>();
         public IReadOnlyList<string> PausedDeviceIds { get; private set; } = new List<string>().AsReadOnly();
+
+        private readonly HashSet<string> renegadeDeviceIds = new HashSet<string>();
 
         public MeteredNetworkManager(ISyncthingManager syncthingManager, INetworkCostManager costManager)
         {
@@ -56,6 +59,7 @@ namespace SyncTrayzor.Services.Metering
             if (this.costManager.IsSupported)
             {
                 this.syncthingManager.DataLoaded += this.DataLoaded;
+                this.syncthingManager.Devices.DevicePaused += this.DevicePaused;
                 this.syncthingManager.Devices.DeviceResumed += this.DeviceResumed;
                 this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
                 this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
@@ -67,7 +71,7 @@ namespace SyncTrayzor.Services.Metering
         private void DataLoaded(object sender, EventArgs e)
         {
             bool changed;
-            lock (this.pausedDeviceIdsLock)
+            lock (this.syncRoot)
             {
                 changed = this._pausedDeviceIds.Count > 0;
                 this._pausedDeviceIds.Clear();
@@ -79,12 +83,27 @@ namespace SyncTrayzor.Services.Metering
             this.Update();
         }
 
+        private void DevicePaused(object sender, DevicePausedEventArgs e)
+        {
+            bool changed;
+            lock (this.syncRoot)
+            {
+                changed = this._pausedDeviceIds.Add(e.Device.DeviceId);
+
+                // We might not have been expecting this: user has manually paused
+                this.UpdateRenegadeDeviceIds(e.Device.DeviceId, !changed);
+            }
+        }
+
         private void DeviceResumed(object sender, DeviceResumedEventArgs e)
         {
             bool changed;
-            lock (this.pausedDeviceIdsLock)
+            lock (this.syncRoot)
             {
                 changed = this._pausedDeviceIds.Remove(e.Device.DeviceId);
+
+                // We might not have been expecting this: user has manually resumed
+                this.UpdateRenegadeDeviceIds(e.Device.DeviceId, changed);
             }
 
             if (changed)
@@ -116,9 +135,27 @@ namespace SyncTrayzor.Services.Metering
             this.Update();
         }
 
+        private void UpdateRenegadeDeviceIds(string deviceId, bool add)
+        {
+            // We should always be called from inside a lock, but just to be sure....
+            lock (this.syncRoot)
+            {
+                if (add)
+                {
+                    if (this.renegadeDeviceIds.Add(deviceId))
+                        logger.Info($"Device {deviceId} became renegade");
+                }
+                else
+                {
+                    if (this.renegadeDeviceIds.Remove(deviceId))
+                        logger.Info($"Device {deviceId} stopped being renegade");
+                }
+            }
+        }
+
         private void UpdatePausedDeviceIds()
         {
-            lock (this.pausedDeviceIdsLock)
+            lock (this.syncRoot)
             {
                 this.PausedDeviceIds = this._pausedDeviceIds.ToList().AsReadOnly();
             }
@@ -141,29 +178,37 @@ namespace SyncTrayzor.Services.Metering
             if (this.syncthingManager.State != SyncthingState.Running || !this.syncthingManager.Capabilities.SupportsDevicePauseResume)
                 return false;
 
-            var isMetered = this.IsEnabled &&
+            lock (this.syncRoot)
+            {
+                if (this.renegadeDeviceIds.Contains(device.DeviceId))
+                {
+                    logger.Info($"Skipping update of device {device.DeviceId} as it has gone renegade");
+                    return false;
+                }
+            }
+
+            var shouldBePaused = this.IsEnabled &&
                 device.IsConnected &&
-                device.Address != null &&
                 this.costManager.IsConnectionMetered(device.Address.Address);
 
             bool changed = false;
 
-            if (isMetered && device.PauseState == DevicePauseState.Unpaused)
+            if (shouldBePaused && !device.Paused)
             {
                 logger.Info($"Pausing device {device.DeviceId}");
                 await this.syncthingManager.Devices.PauseDeviceAsync(device.DeviceId);
 
-                lock (this.pausedDeviceIdsLock)
+                lock (this.syncRoot)
                 {
                     changed |= this._pausedDeviceIds.Add(device.DeviceId);
                 }
             }
-            else if (!isMetered && device.PauseState == DevicePauseState.PausedByUs)
+            else if (!shouldBePaused && device.Paused)
             {
                 logger.Info($"Resuming device {device.DeviceId}");
                 await this.syncthingManager.Devices.ResumeDeviceAsync(device.DeviceId);
 
-                lock (this.pausedDeviceIdsLock)
+                lock (this.syncRoot)
                 {
                     changed |= this._pausedDeviceIds.Remove(device.DeviceId);
                 }
@@ -175,6 +220,7 @@ namespace SyncTrayzor.Services.Metering
         public void Dispose()
         {
             this.syncthingManager.DataLoaded -= this.DataLoaded;
+            this.syncthingManager.Devices.DevicePaused -= this.DevicePaused;
             this.syncthingManager.Devices.DeviceResumed -= this.DeviceResumed;
             this.syncthingManager.Devices.DeviceConnected -= this.DeviceConnected;
             this.syncthingManager.Devices.DeviceDisconnected -= this.DeviceDisconnected;

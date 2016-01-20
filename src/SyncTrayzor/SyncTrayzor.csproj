@@ -209,7 +209,6 @@
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
     <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
-    <Compile Include="Syncthing\Devices\DevicePauseState.cs" />
     <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
