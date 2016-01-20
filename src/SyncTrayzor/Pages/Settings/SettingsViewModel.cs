@@ -122,7 +122,7 @@ namespace SyncTrayzor.Pages.Settings
             this.EnableFailedTransferAlerts = this.CreateBasicSettingItem(x => x.EnableFailedTransferAlerts);
 
             this.PauseDevicesOnMeteredNetworks = this.CreateBasicSettingItem(x => x.PauseDevicesOnMeteredNetworks);
-            this.PauseDevicesOnMeteredNetworksSupported = meteredNetworkManager.IsSupported;
+            this.PauseDevicesOnMeteredNetworksSupported = meteredNetworkManager.IsSupportedByWindows;
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);

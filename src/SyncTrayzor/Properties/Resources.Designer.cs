@@ -873,7 +873,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must be using Windows 8 or above and Syncthing v0.12 or above to use this feature..
+        ///   Looks up a localized string similar to You must be using Windows 8 or above to use this feature..
         /// </summary>
         public static string SettingsView_MeteredNetworks_NotSupported {
             get {

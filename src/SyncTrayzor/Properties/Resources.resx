@@ -894,7 +894,7 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Pause devices which connect over a metered network</value>
   </data>
   <data name="SettingsView_MeteredNetworks_NotSupported" xml:space="preserve">
-    <value>You must be using Windows 8 or above and Syncthing v0.12 or above to use this feature.</value>
+    <value>You must be using Windows 8 or above to use this feature.</value>
   </data>
   <data name="SettingsView_Section_MeteredNetworks" xml:space="preserve">
     <value>Metered Networks</value>

@@ -14,7 +14,7 @@ namespace SyncTrayzor.Services.Metering
         event EventHandler PausedDevicesChanged;
 
         bool IsEnabled { get; set; }
-        bool IsSupported { get; }
+        bool IsSupportedByWindows { get; }
 
         IReadOnlyList<string> PausedDeviceIds { get; }
     }
@@ -41,7 +41,7 @@ namespace SyncTrayzor.Services.Metering
             }
         }
 
-        public bool IsSupported => this.costManager.IsSupported && this.syncthingManager.Capabilities.SupportsDevicePauseResume;
+        public bool IsSupportedByWindows => this.costManager.IsSupported;
 
         private readonly object pausedDeviceIdsLock = new object();
         private readonly HashSet<String> _pausedDeviceIds = new HashSet<string>();
@@ -52,9 +52,8 @@ namespace SyncTrayzor.Services.Metering
             this.syncthingManager = syncthingManager;
             this.costManager = costManager;
 
-            // Only bother if it's actually supported. This stops us trying to do things like pause a device when
-            // pausing isn't supported.
-            if (this.IsSupported)
+            // We won't know whether or not Syncthing supports this until it loads
+            if (this.costManager.IsSupported)
             {
                 this.syncthingManager.DataLoaded += this.DataLoaded;
                 this.syncthingManager.Devices.DeviceResumed += this.DeviceResumed;
@@ -139,7 +138,7 @@ namespace SyncTrayzor.Services.Metering
 
         private async Task<bool> UpdateDeviceAsync(Device device)
         {
-            if (this.syncthingManager.State != SyncthingState.Running)
+            if (this.syncthingManager.State != SyncthingState.Running || !this.syncthingManager.Capabilities.SupportsDevicePauseResume)
                 return false;
 
             var isMetered = this.IsEnabled &&
