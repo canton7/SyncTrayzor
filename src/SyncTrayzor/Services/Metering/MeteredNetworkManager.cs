@@ -37,7 +37,10 @@ namespace SyncTrayzor.Services.Metering
                 if (this._isEnabled == value)
                     return;
                 this._isEnabled = value;
-                this.Update();
+                if (value)
+                    this.Enable();
+                else
+                    this.Disable();
             }
         }
 
@@ -58,6 +61,7 @@ namespace SyncTrayzor.Services.Metering
             // We won't know whether or not Syncthing supports this until it loads
             if (this.costManager.IsSupported)
             {
+                this.syncthingManager.StateChanged += this.SyncthingStateChanged;
                 this.syncthingManager.DataLoaded += this.DataLoaded;
                 this.syncthingManager.Devices.DevicePaused += this.DevicePaused;
                 this.syncthingManager.Devices.DeviceResumed += this.DeviceResumed;
@@ -68,13 +72,24 @@ namespace SyncTrayzor.Services.Metering
             }
         }
 
+        private void SyncthingStateChanged(object sender, SyncthingStateChangedEventArgs e)
+        {
+            if (e.NewState != SyncthingState.Running)
+                this.ClearAllDevices();
+            // Else, we'll get DataLoaded shortly
+        }
+
         private void DataLoaded(object sender, EventArgs e)
         {
+            if (!this.IsEnabled)
+                return;
+
             bool changed;
             lock (this.syncRoot)
             {
                 changed = this._pausedDeviceIds.Count > 0;
                 this._pausedDeviceIds.Clear();
+                this.renegadeDeviceIds.Clear();
             }
 
             if (changed)
@@ -85,18 +100,27 @@ namespace SyncTrayzor.Services.Metering
 
         private void DevicePaused(object sender, DevicePausedEventArgs e)
         {
+            if (!this.IsEnabled)
+                return;
+
             bool changed;
             lock (this.syncRoot)
             {
                 changed = this._pausedDeviceIds.Add(e.Device.DeviceId);
 
                 // We might not have been expecting this: user has manually paused
-                this.UpdateRenegadeDeviceIds(e.Device.DeviceId, !changed);
+                this.UpdateRenegadeDeviceIds(e.Device.DeviceId, changed);
             }
+
+            if (changed)
+                this.UpdatePausedDeviceIds();
         }
 
         private void DeviceResumed(object sender, DeviceResumedEventArgs e)
         {
+            if (!this.IsEnabled)
+                return;
+
             bool changed;
             lock (this.syncRoot)
             {
@@ -112,6 +136,9 @@ namespace SyncTrayzor.Services.Metering
 
         private async void DeviceConnected(object sender, DeviceConnectedEventArgs e)
         {
+            if (!this.IsEnabled)
+                return;
+
             var changed = await this.UpdateDeviceAsync(e.Device);
             if (changed)
                 this.UpdatePausedDeviceIds();
@@ -125,12 +152,18 @@ namespace SyncTrayzor.Services.Metering
 
         private void NetworkCostsChanged(object sender, EventArgs e)
         {
+            if (!this.IsEnabled)
+                return;
+
             logger.Info("Network costs changed. Updating devices");
             this.Update();
         }
 
         private void NetworksChanged(object sender, EventArgs e)
         {
+            if (!this.IsEnabled)
+                return;
+
             logger.Info("Networks changed. Updating devices");
             this.Update();
         }
@@ -163,6 +196,39 @@ namespace SyncTrayzor.Services.Metering
             this.PausedDevicesChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        private void Enable()
+        {
+            this.Update();
+        }
+
+        private void ClearAllDevices()
+        {
+            bool changed;
+            lock (this.syncRoot)
+            {
+                changed = this._pausedDeviceIds.Count > 0;
+                this._pausedDeviceIds.Clear();
+                this.renegadeDeviceIds.Clear();
+            }
+
+            if (changed)
+                this.UpdatePausedDeviceIds();
+        }
+
+        private async void Disable()
+        {
+            List<string> deviceIdsToUnpause;
+            lock (this.syncRoot)
+            {
+                deviceIdsToUnpause = this._pausedDeviceIds.Except(this.renegadeDeviceIds).ToList();
+            }
+
+            this.ClearAllDevices();
+
+            if (this.syncthingManager.State == SyncthingState.Running)
+                await Task.WhenAll(deviceIdsToUnpause.Select(x => this.syncthingManager.Devices.ResumeDeviceAsync(x)).ToList());
+        }
+
         private async void Update()
         {
             var devices = this.syncthingManager.Devices.FetchDevices();
@@ -175,7 +241,7 @@ namespace SyncTrayzor.Services.Metering
 
         private async Task<bool> UpdateDeviceAsync(Device device)
         {
-            if (this.syncthingManager.State != SyncthingState.Running || !this.syncthingManager.Capabilities.SupportsDevicePauseResume)
+            if (!this.IsEnabled || this.syncthingManager.State != SyncthingState.Running || !this.syncthingManager.Capabilities.SupportsDevicePauseResume)
                 return false;
 
             lock (this.syncRoot)
@@ -187,9 +253,7 @@ namespace SyncTrayzor.Services.Metering
                 }
             }
 
-            var shouldBePaused = this.IsEnabled &&
-                device.IsConnected &&
-                this.costManager.IsConnectionMetered(device.Address.Address);
+            var shouldBePaused = device.IsConnected && this.costManager.IsConnectionMetered(device.Address.Address);
 
             bool changed = false;
 
@@ -219,6 +283,7 @@ namespace SyncTrayzor.Services.Metering
 
         public void Dispose()
         {
+            this.syncthingManager.StateChanged -= this.SyncthingStateChanged;
             this.syncthingManager.DataLoaded -= this.DataLoaded;
             this.syncthingManager.Devices.DevicePaused -= this.DevicePaused;
             this.syncthingManager.Devices.DeviceResumed -= this.DeviceResumed;
