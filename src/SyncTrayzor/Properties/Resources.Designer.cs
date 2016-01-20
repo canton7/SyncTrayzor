@@ -187,7 +187,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following {1:p:device has|devices have} been paused because you are connected to a metered network: {0:l:{}|, }..
+        ///   Looks up a localized string similar to The following {1:p:device has|devices have} been paused because {1:p:it is|they are} connected to a metered network: {0:l:{}|, }..
         /// </summary>
         public static string BarAlertsView_PausedDevicesFromMetering_AlertText {
             get {

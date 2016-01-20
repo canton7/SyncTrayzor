@@ -883,7 +883,7 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Please choose the version of the file you want to keep. The other versions will be deleted.</value>
   </data>
   <data name="BarAlertsView_PausedDevicesFromMetering_AlertText" xml:space="preserve">
-    <value>The following {1:p:device has|devices have} been paused because you are connected to a metered network: {0:l:{}|, }.</value>
+    <value>The following {1:p:device has|devices have} been paused because {1:p:it is|they are} connected to a metered network: {0:l:{}|, }.</value>
     <comment>{0}: List of paused devices
 {1}: Number of paused devies</comment>
   </data>
