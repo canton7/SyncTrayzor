@@ -261,6 +261,7 @@
     <Compile Include="Syncthing\Devices\SyncthingDeviceManager.cs" />
     <Compile Include="Syncthing\ApiClient\SyncthingHttpClientHandler.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
+    <Compile Include="Syncthing\SyncthingCapabilities.cs" />
     <Compile Include="Syncthing\SyncthingDidNotStartCorrectlyException.cs" />
     <Compile Include="Syncthing\SyncthingConnectionsWatcherFactory.cs" />
     <Compile Include="Syncthing\EventWatcher\SyncthingEventWatcherFactory.cs" />

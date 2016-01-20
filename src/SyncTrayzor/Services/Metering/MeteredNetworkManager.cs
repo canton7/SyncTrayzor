@@ -14,6 +14,7 @@ namespace SyncTrayzor.Services.Metering
         event EventHandler PausedDevicesChanged;
 
         bool IsEnabled { get; set; }
+        bool IsSupported { get; }
 
         IReadOnlyList<string> PausedDeviceIds { get; }
     }
@@ -40,6 +41,8 @@ namespace SyncTrayzor.Services.Metering
             }
         }
 
+        public bool IsSupported => this.costManager.IsSupported && this.syncthingManager.Capabilities.SupportsDevicePauseResume;
+
         private readonly object pausedDeviceIdsLock = new object();
         private readonly HashSet<String> _pausedDeviceIds = new HashSet<string>();
         public IReadOnlyList<string> PausedDeviceIds { get; private set; } = new List<string>().AsReadOnly();
@@ -49,12 +52,17 @@ namespace SyncTrayzor.Services.Metering
             this.syncthingManager = syncthingManager;
             this.costManager = costManager;
 
-            this.syncthingManager.DataLoaded += this.DataLoaded;
-            this.syncthingManager.Devices.DeviceResumed += this.DeviceResumed;
-            this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
-            this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
-            this.costManager.NetworkCostsChanged += this.NetworkCostsChanged;
-            this.costManager.NetworksChanged += this.NetworksChanged;
+            // Only bother if it's actually supported. This stops us trying to do things like pause a device when
+            // pausing isn't supported.
+            if (this.IsSupported)
+            {
+                this.syncthingManager.DataLoaded += this.DataLoaded;
+                this.syncthingManager.Devices.DeviceResumed += this.DeviceResumed;
+                this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
+                this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
+                this.costManager.NetworkCostsChanged += this.NetworkCostsChanged;
+                this.costManager.NetworksChanged += this.NetworksChanged;
+            }
         }
 
         private void DataLoaded(object sender, EventArgs e)

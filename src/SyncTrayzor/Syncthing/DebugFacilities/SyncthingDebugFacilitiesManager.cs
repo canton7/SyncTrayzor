@@ -34,6 +34,7 @@ namespace SyncTrayzor.Syncthing.DebugFacilities
         };
 
         private readonly SynchronizedTransientWrapper<ISyncthingApiClient> apiClient;
+        private readonly ISyncthingCapabilities capabilities;
 
         private DebugFacilitiesSettings fetchedDebugFacilitySettings;
         private List<string> enabledDebugFacilities = new List<string>();
@@ -41,16 +42,18 @@ namespace SyncTrayzor.Syncthing.DebugFacilities
         public bool SupportsRestartlessUpdate { get; private set; }
         public IReadOnlyList<DebugFacility> DebugFacilities { get; private set; }
 
-        public SyncthingDebugFacilitiesManager(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient)
+        public SyncthingDebugFacilitiesManager(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient, ISyncthingCapabilities capabilities)
         {
             this.apiClient = apiClient;
+            this.capabilities = capabilities;
+
             this.SupportsRestartlessUpdate = false;
             this.DebugFacilities = new List<DebugFacility>();
         }
 
-        public async Task LoadAsync(Version syncthingVersion)
+        public async Task LoadAsync()
         {
-            if (syncthingVersion.Minor < 12)
+            if (this.capabilities.SupportsDebugFacilities)
             {
                 this.SupportsRestartlessUpdate = false;
                 this.fetchedDebugFacilitySettings = null;

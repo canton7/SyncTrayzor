@@ -10,6 +10,8 @@ namespace SyncTrayzor.Services.Metering
 {
     public interface INetworkCostManager
     {
+        bool IsSupported { get; }
+
         event EventHandler NetworkCostsChanged;
         event EventHandler NetworksChanged;
 
@@ -25,6 +27,8 @@ namespace SyncTrayzor.Services.Metering
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly NetworkListManagerClass networkListManager;
+
+        public bool IsSupported => this.networkListManager != null;
 
         public event EventHandler NetworkCostsChanged;
         public event EventHandler NetworksChanged;
@@ -53,7 +57,7 @@ namespace SyncTrayzor.Services.Metering
         public bool IsConnectionMetered(IPAddress address)
         {
             // < Windows 8? Never metered
-            if (this.networkListManager == null)
+            if (!this.IsSupported)
                 return false;
 
             var sockAddr = (address.AddressFamily == AddressFamily.InterNetwork) ?

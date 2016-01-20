@@ -46,6 +46,7 @@ namespace SyncTrayzor.Syncthing
         ISyncthingDeviceManager Devices { get; }
         ISyncthingTransferHistory TransferHistory { get; }
         ISyncthingDebugFacilitiesManager DebugFacilities { get; }
+        ISyncthingCapabilities Capabilities { get; }
 
         Task StartAsync();
         Task StopAsync();
@@ -142,6 +143,9 @@ namespace SyncTrayzor.Syncthing
         private SyncthingDebugFacilitiesManager _debugFacilities;
         public ISyncthingDebugFacilitiesManager DebugFacilities => this._debugFacilities;
 
+        private readonly SyncthingCapabilities _capabilities = new SyncthingCapabilities();
+        public ISyncthingCapabilities Capabilities => this._capabilities;
+
         public SyncthingManager(
             ISyncthingProcessRunner processRunner,
             ISyncthingApiClientFactory apiClientFactory,
@@ -169,9 +173,9 @@ namespace SyncTrayzor.Syncthing
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
             this._folders = new SyncthingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
-            this._devices = new SyncthingDeviceManager(this.apiClient, this.eventWatcher);
+            this._devices = new SyncthingDeviceManager(this.apiClient, this.eventWatcher, this.Capabilities);
             this._transferHistory = new SyncthingTransferHistory(this.eventWatcher, this._folders);
-            this._debugFacilities = new SyncthingDebugFacilitiesManager(this.apiClient);
+            this._debugFacilities = new SyncthingDebugFacilitiesManager(this.apiClient, this.Capabilities);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
@@ -446,10 +450,11 @@ namespace SyncTrayzor.Syncthing
             var syncthingVersion = syncthingVersionTask.Result;
 
             this.Version = new SyncthingVersionInformation(syncthingVersion.Version, syncthingVersion.LongVersion);
+            this._capabilities.SyncthingVersion = this.Version.ParsedVersion;
             
             cancellationToken.ThrowIfCancellationRequested();
 
-            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync(this.Version.ParsedVersion);
+            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync();
             var configDataLoadTask = this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
 
             await Task.WhenAll(debugFacilitiesLoadTask, configDataLoadTask);

@@ -32,6 +32,7 @@ namespace SyncTrayzor.Syncthing.Devices
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly SynchronizedTransientWrapper<ISyncthingApiClient> apiClient;
         private readonly ISyncthingEventWatcher eventWatcher;
+        private readonly ISyncthingCapabilities capabilities;
 
         private readonly object devicesLock = new object();
         private ConcurrentDictionary<string, Device> _devices = new ConcurrentDictionary<string, Device>();
@@ -46,11 +47,12 @@ namespace SyncTrayzor.Syncthing.Devices
         public event EventHandler<DevicePausedEventArgs> DevicePaused;
         public event EventHandler<DeviceResumedEventArgs> DeviceResumed;
 
-        public SyncthingDeviceManager(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient, ISyncthingEventWatcher eventWatcher)
+        public SyncthingDeviceManager(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient, ISyncthingEventWatcher eventWatcher, ISyncthingCapabilities capabilities)
         {
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.apiClient = apiClient;
             this.eventWatcher = eventWatcher;
+            this.capabilities = capabilities;
 
             this.eventWatcher.DeviceConnected += this.EventDeviceConnected;
             this.eventWatcher.DeviceDisconnected += this.EventDeviceDisconnected;
@@ -132,6 +134,9 @@ namespace SyncTrayzor.Syncthing.Devices
         
         public async Task PauseDeviceAsync(string deviceId)
         {
+            if (!this.capabilities.SupportsDevicePauseResume)
+                throw new InvalidOperationException("Syncthing version does not support device pause and resume");
+
             Device device;
             if (!this.devices.TryGetValue(deviceId, out device))
                 return;
@@ -143,6 +148,9 @@ namespace SyncTrayzor.Syncthing.Devices
 
         public async Task ResumeDeviceAsync(string deviceId)
         {
+            if (!this.capabilities.SupportsDevicePauseResume)
+                throw new InvalidOperationException("Syncthing version does not support device pause and resume");
+
             Device device;
             if (!this.devices.TryGetValue(deviceId, out device))
                 return;
