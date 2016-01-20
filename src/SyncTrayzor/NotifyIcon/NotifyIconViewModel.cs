@@ -30,7 +30,9 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncthingState SyncthingState { get; set; }
 
-        public bool SyncthingAlert => this.alertsManager.AnyWarnings;
+        public bool SyncthingDevicesPaused => this.alertsManager.PausedDeviceIdsFromMetering.Count > 0;
+
+        public bool SyncthingWarning => this.alertsManager.AnyWarnings;
 
         public bool SyncthingStarted => this.SyncthingState == SyncthingState.Running;
 
@@ -82,7 +84,8 @@ namespace SyncTrayzor.NotifyIcon
 
         private void AlertsStateChanged(object sender, EventArgs e)
         {
-            this.NotifyOfPropertyChange(nameof(this.SyncthingAlert));
+            this.NotifyOfPropertyChange(nameof(this.SyncthingDevicesPaused));
+            this.NotifyOfPropertyChange(nameof(this.SyncthingWarning));
         }
 
         public void DoubleClick()
