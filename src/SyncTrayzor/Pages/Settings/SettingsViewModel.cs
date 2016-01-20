@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
 using System.IO;
+using SyncTrayzor.Services.Metering;
 
 namespace SyncTrayzor.Pages.Settings
 {
@@ -55,6 +56,9 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> EnableConflictFileMonitoring { get; }
         public SettingItem<bool> EnableFailedTransferAlerts { get; }
 
+        public bool PauseDevicesOnMeteredNetworksSupported { get; }
+        public SettingItem<bool> PauseDevicesOnMeteredNetworks { get; }
+
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
@@ -94,7 +98,8 @@ namespace SyncTrayzor.Pages.Settings
             IAssemblyProvider assemblyProvider,
             IApplicationState applicationState,
             IApplicationPathsProvider applicationPathsProvider,
-            ISyncthingManager syncthingManager)
+            ISyncthingManager syncthingManager,
+            IMeteredNetworkManager meteredNetworkManager)
         {
             this.configurationProvider = configurationProvider;
             this.autostartProvider = autostartProvider;
@@ -115,6 +120,9 @@ namespace SyncTrayzor.Pages.Settings
             this.DisableHardwareRendering.RequiresSyncTrayzorRestart = true;
             this.EnableConflictFileMonitoring = this.CreateBasicSettingItem(x => x.EnableConflictFileMonitoring);
             this.EnableFailedTransferAlerts = this.CreateBasicSettingItem(x => x.EnableFailedTransferAlerts);
+
+            this.PauseDevicesOnMeteredNetworks = this.CreateBasicSettingItem(x => x.PauseDevicesOnMeteredNetworks);
+            this.PauseDevicesOnMeteredNetworksSupported = meteredNetworkManager.IsSupported;
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);

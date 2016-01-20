@@ -864,6 +864,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pause devices which connect over a metered network.
+        /// </summary>
+        public static string SettingsView_MeteredNetworks {
+            get {
+                return ResourceManager.GetString("SettingsView_MeteredNetworks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must be using Windows 8 or above and Syncthing v0.12 or above to use this feature..
+        /// </summary>
+        public static string SettingsView_MeteredNetworks_NotSupported {
+            get {
+                return ResourceManager.GetString("SettingsView_MeteredNetworks_NotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimize to tray.
         /// </summary>
         public static string SettingsView_MinimizeToTray {
@@ -945,6 +963,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Section_Alerts {
             get {
                 return ResourceManager.GetString("SettingsView_Section_Alerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metered Networks.
+        /// </summary>
+        public static string SettingsView_Section_MeteredNetworks {
+            get {
+                return ResourceManager.GetString("SettingsView_Section_MeteredNetworks", resourceCulture);
             }
         }
         

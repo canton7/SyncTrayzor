@@ -77,9 +77,6 @@ namespace SyncTrayzor.Services
             this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
             this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(Settings.Default.UpdateCheckIntervalSeconds);
 
-            // For now...
-            this.meteredNetworkManager.IsEnabled = true;
-
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
 
@@ -111,6 +108,8 @@ namespace SyncTrayzor.Services
             this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
 
             this.conflictFileWatcher.IsEnabled = configuration.EnableConflictFileMonitoring;
+
+            this.meteredNetworkManager.IsEnabled = configuration.PauseDevicesOnMeteredNetworks;
 
             this.alertsManager.EnableConflictedFileAlerts = configuration.EnableConflictFileMonitoring;
             this.alertsManager.EnableFailedTransferAlerts = configuration.EnableFailedTransferAlerts;
