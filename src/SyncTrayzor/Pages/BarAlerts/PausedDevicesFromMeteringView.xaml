@@ -9,17 +9,6 @@
              d:DataContext="{d:DesignInstance local:PausedDevicesFromMeteringViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
     <StackPanel>
-        <TextBlock TextWrapping="Wrap">
-            <TextBlock.Text>
-                <l:LocExtension Key="BarAlertsView_PausedDevicesFromMetering_AlertText">
-                    <l:LocExtension.ValueBindings>
-                        <MultiBinding>
-                            <Binding Path="PausedDeviceNames"/>
-                            <Binding Path="PausedDeviceNames.Count"/>
-                        </MultiBinding>
-                    </l:LocExtension.ValueBindings>
-                </l:LocExtension>
-            </TextBlock.Text>
-        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Text="{l:Loc BarAlertsView_PausedDevicesFromMetering_AlertText, ValueBinding={Binding PausedDeviceNames}}"/>
     </StackPanel>
 </UserControl>

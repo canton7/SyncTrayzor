@@ -1,4 +1,6 @@
 ﻿using SmartFormat;
+using SmartFormat.Core.Extensions;
+using SmartFormat.Extensions;
 using SyncTrayzor.Properties;
 using System;
 using System.Globalization;
@@ -8,6 +10,27 @@ namespace SyncTrayzor.Localization
 {
     public static class Localizer
     {
+        private static readonly SmartFormatter formatter;
+
+        static Localizer()
+        {
+            formatter = new SmartFormatter();
+
+            var listFormatter = new ListFormatter(formatter);
+
+            formatter.AddExtensions(
+                listFormatter,
+                new DefaultSource(formatter)
+            );
+
+            formatter.AddExtensions(
+                listFormatter,
+                new PluralLocalizationFormatter("en"),
+                new ChooseFormatter(),
+                new DefaultFormatter()
+            );
+        }
+
         public static string Translate(string key, params object[] parameters)
         {
             var culture = Thread.CurrentThread.CurrentUICulture;
@@ -17,12 +40,12 @@ namespace SyncTrayzor.Localization
             if (format == null)
                 return "!" + key + (parameters.Length > 0 ? ":" + String.Join(",", parameters) : "") + "!";
 
-            return Smart.Format(culture, format, parameters);
+            return formatter.Format(culture, format, parameters);
         }
 
         public static string F(string format, params object[] parameters)
         {
-            return Smart.Format(Thread.CurrentThread.CurrentUICulture, format, parameters);
+            return formatter.Format(Thread.CurrentThread.CurrentUICulture, format, parameters);
         }
 
         public static string OriginalTranslation(string key)

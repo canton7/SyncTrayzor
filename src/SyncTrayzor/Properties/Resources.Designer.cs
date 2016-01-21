@@ -169,7 +169,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following {1:p:folder has|folders have} failing file transfers: {0:l:{}|, }..
+        ///   Looks up a localized string similar to The following {0:p:folder has|folders have} failing file transfers: {0:l:{}|, }..
         /// </summary>
         public static string BarAlertsView_FailedTransfer_AlertText {
             get {
@@ -187,7 +187,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following {1:p:device has|devices have} been paused because {1:p:it is|they are} connected to a metered network: {0:l:{}|, }..
+        ///   Looks up a localized string similar to The following {0:p:device has|devices have} been paused because {0:p:it|they} connected to a metered network: {0:l:{}|, }..
         /// </summary>
         public static string BarAlertsView_PausedDevicesFromMetering_AlertText {
             get {
