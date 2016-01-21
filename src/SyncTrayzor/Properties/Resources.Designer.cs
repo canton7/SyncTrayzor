@@ -774,6 +774,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See the &apos;Folders&apos; tab for per-folder alert settings..
+        /// </summary>
+        public static string SettingsView_Alerts_SeeFolders {
+            get {
+                return ResourceManager.GetString("SettingsView_Alerts_SeeFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to API Key:.
         /// </summary>
         public static string SettingsView_ApiKey {
