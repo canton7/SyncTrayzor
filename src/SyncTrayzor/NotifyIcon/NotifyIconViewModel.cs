@@ -3,6 +3,7 @@ using SyncTrayzor.Pages;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
@@ -29,7 +30,9 @@ namespace SyncTrayzor.NotifyIcon
 
         public SyncthingState SyncthingState { get; set; }
 
-        public bool SyncthingAlert => this.alertsManager.AnyAlerts;
+        public bool SyncthingDevicesPaused => this.alertsManager.PausedDeviceIdsFromMetering.Count > 0;
+
+        public bool SyncthingWarning => this.alertsManager.AnyWarnings;
 
         public bool SyncthingStarted => this.SyncthingState == SyncthingState.Running;
 
@@ -81,7 +84,8 @@ namespace SyncTrayzor.NotifyIcon
 
         private void AlertsStateChanged(object sender, EventArgs e)
         {
-            this.NotifyOfPropertyChange(nameof(this.SyncthingAlert));
+            this.NotifyOfPropertyChange(nameof(this.SyncthingDevicesPaused));
+            this.NotifyOfPropertyChange(nameof(this.SyncthingWarning));
         }
 
         public void DoubleClick()

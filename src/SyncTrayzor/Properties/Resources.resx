@@ -846,9 +846,10 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Alert me of conflicted files</value>
   </data>
   <data name="BarAlertsView_FailedTransfer_AlertText" xml:space="preserve">
-    <value>The following folders have failing file transfers: {0:l:{}|, }.</value>
+    <value>The following {1:p:folder has|folders have} failing file transfers: {0:l:{}|, }.</value>
     <comment>Text show in a bar alert at the top of the screen when there are 1 or more folders with failing transfers. 
-{0}: List of folders with failing file transfers</comment>
+{0}: List of folders with failing file transfers
+{1}: Number of folders with failing file transfers</comment>
   </data>
   <data name="BarAlertsView_FailedTransfer_Details" xml:space="preserve">
     <value>Please see the Syncthing GUI or Console for clues.</value>
@@ -880,5 +881,22 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="ConflictResolutionView_ChooseDescription" xml:space="preserve">
     <value>Please choose the version of the file you want to keep. The other versions will be deleted.</value>
+  </data>
+  <data name="BarAlertsView_PausedDevicesFromMetering_AlertText" xml:space="preserve">
+    <value>The following {1:p:device has|devices have} been paused because {1:p:it is|they are} connected to a metered network: {0:l:{}|, }.</value>
+    <comment>{0}: List of paused devices
+{1}: Number of paused devies</comment>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SettingsView_MeteredNetworks" xml:space="preserve">
+    <value>Pause devices which connect over a metered network</value>
+  </data>
+  <data name="SettingsView_MeteredNetworks_NotSupported" xml:space="preserve">
+    <value>You must be using Windows 8 or above to use this feature.</value>
+  </data>
+  <data name="SettingsView_Section_MeteredNetworks" xml:space="preserve">
+    <value>Metered Networks</value>
   </data>
 </root>

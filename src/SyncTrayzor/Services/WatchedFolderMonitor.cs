@@ -1,4 +1,5 @@
 ﻿using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Folders;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -29,7 +29,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task<SystemInfo> FetchSystemInfoAsync();
 
         [Get("/rest/system/connections")]
-        Task<Connections> FetchConnectionsAsync();
+        Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken);
 
         [Get("/rest/system/version")]
         Task<SyncthingVersion> FetchVersionAsync();
@@ -48,5 +48,11 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         [Post("/rest/system/debug")]
         Task SetDebugFacilitiesAsync(string enable, string disable);
+
+        [Post("/rest/system/pause")]
+        Task PauseDeviceAsync(string device);
+
+        [Post("/rest/system/resume")]
+        Task ResumeDeviceAsync(string device);
     }
 }

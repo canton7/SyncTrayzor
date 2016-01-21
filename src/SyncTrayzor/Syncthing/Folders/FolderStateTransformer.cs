@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using NLog;
-using SyncTrayzor.Syncthing.ApiClient;
 
-namespace SyncTrayzor.Syncthing
+namespace SyncTrayzor.Syncthing.Folders
 {
     public static class FolderStateTransformer
     {
@@ -16,7 +15,7 @@ namespace SyncTrayzor.Syncthing
             { "error", FolderSyncState.Error },
         };
 
-        public static FolderSyncState SyncStateFromStatus(string state)
+        public static FolderSyncState SyncStateFromString(string state)
         {
             FolderSyncState syncState;
             if (folderSyncStateLookup.TryGetValue(state, out syncState))

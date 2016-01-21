@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SyncTrayzor.Syncthing
+namespace SyncTrayzor.Syncthing.Folders
 {
     public class FolderErrorsChangedEventArgs : EventArgs
     {

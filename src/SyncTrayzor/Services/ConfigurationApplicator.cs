@@ -7,6 +7,7 @@ using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
+using SyncTrayzor.Services.Metering;
 
 namespace SyncTrayzor.Services
 {
@@ -22,6 +23,7 @@ namespace SyncTrayzor.Services
         private readonly IUpdateManager updateManager;
         private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly IAlertsManager alertsManager;
+        private readonly IMeteredNetworkManager meteredNetworkManager;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
@@ -32,7 +34,8 @@ namespace SyncTrayzor.Services
             IWatchedFolderMonitor watchedFolderMonitor,
             IUpdateManager updateManager,
             IConflictFileWatcher conflictFileWatcher,
-            IAlertsManager alertsManager)
+            IAlertsManager alertsManager,
+            IMeteredNetworkManager meteredNetworkManager)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
@@ -45,6 +48,7 @@ namespace SyncTrayzor.Services
             this.updateManager = updateManager;
             this.conflictFileWatcher = conflictFileWatcher;
             this.alertsManager = alertsManager;
+            this.meteredNetworkManager = meteredNetworkManager;
 
             this.syncthingManager.DataLoaded += this.OnDataLoaded;
             this.updateManager.VersionIgnored += this.VersionIgnored;
@@ -104,6 +108,8 @@ namespace SyncTrayzor.Services
             this.updateManager.CheckForUpdates = configuration.NotifyOfNewVersions;
 
             this.conflictFileWatcher.IsEnabled = configuration.EnableConflictFileMonitoring;
+
+            this.meteredNetworkManager.IsEnabled = configuration.PauseDevicesOnMeteredNetworks;
 
             this.alertsManager.EnableConflictedFileAlerts = configuration.EnableConflictFileMonitoring;
             this.alertsManager.EnableFailedTransferAlerts = configuration.EnableFailedTransferAlerts;

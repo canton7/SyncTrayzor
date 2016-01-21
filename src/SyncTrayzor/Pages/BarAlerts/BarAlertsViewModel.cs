@@ -1,22 +1,28 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Services;
+using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Devices;
 using System;
+using System.Collections.Generic;
 
 namespace SyncTrayzor.Pages.BarAlerts
 {
     public class BarAlertsViewModel : Conductor<IBarAlert>.Collection.AllActive
     {
         private readonly IAlertsManager alertsManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory;
         private readonly IWindowManager windowManager;
 
         public BarAlertsViewModel(
             IAlertsManager alertsManager,
+            ISyncthingManager syncthingManager,
             Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory,
             IWindowManager windowManager)
         {
             this.alertsManager = alertsManager;
+            this.syncthingManager = syncthingManager;
             this.conflictResolutionViewModelFactory = conflictResolutionViewModelFactory;
             this.windowManager = windowManager;
         }
@@ -48,6 +54,21 @@ namespace SyncTrayzor.Pages.BarAlerts
             if (foldersWithFailedTransferFiles.Count > 0)
             {
                 var vm = new FailedTransfersAlertViewModel(foldersWithFailedTransferFiles);
+                this.Items.Add(vm);
+            }
+
+            var pausedDeviceIds = this.alertsManager.PausedDeviceIdsFromMetering;
+            if (pausedDeviceIds.Count > 0)
+            {
+                var pausedDeviceNames = new List<string>();
+                foreach (var deviceId in pausedDeviceIds)
+                {
+                    Device device;
+                    if (this.syncthingManager.Devices.TryFetchById(deviceId, out device))
+                        pausedDeviceNames.Add(device.Name);
+                }
+
+                var vm = new PausedDevicesFromMeteringViewModel(pausedDeviceNames);
                 this.Items.Add(vm);
             }
         }

@@ -65,9 +65,10 @@ namespace SyncTrayzor.Syncthing.ApiClient
             return systemInfo;
         }
 
-        public Task<Connections> FetchConnectionsAsync()
+        public async Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken)
         {
-            return this.api.FetchConnectionsAsync();
+            var connections = await this.api.FetchConnectionsAsync(cancellationToken);
+            return connections;
         }
 
         public async Task<SyncthingVersion> FetchVersionAsync()
@@ -111,6 +112,18 @@ namespace SyncTrayzor.Syncthing.ApiClient
             logger.Debug("Setting trace facilities: enabling {0}; disabling {1}", enabled, disabled);
 
             return this.api.SetDebugFacilitiesAsync(enabled, disabled);
+        }
+
+        public Task PauseDeviceAsync(string deviceId)
+        {
+            logger.Info("Pausing device {0}", deviceId);
+            return this.api.PauseDeviceAsync(deviceId);
+        }
+
+        public Task ResumeDeviceAsync(string deviceId)
+        {
+            logger.Info("Resuming device {0}", deviceId);
+            return this.api.ResumeDeviceAsync(deviceId);
         }
     }
 }

@@ -93,6 +93,11 @@
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Interop.NETWORKLIST">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\lib\$(Platform)\Interop.NETWORKLIST.dll</HintPath>
+    </Reference>
     <Reference Include="Itenso.Windows.Controls.ListViewLayout">
       <HintPath>..\..\lib\Itenso.Windows.Controls.ListViewLayout.dll</HintPath>
     </Reference>
@@ -160,6 +165,10 @@
     <Compile Include="Pages\BarAlerts\FailedTransfersAlertViewModel.cs" />
     <Compile Include="Pages\BarAlerts\IBarAlert.cs" />
     <Compile Include="Pages\BarAlerts\BarAlertsViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml.cs">
+      <DependentUpon>PausedDevicesFromMeteringView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
@@ -197,6 +206,11 @@
     <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
+    <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
+    <Compile Include="Services\Metering\NetworkCostManager.cs" />
+    <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
@@ -215,6 +229,8 @@
     <Compile Include="Syncthing\ApiClient\ConfigSavedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\DebugFacilitiesSettings.cs" />
     <Compile Include="Syncthing\ApiClient\DefaultingStringEnumConverter.cs" />
+    <Compile Include="Syncthing\ApiClient\DevicePausedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceResumedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\DownloadProgressEvent.cs" />
     <Compile Include="Syncthing\ApiClient\FolderErrorsEvent.cs" />
     <Compile Include="Syncthing\ApiClient\FolderStatus.cs" />
@@ -228,15 +244,23 @@
     <Compile Include="Syncthing\DebugFacilities\DebugFacility.cs" />
     <Compile Include="Syncthing\DebugFacilities\SyncthingDebugFacilitiesManager.cs" />
     <Compile Include="Syncthing\EventWatcher\ConfigSavedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DevicePausedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\FolderStatusChangedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemStartedEventArgs.cs" />
-    <Compile Include="Syncthing\FolderErrorsChangedEventArgs.cs" />
-    <Compile Include="Syncthing\FolderStateTransformer.cs" />
+    <Compile Include="Syncthing\Folders\FolderError.cs" />
+    <Compile Include="Syncthing\Folders\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\FolderIgnores.cs" />
+    <Compile Include="Syncthing\Folders\FolderStateTransformer.cs" />
+    <Compile Include="Syncthing\Folders\FolderSyncState.cs" />
     <Compile Include="Syncthing\FreePortFinder.cs" />
-    <Compile Include="Syncthing\SyncStateChangedEventArgs.cs" />
-    <Compile Include="Syncthing\SyncthingHttpClientHandler.cs" />
+    <Compile Include="Syncthing\EventWatcher\SyncStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\SyncthingDeviceManager.cs" />
+    <Compile Include="Syncthing\ApiClient\SyncthingHttpClientHandler.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
+    <Compile Include="Syncthing\SyncthingCapabilities.cs" />
     <Compile Include="Syncthing\SyncthingDidNotStartCorrectlyException.cs" />
     <Compile Include="Syncthing\SyncthingConnectionsWatcherFactory.cs" />
     <Compile Include="Syncthing\EventWatcher\SyncthingEventWatcherFactory.cs" />
@@ -283,20 +307,20 @@
     <Compile Include="Syncthing\ApiClient\StateChangedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\SyncthingVersion.cs" />
     <Compile Include="Syncthing\ApiClient\SystemInfo.cs" />
-    <Compile Include="Syncthing\Device.cs" />
-    <Compile Include="Syncthing\DeviceConnectedEventArgs.cs" />
-    <Compile Include="Syncthing\DeviceDisconnectedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\Device.cs" />
+    <Compile Include="Syncthing\Devices\DeviceConnectedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\DeviceDisconnectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DeviceConnectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DeviceDisconnectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemStateChangedEventArgs.cs" />
-    <Compile Include="Syncthing\Folder.cs" />
-    <Compile Include="Syncthing\FolderSyncStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\Folder.cs" />
+    <Compile Include="Syncthing\Folders\FolderSyncStateChangedEventArgs.cs" />
     <Compile Include="Syncthing\MessageLoggedEventArgs.cs" />
-    <Compile Include="Syncthing\FolderStatusChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\FolderStatusChangedEventArgs.cs" />
     <Compile Include="Syncthing\SyncthingConnectionStats.cs" />
     <Compile Include="Syncthing\SyncthingConnectionsWatcher.cs" />
     <Compile Include="Syncthing\EventWatcher\SyncthingEventWatcher.cs" />
-    <Compile Include="Syncthing\SyncthingFolderManager.cs" />
+    <Compile Include="Syncthing\Folders\SyncthingFolderManager.cs" />
     <Compile Include="Syncthing\SyncthingManager.cs" />
     <Compile Include="Syncthing\SyncthingPoller.cs" />
     <Compile Include="Syncthing\SyncthingProcessRunner.cs" />
@@ -388,6 +412,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\BarAlerts\FailedTransfersAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -532,6 +560,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\alert_tray.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\paused_tray.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="Configs">

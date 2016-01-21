@@ -20,6 +20,15 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         [JsonProperty("clientVersion")]
         public string ClientVersion { get; set; }
+
+        [JsonProperty("connected")]
+        public bool Connected { get; set; }
+
+        [JsonProperty("paused")]
+        public bool Paused { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
     }
 
     public class Connections

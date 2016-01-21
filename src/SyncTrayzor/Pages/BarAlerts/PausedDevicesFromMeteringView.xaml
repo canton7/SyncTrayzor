@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.BarAlerts.PausedDevicesFromMeteringView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             xmlns:local="clr-namespace:SyncTrayzor.Pages.BarAlerts"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:PausedDevicesFromMeteringViewModel}"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <StackPanel>
+        <TextBlock TextWrapping="Wrap">
+            <TextBlock.Text>
+                <l:LocExtension Key="BarAlertsView_PausedDevicesFromMetering_AlertText">
+                    <l:LocExtension.ValueBindings>
+                        <MultiBinding>
+                            <Binding Path="PausedDeviceNames"/>
+                            <Binding Path="PausedDeviceNames.Count"/>
+                        </MultiBinding>
+                    </l:LocExtension.ValueBindings>
+                </l:LocExtension>
+            </TextBlock.Text>
+        </TextBlock>
+    </StackPanel>
+</UserControl>

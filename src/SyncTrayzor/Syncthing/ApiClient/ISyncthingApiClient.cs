@@ -12,12 +12,14 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task<Config> FetchConfigAsync();
         Task ScanAsync(string folderId, string subPath);
         Task<SystemInfo> FetchSystemInfoAsync();
-        Task<Connections> FetchConnectionsAsync();
+        Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken);
         Task<SyncthingVersion> FetchVersionAsync();
         Task<Ignores> FetchIgnoresAsync(string folderId, CancellationToken cancellationToken);
         Task RestartAsync();
         Task<FolderStatus> FetchFolderStatusAsync(string folderId, CancellationToken cancellationToken);
         Task<DebugFacilitiesSettings> FetchDebugFacilitiesAsync();
         Task SetDebugFacilitiesAsync(IEnumerable<string> enable, IEnumerable<string> disable);
+        Task PauseDeviceAsync(string deviceId);
+        Task ResumeDeviceAsync(string deviceId);
     }
 }

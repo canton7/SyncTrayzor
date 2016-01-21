@@ -78,6 +78,16 @@
                         </DockPanel>
                     </GroupBox>
 
+                    <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_MeteredNetworks}">
+                        <Grid>
+                            <TextBlock TextWrapping="Wrap" Text="{l:Loc SettingsView_MeteredNetworks_NotSupported}"
+                                       Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"
+                                       Visibility="{Binding PauseDevicesOnMeteredNetworksSupported, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
+                            <CheckBox IsChecked="{Binding PauseDevicesOnMeteredNetworks.Value}" Content="{l:Loc SettingsView_MeteredNetworks}"
+                                      Visibility="{Binding PauseDevicesOnMeteredNetworksSupported, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                        </Grid>
+                    </GroupBox>
+
                     <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_StartOnLogin}">
                         <DockPanel>
                             <Grid DockPanel.Dock="Top">

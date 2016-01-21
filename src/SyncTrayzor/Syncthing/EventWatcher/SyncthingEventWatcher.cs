@@ -20,6 +20,8 @@ namespace SyncTrayzor.Syncthing.EventWatcher
         event EventHandler<ConfigSavedEventArgs> ConfigSaved;
         event EventHandler<FolderStatusChangedEventArgs> FolderStatusChanged;
         event EventHandler<FolderErrorsChangedEventArgs> FolderErrorsChanged;
+        event EventHandler<DevicePausedEventArgs> DevicePaused;
+        event EventHandler<DeviceResumedEventArgs> DeviceResumed;
         event EventHandler EventsSkipped;
     }
 
@@ -42,6 +44,8 @@ namespace SyncTrayzor.Syncthing.EventWatcher
         public event EventHandler<ConfigSavedEventArgs> ConfigSaved;
         public event EventHandler<FolderStatusChangedEventArgs> FolderStatusChanged;
         public event EventHandler<FolderErrorsChangedEventArgs> FolderErrorsChanged;
+        public event EventHandler<DevicePausedEventArgs> DevicePaused;
+        public event EventHandler<DeviceResumedEventArgs> DeviceResumed;
         public event EventHandler EventsSkipped;
 
         public SyncthingEventWatcher(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient)
@@ -113,7 +117,7 @@ namespace SyncTrayzor.Syncthing.EventWatcher
             }, cancellationToken);
         }
 
-        private void OnSyncStateChanged(string folderId, FolderSyncState oldState, FolderSyncState syncState)
+        private void OnSyncStateChanged(string folderId, string oldState, string syncState)
         {
             this.SyncStateChanged?.Invoke(this, new SyncStateChangedEventArgs(folderId, oldState, syncState));
         }
@@ -163,6 +167,16 @@ namespace SyncTrayzor.Syncthing.EventWatcher
             this.FolderErrorsChanged?.Invoke(this, new FolderErrorsChangedEventArgs(folderId, errors));
         }
 
+        private void OnDevicePaused(string deviceId)
+        {
+            this.DevicePaused?.Invoke(this, new DevicePausedEventArgs(deviceId));
+        }
+
+        private void OnDeviceResumed(string deviceId)
+        {
+            this.DeviceResumed?.Invoke(this, new DeviceResumedEventArgs(deviceId));
+        }
+
         private void OnEventsSkipped()
         {
             this.EventsSkipped?.Invoke(this, EventArgs.Empty);
@@ -184,8 +198,8 @@ namespace SyncTrayzor.Syncthing.EventWatcher
 
         public void Accept(StateChangedEvent evt)
         {
-            var oldState = FolderStateTransformer.SyncStateFromStatus(evt.Data.From);
-            var state = FolderStateTransformer.SyncStateFromStatus(evt.Data.To);
+            var oldState = evt.Data.From;
+            var state = evt.Data.To;
             this.OnSyncStateChanged(evt.Data.Folder, oldState, state);
         }
 
@@ -238,6 +252,16 @@ namespace SyncTrayzor.Syncthing.EventWatcher
         public void Accept(FolderErrorsEvent evt)
         {
             this.OnFolderErorrsChanged(evt.Data.Folder, evt.Data.Errors);
+        }
+
+        public void Accept(DevicePausedEvent evt)
+        {
+            this.OnDevicePaused(evt.Data.DeviceId);
+        }
+
+        public void Accept(DeviceResumedEvent evt)
+        {
+            this.OnDeviceResumed(evt.Data.DeviceId);
         }
 
         #endregion

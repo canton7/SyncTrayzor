@@ -15,5 +15,7 @@
         void Accept(ConfigSavedEvent evt);
         void Accept(FolderSummaryEvent evt);
         void Accept(FolderErrorsEvent evt);
+        void Accept(DevicePausedEvent evt);
+        void Accept(DeviceResumedEvent evt);
     }
 }

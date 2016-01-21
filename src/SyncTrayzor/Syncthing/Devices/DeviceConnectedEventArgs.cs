@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SyncTrayzor.Syncthing
+namespace SyncTrayzor.Syncthing.Devices
 {
     public class DeviceConnectedEventArgs : EventArgs
     {
