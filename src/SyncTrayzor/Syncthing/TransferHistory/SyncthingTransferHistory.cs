@@ -24,6 +24,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
     public class SyncthingTransferHistory : ISyncthingTransferHistory
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger downloadLogger = LogManager.GetLogger("DownloadLog");
 
         private readonly ISyncthingEventWatcher eventWatcher;
         private readonly ISyncthingFolderManager folderManager;
@@ -133,6 +134,8 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
         private void ItemFinished(object sender, ItemFinishedEventArgs e)
         {
+            // Folder,Path,Type,Action,Error
+            downloadLogger.Info($"{e.Folder},{e.Item},{e.ItemType},{e.Action},{e.Error}");
             logger.Debug("Item finished. Folder: {0}, Item: {1}, Type: {2}, Action: {3}", e.Folder, e.Item, e.ItemType, e.Action);
 
             if ((e.ItemType != ItemChangedItemType.File && e.ItemType != ItemChangedItemType.Dir) ||
