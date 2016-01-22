@@ -47,7 +47,7 @@ namespace SyncTrayzor.Pages
             this.processStartProvider = processStartProvider;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-            this.HomepageUrl = Properties.Settings.Default.HomepageUrl;
+            this.HomepageUrl = AppSettings.Instance.HomepageUrl;
 
             this.syncthingManager.DataLoaded += this.SyncthingDataLoaded;
             this.LoadSyncthingVersion();

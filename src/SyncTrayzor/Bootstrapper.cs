@@ -73,9 +73,9 @@ namespace SyncTrayzor
             builder.Bind<INetworkCostManager>().To<NetworkCostManager>();
             builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
 
-            if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
+            if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
-            else if (Settings.Default.Variant == SyncTrayzorVariant.Portable)
+            else if (AppSettings.Instance.Variant == SyncTrayzorVariant.Portable)
                 builder.Bind<IUpdateVariantHandler>().To<PortableUpdateVariantHandler>();
             else
                 Trace.Assert(false);
@@ -87,12 +87,12 @@ namespace SyncTrayzor
         protected override void Configure()
         {
             // Have to set the log path before anything else
-            var pathConfiguration = Settings.Default.PathConfiguration;
+            var pathConfiguration = AppSettings.Instance.PathConfiguration;
             GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
 
             AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
 
-            if (Settings.Default.EnforceSingleProcessPerUser)
+            if (AppSettings.Instance.EnforceSingleProcessPerUser)
             {
                 if (this.Container.Get<ISingleApplicationInstanceManager>().ShouldExit())
                     Environment.Exit(0);
@@ -101,10 +101,10 @@ namespace SyncTrayzor
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
-            configurationProvider.Initialize(Settings.Default.DefaultUserConfiguration);
+            configurationProvider.Initialize(AppSettings.Instance.DefaultUserConfiguration);
             var configuration = this.Container.Get<IConfigurationProvider>().Load();
 
-            if (Settings.Default.EnforceSingleProcessPerUser)
+            if (AppSettings.Instance.EnforceSingleProcessPerUser)
             {
                 this.Container.Get<ISingleApplicationInstanceManager>().StartServer();
             }
@@ -125,7 +125,7 @@ namespace SyncTrayzor
 #endif
 
             // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
-            if (autostartProvider.CanWrite && Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
+            if (autostartProvider.CanWrite && AppSettings.Instance.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
                     autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
 
             // Needs to be done before ConfigurationApplicator is run

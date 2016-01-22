@@ -66,16 +66,16 @@ namespace SyncTrayzor.Services
 
         public void ApplyConfiguration()
         {
-            this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
-            this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
+            this.watchedFolderMonitor.BackoffInterval = TimeSpan.FromMilliseconds(AppSettings.Instance.DirectoryWatcherBackoffMilliseconds);
+            this.watchedFolderMonitor.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(AppSettings.Instance.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.conflictFileWatcher.BackoffInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherBackoffMilliseconds);
-            this.conflictFileWatcher.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(Settings.Default.DirectoryWatcherFolderExistenceCheckMilliseconds);
+            this.conflictFileWatcher.BackoffInterval = TimeSpan.FromMilliseconds(AppSettings.Instance.DirectoryWatcherBackoffMilliseconds);
+            this.conflictFileWatcher.FolderExistenceCheckingInterval = TimeSpan.FromMilliseconds(AppSettings.Instance.DirectoryWatcherFolderExistenceCheckMilliseconds);
 
-            this.syncthingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(Settings.Default.SyncthingConnectTimeoutSeconds);
+            this.syncthingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(AppSettings.Instance.SyncthingConnectTimeoutSeconds);
 
-            this.updateManager.UpdateCheckApiUrl = Settings.Default.UpdateApiUrl;
-            this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(Settings.Default.UpdateCheckIntervalSeconds);
+            this.updateManager.UpdateCheckApiUrl = AppSettings.Instance.UpdateApiUrl;
+            this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(AppSettings.Instance.UpdateCheckIntervalSeconds);
 
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }

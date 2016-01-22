@@ -132,6 +132,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -186,14 +187,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Services\AlertsManager.cs" />
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\Config\AppSettings.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
     <Compile Include="Services\Config\ConfigFolderCleaner.cs" />
     <Compile Include="Services\Config\EnvironmentalVariableCollection.cs" />
@@ -383,10 +380,6 @@
       <Link>Resources\synctrayzor_releases_cert.asc</Link>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <AppDesigner Include="Properties\" />
     <None Include="SyncTrayzor.ruleset" />
   </ItemGroup>

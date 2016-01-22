@@ -33,13 +33,13 @@ namespace SyncTrayzor.Pages
             this.processStartProvider = processStartProvider;
             this.assemblyProvider = assemblyProvider;
 
-            this.IssuesUrl = Properties.Settings.Default.IssuesUrl;
+            this.IssuesUrl = AppSettings.Instance.IssuesUrl;
         }
 
         private string GenerateErrorMessage()
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("Version: {0}; Variant: {1}; Arch: {2}", this.assemblyProvider.FullVersion, Properties.Settings.Default.Variant, this.assemblyProvider.ProcessorArchitecture);
+            sb.AppendFormat("Version: {0}; Variant: {1}; Arch: {2}", this.assemblyProvider.FullVersion, AppSettings.Instance.Variant, this.assemblyProvider.ProcessorArchitecture);
             sb.AppendLine();
 
             sb.AppendFormat("Path: {0}", this.assemblyProvider.Location);

@@ -256,7 +256,7 @@ namespace SyncTrayzor.Services.Config
         {
             // If the SyncthingPath was previously %EXEPATH%\syncthing.exe, and we're portable,
             // change it to %EXEPATH%\data\syncthing.exe
-            if (Properties.Settings.Default.Variant == SyncTrayzorVariant.Portable)
+            if (AppSettings.Instance.Variant == SyncTrayzorVariant.Portable)
             {
                 var pathElement = configuration.Root.Element("SyncthingPath");
                 if (pathElement.Value == @"%EXEPATH%\syncthing.exe")
