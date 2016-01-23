@@ -10,6 +10,7 @@ using System.Threading;
 using SyncTrayzor.Services;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Syncthing.Folders;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace SyncTrayzor.Pages
 {
@@ -61,7 +62,7 @@ namespace SyncTrayzor.Pages
 
             this.syncthingManager.StateChanged += this.SyncthingStateChanged;
 
-            this.callback = new JavascriptCallbackObject(this.OpenFolder);
+            this.callback = new JavascriptCallbackObject(this.OpenFolder, this.BrowseFolderPath);
 
             this.SetCulture(configuration);
             configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
@@ -146,13 +147,34 @@ namespace SyncTrayzor.Pages
             {
                 if (e.Frame.IsMain && e.Url != "about:blank")
                 {
-                    var script = @"$('#folders .panel-footer .pull-right').prepend(" +
-                    @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
-                    @"<span class=""fa fa-folder-open""></span>" +
-                    @"<span style=""margin-left: 3px"">" +
-                    Resources.ViewerView_OpenFolder +
-                    "</span></button>')";
-                    webBrowser.ExecuteScriptAsync(script);
+                    var addOpenFolder =
+                    @"$('#folders .panel-footer .pull-right').prepend(" +
+                    @"  '<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
+                    @"      <span class=""fa fa-folder-open""></span>" +
+                    @"      <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
+                    @"  </button>')";
+                    webBrowser.ExecuteScriptAsync(addOpenFolder);
+
+                    var addFolderBrowse = 
+                    @"$('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
+                    @"$('#folderPath').after(" +
+                    @"  $('<button>').attr('id', 'folderPathBrowseButton')" +
+                    @"               .addClass('btn btn-sm btn-default')" +           
+                    @"               .html('Browse')" +
+                    @"               .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
+                    @"               .on('click', function() { callbackObject.browseFolderPath() })" +
+                    @");" +
+                    @"$('#folderPath').removeAttr('list');" +
+                    @"$('#directory-list').remove();" +
+                    @"$('#editFolder').on('shown.bs.modal', function() {" +
+                    @"  if ($('#folderPath').is('[readonly]')) {" +
+                    @"      $('#folderPathBrowseButton').attr('disabled', 'disabled');" +
+                    @"  }" +
+                    @"  else {" +
+                    @"      $('#folderPathBrowseButton').removeAttr('disabled');" +
+                    @"  }" +
+                    @"});";
+                    webBrowser.ExecuteScriptAsync(addFolderBrowse);
                 }
             };
         }
@@ -196,6 +218,24 @@ namespace SyncTrayzor.Pages
                 return;
 
             this.processStartProvider.StartDetached("explorer.exe", folder.Path);
+        }
+
+        private void BrowseFolderPath()
+        {
+            Execute.OnUIThread(() =>
+            {
+                var dialog = new CommonOpenFileDialog()
+                {
+                    IsFolderPicker = true,
+                };
+                var result = dialog.ShowDialog();
+                if (result == CommonFileDialogResult.Ok)
+                {
+                    var script =
+                    @"$('#folderPath').val('" + dialog.FileName.Replace("\\", "\\\\").Replace("'", "\\'") + "')";
+                    this.WebBrowser.ExecuteScriptAsync(script);
+                }
+            });
         }
 
         protected override void OnClose()
@@ -331,15 +371,22 @@ namespace SyncTrayzor.Pages
         private class JavascriptCallbackObject
         {
             private readonly Action<string> openFolderAction;
+            private readonly Action browseFolderPathAction;
 
-            public JavascriptCallbackObject(Action<string> openFolderAction)
+            public JavascriptCallbackObject(Action<string> openFolderAction, Action browseFolderPathAction)
 	        {
                 this.openFolderAction = openFolderAction;
+                this.browseFolderPathAction = browseFolderPathAction;
 	        }
 
             public void OpenFolder(string folderId)
             {
                 this.openFolderAction(folderId);
+            }
+
+            public void BrowseFolderPath()
+            {
+                this.browseFolderPathAction();
             }
         }
     }
