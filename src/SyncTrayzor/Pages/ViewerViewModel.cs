@@ -25,7 +25,11 @@ namespace SyncTrayzor.Pages
         private CultureInfo culture;
         private double zoomLevel;
 
-        public string Location { get; private set; }
+        public string Location
+        {
+            get { return this.WebBrowser.Address; }
+            private set { this.WebBrowser.Address = value; }
+        }
         
         private SyncthingState syncthingState { get; set; }
         public bool ShowSyncthingStarting => this.syncthingState == SyncthingState.Starting;
@@ -55,12 +59,6 @@ namespace SyncTrayzor.Pages
 
             this.callback = new JavascriptCallbackObject(this.OpenFolder);
 
-            this.Bind(x => x.WebBrowser, (o, e) =>
-            {
-                if (e.NewValue != null)
-                    this.InitializeBrowser(e.NewValue);
-            });
-
             this.SetCulture(configuration);
             configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
         }
@@ -86,26 +84,38 @@ namespace SyncTrayzor.Pages
 
         protected override void OnInitialActivate()
         {
-            var configuration = this.configurationProvider.Load();
-
-            var settings = new CefSettings()
+            if (!Cef.IsInitialized)
             {
-                RemoteDebuggingPort = AppSettings.Instance.CefRemoteDebuggingPort,
-                // We really only want to set the LocalStorage path, but we don't have that level of control....
-                CachePath = this.pathsProvider.CefCachePath,
-                IgnoreCertificateErrors = true,
-            };
-            
-            // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
-            settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+                var configuration = this.configurationProvider.Load();
 
-            if (configuration.DisableHardwareRendering)
-            {
-                settings.CefCommandLineArgs.Add("disable-gpu", "1");
-                settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
+                var settings = new CefSettings()
+                {
+                    RemoteDebuggingPort = AppSettings.Instance.CefRemoteDebuggingPort,
+                    // We really only want to set the LocalStorage path, but we don't have that level of control....
+                    CachePath = this.pathsProvider.CefCachePath,
+                    IgnoreCertificateErrors = true,
+                };
+
+                // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
+                settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+
+                if (configuration.DisableHardwareRendering)
+                {
+                    settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                    settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
+                }
+
+                Cef.Initialize(settings);
             }
 
-            Cef.Initialize(settings);
+            var webBrowser = new ChromiumWebBrowser();
+            this.InitializeBrowser(webBrowser);
+            this.WebBrowser = webBrowser;
+        }
+
+        protected override void OnActivate()
+        {
+            this.RefreshBrowser();
         }
 
         private void InitializeBrowser(ChromiumWebBrowser webBrowser)
@@ -129,7 +139,7 @@ namespace SyncTrayzor.Pages
             webBrowser.FrameLoadStart += (o, e) => webBrowser.SetZoomLevel(this.zoomLevel);
             webBrowser.FrameLoadEnd += (o, e) =>
             {
-                if (e.IsMainFrame && e.Url != "about:blank")
+                if (e.Frame.IsMain && e.Url != "about:blank")
                 {
                     var script = @"$('#folders .panel-footer .pull-right').prepend(" +
                     @"'<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
@@ -185,6 +195,9 @@ namespace SyncTrayzor.Pages
 
         protected override void OnClose()
         {
+            this.WebBrowser.Dispose();
+            this.WebBrowser = null;
+
             // This is such a dirty, horrible, hacky thing to do...
             // So it turns out that doesn't like being shut down, then re-initialized, see http://www.magpcss.org/ceforum/viewtopic.php?f=6&t=10807&start=10
             // and others. However, if we wait a little while (presumably for the WebBrowser to die and all open connections to the subprocess
@@ -201,22 +214,17 @@ namespace SyncTrayzor.Pages
             await this.syncthingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
-        bool IRequestHandler.GetAuthCredentials(IWebBrowser browser, bool isProxy, string host, int port, string realm, string scheme, ref string username, ref string password)
+        bool IRequestHandler.GetAuthCredentials(IWebBrowser browserControl, IBrowser browser, IFrame frame, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
         {
             return false;
         }
 
-        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browser, IRequest request, bool isRedirect, bool isMainFrame)
+        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, bool isRedirect)
         {
             return false;
         }
 
-        bool IRequestHandler.OnBeforePluginLoad(IWebBrowser browser, string url, string policyUrl, WebPluginInfo info)
-        {
-            return false;
-        }
-
-        CefReturnValue IRequestHandler.OnBeforeResourceLoad(IWebBrowser browser, IRequest request, bool isMainFrame)
+        CefReturnValue IRequestHandler.OnBeforeResourceLoad(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback)
         {
             var uri = new Uri(request.Url);
             // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
@@ -242,28 +250,71 @@ namespace SyncTrayzor.Pages
             return CefReturnValue.Continue;
         }
 
-        bool IRequestHandler.OnCertificateError(IWebBrowser browser, CefErrorCode errorCode, string requestUrl)
+        bool IRequestHandler.OnCertificateError(IWebBrowser browserControl, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback)
         {
             // We shouldn't hit this, since IgnoreCertificateErrors is true
             return true;
         }
 
-        void IRequestHandler.OnPluginCrashed(IWebBrowser browser, string pluginPath)
+        void IRequestHandler.OnPluginCrashed(IWebBrowser browserControl, IBrowser browser, string pluginPath)
         {
         }
 
-        void IRequestHandler.OnRenderProcessTerminated(IWebBrowser browser, CefTerminationStatus status)
+        void IRequestHandler.OnRenderProcessTerminated(IWebBrowser browserControl, IBrowser browser, CefTerminationStatus status)
         {
         }
 
-        void ILifeSpanHandler.OnBeforeClose(IWebBrowser browser)
+        bool IRequestHandler.OnOpenUrlFromTab(IWebBrowser browserControl, IBrowser browser, IFrame frame, string targetUrl, WindowOpenDisposition targetDisposition, bool userGesture)
+        {
+            return false;
+        }
+
+        bool IRequestHandler.OnQuotaRequest(IWebBrowser browserControl, IBrowser browser, string originUrl, long newSize, IRequestCallback callback)
+        {
+            callback.Continue(true);
+            return true;
+        }
+
+        void IRequestHandler.OnResourceRedirect(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, ref string newUrl)
         {
         }
 
-        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browser, string sourceUrl, string targetUrl, ref int x, ref int y, ref int width, ref int height)
+        bool IRequestHandler.OnProtocolExecution(IWebBrowser browserControl, IBrowser browser, string url)
+        {
+            return false;
+        }
+
+        void IRequestHandler.OnRenderViewReady(IWebBrowser browserControl, IBrowser browser)
+        {
+        }
+
+        bool IRequestHandler.OnResourceResponse(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response)
+        {
+            return false;
+        }
+
+        void IRequestHandler.OnResourceLoadComplete(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response, UrlRequestStatus status, long receivedContentLength)
+        {
+        }
+
+        void ILifeSpanHandler.OnBeforeClose(IWebBrowser browserControl, IBrowser browser)
+        {
+        }
+
+        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browserControl, IBrowser browser, IFrame frame, string targetUrl, string targetFrameName, WindowOpenDisposition targetDisposition, bool userGesture, IWindowInfo windowInfo, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
         {
             this.processStartProvider.StartDetached(targetUrl);
+            newBrowser = null;
             return true;
+        }
+
+        void ILifeSpanHandler.OnAfterCreated(IWebBrowser browserControl, IBrowser browser)
+        {
+        }
+
+        bool ILifeSpanHandler.DoClose(IWebBrowser browserControl, IBrowser browser)
+        {
+            return false;
         }
 
         public void Dispose()
