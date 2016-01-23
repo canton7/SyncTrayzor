@@ -35,5 +35,6 @@ namespace SyncTrayzor.Syncthing.ApiClient
         FolderScanProgress,
         DevicePaused,
         DeviceResumed,
+        LoginAttempt,
     }
 }
