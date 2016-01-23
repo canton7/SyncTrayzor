@@ -112,4 +112,4 @@ end;
 Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: files; Name: "{app}\InstallCount.txt"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
-Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
+Type: filesandordirs; Name: "{localappdata}\{#AppDataFolder}"
