@@ -900,4 +900,8 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_Alerts_SeeFolders" xml:space="preserve">
     <value>See the 'Folders' tab for per-folder alert settings.</value>
   </data>
+  <data name="ViewerView_BrowseToFolder" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Shown on a button next to the 'Folder Path' input in Syncthing's UI</comment>
+  </data>
 </root>

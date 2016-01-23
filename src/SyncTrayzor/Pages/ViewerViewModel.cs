@@ -162,7 +162,7 @@ namespace SyncTrayzor.Pages
                     @"$('#folderPath').after(" +
                     @"  $('<button>').attr('id', 'folderPathBrowseButton')" +
                     @"               .addClass('btn btn-sm btn-default')" +           
-                    @"               .html('Browse')" +
+                    @"               .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
                     @"               .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
                     @"               .on('click', function() { callbackObject.browseFolderPath() })" +
                     @");" +

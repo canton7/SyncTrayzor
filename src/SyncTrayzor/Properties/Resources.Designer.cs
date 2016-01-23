@@ -1925,6 +1925,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string ViewerView_BrowseToFolder {
+            get {
+                return ResourceManager.GetString("ViewerView_BrowseToFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Folder.
         /// </summary>
         public static string ViewerView_OpenFolder {
