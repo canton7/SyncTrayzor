@@ -351,7 +351,7 @@ namespace SyncTrayzor.Syncthing
             }
             catch (Exception e)
             {
-                logger.Error("Error starting Syncthing API", e);
+                logger.Error(e, "Error starting Syncthing API");
                 throw;
             }
         }

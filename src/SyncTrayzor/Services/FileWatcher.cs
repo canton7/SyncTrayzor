@@ -162,7 +162,7 @@ namespace SyncTrayzor.Services
             }
             catch (Exception ex)
             {
-                logger.Error($"Failed to see whether file/dir {e.FullPath} exists", ex);
+                logger.Error(ex, $"Failed to see whether file/dir {e.FullPath} exists");
             }
         }
 

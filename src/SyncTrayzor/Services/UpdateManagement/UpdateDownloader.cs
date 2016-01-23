@@ -91,7 +91,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                         }
                         catch (Exception e)
                         {
-                            logger.Warn($"Failed to set last access time on {downloadPath}", e);
+                            logger.Warn(e, $"Failed to set last access time on {downloadPath}");
                         }
 
                         // EXIT POINT
@@ -129,7 +129,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
             catch (Exception e)
             {
-                logger.Error("Error in DownloadUpdateAsync", e);
+                logger.Error(e, "Error in DownloadUpdateAsync");
 
                 // EXIT POINT
                 return Tuple.Create(false, default(T));

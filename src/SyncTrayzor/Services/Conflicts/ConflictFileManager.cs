@@ -224,7 +224,7 @@ namespace SyncTrayzor.Services.Conflicts
             }
             catch (Exception e)
             {
-                logger.Error($"Failed to enumerate {itemType} in folder {path}: {e.GetType().Name} {e.Message}", e);
+                logger.Error(e, $"Failed to enumerate {itemType} in folder {path}: {e.GetType().Name} {e.Message}");
             }
         }
 
@@ -285,7 +285,7 @@ namespace SyncTrayzor.Services.Conflicts
             catch (Exception e)
             {
                 // We're in the path to return false at this point
-                logger.Error($"Failed to look for base file for conflict file {filePath}: {e.Message}", e);
+                logger.Error(e, $"Failed to look for base file for conflict file {filePath}: {e.Message}");
             }
 
             parsedConflictFileInfo = default(ParsedConflictFileInfo);

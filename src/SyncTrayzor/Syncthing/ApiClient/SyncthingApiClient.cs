@@ -22,10 +22,13 @@ namespace SyncTrayzor.Syncthing.ApiClient
                 BaseAddress = baseAddress.NormalizeZeroHost(),
                 Timeout = TimeSpan.FromSeconds(70),
             };
-            this.api = RestClient.For<ISyncthingApi>(httpClient, new JsonSerializerSettings()
+            this.api = new RestClient(httpClient)
             {
-                Converters = { new EventConverter() }
-            });
+                JsonSerializerSettings = new JsonSerializerSettings()
+                {
+                    Converters = { new EventConverter() }
+                }
+            }.For<ISyncthingApi>();
             this.api.ApiKey = apiKey;
         }
 

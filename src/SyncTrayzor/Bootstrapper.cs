@@ -193,13 +193,13 @@ namespace SyncTrayzor
         {
             // Testing has indicated that this and OnUnhandledException won't be called at the same time
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Error($"An unhandled AppDomain exception occurred. Terminating: {e.IsTerminating}", e.ExceptionObject as Exception);
+            logger.Error(e.ExceptionObject as Exception, $"An unhandled AppDomain exception occurred. Terminating: {e.IsTerminating}");
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Error("An unhandled exception occurred", e.Exception);
+            logger.Error(e.Exception, "An unhandled exception occurred");
 
             // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try
@@ -273,7 +273,7 @@ namespace SyncTrayzor
             {
                 // Don't re-throw. Nasty stuff happens if we throw an exception while trying to handle an unhandled exception
                 // For starters, the event log shows the wrong exception - this one, instead of the root cause
-                logger.Error("Unhandled exception while trying to display unhandled exception window", exception);
+                logger.Error(exception, "Unhandled exception while trying to display unhandled exception window");
             }
         }
 

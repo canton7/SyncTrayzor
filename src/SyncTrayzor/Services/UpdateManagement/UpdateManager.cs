@@ -246,7 +246,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
             catch (Exception e)
             {
-                logger.Error("Error in UpdateManager.CheckForUpdatesAsync", e);
+                logger.Error(e, "Error in UpdateManager.CheckForUpdatesAsync");
             }
             finally
             {

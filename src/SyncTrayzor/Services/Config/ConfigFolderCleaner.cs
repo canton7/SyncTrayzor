@@ -25,7 +25,7 @@ namespace SyncTrayzor.Services.Config
             }
             catch (Exception e)
             {
-                logger.Error("Failed to run config folder cleaner", e);
+                logger.Error(e, "Failed to run config folder cleaner");
             }
         }
 

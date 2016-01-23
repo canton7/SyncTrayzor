@@ -106,7 +106,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
             catch (Exception e)
             {
-                logger.Warn("Fetching updates failed with an error", e);
+                logger.Warn(e, "Fetching updates failed with an error");
                 return null;
             }
         }

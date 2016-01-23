@@ -50,7 +50,7 @@ namespace SyncTrayzor.Services.Metering
             }
             catch (Exception e)
             {
-                logger.Error($"Failed to load network list manager: {e.Message}", e);
+                logger.Error(e, $"Failed to load network list manager: {e.Message}");
             }
         }
 
