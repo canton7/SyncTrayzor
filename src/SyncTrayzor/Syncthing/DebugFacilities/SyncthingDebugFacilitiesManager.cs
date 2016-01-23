@@ -55,13 +55,13 @@ namespace SyncTrayzor.Syncthing.DebugFacilities
         {
             if (this.capabilities.SupportsDebugFacilities)
             {
-                this.SupportsRestartlessUpdate = false;
-                this.fetchedDebugFacilitySettings = null;
+                this.SupportsRestartlessUpdate = true;
+                this.fetchedDebugFacilitySettings = await this.apiClient.Value.FetchDebugFacilitiesAsync();
             }
             else
             {
-                this.SupportsRestartlessUpdate = true;
-                this.fetchedDebugFacilitySettings = await this.apiClient.Value.FetchDebugFacilitiesAsync();
+                this.SupportsRestartlessUpdate = false;
+                this.fetchedDebugFacilitySettings = null;
             }
 
             this.UpdateDebugFacilities();
