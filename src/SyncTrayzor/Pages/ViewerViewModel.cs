@@ -27,8 +27,12 @@ namespace SyncTrayzor.Pages
 
         public string Location
         {
-            get { return this.WebBrowser.Address; }
-            private set { this.WebBrowser.Address = value; }
+            get { return this.WebBrowser?.Address; }
+            private set
+            {
+                if (this.WebBrowser != null)
+                    this.WebBrowser.Address = value;
+            }
         }
         
         private SyncthingState syncthingState { get; set; }
@@ -111,6 +115,7 @@ namespace SyncTrayzor.Pages
             var webBrowser = new ChromiumWebBrowser();
             this.InitializeBrowser(webBrowser);
             this.WebBrowser = webBrowser;
+            this.RefreshBrowser();
         }
 
         protected override void OnActivate()
