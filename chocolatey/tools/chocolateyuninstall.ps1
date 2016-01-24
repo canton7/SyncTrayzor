@@ -18,7 +18,6 @@ $machine_key6432 = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\
 if ($key.Count -eq 1) {
   $key | % { 
     $file = "$($_.UninstallString)"
-    Write-Warning "File is $file"
     Uninstall-ChocolateyPackage -PackageName $packageName `
                                 -FileType $installerType `
                                 -SilentArgs "$silentArgs" `

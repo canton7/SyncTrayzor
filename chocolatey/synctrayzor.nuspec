@@ -32,13 +32,12 @@ Features include:
  - Contains translations for many languages 
     </description>
     <projectUrl>https://github.com/canton7/SyncTrayzor</projectUrl>
-    <!-- <packageSourceUrl></packageSourceUrl> -->
+    <packageSourceUrl>https://github.com/canton7/SyncTrayzor/tree/develop/chocolatey</packageSourceUrl>
     <!--<projectSourceUrl></projectSourceUrl>
     <docsUrl></docsUrl>
     <mailingListUrl></mailingListUrl>>-->
     <bugTrackerUrl>https://github.com/canton7/SyncTrayzor/issues</bugTrackerUrl>
     <tags>synctrayzor syncthing synchronization admin</tags>
-    <copyright>MIT</copyright>
     <licenseUrl>https://raw.githubusercontent.com/canton7/SyncTrayzor/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://cdn.rawgit.com/canton7/SyncTrayzor/develop/SyncTrayzor.png</iconUrl>
@@ -46,7 +45,7 @@ Features include:
       <!-- Chocolatey 0.9.9 required in order to access the chocolateyPackageName and chocolateyPackageVersion environment variables -->
       <dependency id="chocolatey" version="0.9.9" />
     </dependencies>
-    <!-- <releaseNotes></releaseNotes> -->
+    <releaseNotes>https://github.com/canton7/SyncTrayzor/blob/master/CHANGELOG.txt</releaseNotes>
     <!--<provides></provides>-->
   </metadata>
   <files>
