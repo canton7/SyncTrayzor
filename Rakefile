@@ -19,6 +19,8 @@ DEPLOY_DIR = 'deploy'
 
 SLN = 'src/SyncTrayzor.sln'
 
+CHOCOLATEY_NUSPEC = 'chocolatey/synctrayzor.nuspec'
+
 CHECKSUM_UTIL_CSPROJ = 'src/ChecksumUtil/ChecksumUtil.csproj'
 CHECKSUM_UTIL_EXE = 'bin/ChecksumUtil/Release/ChecksumUtil.exe'
 SYNCTHING_RELEASES_CERT = 'security/syncthing_releases_cert.asc'
@@ -244,17 +246,31 @@ end
 desc 'Build installer and portable for all architectures'
 task :package => [:clean, *ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }, :"create-checksums"]
 
+desc 'Build chocolatey package'
+task :chocolatey do
+  chocolatey_dir = File.dirname(CHOCOLATEY_NUSPEC)
+  Dir.chdir(chocolatey_dir) do
+    sh "choco pack"
+  end
+  mv Dir[File.join(chocolatey_dir, 'synctrayzor.*.nupkg')], DEPLOY_DIR
+end
+
 desc "Bump version number"
 task :version, [:version] do |t, args|
   parts = args[:version].split('.')
-  parts << '0' if parts.length == 3
-  version = parts.join('.')
+  parts4 = parts.dup
+  parts4 << '0' if parts4.length == 3
+  version4 = parts4.join('.')
   ASSEMBLY_INFOS.each do |info|
     content = IO.read(info)
-    content[/^\[assembly: AssemblyVersion\(\"(.+?)\"\)\]/, 1] = version
-    content[/^\[assembly: AssemblyFileVersion\(\"(.+?)\"\)\]/, 1] = version
+    content[/^\[assembly: AssemblyVersion\(\"(.+?)\"\)\]/, 1] = version4
+    content[/^\[assembly: AssemblyFileVersion\(\"(.+?)\"\)\]/, 1] = version4
     File.open(info, 'w'){ |f| f.write(content) }
   end
+
+  choco_content = IO.read(CHOCOLATEY_NUSPEC)
+  choco_content[/<version>(.+?)<\/version>/, 1] = args[:version]
+  File.open(CHOCOLATEY_NUSPEC, 'w'){ |f| f.write(choco_content) }
 end
 
 desc 'Create both 64-bit and 32-bit portable packages'

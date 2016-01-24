@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <!-- Read this before publishing packages to chocolatey.org: https://github.com/chocolatey/chocolatey/wiki/CreatePackages -->
+    <id>synctrayzor</id>
+    <title>SyncTrayzor</title>
+    <version>0.0.0</version>
+    <authors>Antony Male</authors>
+    <owners>Antony Male</owners>
+    <summary>Windows tray utility / filesystem watcher / launcher for syncthing</summary>
+    <description>SyncTrayzor is a little tray utility for [Syncthing](http://syncthing.net/) on Windows.
+It hosts and wraps Syncthing, making it behave more like a native Windows application and less like a command-line utility with a web browser interface.
+
+Features include:
+
+ - Has a built-in web browser, so you don't need to fire up an external browser.
+ - Optionally starts on login, so you don't need to set up Syncthing as a service.
+ - Has drop-box style file download / progress window
+ - Tray icon indicates when synchronization is occurring.
+ - Alerts you when:
+    - You have file conflicts
+    - One of your folders is out of sync
+    - Folders finish syncing
+    - Devices connect / disconnect
+ - Can watch your folders for changes, so you don't have to poll them frequently:
+    - Syncthing on its own has to poll your folders, in order to see if any files have changed.
+    - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
+    - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
+    - Folder watching respects the ignores configured in Syncthing.
+ - Has a tool to help you resolve file conflicts
+ - Contains translations for many languages 
+    </description>
+    <projectUrl>https://github.com/canton7/SyncTrayzor</projectUrl>
+    <!-- <packageSourceUrl></packageSourceUrl> -->
+    <!--<projectSourceUrl></projectSourceUrl>
+    <docsUrl></docsUrl>
+    <mailingListUrl></mailingListUrl>>-->
+    <bugTrackerUrl>https://github.com/canton7/SyncTrayzor/issues</bugTrackerUrl>
+    <tags>synctrayzor syncthing synchronization admin</tags>
+    <copyright>MIT</copyright>
+    <licenseUrl>https://raw.githubusercontent.com/canton7/SyncTrayzor/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <iconUrl>https://cdn.rawgit.com/canton7/SyncTrayzor/develop/SyncTrayzor.png</iconUrl>
+    <dependencies>
+      <!-- Chocolatey 0.9.9 required in order to access the chocolateyPackageName and chocolateyPackageVersion environment variables -->
+      <dependency id="chocolatey" version="0.9.9" />
+    </dependencies>
+    <!-- <releaseNotes></releaseNotes> -->
+    <!--<provides></provides>-->
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
