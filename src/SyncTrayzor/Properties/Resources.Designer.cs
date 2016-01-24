@@ -385,6 +385,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resume.
+        /// </summary>
+        public static string ConsoleView_ResumeButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_ResumeButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string ConsoleView_SettingsButton {

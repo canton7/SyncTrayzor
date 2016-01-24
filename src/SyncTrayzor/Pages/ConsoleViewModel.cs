@@ -36,12 +36,6 @@ namespace SyncTrayzor.Pages
             this.logMessagesBuffer.Delivered += this.LogMessageDelivered;
 
             this.syncthingManager.MessageLogged += this.SyncthingMessageLogged;
-
-            this.Bind(s => s.LogPaused, (o, e) =>
-            {
-                if (!e.NewValue)
-                    this.NotifyOfPropertyChange(() => this.LogMessages);
-            });
         }
 
         private void LogMessageDelivered(object sender, BufferDeliveredEventArgs<string> e)
@@ -54,7 +48,7 @@ namespace SyncTrayzor.Pages
             }
 
             if (!this.LogPaused)
-                this.NotifyOfPropertyChange(() => this.LogMessages);
+                this.NotifyOfPropertyChange(nameof(this.LogMessages));
         }
 
         private void SyncthingMessageLogged(object sender, MessageLoggedEventArgs e)
@@ -65,7 +59,7 @@ namespace SyncTrayzor.Pages
         public void ClearLog()
         {
             this.LogMessages.Clear();
-            this.NotifyOfPropertyChange(() => this.LogMessages);
+            this.NotifyOfPropertyChange(nameof(this.LogMessages));
         }
 
         public void ShowSettings()
@@ -73,6 +67,17 @@ namespace SyncTrayzor.Pages
             var vm = this.settingsViewModelFactory();
             vm.SelectLoggingTab();
             this.windowManager.ShowDialog(vm);
+        }
+
+        public void PauseLog()
+        {
+            this.LogPaused = true;
+        }
+
+        public void ResumeLog()
+        {
+            this.LogPaused = false;
+            this.NotifyOfPropertyChange(nameof(this.LogMessages));
         }
 
         public void Dispose()
