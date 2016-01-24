@@ -23,13 +23,13 @@ namespace SyncTrayzor.Services.Config
     public class AppSettings
     {
         private const string sectionName = "settings";
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(AppSettings), new XmlRootAttribute(sectionName));
 
         public static readonly AppSettings Instance;
 
         static AppSettings()
         {
             var reader = (XmlReader)ConfigurationManager.GetSection(sectionName);
-            var serializer = new XmlSerializer(typeof(AppSettings), new XmlRootAttribute(sectionName));
             Instance = (AppSettings)serializer.Deserialize(reader);
         }
 
@@ -51,7 +51,6 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            var serializer = new XmlSerializer(typeof(AppSettings));
             using (var writer = new StringWriter())
             {
                 serializer.Serialize(writer, this);
