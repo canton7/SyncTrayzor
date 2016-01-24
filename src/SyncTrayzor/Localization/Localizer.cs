@@ -1,5 +1,4 @@
 ﻿using SmartFormat;
-using SmartFormat.Core.Extensions;
 using SmartFormat.Extensions;
 using SyncTrayzor.Properties;
 using System;

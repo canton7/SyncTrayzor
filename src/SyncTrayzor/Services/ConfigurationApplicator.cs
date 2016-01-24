@@ -1,5 +1,4 @@
 ﻿using SyncTrayzor.NotifyIcon;
-using SyncTrayzor.Properties;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
