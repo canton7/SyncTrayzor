@@ -27,8 +27,8 @@ LicenseFile={#AppRoot}\LICENSE.txt
 OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
-Compression=lzma2/max
-;Compression=None
+;Compression=lzma2/max
+Compression=None
 SolidCompression=yes
 PrivilegesRequired=admin
 CloseApplications=yes
@@ -100,6 +100,10 @@ begin
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
+var
+  FindRec: TFindRec;
+  FolderPath: String;
+  FilePath: String;
 begin
   if CurStep = ssInstall then
   begin
@@ -108,6 +112,29 @@ begin
     { We might be being run from ProcessRunner.exe, *and* we might be trying to update it. Funsies. Let's rename it (which Windows lets us do) }
     DeleteFile(ExpandConstant('{app}\ProcessRunner.exe.old'));
     RenameFile(ExpandConstant('{app}\ProcessRunner.exe'), ExpandConstant('{app}\ProcessRunner.exe.old'));
+
+    Log(ExpandConstant('Looking for resource files in {app}\*'));
+    { Remove resource files. This means that out-of-date languages will be removed, which (as a last-ditch resore) will alert maintainers that something's wrong }
+    if FindFirst(ExpandConstant('{app}\*'), FindRec) then
+    begin
+      try
+        repeat
+          if (FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0) and (FindRec.Name <> '.') and (FindRec.Name <> '..') then
+          begin
+            FolderPath :=  ExpandConstant('{app}\') + FindRec.Name;
+            FilePath := FolderPath + '\SyncTrayzor.resources.dll';
+            if DeleteFile(FilePath) then
+            begin
+              Log('Deleted ' + FilePath);
+              if DelTree(FolderPath, True, False, False) then
+                Log('Deleted ' + FolderPath);
+            end;
+          end;
+        until not FindNext(FindRec);
+      finally
+        FindClose(FindRec);
+      end;
+    end;
   end
 end;
 
