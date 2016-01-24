@@ -5,25 +5,33 @@ using System.Xml.Serialization;
 
 namespace SyncTrayzor.Services.Config
 {
-    public class AppSettingsConfigurationHandler : ConfigurationSection
+    public class XmlConfigurationSection : ConfigurationSection
     {
-        private object appSettings;
+        private XmlReader reader;
 
         protected override void DeserializeSection(XmlReader reader)
         {
-            var serializer = new XmlSerializer(typeof(AppSettings), new XmlRootAttribute(this.SectionInformation.Name));
-            this.appSettings = serializer.Deserialize(reader);
+            this.reader = reader;
         }
 
         protected override object GetRuntimeObject()
         {
-            return this.appSettings;
+            return this.reader;
         }
     }
 
     public class AppSettings
     {
-        public static readonly AppSettings Instance = (AppSettings)ConfigurationManager.GetSection("settings");
+        private const string sectionName = "settings";
+
+        public static readonly AppSettings Instance;
+
+        static AppSettings()
+        {
+            var reader = (XmlReader)ConfigurationManager.GetSection(sectionName);
+            var serializer = new XmlSerializer(typeof(AppSettings), new XmlRootAttribute(sectionName));
+            Instance = (AppSettings)serializer.Deserialize(reader);
+        }
 
         public string UpdateApiUrl { get; set; } = "http://synctrayzor.antonymale.co.uk/version-check";
         public string HomepageUrl { get; set; } = "http://github.com/canton7/SyncTrayzor";
