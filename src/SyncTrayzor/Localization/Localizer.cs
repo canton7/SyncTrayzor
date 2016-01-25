@@ -10,6 +10,7 @@ namespace SyncTrayzor.Localization
     public static class Localizer
     {
         private static readonly SmartFormatter formatter;
+        private static readonly CultureInfo baseCulture = new CultureInfo("en-US", false);
 
         static Localizer()
         {
@@ -35,7 +36,10 @@ namespace SyncTrayzor.Localization
             var culture = Thread.CurrentThread.CurrentUICulture;
 
             var format = Resources.ResourceManager.GetString(key, culture);
-            
+
+            if (format == null)
+                format = Resources.ResourceManager.GetString(key, baseCulture);
+
             if (format == null)
                 return "!" + key + (parameters.Length > 0 ? ":" + String.Join(",", parameters) : "") + "!";
 
@@ -49,7 +53,7 @@ namespace SyncTrayzor.Localization
 
         public static string OriginalTranslation(string key)
         {
-            return Resources.ResourceManager.GetString(key, new CultureInfo("en-US", false));
+            return Resources.ResourceManager.GetString(key, baseCulture);
         }
     }
 }
