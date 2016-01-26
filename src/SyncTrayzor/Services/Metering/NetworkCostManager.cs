@@ -64,12 +64,19 @@ namespace SyncTrayzor.Services.Metering
                 CreateIpv4SockAddr(address) :
                 CreateIPv6SockAddr(address);
 
-            uint costVal;
-            this.networkListManager.GetCost(out costVal, ref sockAddr);
+            try
+            {
+                uint costVal;
+                this.networkListManager.GetCost(out costVal, ref sockAddr);
+                var cost = (NLM_CONNECTION_COST)costVal;
+                return !cost.HasFlag(NLM_CONNECTION_COST.NLM_CONNECTION_COST_UNRESTRICTED);
+            }
+            catch (ArgumentException e)
+            {
+                logger.Error(e, $"GetCost failed. IP: {address}, Bytes: {BitConverter.ToString(sockAddr.data)}");
+            }
 
-            var cost = (NLM_CONNECTION_COST)costVal;
-
-            return !cost.HasFlag(NLM_CONNECTION_COST.NLM_CONNECTION_COST_UNRESTRICTED);
+            return false;
         }
 
         private static NLM_SOCKADDR CreateIpv4SockAddr(IPAddress address)
