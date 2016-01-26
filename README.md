@@ -1,9 +1,13 @@
+
 SyncTrayzor [![Build status](https://ci.appveyor.com/api/projects/status/pwa4mpy4066okxyu?svg=true)](https://ci.appveyor.com/project/canton7/synctrayzor)
 ===========
 
-\[[Download and install SyncTrayzor now](#installation)\]
-\[[Something went wrong!](#something-went-wrong)\]
-\[[Buy me a beer!](#buy-me-a-beer)\]
+Quick Links
+-----------
+
+ - [Download and install SyncTrayzor now](#installation)
+ - [Something went wrong](#something-went-wrong)
+ - [Buy me a beer!](#buy-me-a-beer)
 
 
 Introduction
@@ -29,6 +33,7 @@ Features include:
     - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
     - Folder watching respects the ignores configured in Syncthing.
  - Has a tool to help you resolve file conflicts
+ - Can pause devices on metered networks, to stop Syncthing transferring data on e.g. a mobile connection or wifi hotspot.
  - Contains translations for many languages
 
 
@@ -37,7 +42,7 @@ Features include:
 Installation
 ------------
 
-SyncTrayzor is packaged as both an installer and a standalone zip. It will run on Windows Vista or newer.
+SyncTrayzor is packaged as both an installer, standalone zip, and chocolatey package. It will run on Windows Vista or newer.
 
 ### Installer
 
@@ -51,6 +56,14 @@ First, you'll need .net 4.5. [Download the offline](http://www.microsoft.com/en-
 [Download `SyncTrayzorPortable-x64.zip` or `SyncTrayzorPortable-x86.zip`](https://github.com/canton7/SyncTrayzor/releases/latest).
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
+
+### Chocolatey
+
+The installed version of SyncTrayzor is also [available on Chocolatey](https://chocolatey.org/packages/synctrayzor).
+
+```
+C:\> choco install synctrayzor
+```
 
 Something went wrong!
 ---------------------
