@@ -73,7 +73,18 @@ namespace SyncTrayzor.Services.Metering
             }
             catch (ArgumentException e)
             {
-                logger.Error(e, $"GetCost failed. IP: {address}, Bytes: {BitConverter.ToString(sockAddr.data)}");
+                // See #210
+                logger.Error(e, $"GetCost failed (ArgumentException). IP: {address}, Bytes: {BitConverter.ToString(sockAddr.data)}");
+            }
+            catch (COMException e)
+            {
+                // See #215
+                logger.Error(e, $"GetCost failed (COMException, HResult {e.HResult}). IP: {address}, Bytes: {BitConverter.ToString(sockAddr.data)}");
+            }
+            catch (Exception e)
+            {
+                // Being safe...
+                logger.Error(e, $"GetCost failed for an unknown reason. IP: {address}, Bytes: {BitConverter.ToString(sockAddr.data)}");
             }
 
             return false;
