@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -41,6 +42,10 @@ namespace SyncTrayzor.Services.Config
     {
         private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
         private const int apiKeyLength = 40;
+
+        // Together these come to half a second, which is probably sensible
+        private const int fileSaveRetryCount = 10;
+        private const int fileSaveFailureDelayMs = 50;
 
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
@@ -251,7 +256,7 @@ namespace SyncTrayzor.Services.Config
         {
             // If the SyncthingPath was previously %EXEPATH%\syncthing.exe, and we're portable,
             // change it to %EXEPATH%\data\syncthing.exe
-            if (Properties.Settings.Default.Variant == SyncTrayzorVariant.Portable)
+            if (AppSettings.Instance.Variant == SyncTrayzorVariant.Portable)
             {
                 var pathElement = configuration.Root.Element("SyncthingPath");
                 if (pathElement.Value == @"%EXEPATH%\syncthing.exe")
@@ -330,10 +335,27 @@ namespace SyncTrayzor.Services.Config
 
         private void SaveToFile(Configuration config)
         {
-            using (var stream = this.filesystem.CreateAtomic(this.paths.ConfigurationFilePath))
+            Exception lastException = null;
+            for (int i = 0; i < fileSaveRetryCount; i++)
             {
-                serializer.Serialize(stream, config);
+                try
+                {
+                    using (var stream = this.filesystem.CreateAtomic(this.paths.ConfigurationFilePath))
+                    {
+                        serializer.Serialize(stream, config);
+                        break;
+                    }
+                }
+                catch (IOException e)
+                {
+                    lastException = e;
+                    logger.Warn("Unable to save config file: maybe someone else has locked it. Trying again shortly", e);
+                    Thread.Sleep(fileSaveFailureDelayMs);
+                }
             }
+
+            if (lastException != null)
+                throw new CouldNotSaveConfigurationExeption(this.paths.ConfigurationFilePath, lastException);
         }
 
         private string GenerateApiKey()
@@ -377,6 +399,17 @@ namespace SyncTrayzor.Services.Config
 
         public BadConfigurationException(string configurationFilePath, Exception innerException)
             : base($"Error deserializing configuration file at {configurationFilePath}", innerException)
+        {
+            this.ConfigurationFilePath = configurationFilePath;
+        }
+    }
+
+    public class CouldNotSaveConfigurationExeption : Exception
+    {
+        public string ConfigurationFilePath { get; }
+
+        public CouldNotSaveConfigurationExeption(string configurationFilePath, Exception innerException)
+            : base($"Could not save configuration file to {configurationFilePath}", innerException)
         {
             this.ConfigurationFilePath = configurationFilePath;
         }

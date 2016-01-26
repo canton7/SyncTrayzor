@@ -16,17 +16,19 @@ namespace SyncTrayzor.Services
         All = ContentChanged | CreatedOrDeleted
     }
 
-    public class FileChangedEventArgs : EventArgs
+    public class PathChangedEventArgs : EventArgs
     {
         public string Directory { get; }
         public string Path { get; }
-        public bool FileExists { get; }
+        public bool PathExists { get; }
+        public bool IsDirectory { get; }
 
-        public FileChangedEventArgs(string directory, string path, bool fileExists)
+        public PathChangedEventArgs(string directory, string path, bool pathExists, bool isDirectory)
         {
             this.Directory = directory;
             this.Path = path;
-            this.FileExists = fileExists;
+            this.PathExists = pathExists;
+            this.IsDirectory = isDirectory;
         }
     }
 
@@ -62,7 +64,7 @@ namespace SyncTrayzor.Services
 
         private FileSystemWatcher watcher;
 
-        public event EventHandler<FileChangedEventArgs> FileChanged;
+        public event EventHandler<PathChangedEventArgs> PathChanged;
 
         public FileWatcher(IFilesystemProvider filesystem, FileWatcherMode mode, string directory, TimeSpan existenceCheckingInterval, string filter = "*.*")
         {
@@ -144,7 +146,7 @@ namespace SyncTrayzor.Services
 
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            this.PathChanged(e.FullPath, fileExists: false);
+            this.RecordPathChange(e.FullPath, pathExists: false);
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
@@ -156,22 +158,22 @@ namespace SyncTrayzor.Services
             try
             {
                 if (this.filesystem.FileExists(e.FullPath))
-                    this.PathChanged(e.FullPath, fileExists: true);
+                    this.RecordPathChange(e.FullPath, pathExists: true);
             }
             catch (Exception ex)
             {
-                logger.Error($"Failed to see whether file/dir {e.FullPath} exists", ex);
+                logger.Error(ex, $"Failed to see whether file/dir {e.FullPath} exists");
             }
         }
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            this.PathChanged(e.FullPath, fileExists: true);
+            this.RecordPathChange(e.FullPath, pathExists: true);
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            this.PathChanged(e.FullPath, fileExists: true);
+            this.RecordPathChange(e.FullPath, pathExists: true);
             // Irritatingly, e.OldFullPath will throw an exception if the path is longer than the windows max
             // (but e.FullPath is fine).
             // So, construct it from e.FullPath and e.OldName
@@ -197,17 +199,17 @@ namespace SyncTrayzor.Services
 
             var oldFullPath = Path.Combine(oldFullPathDirectory, oldFileName);
 
-            this.PathChanged(oldFullPath, fileExists: false);
+            this.RecordPathChange(oldFullPath, pathExists: false);
         }
 
-        private void PathChanged(string path, bool fileExists)
+        private void RecordPathChange(string path, bool pathExists)
         {
             // First, we need to convert to a long path, just in case anyone's using the short path
             // We can't do this if we don't expect the file to exist any more...
             // There's also a chance that the file no longer exists. Catch that exception.
             // If a short path is renamed or deleted, then we do our best with it in a bit, by removing the short bits
             // If short path segments are used in the base directory path in this case, tough.
-            if (fileExists)
+            if (pathExists)
                 path = this.GetLongPathName(path);
 
             if (!path.StartsWith(this.Directory))
@@ -219,14 +221,16 @@ namespace SyncTrayzor.Services
             // (e.g. because it was a deletion), then strip it back to the first component without an ~
             subPath = this.StripShortPathSegments(subPath);
 
-            this.OnFileChanged(subPath, fileExists);
+            bool isDirectory = !this.filesystem.FileExists(path);
+
+            this.OnPathChanged(subPath, pathExists, isDirectory);
         }
 
-        public virtual void OnFileChanged(string path, bool fileExists)
+        public virtual void OnPathChanged(string path, bool pathExists, bool isDirectory)
         {
-            var handler = this.FileChanged;
+            var handler = this.PathChanged;
             if (handler != null)
-                handler(this, new FileChangedEventArgs(this.Directory, path, fileExists));
+                handler(this, new PathChangedEventArgs(this.Directory, path, pathExists, isDirectory));
         }
 
         private string GetLongPathName(string path)

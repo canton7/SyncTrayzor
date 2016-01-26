@@ -49,7 +49,7 @@ namespace SyncTrayzor.Services
                         }
                         catch (Exception e)
                         {
-                            logger.Error("Process produced an error", e);
+                            logger.Error(e, "Process produced an error");
                         }
                     }
                     else if (process.Id != ourProcess.Id)
@@ -59,7 +59,7 @@ namespace SyncTrayzor.Services
                 }
                 catch (Exception e)
                 {
-                    logger.Error($"Error accessing information for process with PID { process.Id}", e);
+                    logger.Error(e, $"Error accessing information for process with PID { process.Id}");
                 }
             }
 

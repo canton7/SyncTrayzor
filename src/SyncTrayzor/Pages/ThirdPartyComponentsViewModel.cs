@@ -142,6 +142,15 @@ namespace SyncTrayzor.Pages
                     Notes = "Not distributed with SyncTrayzor, but provides awesome compile-time features",
                     LicenseText = this.LoadLicense("Fody.txt")
                 },
+                new ThirdPartyComponent()
+                {
+                    Name = "Windows API Code Pack - Shell",
+                    Description = "Shell library for Windows API Code Pack",
+                    Homepage = "https://github.com/aybe/Windows-API-Code-Pack-1.1",
+                    License = "Microsoft Software License",
+                    Notes = "Provides the 'Open Folder' dialog",
+                    LicenseText = this.LoadLicense("WindowsAPICodePack.txt")
+                },
             });
         }
 

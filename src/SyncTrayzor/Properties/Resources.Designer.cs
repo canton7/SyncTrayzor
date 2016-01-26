@@ -169,7 +169,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following folders have failing file transfers: {0:l:{}|, }..
+        ///   Looks up a localized string similar to The following {0:p:folder has|folders have} failing file transfers: {0:l:{}|, }..
         /// </summary>
         public static string BarAlertsView_FailedTransfer_AlertText {
             get {
@@ -183,6 +183,15 @@ namespace SyncTrayzor.Properties {
         public static string BarAlertsView_FailedTransfer_Details {
             get {
                 return ResourceManager.GetString("BarAlertsView_FailedTransfer_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following {0:p:device has|devices have} been paused because {0:p:it|they} connected to a metered network: {0:l:{}|, }..
+        /// </summary>
+        public static string BarAlertsView_PausedDevicesFromMetering_AlertText {
+            get {
+                return ResourceManager.GetString("BarAlertsView_PausedDevicesFromMetering_AlertText", resourceCulture);
             }
         }
         
@@ -201,6 +210,15 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_Button_ShowInFolder {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_Button_ShowInFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please choose the version of the file you want to keep. The other versions will be deleted..
+        /// </summary>
+        public static string ConflictResolutionView_ChooseDescription {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseDescription", resourceCulture);
             }
         }
         
@@ -363,6 +381,15 @@ namespace SyncTrayzor.Properties {
         public static string ConsoleView_PauseButton {
             get {
                 return ResourceManager.GetString("ConsoleView_PauseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resume.
+        /// </summary>
+        public static string ConsoleView_ResumeButton {
+            get {
+                return ResourceManager.GetString("ConsoleView_ResumeButton", resourceCulture);
             }
         }
         
@@ -756,6 +783,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See the &apos;Folders&apos; tab for per-folder alert settings..
+        /// </summary>
+        public static string SettingsView_Alerts_SeeFolders {
+            get {
+                return ResourceManager.GetString("SettingsView_Alerts_SeeFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to API Key:.
         /// </summary>
         public static string SettingsView_ApiKey {
@@ -846,6 +882,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pause devices which connect over a metered network.
+        /// </summary>
+        public static string SettingsView_MeteredNetworks {
+            get {
+                return ResourceManager.GetString("SettingsView_MeteredNetworks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must be using Windows 8 or above to use this feature..
+        /// </summary>
+        public static string SettingsView_MeteredNetworks_NotSupported {
+            get {
+                return ResourceManager.GetString("SettingsView_MeteredNetworks_NotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimize to tray.
         /// </summary>
         public static string SettingsView_MinimizeToTray {
@@ -927,6 +981,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Section_Alerts {
             get {
                 return ResourceManager.GetString("SettingsView_Section_Alerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metered Networks.
+        /// </summary>
+        public static string SettingsView_Section_MeteredNetworks {
+            get {
+                return ResourceManager.GetString("SettingsView_Section_MeteredNetworks", resourceCulture);
             }
         }
         
@@ -1473,6 +1536,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description:.
         /// </summary>
         public static string ThirdPartyComponentsView_ComponentDescriptionLabel {
@@ -1858,6 +1930,15 @@ namespace SyncTrayzor.Properties {
         public static string UnhandledExceptionView_Title {
             get {
                 return ResourceManager.GetString("UnhandledExceptionView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string ViewerView_BrowseToFolder {
+            get {
+                return ResourceManager.GetString("ViewerView_BrowseToFolder", resourceCulture);
             }
         }
         

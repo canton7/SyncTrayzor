@@ -3,9 +3,10 @@ using Stylet;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
-using SyncTrayzor.SyncThing;
-using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.TransferHistory;
+using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.Devices;
+using SyncTrayzor.Syncthing.TransferHistory;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +40,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly NotifyIconViewModel viewModel;
         private readonly IApplicationState application;
         private readonly IApplicationWindowState applicationWindowState;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
 
         private TaskbarIcon taskbarIcon;
 
@@ -74,13 +75,13 @@ namespace SyncTrayzor.NotifyIcon
             NotifyIconViewModel viewModel,
             IApplicationState application,
             IApplicationWindowState applicationWindowState,
-            ISyncThingManager syncThingManager)
+            ISyncthingManager syncthingManager)
         {
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
             this.applicationWindowState = applicationWindowState;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
 
             this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
             // Need to hold off until after the application is started, otherwise the ViewManager won't be set
@@ -102,9 +103,9 @@ namespace SyncTrayzor.NotifyIcon
             };
             this.viewModel.ExitRequested += (o, e) => this.application.Shutdown();
 
-            this.syncThingManager.TransferHistory.FolderSynchronizationFinished += this.FolderSynchronizationFinished;
-            this.syncThingManager.DeviceConnected += this.DeviceConnected;
-            this.syncThingManager.DeviceDisconnected += this.DeviceDisconnected;
+            this.syncthingManager.TransferHistory.FolderSynchronizationFinished += this.FolderSynchronizationFinished;
+            this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
+            this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
         }
 
         private void ApplicationStartup(object sender, EventArgs e)
@@ -115,7 +116,7 @@ namespace SyncTrayzor.NotifyIcon
         private void DeviceConnected(object sender, DeviceConnectedEventArgs e)
         {
             if (this.ShowDeviceConnectivityBalloons &&
-                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                    DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
             {
                 this.taskbarIcon.HideBalloonTip();
                 this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
@@ -125,7 +126,7 @@ namespace SyncTrayzor.NotifyIcon
         private void DeviceDisconnected(object sender, DeviceDisconnectedEventArgs e)
         {
             if (this.ShowDeviceConnectivityBalloons &&
-                    DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                    DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
             {
                 this.taskbarIcon.HideBalloonTip();
                 this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
@@ -146,8 +147,8 @@ namespace SyncTrayzor.NotifyIcon
                 if (e.FileTransfers.Count == 0)
                 {
                     if (this.ShowSynchronizedBalloonEvenIfNothingDownloaded &&
-                        DateTime.UtcNow - this.syncThingManager.LastConnectivityEventTime > syncedDeadTime &&
-                        DateTime.UtcNow - this.syncThingManager.StartedTime > syncedDeadTime)
+                        DateTime.UtcNow - this.syncthingManager.LastConnectivityEventTime > syncedDeadTime &&
+                        DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
                     {
                         this.taskbarIcon.HideBalloonTip();
                         this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
@@ -303,9 +304,9 @@ namespace SyncTrayzor.NotifyIcon
             this.applicationWindowState.RootWindowDeactivated -= this.RootViewModelDeactivated;
             this.applicationWindowState.RootWindowClosed -= this.RootViewModelClosed;
 
-            this.syncThingManager.TransferHistory.FolderSynchronizationFinished -= this.FolderSynchronizationFinished;
-            this.syncThingManager.DeviceConnected -= this.DeviceConnected;
-            this.syncThingManager.DeviceDisconnected -= this.DeviceDisconnected;
+            this.syncthingManager.TransferHistory.FolderSynchronizationFinished -= this.FolderSynchronizationFinished;
+            this.syncthingManager.Devices.DeviceConnected -= this.DeviceConnected;
+            this.syncthingManager.Devices.DeviceDisconnected -= this.DeviceDisconnected;
         }
     }
 }

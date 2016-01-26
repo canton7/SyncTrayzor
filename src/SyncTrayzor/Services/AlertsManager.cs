@@ -1,5 +1,7 @@
 ﻿using SyncTrayzor.Services.Conflicts;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Services.Metering;
+using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace SyncTrayzor.Services
     public interface IAlertsManager : IDisposable
     {
         event EventHandler AlertsStateChanged;
-        bool AnyAlerts { get; }
+        bool AnyWarnings { get; }
 
         bool EnableFailedTransferAlerts { get; set; }
         bool EnableConflictedFileAlerts { get; set; }
@@ -18,22 +20,33 @@ namespace SyncTrayzor.Services
         IReadOnlyList<string> ConflictedFiles { get; }
 
         IReadOnlyList<string> FoldersWithFailedTransferFiles { get; }
+
+        IReadOnlyList<string> PausedDeviceIdsFromMetering { get; }
     }
 
     public class AlertsManager : IAlertsManager
     {
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IConflictFileWatcher conflictFileWatcher;
+        private readonly IMeteredNetworkManager meteredNetworkManager;
         private readonly SynchronizedEventDispatcher eventDispatcher;
 
-        public bool AnyAlerts => this.ConflictedFiles.Count > 0 || this.FoldersWithFailedTransferFiles.Count > 0;
+        public bool AnyWarnings => this.ConflictedFiles.Count > 0 || this.FoldersWithFailedTransferFiles.Count > 0;
 
 
-        private readonly List<string> _conflictedFiles = new List<string>();
-        public IReadOnlyList<string> ConflictedFiles { get; private set; }
+        private IReadOnlyList<string> _conflictedFiles = EmptyReadOnlyList<string>.Instance;
+        public IReadOnlyList<string> ConflictedFiles
+        {
+            get { return this._enableConflictedFileAlerts ? this._conflictedFiles : EmptyReadOnlyList<string>.Instance; }
+        }
 
-        private readonly List<string> _foldersWithFailedTransferFiles = new List<string>();
-        public IReadOnlyList<string> FoldersWithFailedTransferFiles { get; private set; }
+        private IReadOnlyList<string> _foldersWithFailedTransferFiles = EmptyReadOnlyList<string>.Instance;
+        public IReadOnlyList<string> FoldersWithFailedTransferFiles
+        {
+            get { return this._enableFailedTransferAlerts ? this._foldersWithFailedTransferFiles : EmptyReadOnlyList<string>.Instance; }
+        }
+
+        public IReadOnlyList<string> PausedDeviceIdsFromMetering { get; private set; } = EmptyReadOnlyList<string>.Instance;
 
         public event EventHandler AlertsStateChanged;
 
@@ -46,7 +59,7 @@ namespace SyncTrayzor.Services
                 if (this._enableFailedTransferAlerts == value)
                     return;
                 this._enableFailedTransferAlerts = value;
-                this.ResetOutputs();
+                this.OnAlertsStateChanged();
             }
         }
 
@@ -59,48 +72,56 @@ namespace SyncTrayzor.Services
                 if (this._enableConflictedFileAlerts == value)
                     return;
                 this._enableConflictedFileAlerts = value;
-                this.ResetOutputs();
+                this.OnAlertsStateChanged();
             }
         }
 
-        public AlertsManager(ISyncThingManager syncThingManager, IConflictFileWatcher conflictFileWatcher)
+        public AlertsManager(ISyncthingManager syncthingManager, IConflictFileWatcher conflictFileWatcher, IMeteredNetworkManager meteredNetworkManager)
         {
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.conflictFileWatcher = conflictFileWatcher;
+            this.meteredNetworkManager = meteredNetworkManager;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
 
-            this.ResetOutputs();
-
-            this.syncThingManager.Folders.FolderErrorsChanged += this.FolderErrorsChanged;
+            this.syncthingManager.Folders.FolderErrorsChanged += this.FolderErrorsChanged;
 
             this.conflictFileWatcher.ConflictedFilesChanged += this.ConflictFilesChanged;
+
+            this.meteredNetworkManager.PausedDevicesChanged += this.PausedDevicesChanged;
         }
 
-        private void ResetOutputs()
+        private void OnAlertsStateChanged()
         {
-            this.FoldersWithFailedTransferFiles = this.EnableFailedTransferAlerts ? this._foldersWithFailedTransferFiles.AsReadOnly() : EmptyReadOnlyList<string>.Instance;
-            this.ConflictedFiles = this.EnableConflictedFileAlerts ? this._conflictedFiles.AsReadOnly() : EmptyReadOnlyList<string>.Instance;
-
             this.eventDispatcher.Raise(this.AlertsStateChanged);
         }
 
         private void FolderErrorsChanged(object sender, FolderErrorsChangedEventArgs e)
         {
-            var folders = this.syncThingManager.Folders.FetchAll();
-            this._foldersWithFailedTransferFiles.Replace(folders.Where(x => x.FolderErrors.Any()).Select(x => x.FolderId));
-            this.eventDispatcher.Raise(this.AlertsStateChanged);
+            var folders = this.syncthingManager.Folders.FetchAll();
+            this._foldersWithFailedTransferFiles = folders.Where(x => x.FolderErrors.Any()).Select(x => x.FolderId).ToList().AsReadOnly();
+ 
+            this.OnAlertsStateChanged();
         }
 
         private void ConflictFilesChanged(object sender, EventArgs e)
         {
-            this._conflictedFiles.Replace(this.conflictFileWatcher.ConflictedFiles);
-            this.eventDispatcher.Raise(this.AlertsStateChanged);
+            this._conflictedFiles = this.conflictFileWatcher.ConflictedFiles.ToList().AsReadOnly();
+
+            this.OnAlertsStateChanged();
+        }
+
+        private void PausedDevicesChanged(object sender, EventArgs e)
+        {
+            this.PausedDeviceIdsFromMetering = this.meteredNetworkManager.PausedDeviceIds.ToList().AsReadOnly();
+
+            this.OnAlertsStateChanged();
         }
 
         public void Dispose()
         {
-            this.syncThingManager.Folders.FolderErrorsChanged -= this.FolderErrorsChanged;
+            this.syncthingManager.Folders.FolderErrorsChanged -= this.FolderErrorsChanged;
             this.conflictFileWatcher.ConflictedFilesChanged -= this.ConflictFilesChanged;
+            this.meteredNetworkManager.PausedDevicesChanged -= this.PausedDevicesChanged;
         }
 
         private static class EmptyReadOnlyList<T>

@@ -19,6 +19,8 @@ DEPLOY_DIR = 'deploy'
 
 SLN = 'src/SyncTrayzor.sln'
 
+CHOCOLATEY_NUSPEC = 'chocolatey/synctrayzor.nuspec'
+
 CHECKSUM_UTIL_CSPROJ = 'src/ChecksumUtil/ChecksumUtil.csproj'
 CHECKSUM_UTIL_EXE = 'bin/ChecksumUtil/Release/ChecksumUtil.exe'
 SYNCTHING_RELEASES_CERT = 'security/syncthing_releases_cert.asc'
@@ -27,7 +29,7 @@ CHECKSUM_FILE_PRIV_KEY = 'security/private_key.asc'
 
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
-PORTABLE_SYNCTHING_VERSION = '0.11'
+PORTABLE_SYNCTHING_VERSION = '0.12'
 
 class ArchDirConfig
   attr_reader :arch
@@ -48,7 +50,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(DEPLOY_DIR, "SyncTrayzorPortable-#{@arch}.zip")
-    @syncthing_binaries = { '0.11' => 'syncthing.exe' }
+    @syncthing_binaries = { '0.12' => 'syncthing.exe' }
   end
 
   def sha1sum_download_uri(version)
@@ -60,7 +62,7 @@ class ArchDirConfig
   end
 end
 
-SYNCTHING_VERSIONS_TO_UPDATE = ['0.11']
+SYNCTHING_VERSIONS_TO_UPDATE = ['0.12']
 
 ARCH_CONFIG = [ArchDirConfig.new('x64', 'amd64'), ArchDirConfig.new('x86', '386')]
 ASSEMBLY_INFOS = FileList['**/AssemblyInfo.cs']
@@ -202,30 +204,6 @@ namespace :portable do
   end
 end
 
-desc 'Create both 64-bit and 32-bit portable packages'
-task :portable => ARCH_CONFIG.map{ |x| :"portable:#{x.arch}" }
-
-namespace :"update-syncthing" do
-  ARCH_CONFIG.each do |arch_config|
-    desc "Update syncthing binaries (#{arch_config.arch}"
-    task arch_config.arch do
-      arch_config.syncthing_binaries.values_at(*SYNCTHING_VERSIONS_TO_UPDATE).each do |bin|
-        path = File.join(arch_config.installer_dir, bin)
-        raise "Could not find #{path}" unless File.exist?(path)
-        Dir.mktmpdir do |tmp|
-          sh path, '-upgrade', "-home=#{tmp}" do; end
-        end
-
-        old_bin = "#{path}.old"
-        rm old_bin if File.exist?(old_bin)
-      end
-    end
-  end
-end
-
-desc 'Update syncthing binaries, all architectures'
-task :"update-syncthing" => ARCH_CONFIG.map{ |x| :"update-syncthing:#{x.arch}" }
-
 def create_checksums(checksum_file, password, algorithm, files)
   rm checksum_file if File.exist?(checksum_file)
 
@@ -268,53 +246,95 @@ end
 desc 'Build installer and portable for all architectures'
 task :package => [:clean, *ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }, :"create-checksums"]
 
+desc 'Build chocolatey package'
+task :chocolatey do
+  chocolatey_dir = File.dirname(CHOCOLATEY_NUSPEC)
+  Dir.chdir(chocolatey_dir) do
+    sh "choco pack"
+  end
+  mv Dir[File.join(chocolatey_dir, 'synctrayzor.*.nupkg')], DEPLOY_DIR
+end
+
 desc "Bump version number"
 task :version, [:version] do |t, args|
   parts = args[:version].split('.')
-  parts << '0' if parts.length == 3
-  version = parts.join('.')
+  parts4 = parts.dup
+  parts4 << '0' if parts4.length == 3
+  version4 = parts4.join('.')
   ASSEMBLY_INFOS.each do |info|
     content = IO.read(info)
-    content[/^\[assembly: AssemblyVersion\(\"(.+?)\"\)\]/, 1] = version
-    content[/^\[assembly: AssemblyFileVersion\(\"(.+?)\"\)\]/, 1] = version
+    content[/^\[assembly: AssemblyVersion\(\"(.+?)\"\)\]/, 1] = version4
+    content[/^\[assembly: AssemblyFileVersion\(\"(.+?)\"\)\]/, 1] = version4
     File.open(info, 'w'){ |f| f.write(content) }
   end
+
+  choco_content = IO.read(CHOCOLATEY_NUSPEC)
+  choco_content[/<version>(.+?)<\/version>/, 1] = args[:version]
+  File.open(CHOCOLATEY_NUSPEC, 'w'){ |f| f.write(choco_content) }
 end
 
-namespace :"download-syncthing" do
-  ARCH_CONFIG.each do |arch_config|
-    desc "Download syncthing (#{arch_config.arch})"
-    task arch_config.arch, [:version]  => [:"build-checksum-util"] do |t, args|
-      ensure_7zip
+desc 'Create both 64-bit and 32-bit portable packages'
+task :portable => ARCH_CONFIG.map{ |x| :"portable:#{x.arch}" }
 
-      Dir.mktmpdir do |tmp|
-        download_file = File.join(tmp, File.basename(arch_config.download_uri(args[:version])))
-        File.open(download_file, 'wb') do |outfile|
-          open(arch_config.download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
-            outfile.write(infile.read)
+
+namespace :syncthing do
+  namespace :download do
+    ARCH_CONFIG.each do |arch_config|
+      desc "Download syncthing (#{arch_config.arch})"
+      task arch_config.arch, [:version]  => [:"build-checksum-util"] do |t, args|
+        ensure_7zip
+
+        Dir.mktmpdir do |tmp|
+          download_file = File.join(tmp, File.basename(arch_config.download_uri(args[:version])))
+          File.open(download_file, 'wb') do |outfile|
+            open(arch_config.download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
+              outfile.write(infile.read)
+            end
           end
-        end
 
-        File.open(File.join(tmp, 'sha1sum.txt.asc.'), 'w') do |outfile|
-          open(arch_config.sha1sum_download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
-            outfile.write(infile.read)
+          File.open(File.join(tmp, 'sha1sum.txt.asc.'), 'w') do |outfile|
+            open(arch_config.sha1sum_download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
+              outfile.write(infile.read)
+            end
           end
+
+          sh CHECKSUM_UTIL_EXE, 'verify', File.join(tmp, 'sha1sum.txt.asc'), 'sha1', SYNCTHING_RELEASES_CERT, download_file
+
+          Dir.chdir(tmp) do
+            sh %Q{"#{SZIP}" e #{File.basename(download_file)}}
+          end
+
+          cp File.join(tmp, 'syncthing.exe'), File.join(arch_config.installer_dir, 'syncthing.exe')
         end
-
-        sh CHECKSUM_UTIL_EXE, 'verify', File.join(tmp, 'sha1sum.txt.asc'), 'sha1', SYNCTHING_RELEASES_CERT, download_file
-
-        Dir.chdir(tmp) do
-          sh %Q{"#{SZIP}" e #{File.basename(download_file)}}
-        end
-
-        cp File.join(tmp, 'syncthing.exe'), File.join(arch_config.installer_dir, 'syncthing.exe')
       end
     end
   end
+
+  desc 'Download syncthing for all architectures'
+  task :download, [:version] => ARCH_CONFIG.map{ |x| :"syncthing:download:#{x.arch}" }
+
+  namespace :update do
+    ARCH_CONFIG.each do |arch_config|
+      desc "Update syncthing binaries (#{arch_config.arch}"
+      task arch_config.arch do
+        arch_config.syncthing_binaries.values_at(*SYNCTHING_VERSIONS_TO_UPDATE).each do |bin|
+          path = File.join(arch_config.installer_dir, bin)
+          raise "Could not find #{path}" unless File.exist?(path)
+          Dir.mktmpdir do |tmp|
+            sh path, '-upgrade', "-home=#{tmp}" do; end
+          end
+
+          old_bin = "#{path}.old"
+          rm old_bin if File.exist?(old_bin)
+        end
+      end
+    end
+  end
+
+  desc 'Update syncthing binaries, all architectures'
+  task :update => ARCH_CONFIG.map{ |x| :"syncthing:update:#{x.arch}" }
 end
 
-desc 'Download syncthing for all architectures'
-task :"download-syncthing", [:version] => ARCH_CONFIG.map{ |x| :"download-syncthing:#{x.arch}" }
 
 def create_tx_client
   raise "TX_PASSWORD not specified" if ENV['TX_PASSWORD'].nil? || ENV['TX_PASSWORD'].empty?

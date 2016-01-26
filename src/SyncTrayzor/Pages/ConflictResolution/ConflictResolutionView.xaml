@@ -42,6 +42,8 @@
                 Style="{StaticResource SectionBorderStyle}"
                 Visibility="{Binding SelectedConflict, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
             <DockPanel Margin="5">
+                <TextBlock DockPanel.Dock="Top" Margin="0,0,0,10" TextWrapping="Wrap" Text="{l:Loc ConflictResolutionView_ChooseDescription}"/>
+
                 <Grid DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="{Binding View.Columns[0].ActualWidth, ElementName=SelectConflictOptions}"/>

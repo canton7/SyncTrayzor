@@ -5,7 +5,7 @@ using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Windows;
@@ -15,7 +15,7 @@ namespace SyncTrayzor.Pages
     public class ShellViewModel : Screen, IDisposable
     {
         private readonly IWindowManager windowManager;
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IApplicationState application;
         private readonly IConfigurationProvider configurationProvider;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
@@ -31,11 +31,11 @@ namespace SyncTrayzor.Pages
         public ViewerViewModel Viewer { get; }
         public BarAlertsViewModel BarAlerts { get; }
 
-        public SyncThingState SyncThingState { get; private set; }
+        public SyncthingState SyncthingState { get; private set; }
 
         public ShellViewModel(
             IWindowManager windowManager,
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IApplicationState application,
             IConfigurationProvider configurationProvider,
             ConsoleViewModel console,
@@ -47,7 +47,7 @@ namespace SyncTrayzor.Pages
             IProcessStartProvider processStartProvider)
         {
             this.windowManager = windowManager;
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.application = application;
             this.configurationProvider = configurationProvider;
             this.Console = console;
@@ -64,8 +64,8 @@ namespace SyncTrayzor.Pages
             this.Viewer.ConductWith(this);
             this.BarAlerts.ConductWith(this);
 
-            this.syncThingManager.StateChanged += (o, e) => this.SyncThingState = e.NewState;
-            this.syncThingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
+            this.syncthingManager.StateChanged += (o, e) => this.SyncthingState = e.NewState;
+            this.syncthingManager.ProcessExitedWithError += (o, e) => this.ShowExitedWithError();
 
             this.ConsoleHeight = configuration.SyncthingConsoleHeight;
             this.Bind(s => s.ConsoleHeight, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.SyncthingConsoleHeight = e.NewValue));
@@ -80,34 +80,34 @@ namespace SyncTrayzor.Pages
             this.Bind(s => s.Placement, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.WindowPlacement = e.NewValue));
         }
 
-        public bool CanStart => this.SyncThingState == SyncThingState.Stopped;
+        public bool CanStart => this.SyncthingState == SyncthingState.Stopped;
         public async void Start()
         {
-            await this.syncThingManager.StartWithErrorDialogAsync(this.windowManager);
+            await this.syncthingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
-        public bool CanStop => this.SyncThingState == SyncThingState.Running;
+        public bool CanStop => this.SyncthingState == SyncthingState.Running;
         public void Stop()
         {
-            this.syncThingManager.StopAsync();
+            this.syncthingManager.StopAsync();
         }
 
-        public bool CanRestart => this.SyncThingState == SyncThing.SyncThingState.Running;
+        public bool CanRestart => this.SyncthingState == Syncthing.SyncthingState.Running;
         public void Restart()
         {
-            this.syncThingManager.RestartAsync();
+            this.syncthingManager.RestartAsync();
         }
 
-        public bool CanRefreshBrowser => this.SyncThingState == SyncThingState.Running;
+        public bool CanRefreshBrowser => this.SyncthingState == SyncthingState.Running;
         public void RefreshBrowser()
         {
             this.Viewer.RefreshBrowser();
         }
 
-        public bool CanOpenBrowser => this.SyncThingState == SyncThingState.Running;
+        public bool CanOpenBrowser => this.SyncthingState == SyncthingState.Running;
         public void OpenBrowser()
         {
-            this.processStartProvider.StartDetached(this.syncThingManager.Address.NormalizeZeroHost().ToString());
+            this.processStartProvider.StartDetached(this.syncthingManager.Address.NormalizeZeroHost().ToString());
         }
 
         public void KillAllSyncthingProcesses()
@@ -116,7 +116,7 @@ namespace SyncTrayzor.Pages
                     Resources.Dialog_ConfirmKillAllProcesses_Message,
                     Resources.Dialog_ConfirmKillAllProcesses_Title,
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                this.syncThingManager.KillAllSyncthingProcesses();
+                this.syncthingManager.KillAllSyncthingProcesses();
         }
 
         public void ShowSettings()
@@ -131,7 +131,7 @@ namespace SyncTrayzor.Pages
             this.windowManager.ShowDialog(vm);
         }
 
-        public bool CanZoomBrowser => this.SyncThingState == SyncThingState.Running;
+        public bool CanZoomBrowser => this.SyncthingState == SyncthingState.Running;
 
         public void BrowserZoomIn()
         {

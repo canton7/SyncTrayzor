@@ -1,7 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
-using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.TransferHistory;
+using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.TransferHistory;
 
 namespace SyncTrayzor.Design
 {

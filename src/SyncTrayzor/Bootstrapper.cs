@@ -9,9 +9,9 @@ using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
-using SyncTrayzor.SyncThing;
-using SyncTrayzor.SyncThing.ApiClient;
-using SyncTrayzor.SyncThing.EventWatcher;
+using SyncTrayzor.Syncthing;
+using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.EventWatcher;
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using SyncTrayzor.Services.Metering;
 
 namespace SyncTrayzor
 {
@@ -45,11 +46,11 @@ namespace SyncTrayzor
             builder.Bind<IAssemblyProvider>().To<AssemblyProvider>().InSingletonScope();
             builder.Bind<IAutostartProvider>().To<AutostartProvider>().InSingletonScope();
             builder.Bind<ConfigurationApplicator>().ToSelf().InSingletonScope();
-            builder.Bind<ISyncThingApiClientFactory>().To<SyncThingApiClientFactory>();
-            builder.Bind<ISyncThingEventWatcherFactory>().To<SyncThingEventWatcherFactory>();
-            builder.Bind<ISyncThingProcessRunner>().To<SyncThingProcessRunner>().InSingletonScope();
-            builder.Bind<ISyncThingManager>().To<SyncThingManager>().InSingletonScope();
-            builder.Bind<ISyncThingConnectionsWatcherFactory>().To<SyncThingConnectionsWatcherFactory>();
+            builder.Bind<ISyncthingApiClientFactory>().To<SyncthingApiClientFactory>();
+            builder.Bind<ISyncthingEventWatcherFactory>().To<SyncthingEventWatcherFactory>();
+            builder.Bind<ISyncthingProcessRunner>().To<SyncthingProcessRunner>().InSingletonScope();
+            builder.Bind<ISyncthingManager>().To<SyncthingManager>().InSingletonScope();
+            builder.Bind<ISyncthingConnectionsWatcherFactory>().To<SyncthingConnectionsWatcherFactory>();
             builder.Bind<IFreePortFinder>().To<FreePortFinder>().InSingletonScope();
             builder.Bind<INotifyIconManager>().To<NotifyIconManager>().InSingletonScope();
             builder.Bind<IWatchedFolderMonitor>().To<WatchedFolderMonitor>().InSingletonScope();
@@ -69,10 +70,12 @@ namespace SyncTrayzor
             builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
             builder.Bind<IFileWatcherFactory>().To<FileWatcherFactory>();
             builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
+            builder.Bind<INetworkCostManager>().To<NetworkCostManager>();
+            builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
 
-            if (Settings.Default.Variant == SyncTrayzorVariant.Installed)
+            if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
-            else if (Settings.Default.Variant == SyncTrayzorVariant.Portable)
+            else if (AppSettings.Instance.Variant == SyncTrayzorVariant.Portable)
                 builder.Bind<IUpdateVariantHandler>().To<PortableUpdateVariantHandler>();
             else
                 Trace.Assert(false);
@@ -84,12 +87,12 @@ namespace SyncTrayzor
         protected override void Configure()
         {
             // Have to set the log path before anything else
-            var pathConfiguration = Settings.Default.PathConfiguration;
+            var pathConfiguration = AppSettings.Instance.PathConfiguration;
             GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
 
             AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
 
-            if (Settings.Default.EnforceSingleProcessPerUser)
+            if (AppSettings.Instance.EnforceSingleProcessPerUser)
             {
                 if (this.Container.Get<ISingleApplicationInstanceManager>().ShouldExit())
                     Environment.Exit(0);
@@ -98,10 +101,10 @@ namespace SyncTrayzor
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
-            configurationProvider.Initialize(Settings.Default.DefaultUserConfiguration);
+            configurationProvider.Initialize(AppSettings.Instance.DefaultUserConfiguration);
             var configuration = this.Container.Get<IConfigurationProvider>().Load();
 
-            if (Settings.Default.EnforceSingleProcessPerUser)
+            if (AppSettings.Instance.EnforceSingleProcessPerUser)
             {
                 this.Container.Get<ISingleApplicationInstanceManager>().StartServer();
             }
@@ -122,7 +125,7 @@ namespace SyncTrayzor
 #endif
 
             // If it's not in portable mode, and if we had to create config (i.e. it's the first start ever), then enable autostart
-            if (autostartProvider.CanWrite && Settings.Default.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
+            if (autostartProvider.CanWrite && AppSettings.Instance.EnableAutostartOnFirstStart && configurationProvider.HadToCreateConfiguration)
                     autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
 
             // Needs to be done before ConfigurationApplicator is run
@@ -136,7 +139,7 @@ namespace SyncTrayzor
             this.Application.SessionEnding += (o, e) =>
             {
                 LogManager.GetCurrentClassLogger().Info("Shutting down: {0}", e.ReasonSessionEnding);
-                var manager = this.Container.Get<ISyncThingManager>();
+                var manager = this.Container.Get<ISyncthingManager>();
                 manager.StopAndWaitAsync().Wait(2000);
                 manager.Kill();
             };
@@ -190,18 +193,18 @@ namespace SyncTrayzor
         {
             // Testing has indicated that this and OnUnhandledException won't be called at the same time
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Error($"An unhandled AppDomain exception occurred. Terminating: {e.IsTerminating}", e.ExceptionObject as Exception);
+            logger.Error(e.ExceptionObject as Exception, $"An unhandled AppDomain exception occurred. Terminating: {e.IsTerminating}");
         }
 
         protected override void OnUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Error("An unhandled exception occurred", e.Exception);
+            logger.Error(e.Exception, "An unhandled exception occurred");
 
             // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try
             {
-                this.Container.Get<ISyncThingManager>().StopAsync();
+                this.Container.Get<ISyncthingManager>().StopAsync();
             }
             catch { }
 
@@ -225,6 +228,7 @@ namespace SyncTrayzor
                     // Don't "crash"
                     e.Handled = true;
                     this.Application.Shutdown();
+                    return;
                 }
 
                 var configurationException = e.Exception as BadConfigurationException;
@@ -243,6 +247,22 @@ namespace SyncTrayzor
                     // Don't "crash"
                     e.Handled = true;
                     this.Application.Shutdown();
+                    return;
+                }
+
+                var couldNotSaveConfigurationException = e.Exception as CouldNotSaveConfigurationExeption;
+                if (couldNotSaveConfigurationException != null)
+                {
+                    var msg = $"Could not save configuration file.\n\n" +
+                        $"{couldNotSaveConfigurationException.InnerException.GetType().Name}: {couldNotSaveConfigurationException.InnerException.Message}.\n\n" +
+                        $"Please close any other programs which may be using this file.";
+
+                    windowManager.ShowMessageBox(msg, "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Don't "crash"
+                    e.Handled = true;
+                    this.Application.Shutdown();
+                    return;
                 }
 
                 var vm = this.Container.Get<UnhandledExceptionViewModel>();
@@ -253,7 +273,7 @@ namespace SyncTrayzor
             {
                 // Don't re-throw. Nasty stuff happens if we throw an exception while trying to handle an unhandled exception
                 // For starters, the event log shows the wrong exception - this one, instead of the root cause
-                logger.Error("Unhandled exception while trying to display unhandled exception window", exception);
+                logger.Error(exception, "Unhandled exception while trying to display unhandled exception window");
             }
         }
 
@@ -261,8 +281,8 @@ namespace SyncTrayzor
         {
             this.exiting = true;
 
-            // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncThingProcessRunning kills it dead
-            this.Container.Get<ISyncThingManager>().StopAsync().Wait(500);
+            // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncthingProcessRunning kills it dead
+            this.Container.Get<ISyncthingManager>().StopAsync().Wait(500);
         }
 
         public override void Dispose()

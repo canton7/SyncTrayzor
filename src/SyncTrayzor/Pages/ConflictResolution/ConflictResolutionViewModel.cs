@@ -1,6 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Services.Conflicts;
-using SyncTrayzor.SyncThing;
+using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
 {
     public class ConflictResolutionViewModel : Screen
     {
-        private readonly ISyncThingManager syncThingManager;
+        private readonly ISyncthingManager syncthingManager;
         private readonly IConflictFileManager conflictFileManager;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IConflictFileWatcher conflictFileWatcher;
@@ -39,14 +39,14 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public ConflictViewModel SelectedConflict { get; set; }
 
         public ConflictResolutionViewModel(
-            ISyncThingManager syncThingManager,
+            ISyncthingManager syncthingManager,
             IConflictFileManager conflictFileManager,
             IProcessStartProvider processStartProvider,
             IConflictFileWatcher conflictFileWatcher,
             IWindowManager windowManager,
             IConfigurationProvider configurationProvider)
         {
-            this.syncThingManager = syncThingManager;
+            this.syncthingManager = syncthingManager;
             this.conflictFileManager = conflictFileManager;
             this.processStartProvider = processStartProvider;
             this.conflictFileWatcher = conflictFileWatcher;
@@ -72,7 +72,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
             };
         }
 
-        private void SyncThingDataLoaded(object sender, EventArgs e)
+        private void SyncthingDataLoaded(object sender, EventArgs e)
         {
             this.IsSyncthingStopped = false;
             this.Load();
@@ -84,10 +84,10 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.wasConflictFileWatcherEnabled = this.conflictFileWatcher.IsEnabled;
             this.conflictFileWatcher.IsEnabled = false;
 
-            if (this.syncThingManager.State != SyncThingState.Running || !this.syncThingManager.IsDataLoaded)
+            if (this.syncthingManager.State != SyncthingState.Running || !this.syncthingManager.IsDataLoaded)
             {
                 this.IsSyncthingStopped = true;
-                this.syncThingManager.DataLoaded += this.SyncThingDataLoaded;
+                this.syncthingManager.DataLoaded += this.SyncthingDataLoaded;
             }
             else
             {
@@ -101,7 +101,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.loadingCts?.Cancel();
             if (this.wasConflictFileWatcherEnabled)
                 this.conflictFileWatcher.IsEnabled = true;
-            this.syncThingManager.DataLoaded -= this.SyncThingDataLoaded;
+            this.syncthingManager.DataLoaded -= this.SyncthingDataLoaded;
         }
 
         private async void Load()
@@ -117,7 +117,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
             try
             {
                 this.Conflicts.Clear();
-                foreach (var folder in this.syncThingManager.Folders.FetchAll())
+                foreach (var folder in this.syncthingManager.Folders.FetchAll())
                 {
                     try
                     {

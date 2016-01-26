@@ -1,9 +1,13 @@
+
 SyncTrayzor [![Build status](https://ci.appveyor.com/api/projects/status/pwa4mpy4066okxyu?svg=true)](https://ci.appveyor.com/project/canton7/synctrayzor)
 ===========
 
-\[[Download and install SyncTrayzor now](#installation)\]
-\[[Something went wrong!](#something-went-wrong)\]
-\[[Buy me a beer!](#buy-me-a-beer)\]
+Quick Links
+-----------
+
+ - [Download and install SyncTrayzor now](#installation)
+ - [Something went wrong](#something-went-wrong)
+ - [Buy me a beer!](#buy-me-a-beer)
 
 
 Introduction
@@ -29,6 +33,7 @@ Features include:
     - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
     - Folder watching respects the ignores configured in Syncthing.
  - Has a tool to help you resolve file conflicts
+ - Can pause devices on metered networks, to stop Syncthing transferring data on e.g. a mobile connection or wifi hotspot.
  - Contains translations for many languages
 
 
@@ -37,7 +42,7 @@ Features include:
 Installation
 ------------
 
-SyncTrayzor is packaged as both an installer and a standalone zip. It will run on Windows Vista or newer.
+SyncTrayzor is packaged as both an installer, standalone zip, and chocolatey package. It will run on Windows Vista or newer.
 
 ### Installer
 
@@ -52,6 +57,14 @@ First, you'll need .net 4.5. [Download the offline](http://www.microsoft.com/en-
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
 
 
+### Chocolatey
+
+The installed version of SyncTrayzor is also [available on Chocolatey](https://chocolatey.org/packages/synctrayzor).
+
+```
+C:\> choco install synctrayzor
+```
+
 Something went wrong!
 ---------------------
 
@@ -59,8 +72,8 @@ First, what went wrong? Remember that SyncTrayzor is a wrapper around [Syncthing
 Syncthing is the file synchronization program, which has a web interface.
 SyncTrayzor is the tray utility, looks like a normal Windows program, and has menus and suchlike, and a big area where Syncthing's web interface is displayed.
 
- - If you're having problems connecting to other devices, your files aren't synchronizing, or you're getting error messages in the console area, [raise an issue with Syncthing](http://github.com/syncthing/syncthing) or [post on the Syncthing forums](http://discourse.syncthing.net).
- - If SyncTrayzor isn't talking to Syncthing, you're getting error dialogs, it's not auto-starting, etc, [raise an issue with SyncTrayzor](http://github.com/canton7/SyncTrayzor).
+ - If you're having problems connecting to other devices, your files aren't synchronizing, or you're getting error messages in the console area, [raise an issue with Syncthing](https://github.com/syncthing/syncthing/issues/new) or [post on the Syncthing forums](https://forum.syncthing.net).
+ - If SyncTrayzor isn't talking to Syncthing, you're getting error dialogs, it's not auto-starting, etc, [raise an issue with SyncTrayzor](https://github.com/canton7/SyncTrayzor/issues/new).
  - If you're not sure, raise an issue here and I'll redirect you if appropriate.
 
 

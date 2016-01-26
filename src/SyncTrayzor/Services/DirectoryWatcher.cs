@@ -22,12 +22,12 @@ namespace SyncTrayzor.Services
     {
         public bool Cancel { get; set; }
 
-        public bool FileExists { get; }
+        public bool PathExists { get; }
 
-        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath, bool fileExists)
+        public PreviewDirectoryChangedEventArgs(string directoryPath, string subPath, bool pathExists)
             : base(directoryPath, subPath)
         {
-            this.FileExists = fileExists;
+            this.PathExists = pathExists;
         }
     }
 
@@ -86,11 +86,11 @@ namespace SyncTrayzor.Services
             };
         }
 
-        public override void OnFileChanged(string subPath, bool fileExists)
+        public override void OnPathChanged(string subPath, bool pathExists, bool isDirectory)
         {
-            base.OnFileChanged(subPath, fileExists);
+            base.OnPathChanged(subPath, pathExists, isDirectory);
 
-            if (this.OnPreviewDirectoryChanged(subPath, fileExists))
+            if (this.OnPreviewDirectoryChanged(subPath, pathExists))
                 return;
 
             this.backoffTimer.Stop();
@@ -127,12 +127,12 @@ namespace SyncTrayzor.Services
         }
 
         // Return true to cancel
-        private bool OnPreviewDirectoryChanged(string subPath, bool fileExists)
+        private bool OnPreviewDirectoryChanged(string subPath, bool pathExists)
         {
             var handler = this.PreviewDirectoryChanged;
             if (handler != null)
             {
-                var ea = new PreviewDirectoryChangedEventArgs(this.Directory, subPath, fileExists);
+                var ea = new PreviewDirectoryChangedEventArgs(this.Directory, subPath, pathExists);
                 handler(this, ea);
                 logger.Trace("PreviewDirectoryChanged with path {0}. Cancelled: {1}", Path.Combine(this.Directory, subPath), ea.Cancel);
                 return ea.Cancel;

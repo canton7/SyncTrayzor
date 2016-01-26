@@ -35,7 +35,7 @@
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Restart}" Command="{s:Action Restart}"/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" Command="{s:Action RefreshBrowser}"/>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" InputGestureText="F5" Command="{s:Action RefreshBrowser}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
             </MenuItem>

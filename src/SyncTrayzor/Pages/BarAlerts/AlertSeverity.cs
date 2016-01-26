@@ -2,6 +2,7 @@
 {
     public enum AlertSeverity
     {
-        Warning
+        Info,
+        Warning,
     }
 }

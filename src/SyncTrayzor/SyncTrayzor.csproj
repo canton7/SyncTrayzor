@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props')" />
-  <Import Project="..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -85,37 +85,50 @@
       <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentValidation, Version=5.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    <Reference Include="FluentValidation, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.1.0.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Interop.NETWORKLIST">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\lib\$(Platform)\Interop.NETWORKLIST.dll</HintPath>
+    </Reference>
     <Reference Include="Itenso.Windows.Controls.ListViewLayout">
       <HintPath>..\..\lib\Itenso.Windows.Controls.ListViewLayout.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NLog, Version=3.2.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="Pri.LongPath, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pri.LongPath.1.3.2.0\lib\net45\Pri.LongPath.dll</HintPath>
+    <Reference Include="Pri.LongPath, Version=2.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pri.LongPath.2.0.16\lib\net45\Pri.LongPath.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PropertyChanged, Version=1.49.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.1.49.0\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="PropertyChanged, Version=1.50.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.1.50.3\Lib\dotnet\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="RestEase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestEase.1.0.0\lib\net45\RestEase.dll</HintPath>
+    <Reference Include="RestEase, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestEase.1.0.6\lib\net45\RestEase.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -127,6 +140,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -152,6 +166,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
+    <Compile Include="Localization\LocalizeConverters.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
     <Compile Include="Pages\BarAlerts\AlertSeverity.cs" />
@@ -160,6 +175,10 @@
     <Compile Include="Pages\BarAlerts\FailedTransfersAlertViewModel.cs" />
     <Compile Include="Pages\BarAlerts\IBarAlert.cs" />
     <Compile Include="Pages\BarAlerts\BarAlertsViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml.cs">
+      <DependentUpon>PausedDevicesFromMeteringView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
@@ -167,28 +186,24 @@
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
     <Compile Include="Pages\Settings\SettingItem.cs" />
-    <Compile Include="Pages\Settings\SyncThingAddressValidator.cs" />
-    <Compile Include="Pages\Settings\SyncThingApiKeyValidator.cs" />
-    <Compile Include="Pages\Settings\SyncThingCommandLineFlagsValidator.cs" />
-    <Compile Include="Pages\Settings\SyncThingEnvironmentalVariablesValidator.cs" />
+    <Compile Include="Pages\Settings\SyncthingAddressValidator.cs" />
+    <Compile Include="Pages\Settings\SyncthingApiKeyValidator.cs" />
+    <Compile Include="Pages\Settings\SyncthingCommandLineFlagsValidator.cs" />
+    <Compile Include="Pages\Settings\SyncthingEnvironmentalVariablesValidator.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Services\AlertsManager.cs" />
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\Config\AppSettings.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
     <Compile Include="Services\Config\ConfigFolderCleaner.cs" />
     <Compile Include="Services\Config\EnvironmentalVariableCollection.cs" />
     <Compile Include="Services\Config\FolderConfiguration.cs" />
-    <Compile Include="Services\Config\SyncThingPriorityLevel.cs" />
+    <Compile Include="Services\Config\SyncthingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />
     <Compile Include="Services\Conflicts\ConflictFileManager.cs" />
@@ -197,6 +212,11 @@
     <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
     <Compile Include="Services\IpcCommsServer.cs" />
+    <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
+    <Compile Include="Services\Metering\NetworkCostManager.cs" />
+    <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
     <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
@@ -212,35 +232,44 @@
     <Compile Include="Services\UpdateManagement\UpdateNotificationResponse.cs" />
     <Compile Include="Services\UpdateManagement\UpdatePromptProvider.cs" />
     <Compile Include="Services\UserActivityMonitor.cs" />
-    <Compile Include="SyncThing\ApiClient\ConfigSavedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\DebugFacilitiesSettings.cs" />
-    <Compile Include="SyncThing\ApiClient\DefaultingStringEnumConverter.cs" />
-    <Compile Include="SyncThing\ApiClient\DownloadProgressEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\FolderErrorsEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\FolderStatus.cs" />
-    <Compile Include="SyncThing\ApiClient\FolderSummaryEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\ISyncThingApiClient.cs" />
-    <Compile Include="SyncThing\ApiClient\ISyncThingApi.cs" />
-    <Compile Include="SyncThing\ApiClient\SyncThingApiClientFactory.cs" />
-    <Compile Include="SyncThing\ApiClient\SyncThingApiClient.cs" />
-    <Compile Include="SyncThing\ApiClient\ItemChangedActionType.cs" />
-    <Compile Include="SyncThing\ApiClient\ItemChangedItemType.cs" />
-    <Compile Include="SyncThing\DebugFacilities\DebugFacility.cs" />
-    <Compile Include="SyncThing\DebugFacilities\SyncThingDebugFacilitiesManager.cs" />
-    <Compile Include="SyncThing\EventWatcher\ConfigSavedEventArgs.cs" />
-    <Compile Include="SyncThing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
-    <Compile Include="SyncThing\EventWatcher\ItemFinishedEventArgs.cs" />
-    <Compile Include="SyncThing\EventWatcher\ItemStartedEventArgs.cs" />
-    <Compile Include="SyncThing\FolderErrorsChangedEventArgs.cs" />
-    <Compile Include="SyncThing\FolderStateTransformer.cs" />
-    <Compile Include="SyncThing\FreePortFinder.cs" />
-    <Compile Include="SyncThing\SyncStateChangedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncThingHttpClientHandler.cs" />
-    <Compile Include="SyncThing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncThingDidNotStartCorrectlyException.cs" />
-    <Compile Include="SyncThing\SyncThingConnectionsWatcherFactory.cs" />
-    <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcherFactory.cs" />
-    <Compile Include="Localization\LocalizeConverter.cs" />
+    <Compile Include="Syncthing\ApiClient\ConfigSavedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\DebugFacilitiesSettings.cs" />
+    <Compile Include="Syncthing\ApiClient\DefaultingStringEnumConverter.cs" />
+    <Compile Include="Syncthing\ApiClient\DevicePausedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceResumedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\DownloadProgressEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\FolderErrorsEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\FolderStatus.cs" />
+    <Compile Include="Syncthing\ApiClient\FolderSummaryEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\ISyncthingApiClient.cs" />
+    <Compile Include="Syncthing\ApiClient\ISyncthingApi.cs" />
+    <Compile Include="Syncthing\ApiClient\SyncthingApiClientFactory.cs" />
+    <Compile Include="Syncthing\ApiClient\SyncthingApiClient.cs" />
+    <Compile Include="Syncthing\ApiClient\ItemChangedActionType.cs" />
+    <Compile Include="Syncthing\ApiClient\ItemChangedItemType.cs" />
+    <Compile Include="Syncthing\DebugFacilities\DebugFacility.cs" />
+    <Compile Include="Syncthing\DebugFacilities\SyncthingDebugFacilitiesManager.cs" />
+    <Compile Include="Syncthing\EventWatcher\ConfigSavedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DevicePausedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DeviceResumedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\FolderStatusChangedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\ItemFinishedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\FolderError.cs" />
+    <Compile Include="Syncthing\Folders\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\FolderIgnores.cs" />
+    <Compile Include="Syncthing\Folders\FolderStateTransformer.cs" />
+    <Compile Include="Syncthing\Folders\FolderSyncState.cs" />
+    <Compile Include="Syncthing\FreePortFinder.cs" />
+    <Compile Include="Syncthing\EventWatcher\SyncStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\SyncthingDeviceManager.cs" />
+    <Compile Include="Syncthing\ApiClient\SyncthingHttpClientHandler.cs" />
+    <Compile Include="Syncthing\EventWatcher\ItemDownloadProgressChangedEventArgs.cs" />
+    <Compile Include="Syncthing\SyncthingCapabilities.cs" />
+    <Compile Include="Syncthing\SyncthingDidNotStartCorrectlyException.cs" />
+    <Compile Include="Syncthing\SyncthingConnectionsWatcherFactory.cs" />
+    <Compile Include="Syncthing\EventWatcher\SyncthingEventWatcherFactory.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocExtension.cs" />
     <Compile Include="Pages\NewVersionAlertToastViewModel.cs" />
@@ -264,52 +293,52 @@
     <Compile Include="Services\UpdateManagement\UpdateChecker.cs" />
     <Compile Include="Services\UpdateManagement\Release.cs" />
     <Compile Include="Services\WatchedFolderMonitor.cs" />
-    <Compile Include="SyncThing\ApiClient\Config.cs" />
-    <Compile Include="SyncThing\ApiClient\Connections.cs" />
-    <Compile Include="SyncThing\ApiClient\DeviceConnectedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\DeviceDisconnectedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\Event.cs" />
-    <Compile Include="SyncThing\ApiClient\EventConverter.cs" />
-    <Compile Include="SyncThing\ApiClient\EventType.cs" />
-    <Compile Include="SyncThing\ApiClient\GenericEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\IEventVisitor.cs" />
-    <Compile Include="SyncThing\ApiClient\Ignores.cs" />
-    <Compile Include="SyncThing\ApiClient\ItemFinishedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\ItemStartedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\JsonCreationConverter.cs" />
-    <Compile Include="SyncThing\ApiClient\LocalIndexUpdatedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\RemoteIndexUpdatedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\StartupCompleteEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\StateChangedEvent.cs" />
-    <Compile Include="SyncThing\ApiClient\SyncthingVersion.cs" />
-    <Compile Include="SyncThing\ApiClient\SystemInfo.cs" />
-    <Compile Include="SyncThing\Device.cs" />
-    <Compile Include="SyncThing\DeviceConnectedEventArgs.cs" />
-    <Compile Include="SyncThing\DeviceDisconnectedEventArgs.cs" />
-    <Compile Include="SyncThing\EventWatcher\DeviceConnectedEventArgs.cs" />
-    <Compile Include="SyncThing\EventWatcher\DeviceDisconnectedEventArgs.cs" />
-    <Compile Include="SyncThing\EventWatcher\ItemStateChangedEventArgs.cs" />
-    <Compile Include="SyncThing\Folder.cs" />
-    <Compile Include="SyncThing\FolderSyncStateChangedEventArgs.cs" />
-    <Compile Include="SyncThing\MessageLoggedEventArgs.cs" />
-    <Compile Include="SyncThing\FolderStatusChangedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncThingConnectionStats.cs" />
-    <Compile Include="SyncThing\SyncThingConnectionsWatcher.cs" />
-    <Compile Include="SyncThing\EventWatcher\SyncThingEventWatcher.cs" />
-    <Compile Include="SyncThing\SyncThingFolderManager.cs" />
-    <Compile Include="SyncThing\SyncThingManager.cs" />
-    <Compile Include="SyncThing\SyncThingPoller.cs" />
-    <Compile Include="SyncThing\SyncThingProcessRunner.cs" />
-    <Compile Include="SyncThing\SyncThingState.cs" />
-    <Compile Include="SyncThing\SyncThingStateChangedEventArgs.cs" />
-    <Compile Include="SyncThing\SyncThingVersionInformation.cs" />
-    <Compile Include="SyncThing\TransferHistory\FailingTransfer.cs" />
-    <Compile Include="SyncThing\TransferHistory\FileTransfer.cs" />
-    <Compile Include="SyncThing\TransferHistory\FileTransferChangedEventArgs.cs" />
-    <Compile Include="SyncThing\TransferHistory\FileTransferStatus.cs" />
-    <Compile Include="SyncThing\TransferHistory\FolderSynchronizationFinishedEventArgs.cs" />
-    <Compile Include="SyncThing\TransferHistory\SyncThingTransferHistory.cs" />
-    <Compile Include="SyncThing\TransientWrapper.cs" />
+    <Compile Include="Syncthing\ApiClient\Config.cs" />
+    <Compile Include="Syncthing\ApiClient\Connections.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceConnectedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceDisconnectedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\Event.cs" />
+    <Compile Include="Syncthing\ApiClient\EventConverter.cs" />
+    <Compile Include="Syncthing\ApiClient\EventType.cs" />
+    <Compile Include="Syncthing\ApiClient\GenericEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\IEventVisitor.cs" />
+    <Compile Include="Syncthing\ApiClient\Ignores.cs" />
+    <Compile Include="Syncthing\ApiClient\ItemFinishedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\ItemStartedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\JsonCreationConverter.cs" />
+    <Compile Include="Syncthing\ApiClient\LocalIndexUpdatedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\RemoteIndexUpdatedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\StartupCompleteEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\StateChangedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\SyncthingVersion.cs" />
+    <Compile Include="Syncthing\ApiClient\SystemInfo.cs" />
+    <Compile Include="Syncthing\Devices\Device.cs" />
+    <Compile Include="Syncthing\Devices\DeviceConnectedEventArgs.cs" />
+    <Compile Include="Syncthing\Devices\DeviceDisconnectedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DeviceConnectedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DeviceDisconnectedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\ItemStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\Folder.cs" />
+    <Compile Include="Syncthing\Folders\FolderSyncStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\MessageLoggedEventArgs.cs" />
+    <Compile Include="Syncthing\Folders\FolderStatusChangedEventArgs.cs" />
+    <Compile Include="Syncthing\SyncthingConnectionStats.cs" />
+    <Compile Include="Syncthing\SyncthingConnectionsWatcher.cs" />
+    <Compile Include="Syncthing\EventWatcher\SyncthingEventWatcher.cs" />
+    <Compile Include="Syncthing\Folders\SyncthingFolderManager.cs" />
+    <Compile Include="Syncthing\SyncthingManager.cs" />
+    <Compile Include="Syncthing\SyncthingPoller.cs" />
+    <Compile Include="Syncthing\SyncthingProcessRunner.cs" />
+    <Compile Include="Syncthing\SyncthingState.cs" />
+    <Compile Include="Syncthing\SyncthingStateChangedEventArgs.cs" />
+    <Compile Include="Syncthing\SyncthingVersionInformation.cs" />
+    <Compile Include="Syncthing\TransferHistory\FailingTransfer.cs" />
+    <Compile Include="Syncthing\TransferHistory\FileTransfer.cs" />
+    <Compile Include="Syncthing\TransferHistory\FileTransferChangedEventArgs.cs" />
+    <Compile Include="Syncthing\TransferHistory\FileTransferStatus.cs" />
+    <Compile Include="Syncthing\TransferHistory\FolderSynchronizationFinishedEventArgs.cs" />
+    <Compile Include="Syncthing\TransferHistory\SyncthingTransferHistory.cs" />
+    <Compile Include="Syncthing\TransientWrapper.cs" />
     <Compile Include="Utils\AtomicFileStream.cs" />
     <Compile Include="Utils\Buffer.cs" />
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
@@ -358,10 +387,6 @@
       <Link>Resources\synctrayzor_releases_cert.asc</Link>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <AppDesigner Include="Properties\" />
     <None Include="SyncTrayzor.ruleset" />
   </ItemGroup>
@@ -388,6 +413,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\BarAlerts\FailedTransfersAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -533,6 +562,12 @@
   <ItemGroup>
     <Resource Include="Icons\alert_tray.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\paused_tray.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\WindowsAPICodePack.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="Configs">
     <XslTransformation XmlInputPaths="App.config" XslInputPath="App.Installer.config.xslt" OutputPaths="$(OutputPath)$(RootNamespace).exe.Installer.config" />
@@ -544,19 +579,21 @@
   <Target Name="AfterBuild">
     <CallTarget Targets="Configs" />
   </Target>
-  <Import Project="..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2272.32\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.41.0.0\build\CefSharp.Wpf.props'))" />
-    <Error Condition="!Exists('..\packages\Fody.1.26.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.26.4\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2272.32\build\cef.redist.x86.targets')" />
-  <Import Project="..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.41.0.0\build\CefSharp.Common.targets')" />
-  <Import Project="..\packages\Fody.1.26.4\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.4\build\Fody.targets')" />
+  <Import Project="..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets')" />
+  <Import Project="..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets')" />
+  <Import Project="..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets')" />
+  <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
+  <Import Project="..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets" Condition="Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" />
 </Project>

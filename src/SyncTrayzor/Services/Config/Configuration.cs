@@ -37,7 +37,7 @@ namespace SyncTrayzor.Services.Config
         public EnvironmentalVariableCollection SyncthingEnvironmentalVariables { get; set; }
         public bool SyncthingUseCustomHome { get; set; }
         public bool SyncthingDenyUpgrade { get; set; }
-        public SyncThingPriorityLevel SyncthingPriorityLevel { get; set; }
+        public SyncthingPriorityLevel SyncthingPriorityLevel { get; set; }
 
         [XmlArrayItem("Folder")]
         public List<FolderConfiguration> Folders { get; set; }
@@ -69,6 +69,7 @@ namespace SyncTrayzor.Services.Config
         public List<string> SyncthingDebugFacilities { get; set; }
 
         public bool ConflictResolverDeletesToRecycleBin { get; set; }
+        public bool PauseDevicesOnMeteredNetworks { get; set; }
 
         public Configuration()
         {
@@ -86,7 +87,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection();
             this.SyncthingUseCustomHome = true;
             this.SyncthingDenyUpgrade = false;
-            this.SyncthingPriorityLevel = SyncThingPriorityLevel.Normal;
+            this.SyncthingPriorityLevel = SyncthingPriorityLevel.Normal;
             this.Folders = new List<FolderConfiguration>();
             this.NotifyOfNewVersions = true;
             this.ObfuscateDeviceIDs = true;
@@ -103,6 +104,7 @@ namespace SyncTrayzor.Services.Config
             this.EnableConflictFileMonitoring = true;
             this.SyncthingDebugFacilities = new List<string>();
             this.ConflictResolverDeletesToRecycleBin = true;
+            this.PauseDevicesOnMeteredNetworks = true;
         }
 
         public Configuration(Configuration other)
@@ -136,6 +138,7 @@ namespace SyncTrayzor.Services.Config
             this.EnableConflictFileMonitoring = other.EnableConflictFileMonitoring;
             this.SyncthingDebugFacilities = other.SyncthingDebugFacilities;
             this.ConflictResolverDeletesToRecycleBin = other.ConflictResolverDeletesToRecycleBin;
+            this.PauseDevicesOnMeteredNetworks = other.PauseDevicesOnMeteredNetworks;
         }
 
         public override string ToString()
@@ -151,7 +154,7 @@ namespace SyncTrayzor.Services.Config
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
                 $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
                 $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+
-                $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin}>";
+                $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks}>";
         }
     }
 }
