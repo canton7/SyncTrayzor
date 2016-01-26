@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v1.1.3
+------
+
+ - Disable devices which connect over a metered network (#167)
+ - Don't report conflict files in the .stversions folder (#203)
+ - Add a 'Browse' button (which opens a folder browser) to Syncthing's 'Add folder' dialog (#78)
+ - Fix a race condition in the alerts system (#208)
+ - Log file transfers to a CSV file in the logs directly (#205)
+ - Upgrade the embedded browser: may fix issues with Syncthing's UI not loading at first, and adds support for touch-screen devices (#129)
+ - Create chocolatey package (#189)
+ - Clarify some wording in Settings and the Conflict Resolver (#204, #209)
+ - Handle two instances of SyncTrayzor saving their config at the same time (#185)
+
 v1.1.2
 ------
 
