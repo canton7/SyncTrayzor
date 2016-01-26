@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.5
+------
+
+ - Fix further crash when failing to determine if a connection is metered (#215, #216)
+
 v1.1.4
 ------
 
