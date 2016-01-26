@@ -65,20 +65,27 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.2' => [
+   '1.1.3' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.2/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.2/SyncTrayzorSetup-x86.exe',
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.3/SyncTrayzorSetup-x64.exe',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.3/SyncTrayzorSetup-x86.exe',
          ],
-      ],      
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.2/sha1sum.txt.asc',
-      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.2',
-      'release_notes' => "- Handle folders with missing markers again (#187)\n- Don't crash in some cases on .NET 4.5 when the conflict editor is completed (#199)\n- Don't crash if the ConflictFileWatcher is aborted (#200, #202)\n- Don't show conflicts alerts bar if Syncthing isn't running\n- Improve conflict file monitoring (should remove inaccuracies)\n- Don't fail if there's a link loop when scanning for conflicted files (#195)\n- Add 'Size' field to the conflict resolver (#194)\n- Add setting to control whether conflict files are deleted to the recycle bin\n- Pressing F5 will fresh the browser\n- Fix the portable installation procedure (sorry portable users: you'll have to manually upgrade\n  one last time).",
+      ],
+      'portable' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.3/SyncTrayzorPortable-x64.zip',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.3/SyncTrayzorPortable-x86.zip',
+         ],
+      ],     
+      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.3/sha1sum.txt.asc',
+      'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.3',
+      'release_notes' => "- Disable devices which connect over a metered network (#167)\n- Don't report conflict files in the .stversions folder (#203)\n- Add a 'Browse' button (which opens a folder browser) to Syncthing's 'Add folder' dialog (#78)\n- Fix a race condition in the alerts system (#208)\n- Log file transfers to a CSV file in the logs directly (#205)\n- Upgrade the embedded browser: may fix issues with Syncthing's UI not loading at first, and adds support for touch-screen devices (#129)\n- Create chocolatey package (#189)\n- Clarify some wording in Settings and the Conflict Resolver (#204, #209)\n- Handle two instances of SyncTrayzor saving their config at the same time (#185)",
    ]
 ];
 
 $upgrades = [
+   '1.1.2' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.1' => ['to' => 'latest', 'formatter' => '3'],
    '1.1.0' => ['to' => 'latest', 'formatter' => '3'],
    '1.0.32' => ['to' => 'latest', 'formatter' => '3'],
@@ -124,10 +131,14 @@ $response_formatters = [
 
       $data = [
          'version' => $to_version,
-         'direct_download_url' => get_with_wildcard($variant_info['direct_download_url'], $arch),
          'release_page_url' => $to_version_info['release_page_url'],
          'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
       ];
+
+      if ($variant == 'installed')
+      {
+         $data['direct_download_url'] = get_with_wildcard($variant_info['direct_download_url'], $arch);
+      }
 
       return $data;
    },
