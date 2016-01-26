@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.1.4
+------
+
+ - Fix issue with embedded browser failing to start on some systems (#211, #213)
+ - Fix crash when failing to determine if a connection is metered (#210, #212)
+
 v1.1.3
 ------
 
