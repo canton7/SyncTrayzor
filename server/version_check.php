@@ -72,12 +72,12 @@ $versions = [
             'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.5/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      'portable' => [
-         'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.5/SyncTrayzorPortable-x64.zip',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.5/SyncTrayzorPortable-x86.zip',
-         ],
-      ],     
+      // 'portable' => [
+      //    'direct_download_url' => [
+      //       'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.5/SyncTrayzorPortable-x64.zip',
+      //       'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.5/SyncTrayzorPortable-x86.zip',
+      //    ],
+      // ],     
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v1.1.5/sha1sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v1.1.5',
       'release_notes' => "- Disable devices which connect over a metered network (#167)\n- Don't report conflict files in the .stversions folder (#203)\n- Add a 'Browse' button (which opens a folder browser) to Syncthing's 'Add folder' dialog (#78)\n- Fix a race condition in the alerts system (#208)\n- Log file transfers to a CSV file in the logs directly (#205)\n- Upgrade the embedded browser: may fix issues with Syncthing's UI not loading at first, and adds support for touch-screen devices (#129)\n- Create chocolatey package (#189)\n- Clarify some wording in Settings and the Conflict Resolver (#204, #209)\n- Handle two instances of SyncTrayzor saving their config at the same time (#185)",
