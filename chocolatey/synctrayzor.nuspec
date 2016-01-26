@@ -45,7 +45,7 @@ Features include:
       <!-- Chocolatey 0.9.9 required in order to access the chocolateyPackageName and chocolateyPackageVersion environment variables -->
       <dependency id="chocolatey" version="0.9.9" />
     </dependencies>
-    <releaseNotes>https://github.com/canton7/SyncTrayzor/blob/master/CHANGELOG.txt</releaseNotes>
+    <releaseNotes>https://github.com/canton7/SyncTrayzor/blob/master/CHANGELOG.md</releaseNotes>
     <!--<provides></provides>-->
   </metadata>
   <files>
