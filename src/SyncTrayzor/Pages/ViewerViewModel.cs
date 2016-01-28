@@ -234,7 +234,8 @@ namespace SyncTrayzor.Pages
                 if (result == CommonFileDialogResult.Ok)
                 {
                     var script =
-                    @"$('#folderPath').val('" + dialog.FileName.Replace("\\", "\\\\").Replace("'", "\\'") + "')";
+                    @"$('#folderPath').val('" + dialog.FileName.Replace("\\", "\\\\").Replace("'", "\\'") + "');" +
+                    @"$('#folderPath').change();";
                     this.WebBrowser.ExecuteScriptAsync(script);
                 }
             });
