@@ -1255,7 +1255,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must be a valid URL.
+        ///   Looks up a localized string similar to Must have the form &apos;host:port&apos;, e.g. &apos;localhost:8384&apos;.
         /// </summary>
         public static string SettingsView_Validation_InvalidUrl {
             get {

@@ -88,7 +88,7 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
 
-            this.syncthingManager.PreferredAddress = new Uri("https://" + configuration.SyncthingAddress);
+            this.syncthingManager.PreferredHostAndPort = configuration.SyncthingAddress;
             this.syncthingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncthingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
             this.syncthingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;

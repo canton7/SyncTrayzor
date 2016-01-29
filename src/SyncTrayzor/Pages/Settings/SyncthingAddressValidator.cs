@@ -15,9 +15,9 @@ namespace SyncTrayzor.Pages.Settings
                 if (str.StartsWith("http:") || str.StartsWith("https:"))
                     return false;
 
-                str = "https://" + str;
+                str = "http://" + str;
                 Uri uri;
-                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString();
+                return Uri.TryCreate(str, UriKind.Absolute, out uri) && uri.IsWellFormedOriginalString() && uri.PathAndQuery == "/" && uri.Fragment == "";
             }).WithMessage(Resources.SettingsView_Validation_InvalidUrl);
         }
     }

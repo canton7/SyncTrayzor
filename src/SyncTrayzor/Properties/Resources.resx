@@ -347,7 +347,7 @@ Please adjust your settings / whitelists to allow '{1}' to execute</value>
     <comment>Title of dialog shown when Syncthing couldn't start because of group policy settings (probably)</comment>
   </data>
   <data name="SettingsView_Validation_InvalidUrl" xml:space="preserve">
-    <value>Must be a valid URL</value>
+    <value>Must have the form 'host:port', e.g. 'localhost:8384'</value>
     <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress field when the user enters a value which is not a value URL</comment>
   </data>
   <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">

@@ -30,7 +30,7 @@ namespace SyncTrayzor.Syncthing
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
-        Uri PreferredAddress { get; set; }
+        string PreferredHostAndPort { get; set; }
         Uri Address { get; set; }
         List<string> SyncthingCommandLineFlags { get; set; }
         IDictionary<string, string> SyncthingEnvironmentalVariables { get; set; }
@@ -119,7 +119,7 @@ namespace SyncTrayzor.Syncthing
 
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
-        public Uri PreferredAddress { get; set; }
+        public string PreferredHostAndPort { get; set; }
         public Uri Address { get; set; }
         public string SyncthingCustomHomeDir { get; set; }
         public List<string> SyncthingCommandLineFlags { get; set; } = new List<string>();
@@ -386,13 +386,16 @@ namespace SyncTrayzor.Syncthing
 
         private async void ProcessStarting()
         {
-            var port = this.freePortFinder.FindFreePort(this.PreferredAddress.Port);
-            var uriBuilder = new UriBuilder(this.PreferredAddress);
+            // Things will attempt to talk to Syncthing over http. If Syncthing is set to 'https only', this will redirect.
+            var preferredAddressWithScheme = new Uri("https://" + this.PreferredHostAndPort);
+            var port = this.freePortFinder.FindFreePort(preferredAddressWithScheme.Port);
+            var uriBuilder = new UriBuilder(preferredAddressWithScheme);
             uriBuilder.Port = port;
             this.Address = uriBuilder.Uri;
 
             this.processRunner.ApiKey = this.ApiKey;
-            this.processRunner.HostAddress = this.Address.ToString();
+            // Don't pass a scheme here - we want Syncthing to choose http / https as appropriate
+            this.processRunner.HostAddress = $"{this.Address.Host}:{this.Address.Port}";
             this.processRunner.ExecutablePath = this.ExecutablePath;
             this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
             this.processRunner.CommandLineFlags = this.SyncthingCommandLineFlags;

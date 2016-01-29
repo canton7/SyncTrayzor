@@ -185,7 +185,7 @@ namespace SyncTrayzor.Pages
         {
             this.Location = "about:blank";
             if (this.syncthingManager.State == SyncthingState.Running)
-                this.Location = this.syncthingManager.Address.NormalizeZeroHost().ToString();
+                this.Location = this.GetSyncthingAddress().ToString();
         }
 
         public void ZoomIn()
@@ -262,6 +262,15 @@ namespace SyncTrayzor.Pages
             await this.syncthingManager.StartWithErrorDialogAsync(this.windowManager);
         }
 
+        private Uri GetSyncthingAddress()
+        {
+            // SyncthingManager will always request over HTTPS, whether Syncthing enforces this or not.
+            // However in an attempt to avoid #201 we'll use HTTP if available, and if not Syncthing will redirect us.
+            var uriBuilder = new UriBuilder(this.syncthingManager.Address.NormalizeZeroHost());
+            uriBuilder.Scheme = "http";
+            return uriBuilder.Uri;
+        }
+
         bool IRequestHandler.GetAuthCredentials(IWebBrowser browserControl, IBrowser browser, IFrame frame, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
         {
             return false;
@@ -278,7 +287,7 @@ namespace SyncTrayzor.Pages
             // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
             // the new address (Which we do when Syncthing hits the 'running' State).
             // Therefore only open external browsers if Syncthing is actually running
-            if (this.syncthingManager.State == SyncthingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.syncthingManager.Address.NormalizeZeroHost().Host)
+            if (this.syncthingManager.State == SyncthingState.Running && (uri.Scheme == "http" || uri.Scheme == "https") && uri.Host != this.GetSyncthingAddress().Host)
             {
                 this.processStartProvider.StartDetached(request.Url);
                 return CefReturnValue.Cancel;
