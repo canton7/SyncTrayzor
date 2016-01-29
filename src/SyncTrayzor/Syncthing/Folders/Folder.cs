@@ -1,6 +1,7 @@
 ﻿using SyncTrayzor.Syncthing.ApiClient;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace SyncTrayzor.Syncthing.Folders
 {
@@ -30,15 +31,15 @@ namespace SyncTrayzor.Syncthing.Folders
         private FolderStatus _status;
         public FolderStatus Status
         {
-            get {  lock(this.syncRoot) { return this._status; } }
-            set {  lock(this.syncRoot) { this._status = value; } }
+            get { lock(this.syncRoot) { return this._status; } }
+            set { lock(this.syncRoot) { this._status = value; } }
         }
 
-        private readonly List<FolderError> _folderErrorsList = new List<FolderError>();
-        private readonly IReadOnlyList<FolderError> _folderErrors;
+        private IReadOnlyList<FolderError> _folderErrors;
         public IReadOnlyList<FolderError> FolderErrors
         {
-            get {  lock(this.syncRoot) { return this._folderErrors; } }
+            get { lock(this.syncRoot) { return this._folderErrors; } }
+            private set { lock(this.syncRoot) { this._folderErrors = value; } }
         }
 
 
@@ -50,7 +51,7 @@ namespace SyncTrayzor.Syncthing.Folders
             this.syncingPaths = new HashSet<string>();
             this._ignores = ignores;
             this._status = status;
-            this._folderErrors = this._folderErrorsList.AsReadOnly();
+            this.FolderErrors = new List<FolderError>().AsReadOnly();
         }
 
         public bool IsSyncingPath(string path)
@@ -79,19 +80,12 @@ namespace SyncTrayzor.Syncthing.Folders
 
         public void SetFolderErrors(IEnumerable<FolderError> folderErrors)
         {
-            lock (this.syncRoot)
-            {
-                this._folderErrorsList.Clear();
-                this._folderErrorsList.AddRange(folderErrors);
-            }
+            this.FolderErrors = folderErrors.ToList().AsReadOnly();
         }
 
         public void ClearFolderErrors()
         {
-            lock (this.syncRoot)
-            {
-                this._folderErrorsList.Clear();
-            }
+            this.FolderErrors = new List<FolderError>().AsReadOnly();
         }
 
         public override bool Equals(object obj)
