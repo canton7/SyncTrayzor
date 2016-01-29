@@ -88,6 +88,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cheers! Thanks for buying me a beer..
+        /// </summary>
+        public static string AboutView_DonateThanks {
+            get {
+                return ResourceManager.GetString("AboutView_DonateThanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Download Page.
         /// </summary>
         public static string AboutView_DownloadNewVersion {

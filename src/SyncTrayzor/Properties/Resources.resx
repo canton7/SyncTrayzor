@@ -907,4 +907,7 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConsoleView_ResumeButton" xml:space="preserve">
     <value>Resume</value>
   </data>
+  <data name="AboutView_DonateThanks" xml:space="preserve">
+    <value>Cheers! Thanks for buying me a beer.</value>
+  </data>
 </root>
