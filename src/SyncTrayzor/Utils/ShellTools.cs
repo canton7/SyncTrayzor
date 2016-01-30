@@ -1,26 +1,45 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using NLog;
 
 namespace SyncTrayzor.Utils
 {
     // See http://codesdirectory.blogspot.co.uk/2013/01/displaying-system-icon-in-c-wpf.html
     public static class ShellTools
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public static Icon GetIcon(string path, bool isFile)
         {
             var flags = (uint)(SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
             var attribute = isFile ? (uint)FILE_ATTRIBUTE_FILE : (uint)FILE_ATTRIBUTE_DIRECTORY;
             var shfi = new SHFileInfo();
-            var res = NativeMethods.SHGetFileInfo(path, attribute, out shfi, (uint)Marshal.SizeOf(shfi), flags);
+            IntPtr res;
+            try
+            {
+                res = NativeMethods.SHGetFileInfo(path, attribute, out shfi, (uint)Marshal.SizeOf(shfi), flags);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, $"Unable to call SHGetFileInfo: {e.Message}");
+                return null;
+            }
 
             if (res == IntPtr.Zero)
-                throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
+            {
+                logger.Error(Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()), "SHGetFileInfo returned zero");
+                return null;
+            }
 
             try
             {
-                Icon.FromHandle(shfi.hIcon);
                 return (Icon)Icon.FromHandle(shfi.hIcon).Clone();
+            }
+            catch(Exception e)
+            {
+                logger.Error(e, $"Failed to call Icon.FromHandle: {e.Message}");
+                return null;
             }
             finally
             {
@@ -50,7 +69,7 @@ namespace SyncTrayzor.Utils
         private const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
         private const uint FILE_ATTRIBUTE_FILE = 0x00000100;
 
-        private class NativeMethods
+        private static class NativeMethods
         {
             [DllImport("shell32.dll", CharSet = CharSet.Auto)]
             public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, out SHFileInfo psfi, uint cbFileInfo, uint uFlags);
