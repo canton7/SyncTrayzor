@@ -28,24 +28,23 @@ namespace ProcessRunner
             var pivotIndex = Array.IndexOf(args, "--");
             if (pivotIndex < 0)
             {
-                Console.Error.WriteLine("Must specify a command to run, see --help");
+                ShowHelp(options);
                 return 1;
             }
 
             var remainder = args.Skip(pivotIndex + 1).ToList();
             var unknownArgs = options.Parse(args.Take(pivotIndex));
 
+            if (showHelp)
+            {
+                ShowHelp(options);
+                return 1;
+            }
+
             if (unknownArgs.Count > 0)
             {
                 Console.Error.WriteLine("Unknown argument {0}. See --help", unknownArgs[0]);
                 return 1;
-            }
-
-            if (showHelp)
-            {
-                Console.WriteLine("Usage: ProcessRunner.exe [options] -- command");
-                options.WriteOptionDescriptions(Console.Out);
-                return 0;
             }
 
             if (remainder.Count == 0)
@@ -105,6 +104,12 @@ namespace ProcessRunner
             }
 
             return 0;
+        }
+
+        private static void ShowHelp(OptionSet options)
+        {
+            Console.WriteLine("Usage: ProcessRunner.exe [options] -- command");
+            options.WriteOptionDescriptions(Console.Out);
         }
     }
 }
