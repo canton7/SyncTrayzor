@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.1.6
+------
+
+ - Fix portable installer where TEMP is on a different drive to SyncTrayzor (#218)
+ - Fix bug where 'Save' button wouldn't be enabled in Syncthing's 'Add/Edit Folder' pane, after using the 'Browse' button (#219)
+ - Fix race crash (#221)
+ - Don't force Syncthing to use https (should fix #201)
+ - Handle problems getting the icon for a file (should fix #224)
+ - Improve help output of ProcessRunner.exe (#223)
+
 v1.1.5
 ------
 
