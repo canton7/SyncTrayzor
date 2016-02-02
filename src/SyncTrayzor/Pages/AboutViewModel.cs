@@ -17,6 +17,7 @@ namespace SyncTrayzor.Pages
 
         private readonly IWindowManager windowManager;
         private readonly ISyncthingManager syncthingManager;
+        private readonly IConfigurationProvider configurationProvider;
         private readonly IUpdateManager updateManager;
         private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
@@ -32,6 +33,8 @@ namespace SyncTrayzor.Pages
         }
         private string newerVersionDownloadUrl;
 
+        public bool HaveDonated { get; private set; }
+
         public AboutViewModel(
             IWindowManager windowManager,
             ISyncthingManager syncthingManager,
@@ -42,6 +45,7 @@ namespace SyncTrayzor.Pages
         {
             this.windowManager = windowManager;
             this.syncthingManager = syncthingManager;
+            this.configurationProvider = configurationProvider;
             this.updateManager = updateManager;
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
             this.processStartProvider = processStartProvider;
@@ -51,6 +55,9 @@ namespace SyncTrayzor.Pages
 
             this.syncthingManager.DataLoaded += this.SyncthingDataLoaded;
             this.LoadSyncthingVersion();
+
+            var configuration = this.configurationProvider.Load();
+            this.HaveDonated = configuration.HaveDonated;
 
             this.CheckForNewerVersionAsync();
         }
@@ -98,6 +105,9 @@ namespace SyncTrayzor.Pages
 
         public void BuyMeABeer()
         {
+            this.configurationProvider.AtomicLoadAndSave(c => c.HaveDonated = true);
+            this.HaveDonated = true;
+
             this.processStartProvider.StartDetached(donateUrl);
         }
 

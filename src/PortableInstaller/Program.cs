@@ -50,7 +50,7 @@ namespace PortableInstaller
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine($"!! Unable to set working directory to {cwd}. None of your files have been touched.");
+                    Console.WriteLine($"!! Unable to set working directory to\n    {cwd}.\nNone of your files have been touched.");
                     throw;
                 }
 
@@ -58,7 +58,7 @@ namespace PortableInstaller
 
                 if (!Directory.Exists(sourcePath))
                 {
-                    Console.WriteLine($"!! Unable to find source path {sourcePath}. This is a bug with SyncTrayzor's upgrade mechanism.");
+                    Console.WriteLine($"!! Unable to find source path\n    {sourcePath}.\nThis is a bug with SyncTrayzor's upgrade mechanism.");
                     throw new Exception("Unable to find source path");
                 }
 
@@ -68,17 +68,18 @@ namespace PortableInstaller
                     movedDestinationPath = GenerateBackupDestinationPath(destinationPath);
                     while (true)
                     {
-                        Console.WriteLine($"Moving {destinationPath} to {movedDestinationPath}");
+                        Console.WriteLine($"Moving\n    {destinationPath}\nto\n    {movedDestinationPath}");
                         try
                         {
-                            Directory.Move(destinationPath, movedDestinationPath);
+                            DirectoryMove(destinationPath, movedDestinationPath);
                             break;
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine();
-                            Console.WriteLine($"!! Unable to move {destinationPath} to {movedDestinationPath} ({e.GetType().Name} {e.Message})");
-                            Console.WriteLine($"!! Please make sure that {destinationPath}, or any of the files inside it, aren't open.");
+                            Console.WriteLine($"!! Unable to move\n    {destinationPath}\nto\n    {movedDestinationPath}");
+                            Console.WriteLine($"Error: {e.GetType().Name} {e.Message}");
+                            Console.WriteLine($"!! Please make sure that\n    {destinationPath}\nor any of the files inside it, aren't open.");
                             Console.WriteLine($"!! Press any key to try again, or Ctrl-C to abort the upgrade.");
                             Console.WriteLine($"!! If you abort the upgrade, none of your files will be modified.");
                             Console.ReadKey();
@@ -86,15 +87,15 @@ namespace PortableInstaller
                     }
                 }
 
-                Console.WriteLine($"Moving {sourcePath} to {destinationPath}");
+                Console.WriteLine($"Moving\n    {sourcePath}\nto\n    {destinationPath}");
                 try
                 {
-                    Directory.Move(sourcePath, destinationPath);
+                    DirectoryMove(sourcePath, destinationPath);
                 }
                 catch (Exception)
                 {
                     Console.WriteLine();
-                    Console.WriteLine($"!! Unable to move {sourcePath} to {destinationPath}. Your copy of SyncTrayzor is at {sourcePath}.");
+                    Console.WriteLine($"!! Unable to move\n    {sourcePath}\nto\n    {destinationPath}.\nYour copy of SyncTrayzor is at\n    {sourcePath}\nand will still work.");
                     throw;
                 }
 
@@ -105,7 +106,7 @@ namespace PortableInstaller
                     if (Directory.Exists(sourceDataFolder))
                     {
                         Console.WriteLine();
-                        Console.WriteLine($"Copying data folder {sourceDataFolder} to {destDataFolder}...");
+                        Console.WriteLine($"Copying data folder\n    {sourceDataFolder}\nto\n    {destDataFolder}...");
                         try
                         {
                             DirectoryCopy(sourceDataFolder, destDataFolder);
@@ -113,7 +114,7 @@ namespace PortableInstaller
                         catch (Exception)
                         {
                             Console.WriteLine();
-                            Console.WriteLine($"!! Unable to copy {sourceDataFolder} to {destDataFolder}. Your copy of SyncTrayzor is at {movedDestinationPath}, and will still work.");
+                            Console.WriteLine($"!! Unable to copy\n    {sourceDataFolder}\nto\n    {destDataFolder}.\nYour copy of SyncTrayzor is at\n    {movedDestinationPath}\nand will still work.");
                             throw;
                         }
                     }
@@ -129,7 +130,7 @@ namespace PortableInstaller
                     if (File.Exists(sourceInstallCount))
                     {
                         var installCount = Int32.Parse(File.ReadAllText(sourceInstallCount).Trim());
-                        Console.WriteLine($"Increasing install count to {installCount + 1} from {sourceInstallCount} to {destInstallCount}");
+                        Console.WriteLine($"Increasing install count to {installCount + 1} from\n    {sourceInstallCount}\nto\n    {destInstallCount}");
                         try
                         {
                             File.WriteAllText(destInstallCount, (installCount + 1).ToString());
@@ -143,7 +144,7 @@ namespace PortableInstaller
                     }
                     else
                     {
-                        Console.WriteLine($"{sourceInstallCount} doesn't exist, so setting installCount to 1 in {destInstallCount}");
+                        Console.WriteLine($"{sourceInstallCount}\ndoesn't exist, so setting installCount to 1 in\n    {destInstallCount}");
                         try
                         {
                             File.WriteAllText(destInstallCount, "1");
@@ -156,7 +157,7 @@ namespace PortableInstaller
                         }
                     }
 
-                    Console.WriteLine($"Deleting {movedDestinationPath} (to the recycle bin)");
+                    Console.WriteLine($"Deleting\n    {movedDestinationPath}\nto the recycle bin");
                     try
                     {
                         RecycleBinDeleter.Delete(movedDestinationPath);
@@ -164,7 +165,9 @@ namespace PortableInstaller
                     catch (Exception e)
                     {
                         Console.WriteLine();
-                        Console.WriteLine($"!! Unable to delete your old installation at {movedDestinationPath} ({e.GetType().Name} {e.Message}). Your new installation is at {destinationPath}, and should be fully functional. Please double-check, and manually delete {movedDestinationPath}.");
+                        Console.WriteLine($"!! Unable to delete your old installation at\n    {movedDestinationPath}\n Error: {e.GetType().Name} {e.Message}.");
+                        Console.WriteLine($"Your new installation is at\n    {destinationPath}\nand should be fully functional.");
+                        Console.WriteLine($"Please double-check, and manually delete\n    {movedDestinationPath}.");
                         pauseAtEnd = true;
                     }
                 }
@@ -237,6 +240,20 @@ namespace PortableInstaller
             {
                 string temppath = Path.Combine(destDirName, subdir.Name);
                 DirectoryCopy(subdir.FullName, temppath);
+            }
+        }
+
+        private static void DirectoryMove(string sourceDirName, string destDirName)
+        {
+            // Don't care about things like different names for the same root
+            if (Path.GetPathRoot(sourceDirName) == Path.GetPathRoot(destDirName))
+            {
+                Directory.Move(sourceDirName, destDirName);
+            }
+            else
+            {
+                DirectoryCopy(sourceDirName, destDirName);
+                Directory.Delete(sourceDirName, true);
             }
         }
     }
