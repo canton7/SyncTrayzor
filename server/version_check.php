@@ -65,28 +65,29 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.5' => [
+   '1.1.6' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
             'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x86.exe',
          ],
       ],
-      // 'portable' => [
-      //    'direct_download_url' => [
-      //       'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorPortable-x64.zip',
-      //       'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorPortable-x86.zip',
-      //    ],
-      // ],     
+      'portable' => [
+         'direct_download_url' => [
+            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorPortable-x64.zip',
+            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorPortable-x86.zip',
+         ],
+      ],     
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Disable devices which connect over a metered network (#167)\n- Don't report conflict files in the .stversions folder (#203)\n- Add a 'Browse' button (which opens a folder browser) to Syncthing's 'Add folder' dialog (#78)\n- Fix a race condition in the alerts system (#208)\n- Log file transfers to a CSV file in the logs directly (#205)\n- Upgrade the embedded browser: may fix issues with Syncthing's UI not loading at first, and adds support for touch-screen devices (#129)\n- Create chocolatey package (#189)\n- Clarify some wording in Settings and the Conflict Resolver (#204, #209)\n- Handle two instances of SyncTrayzor saving their config at the same time (#185)",
+      'release_notes' => "- Fix portable installer where TEMP is on a different drive to SyncTrayzor (#218)\n- Fix bug where 'Save' button wouldn't be enabled in Syncthing's 'Add/Edit Folder' pane, after using the 'Browse' button (#219)\n- Fix race crash (#221)\n- Don't force Syncthing to use https (should fix #201)\n- Handle problems getting the icon for a file (should fix #224)\n- Improve help output of ProcessRunner.exe (#223)",
    ]
 ];
 
 $upgrades = [
-   '1.1.4' => ['to' => 'latest', 'formatter' => '4', 'overrides' => ['release_notes' => "- Fix further crash when failing to determine if a connection is metered (#215, #216)"]],
-   '1.1.3' => ['to' => 'latest', 'formatter' => '4', 'overrides' => ['release_notes' => "- Fix issue with embedded browser failing to start on some systems (#211, #213)\n- Fix crash when failing to determine if a connection is metered (#210, #212)"]],
+   '1.1.5' => ['to' => 'latest', 'formatter' => '4'],
+   '1.1.4' => ['to' => 'latest', 'formatter' => '4'],
+   '1.1.3' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.2' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.1' => ['to' => 'latest', 'formatter' => '3'],
    '1.1.0' => ['to' => 'latest', 'formatter' => '3'],
