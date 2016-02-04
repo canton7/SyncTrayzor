@@ -220,20 +220,26 @@ namespace SyncTrayzor.Syncthing
                 else if (e.NewState != SyncthingState.Stopping)
                     tcs.TrySetException(new Exception($"Failed to stop Syncthing: Went to state {e.NewState} instead"));
             };
-            this.StateChanged += stateChangedHandler;
 
-            // Syncthing can stop so quickly that it doesn't finish sending the response to us
+            this.StateChanged += stateChangedHandler;
             try
             {
-                await apiClient.ShutdownAsync();
+                // Syncthing can stop so quickly that it doesn't finish sending the response to us
+                try
+                {
+                    await apiClient.ShutdownAsync();
+                }
+                catch (HttpRequestException)
+                { }
+
+                this.SetState(SyncthingState.Stopping);
+
+                await tcs.Task;
             }
-            catch (HttpRequestException)
-            { }
-
-            this.SetState(SyncthingState.Stopping);
-
-            await tcs.Task;
-            this.StateChanged -= stateChangedHandler;
+            finally
+            {
+                this.StateChanged -= stateChangedHandler;
+            }
         }
 
         public async Task RestartAsync()
@@ -303,14 +309,14 @@ namespace SyncTrayzor.Syncthing
                 this._state = state;
             }
 
+            this.eventDispatcher.Raise(this.StateChanged, new SyncthingStateChangedEventArgs(oldState, state));
+
             if (abortApi)
             {
                 logger.Debug("Aborting API clients");
                 // StopApiClients acquires the correct locks, and aborts the CTS
                 this.StopApiClients();
             }
-
-            this.eventDispatcher.Raise(this.StateChanged, new SyncthingStateChangedEventArgs(oldState, state));
         }
 
         private async Task CreateApiClientAsync(CancellationToken cancellationToken)

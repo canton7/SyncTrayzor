@@ -92,7 +92,7 @@ namespace SyncTrayzor.Pages
             this.syncthingManager.StopAsync();
         }
 
-        public bool CanRestart => this.SyncthingState == Syncthing.SyncthingState.Running;
+        public bool CanRestart => this.SyncthingState == SyncthingState.Running;
         public void Restart()
         {
             this.syncthingManager.RestartAsync();
