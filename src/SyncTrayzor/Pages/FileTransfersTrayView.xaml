@@ -56,7 +56,7 @@
                                     <Border Style="{StaticResource ItemBorderStyle}">
                                         <DockPanel Margin="5">
                                             <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
-                                               Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                               Source="{Binding Icon}"/>
                                             <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
                                             <TextBlock DockPanel.Dock="Top" Foreground="DimGray" Text="{Binding ProgressString}"/>
                                             <ProgressBar DockPanel.Dock="Top" Margin="0,4,0,0" Minimum="0" Maximum="100" Height="10"
@@ -109,7 +109,7 @@
                                                        Visibility="{Binding Error, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                                                        Text="{l:Loc FileTransfersTrayView_Error, ValueBinding={Binding Error}}"/>
                                                 <Image DockPanel.Dock="Left" Style="{StaticResource IconStyle}"
-                                                       Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                                       Source="{Binding Icon}"/>
                                                 <TextBlock DockPanel.Dock="Top" Text="{Binding Path}" TextTrimming="CharacterEllipsis">
                                                     <TextBlock.ToolTip>
                                                         <TextBlock>
