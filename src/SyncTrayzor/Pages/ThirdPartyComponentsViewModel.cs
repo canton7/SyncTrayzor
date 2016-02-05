@@ -151,6 +151,15 @@ namespace SyncTrayzor.Pages
                     Notes = "Provides the 'Open Folder' dialog",
                     LicenseText = this.LoadLicense("WindowsAPICodePack.txt")
                 },
+                new ThirdPartyComponent()
+                {
+                    Name = "Reactive Extensions",
+                    Description = "The Reactive Extensions (Rx) is a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators",
+                    Homepage = "http://rx.codeplex.com/",
+                    License = "Microsoft Software License",
+                    Notes = "Used internally for some background operations",
+                    LicenseText = this.LoadLicense("Rx.txt")
+                },
             });
         }
 

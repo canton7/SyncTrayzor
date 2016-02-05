@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Pri.LongPath;
 using NLog;
 using SyncTrayzor.Utils;
+using System.Reactive.Linq;
 
 namespace SyncTrayzor.Services.Conflicts
 {
@@ -81,7 +82,7 @@ namespace SyncTrayzor.Services.Conflicts
     {
         string ConflictPattern { get; }
 
-        IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken);
+        IObservable<ConflictSet> FindConflicts(string basePath);
         void ResolveConflict(ConflictSet conflictSet, string chosenFilePath, bool deleteToRecycleBin);
         bool TryFindBaseFileForConflictFile(string filePath, out ParsedConflictFileInfo parsedConflictFileInfo);
         bool IsPathIgnored(string path);
@@ -109,23 +110,24 @@ namespace SyncTrayzor.Services.Conflicts
             this.filesystemProvider = filesystemProvider;
         }
 
-        public IObservable<ConflictSet> FindConflicts(string basePath, CancellationToken cancellationToken)
+        public IObservable<ConflictSet> FindConflicts(string basePath)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            var subject = new SlimObservable<ConflictSet>();
-            Task.Run(() =>
+            return Observable.Create<ConflictSet>(async (observer, cancellationToken) =>
             {
-                try
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Run(() =>
                 {
-                    this.FindConflictsImpl(basePath, subject, cancellationToken);
-                    subject.Complete();
-                }
-                catch (Exception e)
-                {
-                    subject.Error(e);
-                }
+                    try
+                    {
+                        this.FindConflictsImpl(basePath, observer, cancellationToken);
+                        observer.OnCompleted();
+                    }
+                    catch (Exception e)
+                    {
+                        observer.OnError(e);
+                    }
+                });
             });
-            return subject;
         }
 
         public bool IsPathIgnored(string path)
@@ -138,7 +140,7 @@ namespace SyncTrayzor.Services.Conflicts
             return Path.GetFileName(path).Contains(syncthingSpecialFileMarker);
         }
 
-        private void FindConflictsImpl(string basePath, SlimObservable<ConflictSet> subject, CancellationToken cancellationToken)
+        private void FindConflictsImpl(string basePath, IObserver<ConflictSet> observer, CancellationToken cancellationToken)
         {
             // We may find may conflict files for each conflict, and we need to group them.
             // We can't relay on the order returns by EnumerateFiles either, so it's hard to tell when we've spotted
@@ -186,7 +188,8 @@ namespace SyncTrayzor.Services.Conflicts
                 {
                     var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key), this.filesystemProvider.GetFileSize(kvp.Key));
                     var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created, this.filesystemProvider.GetFileSize(x.FilePath))).ToList();
-                    subject.Next(new ConflictSet(file, conflicts));
+                    observer.OnNext(new ConflictSet(file, conflicts));
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
 
                 if (searchDirectory.Depth < maxSearchDepth)

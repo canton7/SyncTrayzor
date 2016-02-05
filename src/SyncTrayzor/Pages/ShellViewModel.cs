@@ -8,6 +8,7 @@ using SyncTrayzor.Services.Config;
 using SyncTrayzor.Syncthing;
 using SyncTrayzor.Utils;
 using System;
+using System.Reactive.Subjects;
 using System.Windows;
 
 namespace SyncTrayzor.Pages
@@ -26,7 +27,9 @@ namespace SyncTrayzor.Pages
         public bool ShowConsole { get; set; }
         public double ConsoleHeight { get; set; }
         public WindowPlacement Placement { get; set; }
-        public SlimObservable<bool> ActivateObservable { get; } = new SlimObservable<bool>();
+
+        private readonly Subject<bool> _activateObservable = new Subject<bool>();
+        public IObservable<bool> ActivateObservable => this._activateObservable;
         public ConsoleViewModel Console { get; }
         public ViewerViewModel Viewer { get; }
         public BarAlertsViewModel BarAlerts { get; }
@@ -177,7 +180,7 @@ namespace SyncTrayzor.Pages
             if (!this.application.HasMainWindow)
                 this.windowManager.ShowWindow(this);
 
-            this.ActivateObservable.Next(true);
+            this._activateObservable.OnNext(true);
         }
 
         public void Dispose()

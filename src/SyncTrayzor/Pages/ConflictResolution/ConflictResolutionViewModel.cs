@@ -12,6 +12,9 @@ using System.Windows;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
+using System.Reactive.Threading.Tasks;
+using System.Reactive.Linq;
+using System.Windows.Threading;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
@@ -121,13 +124,11 @@ namespace SyncTrayzor.Pages.ConflictResolution
                 {
                     try
                     {
-                        await this.conflictFileManager.FindConflicts(folder.Path, ct).SubscribeAsync(x =>
-                        {
-                            this.Conflicts.Add(new ConflictViewModel(x, folder.FolderId));
-                        });
+                        await this.conflictFileManager.FindConflicts(folder.Path)
+                            .ObserveOnDispatcher(DispatcherPriority.Background)
+                            .ForEachAsync(conflict => this.Conflicts.Add(new ConflictViewModel(conflict, folder.FolderId)), ct);
                     }
-                    catch (OperationCanceledException e) when (e.CancellationToken == ct)
-                    { }
+                    catch (OperationCanceledException) { }
                 }
             }
             finally
