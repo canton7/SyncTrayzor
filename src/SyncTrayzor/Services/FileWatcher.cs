@@ -146,11 +146,23 @@ namespace SyncTrayzor.Services
 
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
+            if (e.FullPath == null)
+            {
+                logger.Warn("OnDeleted: e.FullPath is null. Ignoring...");
+                return;
+            }
+
             this.RecordPathChange(e.FullPath, pathExists: false);
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
+            if (e.FullPath == null)
+            {
+                logger.Warn("OnChnaged: e.FullPath is null. Ignoring...");
+                return;
+            }
+
             // We don't want to raise Changed events on directories - those are file creations or deletions.
             // Creations will pop up in OnCreated, deletions in OnDeletion.
             // We do however want to handle file changes
@@ -168,11 +180,25 @@ namespace SyncTrayzor.Services
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
+            if (e.FullPath == null)
+            {
+                logger.Warn("OnCreated: e.FullPath is null. Ignoring...");
+                return;
+            }
+
             this.RecordPathChange(e.FullPath, pathExists: true);
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
+            // Apparently e.FullPath or e.OldName can be null, see #112
+            // Not sure why this might be, but let's work around it...
+            if (e.FullPath == null)
+            {
+                logger.Warn("OnRenamed: e.FullPath is null. Ignoring...");
+                return;
+            }
+
             this.RecordPathChange(e.FullPath, pathExists: true);
             // Irritatingly, e.OldFullPath will throw an exception if the path is longer than the windows max
             // (but e.FullPath is fine).
@@ -180,23 +206,14 @@ namespace SyncTrayzor.Services
             // Note that we're using Pri.LongPath to get a Path.GetDirectoryName implementation that can handle
             // long paths
 
-            // Apparently Path.GetDirectoryName(e.FullPath) or Path.GetFileName(e.OldName) can return null, see #112
-            // Not sure why this might be, but let's work around it...
+            if (e.OldName == null)
+            {
+                logger.Warn("OnRenamed: e.OldName is null. Not sure why");
+                return;
+            }
+
             var oldFullPathDirectory = Path.GetDirectoryName(e.FullPath);
             var oldFileName = Path.GetFileName(e.OldName);
-
-            if (oldFullPathDirectory == null)
-            {
-                logger.Warn("OldFullPathDirectory is null. Not sure why... e.FullPath: {0}", e.FullPath);
-                return;
-            }
-
-            if (oldFileName == null)
-            {
-                logger.Warn("OldFileName is null. Not sure why... e.OldName: {0}", e.OldName);
-                return;
-            }
-
             var oldFullPath = Path.Combine(oldFullPathDirectory, oldFileName);
 
             this.RecordPathChange(oldFullPath, pathExists: false);

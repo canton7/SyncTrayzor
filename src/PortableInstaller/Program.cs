@@ -222,7 +222,7 @@ namespace PortableInstaller
 
             if (!dir.Exists)
                 throw new DirectoryNotFoundException($"Source directory does not exist or could not be found: {sourceDirName}");
-
+    
             DirectoryInfo[] dirs = dir.GetDirectories();
             // If the destination directory doesn't exist, create it.
             if (!Directory.Exists(destDirName))
