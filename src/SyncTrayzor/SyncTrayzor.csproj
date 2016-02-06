@@ -186,6 +186,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
+    <Compile Include="Localization\CustomPluralLocalizationFormatter.cs" />
     <Compile Include="Localization\LocalizeConverters.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
