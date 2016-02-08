@@ -11,26 +11,29 @@ namespace PortableInstaller
 {
     class Program
     {
-        static int Main(string[] args)
-        {
-            RecycleBinDeleter.Logger = s => Console.WriteLine("!! " + s);
+        private static readonly List<string> logMessages = new List<string>();
 
+        public static int Main(string[] args)
+        {
+            RecycleBinDeleter.Logger = s => Log("!! " + s);
             if (args.Length != 4)
             {
                 Console.WriteLine("You should not invoke this executable directly. It is used as part of the automatic upgrade process for portable installations.");
                 Console.ReadKey();
                 return 0;
             }
+
+            var destinationPath = args[0];
+            var sourcePath = args[1];
+            var waitForPid = Int32.Parse(args[2]);
+            var pathToRestartApplication = args[3];
+            var destinationPathParent = Path.GetDirectoryName(destinationPath);
+
             try
             {
-                var destinationPath = args[0];
-                var sourcePath = args[1];
-                var waitForPid = Int32.Parse(args[2]);
-                var pathToRestartApplication = args[3];
-
                 bool pauseAtEnd = false;
 
-                Console.WriteLine("Waiting for SyncTrayzor process to exit...");
+                Log("Waiting for SyncTrayzor process to exit...");
                 try
                 {
                     using (var process = Process.GetProcessById(waitForPid))
@@ -43,14 +46,13 @@ namespace PortableInstaller
                 { }
 
                 // By default our CWD is the destinationPath, which locks it
-                var cwd = Path.GetDirectoryName(destinationPath);
                 try
                 {
-                    Directory.SetCurrentDirectory(cwd);
+                    Directory.SetCurrentDirectory(destinationPathParent);
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine($"!! Unable to set working directory to\n    {cwd}.\nNone of your files have been touched.");
+                    Log($"!! Unable to set working directory to\n    {destinationPathParent}.\nNone of your files have been touched.");
                     throw;
                 }
 
@@ -58,7 +60,7 @@ namespace PortableInstaller
 
                 if (!Directory.Exists(sourcePath))
                 {
-                    Console.WriteLine($"!! Unable to find source path\n    {sourcePath}.\nThis is a bug with SyncTrayzor's upgrade mechanism.");
+                    Log($"!! Unable to find source path\n    {sourcePath}.\nThis is a bug with SyncTrayzor's upgrade mechanism.");
                     throw new Exception("Unable to find source path");
                 }
 
@@ -68,7 +70,7 @@ namespace PortableInstaller
                     movedDestinationPath = GenerateBackupDestinationPath(destinationPath);
                     while (true)
                     {
-                        Console.WriteLine($"Moving\n    {destinationPath}\nto\n    {movedDestinationPath}");
+                        Log($"Moving\n    {destinationPath}\nto\n    {movedDestinationPath}");
                         try
                         {
                             DirectoryMove(destinationPath, movedDestinationPath);
@@ -76,26 +78,26 @@ namespace PortableInstaller
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine($"!! Unable to move\n    {destinationPath}\nto\n    {movedDestinationPath}");
-                            Console.WriteLine($"Error: {e.GetType().Name} {e.Message}");
-                            Console.WriteLine($"!! Please make sure that\n    {destinationPath}\nor any of the files inside it, aren't open.");
-                            Console.WriteLine($"!! Press any key to try again, or Ctrl-C to abort the upgrade.");
-                            Console.WriteLine($"!! If you abort the upgrade, none of your files will be modified.");
+                            Log();
+                            Log($"!! Unable to move\n    {destinationPath}\nto\n    {movedDestinationPath}");
+                            Log($"Error: {e.GetType().Name} {e.Message}");
+                            Log($"!! Please make sure that\n    {destinationPath}\nor any of the files inside it, aren't open.");
+                            Log($"!! Press any key to try again, or Ctrl-C to abort the upgrade.");
+                            Log($"!! If you abort the upgrade, none of your files will be modified.");
                             Console.ReadKey();
                         }
                     }
                 }
 
-                Console.WriteLine($"Moving\n    {sourcePath}\nto\n    {destinationPath}");
+                Log($"Moving\n    {sourcePath}\nto\n    {destinationPath}");
                 try
                 {
                     DirectoryMove(sourcePath, destinationPath);
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine($"!! Unable to move\n    {sourcePath}\nto\n    {destinationPath}.\nYour copy of SyncTrayzor is at\n    {sourcePath}\nand will still work.");
+                    Log();
+                    Log($"!! Unable to move\n    {sourcePath}\nto\n    {destinationPath}.\nYour copy of SyncTrayzor is at\n    {sourcePath}\nand will still work.");
                     throw;
                 }
 
@@ -105,23 +107,23 @@ namespace PortableInstaller
                     var destDataFolder = Path.Combine(destinationPath, "data");
                     if (Directory.Exists(sourceDataFolder))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine($"Copying data folder\n    {sourceDataFolder}\nto\n    {destDataFolder}...");
+                        Log();
+                        Log($"Copying data folder\n    {sourceDataFolder}\nto\n    {destDataFolder}...");
                         try
                         {
                             DirectoryCopy(sourceDataFolder, destDataFolder);
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine($"!! Unable to copy\n    {sourceDataFolder}\nto\n    {destDataFolder}.\nYour copy of SyncTrayzor is at\n    {movedDestinationPath}\nand will still work.");
+                            Log();
+                            Log($"!! Unable to copy\n    {sourceDataFolder}\nto\n    {destDataFolder}.\nYour copy of SyncTrayzor is at\n    {movedDestinationPath}\nand will still work.");
                             throw;
                         }
                     }
                     else
                     {
-                        Console.WriteLine();
-                        Console.WriteLine($"!! Could not find source data folder {sourceDataFolder}, so not copying. If you have ever started SyncTrayzor from {movedDestinationPath}, this is an error: please manually copy your 'data' folder from whereever it is to {destDataFolder}");
+                        Log();
+                        Log($"!! Could not find source data folder {sourceDataFolder}, so not copying. If you have ever started SyncTrayzor from {movedDestinationPath}, this is an error: please manually copy your 'data' folder from whereever it is to {destDataFolder}");
                         pauseAtEnd = true;
                     }
 
@@ -130,70 +132,72 @@ namespace PortableInstaller
                     if (File.Exists(sourceInstallCount))
                     {
                         var installCount = Int32.Parse(File.ReadAllText(sourceInstallCount).Trim());
-                        Console.WriteLine($"Increasing install count to {installCount + 1} from\n    {sourceInstallCount}\nto\n    {destInstallCount}");
+                        Log($"Increasing install count to {installCount + 1} from\n    {sourceInstallCount}\nto\n    {destInstallCount}");
                         try
                         {
                             File.WriteAllText(destInstallCount, (installCount + 1).ToString());
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine($"!! Unable to increase install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
+                            Log();
+                            Log($"!! Unable to increase install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
                             pauseAtEnd = true;
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"{sourceInstallCount}\ndoesn't exist, so setting installCount to 1 in\n    {destInstallCount}");
+                        Log($"{sourceInstallCount}\ndoesn't exist, so setting installCount to 1 in\n    {destInstallCount}");
                         try
                         {
                             File.WriteAllText(destInstallCount, "1");
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine($"!! Unable to set install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
+                            Log();
+                            Log($"!! Unable to set install count: {e.GetType().Name} {e.Message}. Continuing anyway.");
                             pauseAtEnd = true;
                         }
                     }
 
-                    Console.WriteLine($"Deleting\n    {movedDestinationPath}\nto the recycle bin");
+                    Log($"Deleting\n    {movedDestinationPath}\nto the recycle bin");
                     try
                     {
                         RecycleBinDeleter.Delete(movedDestinationPath);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine();
-                        Console.WriteLine($"!! Unable to delete your old installation at\n    {movedDestinationPath}\n Error: {e.GetType().Name} {e.Message}.");
-                        Console.WriteLine($"Your new installation is at\n    {destinationPath}\nand should be fully functional.");
-                        Console.WriteLine($"Please double-check, and manually delete\n    {movedDestinationPath}.");
+                        Log();
+                        Log($"!! Unable to delete your old installation at\n    {movedDestinationPath}\n Error: {e.GetType().Name} {e.Message}.");
+                        Log($"Your new installation is at\n    {destinationPath}\nand should be fully functional.");
+                        Log($"Please double-check, and manually delete\n    {movedDestinationPath}.");
                         pauseAtEnd = true;
                     }
                 }
 
                 if (pauseAtEnd)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    Console.WriteLine("One or more warnings occurred. Please review the messages above, and take any appropriate action.");
+                    Log();
+                    Log();
+                    Log("One or more warnings occurred. Please review the messages above, and take any appropriate action.");
+                    WriteLogToFile(destinationPathParent);
                     Console.WriteLine("Press any key to continue (this will restart SyncTrayzor)");
                     Console.ReadKey();
                 }
 
-                Console.WriteLine($"Restarting application {pathToRestartApplication}");
+                Log($"Restarting application {pathToRestartApplication}");
                 Process.Start(pathToRestartApplication);
 
                 return 0;
             }
             catch (Exception e)
             {
-                Console.WriteLine();
-                Console.WriteLine($"--- An error occurred ---");
-                Console.WriteLine($"{e.GetType().Name}: {e.Message}");
-                Console.WriteLine();
-                Console.WriteLine("The upgrade failed to complete successfully. Sorry about that.");
-                Console.WriteLine("Please read the messages above.");
+                Log();
+                Log($"--- An error occurred ---");
+                Log($"{e.GetType().Name}: {e.Message}");
+                Log();
+                Log("The upgrade failed to complete successfully. Sorry about that.");
+                Log("Please read the messages above.");
+                WriteLogToFile(destinationPathParent);
                 Console.WriteLine("Press any key to continue");
                 Console.ReadKey();
                 return 2;
@@ -255,6 +259,19 @@ namespace PortableInstaller
                 DirectoryCopy(sourceDirName, destDirName);
                 Directory.Delete(sourceDirName, true);
             }
+        }
+
+        private static void Log(string message = "")
+        {
+            Console.WriteLine(message);
+            logMessages.Add(message);
+        }
+
+        private static void WriteLogToFile(string path)
+        {
+            var filePath = Path.Combine(path, "SyncTrayzorUpgradeErrorLog.txt");
+            Console.WriteLine($"This log has been written to:\n    {filePath}");
+            File.WriteAllLines(filePath, logMessages);
         }
     }
 }
