@@ -177,7 +177,7 @@
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="15" Height="15" Margin="5,0,5,0"
-                                                   Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"/>
+                                                   Source="{Binding Icon}"/>
                                             <TextBlock Text="{Binding FileName}"/>
                                         </StackPanel>
                                     </DataTemplate>

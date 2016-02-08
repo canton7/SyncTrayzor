@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.6' => [
+   '1.1.7' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -80,11 +80,12 @@ $versions = [
       ],     
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Fix portable installer where TEMP is on a different drive to SyncTrayzor (#218)\n- Fix bug where 'Save' button wouldn't be enabled in Syncthing's 'Add/Edit Folder' pane, after using the 'Browse' button (#219)\n- Fix race crash (#221)\n- Don't force Syncthing to use https (should fix #201)\n- Handle problems getting the icon for a file (should fix #224)\n- Improve help output of ProcessRunner.exe (#223)",
+      'release_notes' => "- Handle thousands of conflicts in the conflict editor without crashing (#224)\n- Handle crash when syncing many files (reappearance of #112) (#227)\n- Fix rendering of some strings\n- Add logging to file to portable upgrades, in case of error",
    ]
 ];
 
 $upgrades = [
+   '1.1.6' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.5' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.4' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.3' => ['to' => 'latest', 'formatter' => '4'],

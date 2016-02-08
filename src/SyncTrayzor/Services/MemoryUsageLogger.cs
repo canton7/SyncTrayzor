@@ -33,7 +33,7 @@ namespace SyncTrayzor.Services
             {
                 logger.Debug("Working Set: {0}. Private Memory Size: {1}. GC Total Memory: {2}",
                     FormatUtils.BytesToHuman(this.process.WorkingSet64), FormatUtils.BytesToHuman(this.process.PrivateMemorySize64),
-                    FormatUtils.BytesToHuman(GC.GetTotalMemory(false)));
+                    FormatUtils.BytesToHuman(GC.GetTotalMemory(true)));
             };
         }
     }

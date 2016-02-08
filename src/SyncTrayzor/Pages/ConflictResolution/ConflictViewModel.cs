@@ -5,6 +5,10 @@ using System.Linq;
 using Pri.LongPath;
 using System.Drawing;
 using SyncTrayzor.Utils;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Windows.Interop;
+using System.Windows;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
@@ -26,7 +30,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public BindableCollection<ConflictOptionViewModel> ConflictOptions { get; }
 
-        public Icon Icon { get; }
+        public ImageSource Icon { get; }
 
         public string Size => FormatUtils.BytesToHuman(this.ConflictSet.File.SizeBytes, 1);
         
@@ -37,7 +41,14 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.FolderId = folderName;
 
             this.ConflictOptions = new BindableCollection<ConflictOptionViewModel>(this.ConflictSet.Conflicts.Select(x => new ConflictOptionViewModel(x)));
-            this.Icon = ShellTools.GetIcon(this.ConflictSet.File.FilePath, isFile: true);
+
+            // These bindings aren't called lazilly, so don't bother being lazy
+            using (var icon = ShellTools.GetIcon(this.ConflictSet.File.FilePath, isFile: true))
+            {
+                var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                bs.Freeze();
+                this.Icon = bs;
+            }
         }
     }
 }

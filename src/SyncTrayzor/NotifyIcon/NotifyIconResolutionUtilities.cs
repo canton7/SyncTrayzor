@@ -52,7 +52,8 @@ namespace SyncTrayzor.NotifyIcon
 
                 icon = new Icon(streamInfo.Stream, idealIconSize, idealIconSize);
             }
-            
+
+            taskbarIcon.Icon?.Dispose();
             taskbarIcon.Icon = icon;
         }
 

@@ -11,6 +11,10 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Threading;
+using System.Windows.Media;
+using System.Windows.Interop;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace SyncTrayzor.Pages
 {
@@ -22,7 +26,7 @@ namespace SyncTrayzor.Pages
         public string Path { get; }
         public string FolderId { get; }
         public string FullPath { get; }
-        public Icon Icon { get; }
+        public ImageSource Icon { get; }
         public string Error { get; private set; }
         public bool WasDeleted { get;  }
 
@@ -55,7 +59,12 @@ namespace SyncTrayzor.Pages
             this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
             this.FullPath = this.FileTransfer.Path;
             this.FolderId = this.FileTransfer.FolderId;
-            this.Icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Dir);
+            using (var icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Dir))
+            {
+                var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                bs.Freeze();
+                this.Icon = bs;
+            }
             this.WasDeleted = this.FileTransfer.ActionType == ItemChangedActionType.Delete;
 
             this.UpdateState();

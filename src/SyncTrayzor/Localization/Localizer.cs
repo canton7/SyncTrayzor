@@ -25,7 +25,7 @@ namespace SyncTrayzor.Localization
 
             formatter.AddExtensions(
                 listFormatter,
-                new PluralLocalizationFormatter("en"),
+                new CustomPluralLocalizationFormatter("en"),
                 new ChooseFormatter(),
                 new DefaultFormatter()
             );

@@ -6,6 +6,8 @@ using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -240,13 +242,13 @@ namespace SyncTrayzor.Services.Conflicts
                     {
                         logger.Debug("Scanning folder {0} ({1}) for conflict files", folder.FolderId, folder.Path);
 
-                        await this.conflictFileManager.FindConflicts(folder.Path, this.scanCts.Token).SubscribeAsync(conflict =>
-                        {
-                            foreach (var conflictOptions in conflict.Conflicts)
-                            {
-                                newConflictFileOptions.Add(Path.Combine(folder.Path, conflictOptions.FilePath));
-                            }
-                        });
+                        var options = await this.conflictFileManager.FindConflicts(folder.Path)
+                            .SelectMany(conflict => conflict.Conflicts)
+                            .Select(conflictOptions => Path.Combine(folder.Path, conflictOptions.FilePath))
+                            .ToList()
+                            .ToTask(this.scanCts.Token);
+
+                        newConflictFileOptions.UnionWith(options);
                     }
 
                     // If we get aborted, we won't refresh the conflicted files: it'll get done again in a minute anyway
