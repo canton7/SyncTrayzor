@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.1.7
+------
+
+ - Handle thousands of conflicts in the conflict editor without crashing (#224)
+ - Handle crash when syncing many files (reappearance of #112) (#227)
+ - Fix rendering of some strings
+ - Add logging to file to portable upgrades, in case of error
+
 v1.1.6
 ------
 
