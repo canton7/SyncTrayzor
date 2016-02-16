@@ -74,7 +74,6 @@ namespace SyncTrayzor.Services
             this.syncthingManager.SyncthingConnectTimeout = TimeSpan.FromSeconds(AppSettings.Instance.SyncthingConnectTimeoutSeconds);
 
             this.updateManager.UpdateCheckApiUrl = AppSettings.Instance.UpdateApiUrl;
-            this.updateManager.UpdateCheckInterval = TimeSpan.FromSeconds(AppSettings.Instance.UpdateCheckIntervalSeconds);
 
             this.ApplyNewConfiguration(this.configurationProvider.Load());
         }
