@@ -1048,6 +1048,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show &quot;Add New Device / Folder&quot; balloon messages.
+        /// </summary>
+        public static string SettingsView_ShowDeviceOrFolderRejectedBalloons {
+            get {
+                return ResourceManager.GetString("SettingsView_ShowDeviceOrFolderRejectedBalloons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages even if no files were updated.
         /// </summary>
         public static string SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred {
@@ -1717,6 +1726,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Device {0} ({1}) wants to connect. Open SyncTrayzor to add new device.
+        /// </summary>
+        public static string TrayIcon_Balloon_DeviceRejected_Message {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_DeviceRejected_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect device?.
+        /// </summary>
+        public static string TrayIcon_Balloon_DeviceRejected_Title {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_DeviceRejected_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleted {0:p:1 file|{} files}.
         /// </summary>
         public static string TrayIcon_Balloon_FinishedSyncing_DeletedFile {
@@ -1812,6 +1839,24 @@ namespace SyncTrayzor.Properties {
         public static string TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile {
             get {
                 return ResourceManager.GetString("TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} wants to share folder {1}. Open SyncTrayzor to add new folder.
+        /// </summary>
+        public static string TrayIcon_Balloon_FolderRejected_Message {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FolderRejected_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Share folder?.
+        /// </summary>
+        public static string TrayIcon_Balloon_FolderRejected_Title {
+            get {
+                return ResourceManager.GetString("TrayIcon_Balloon_FolderRejected_Title", resourceCulture);
             }
         }
         

@@ -61,6 +61,7 @@
                                 </CheckBox>
                             </Grid>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
+                            <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceOrFolderRejectedBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceOrFolderRejectedBalloons}"/>
                         </DockPanel>
                     </GroupBox>
 

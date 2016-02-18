@@ -25,6 +25,7 @@ namespace SyncTrayzor.NotifyIcon
         Dictionary<string, bool> FolderNotificationsEnabled { get; set; }
         bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         bool ShowDeviceConnectivityBalloons { get; set; }
+        bool ShowDeviceOrFolderRejectedBalloons { get; set; }
 
         void EnsureIconVisible();
 
@@ -69,6 +70,7 @@ namespace SyncTrayzor.NotifyIcon
         public Dictionary<string, bool> FolderNotificationsEnabled { get; set; }
         public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
+        public bool ShowDeviceOrFolderRejectedBalloons { get; set; }
 
         public NotifyIconManager(
             IViewManager viewManager,
@@ -84,6 +86,11 @@ namespace SyncTrayzor.NotifyIcon
             this.syncthingManager = syncthingManager;
 
             this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
+            this.taskbarIcon.TrayBalloonTipClicked += (o, e) =>
+            {
+                this.applicationWindowState.EnsureInForeground();
+            };
+
             // Need to hold off until after the application is started, otherwise the ViewManager won't be set
             this.application.Startup += this.ApplicationStartup;
 
@@ -106,6 +113,8 @@ namespace SyncTrayzor.NotifyIcon
             this.syncthingManager.TransferHistory.FolderSynchronizationFinished += this.FolderSynchronizationFinished;
             this.syncthingManager.Devices.DeviceConnected += this.DeviceConnected;
             this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
+            this.syncthingManager.DeviceRejected += this.DeviceRejected;
+            this.syncthingManager.FolderRejected += this.FolderRejected;
         }
 
         private void ApplicationStartup(object sender, EventArgs e)
@@ -119,7 +128,7 @@ namespace SyncTrayzor.NotifyIcon
                     DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
             {
                 this.taskbarIcon.HideBalloonTip();
-                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
+                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
             }
         }
 
@@ -129,7 +138,25 @@ namespace SyncTrayzor.NotifyIcon
                     DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
             {
                 this.taskbarIcon.HideBalloonTip();
-                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, String.Format(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
+                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
+            }
+        }
+
+        private void DeviceRejected(object sender, DeviceRejectedEventArgs e)
+        {
+            if (this.ShowDeviceOrFolderRejectedBalloons)
+            {
+                this.taskbarIcon.HideBalloonTip();
+                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceRejected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceRejected_Message, e.DeviceId, e.Address), BalloonIcon.Info);
+            }
+        }
+
+        private void FolderRejected(object sender, FolderRejectedEventArgs e)
+        {
+            if (this.ShowDeviceOrFolderRejectedBalloons)
+            {
+                this.taskbarIcon.HideBalloonTip();
+                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FolderRejected_Title, Localizer.F(Resources.TrayIcon_Balloon_FolderRejected_Message, e.Device.Name, e.FolderId), BalloonIcon.Info);
             }
         }
 
@@ -307,6 +334,8 @@ namespace SyncTrayzor.NotifyIcon
             this.syncthingManager.TransferHistory.FolderSynchronizationFinished -= this.FolderSynchronizationFinished;
             this.syncthingManager.Devices.DeviceConnected -= this.DeviceConnected;
             this.syncthingManager.Devices.DeviceDisconnected -= this.DeviceDisconnected;
+            this.syncthingManager.DeviceRejected -= this.DeviceRejected;
+            this.syncthingManager.FolderRejected -= this.FolderRejected;
         }
     }
 }

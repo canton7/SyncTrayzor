@@ -27,6 +27,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
             { EventType.FolderErrors, typeof(FolderErrorsEvent) },
             { EventType.DevicePaused, typeof(DevicePausedEvent) },
             { EventType.DeviceResumed, typeof(DeviceResumedEvent) },
+            { EventType.DeviceRejected, typeof(DeviceRejectedEvent) },
+            { EventType.FolderRejected, typeof(FolderRejectedEvent) },
         };
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

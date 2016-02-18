@@ -22,6 +22,8 @@ namespace SyncTrayzor.Syncthing.EventWatcher
         event EventHandler<FolderErrorsChangedEventArgs> FolderErrorsChanged;
         event EventHandler<DevicePausedEventArgs> DevicePaused;
         event EventHandler<DeviceResumedEventArgs> DeviceResumed;
+        event EventHandler<DeviceRejectedEventArgs> DeviceRejected;
+        event EventHandler<FolderRejectedEventArgs> FolderRejected;
         event EventHandler EventsSkipped;
     }
 
@@ -46,6 +48,8 @@ namespace SyncTrayzor.Syncthing.EventWatcher
         public event EventHandler<FolderErrorsChangedEventArgs> FolderErrorsChanged;
         public event EventHandler<DevicePausedEventArgs> DevicePaused;
         public event EventHandler<DeviceResumedEventArgs> DeviceResumed;
+        public event EventHandler<DeviceRejectedEventArgs> DeviceRejected;
+        public event EventHandler<FolderRejectedEventArgs> FolderRejected;
         public event EventHandler EventsSkipped;
 
         public SyncthingEventWatcher(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient)
@@ -177,6 +181,16 @@ namespace SyncTrayzor.Syncthing.EventWatcher
             this.DeviceResumed?.Invoke(this, new DeviceResumedEventArgs(deviceId));
         }
 
+        private void OnDeviceRejected(string address, string deviceId)
+        {
+            this.DeviceRejected?.Invoke(this, new DeviceRejectedEventArgs(deviceId, address));
+        }
+
+        private void OnFolderRejected(string deviceId, string folderId)
+        {
+            this.FolderRejected?.Invoke(this, new FolderRejectedEventArgs(deviceId, folderId));
+        }
+
         private void OnEventsSkipped()
         {
             this.EventsSkipped?.Invoke(this, EventArgs.Empty);
@@ -262,6 +276,16 @@ namespace SyncTrayzor.Syncthing.EventWatcher
         public void Accept(DeviceResumedEvent evt)
         {
             this.OnDeviceResumed(evt.Data.DeviceId);
+        }
+
+        public void Accept(DeviceRejectedEvent evt)
+        {
+            this.OnDeviceRejected(evt.Data.Address, evt.Data.DeviceId);
+        }
+
+        public void Accept(FolderRejectedEvent evt)
+        {
+            this.OnFolderRejected(evt.Data.DeviceId, evt.Data.FolderId);
         }
 
         #endregion

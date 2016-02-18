@@ -62,6 +62,7 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
+        public SettingItem<bool> ShowDeviceOrFolderRejectedBalloons { get; }
 
         public SettingItem<bool> StartSyncthingAutomatically { get; }
 
@@ -127,6 +128,7 @@ namespace SyncTrayzor.Pages.Settings
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
+            this.ShowDeviceOrFolderRejectedBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceOrFolderRejectedBalloons);
 
             this.StartSyncthingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
             this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);

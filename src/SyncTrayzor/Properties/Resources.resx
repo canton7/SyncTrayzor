@@ -910,4 +910,25 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="AboutView_DonateThanks" xml:space="preserve">
     <value>Cheers! Thanks for buying me a beer.</value>
   </data>
+  <data name="SettingsView_ShowDeviceOrFolderRejectedBalloons" xml:space="preserve">
+    <value>Show "Add New Device / Folder" balloon messages</value>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceRejected_Message" xml:space="preserve">
+    <value>Device {0} ({1}) wants to connect. Open SyncTrayzor to add new device</value>
+    <comment>Balloon shown when device is rejected.
+{0}: Device ID
+{1}: Device Address</comment>
+  </data>
+  <data name="TrayIcon_Balloon_DeviceRejected_Title" xml:space="preserve">
+    <value>Connect device?</value>
+  </data>
+  <data name="TrayIcon_Balloon_FolderRejected_Message" xml:space="preserve">
+    <value>{0} wants to share folder {1}. Open SyncTrayzor to add new folder</value>
+    <comment>Balloon shown when folder is rejected.
+{0}: Device name
+{1}: Folder ID</comment>
+  </data>
+  <data name="TrayIcon_Balloon_FolderRejected_Title" xml:space="preserve">
+    <value>Share folder?</value>
+  </data>
 </root>

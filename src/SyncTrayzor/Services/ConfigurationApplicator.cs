@@ -86,6 +86,7 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.FolderNotificationsEnabled = configuration.Folders.ToDictionary(x => x.ID, x => x.NotificationsEnabled);
             this.notifyIconManager.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
+            this.notifyIconManager.ShowDeviceOrFolderRejectedBalloons = configuration.ShowDeviceOrFolderRejectedBalloons;
 
             this.syncthingManager.PreferredHostAndPort = configuration.SyncthingAddress;
             this.syncthingManager.ApiKey = configuration.SyncthingApiKey;

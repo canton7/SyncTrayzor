@@ -235,6 +235,9 @@
     <Compile Include="Services\IpcCommsServer.cs" />
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceRejectedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\FolderRejectedEvent.cs" />
+    <Compile Include="Syncthing\DeviceRejectedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
@@ -272,11 +275,14 @@
     <Compile Include="Syncthing\DebugFacilities\SyncthingDebugFacilitiesManager.cs" />
     <Compile Include="Syncthing\EventWatcher\ConfigSavedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DevicePausedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DeviceRejectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\FolderRejectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\FolderStatusChangedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="Syncthing\FolderRejectedEventArgs.cs" />
     <Compile Include="Syncthing\Folders\FolderError.cs" />
     <Compile Include="Syncthing\Folders\FolderErrorsChangedEventArgs.cs" />
     <Compile Include="Syncthing\Folders\FolderIgnores.cs" />

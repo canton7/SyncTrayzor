@@ -27,6 +27,7 @@ namespace SyncTrayzor.Services.Config
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
+        public bool ShowDeviceOrFolderRejectedBalloons { get; set; }
         public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public string SyncthingAddress { get; set; }
         public bool StartSyncthingAutomatically { get; set; }
@@ -81,6 +82,7 @@ namespace SyncTrayzor.Services.Config
             this.CloseToTray = true;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = false;
             this.ShowDeviceConnectivityBalloons = true;
+            this.ShowDeviceOrFolderRejectedBalloons = true;
             this.SyncthingAddress = "localhost:8384";
             this.StartSyncthingAutomatically = true;
             this.SyncthingApiKey = null;
@@ -116,6 +118,7 @@ namespace SyncTrayzor.Services.Config
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = other.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.ShowDeviceConnectivityBalloons = other.ShowDeviceConnectivityBalloons;
+            this.ShowDeviceOrFolderRejectedBalloons = other.ShowDeviceOrFolderRejectedBalloons;
             this.SyncthingAddress = other.SyncthingAddress;
             this.StartSyncthingAutomatically = other.StartSyncthingAutomatically;
             this.SyncthingApiKey = other.SyncthingApiKey;
@@ -147,7 +150,8 @@ namespace SyncTrayzor.Services.Config
         public override string ToString()
         {
             return $"<Configuration ShowTrayIconOnlyOnClose={this.ShowTrayIconOnlyOnClose} MinimizeToTray={this.MinimizeToTray} CloseToTray={this.CloseToTray} " +
-                $"ShowDeviceConnectivityBalloons={this.ShowDeviceConnectivityBalloons} SyncthingAddress={this.SyncthingAddress} StartSyncthingAutomatically={this.StartSyncthingAutomatically} " +
+                $"ShowDeviceConnectivityBalloons={this.ShowDeviceConnectivityBalloons} ShowDeviceOrFolderRejectedBalloons={this.ShowDeviceOrFolderRejectedBalloons} " +
+                $"SyncthingAddress={this.SyncthingAddress} StartSyncthingAutomatically={this.StartSyncthingAutomatically} " +
                 $"SyncthingCommandLineFlags=[{String.Join(",", this.SyncthingCommandLineFlags)}]" +
                 $"SyncthingApiKey={this.SyncthingApiKey} SyncthingEnvironmentalVariables=[{String.Join(" ", this.SyncthingEnvironmentalVariables)}] " +
                 $"SyncthingUseCustomHome={this.SyncthingUseCustomHome} SyncthingDenyUpgrade={this.SyncthingDenyUpgrade} SyncthingPriorityLevel={this.SyncthingPriorityLevel} " +
