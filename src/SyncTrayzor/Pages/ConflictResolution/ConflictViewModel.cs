@@ -3,7 +3,6 @@ using SyncTrayzor.Services.Conflicts;
 using System;
 using System.Linq;
 using Pri.LongPath;
-using System.Drawing;
 using SyncTrayzor.Utils;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;

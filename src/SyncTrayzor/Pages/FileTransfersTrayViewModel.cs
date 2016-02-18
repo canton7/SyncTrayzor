@@ -8,7 +8,6 @@ using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Threading;
 using System.Windows.Media;

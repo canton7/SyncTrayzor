@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using SyncTrayzor.Utils;
 
 namespace SyncTrayzor.Xaml
 {
