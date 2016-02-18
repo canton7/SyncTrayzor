@@ -118,7 +118,6 @@
                         <DockPanel>
                             <DockPanel.Resources>
                                 <ToolTip x:Key="AddressOverride" Content="{l:Loc SettingsView_SyncthingAddress_ToolTip}"/>
-                                <ToolTip x:Key="APIKeyOverride" Content="{l:Loc SettingsView_ApiKey_ToolTip}"/>
                             </DockPanel.Resources>
 
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncthingAutomatically.Value}" Content="{l:Loc SettingsView_StartSyncthingAutomatically}"/>
@@ -132,9 +131,6 @@
 
                             <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>
                             <TextBox DockPanel.Dock="Top" x:Name="SyncthingAddress" ToolTip="{StaticResource AddressOverride}" Text="{Binding SyncthingAddress.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
-
-                            <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingApiKey}" Content="{l:Loc SettingsView_ApiKey}" ToolTip="{StaticResource APIKeyOverride}"/>
-                            <TextBox DockPanel.Dock="Top" x:Name="SyncthingApiKey" Text="{Binding SyncthingApiKey.Value, UpdateSourceTrigger=PropertyChanged}" ToolTip="{StaticResource APIKeyOverride}" Margin="0,0,40,20"/>
                         </DockPanel>
                     </GroupBox>
 

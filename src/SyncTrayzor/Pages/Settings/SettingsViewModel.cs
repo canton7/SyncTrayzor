@@ -71,7 +71,6 @@ namespace SyncTrayzor.Pages.Settings
 
         public SettingItem<bool> SyncthingUseDefaultHome { get; }
         public SettingItem<string> SyncthingAddress { get; }
-        public SettingItem<string> SyncthingApiKey { get; }
 
         public bool CanReadAutostart { get; set; }
         public bool CanWriteAutostart { get; set; }
@@ -137,8 +136,6 @@ namespace SyncTrayzor.Pages.Settings
             this.SyncthingUseDefaultHome.RequiresSyncthingRestart = true;
             this.SyncthingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncthingAddressValidator());
             this.SyncthingAddress.RequiresSyncthingRestart = true;
-            this.SyncthingApiKey = this.CreateBasicSettingItem(x => x.SyncthingApiKey, new SyncthingApiKeyValidator());
-            this.SyncthingApiKey.RequiresSyncthingRestart = true;
 
             this.CanReadAutostart = this.autostartProvider.CanRead;
             this.CanWriteAutostart = this.autostartProvider.CanWrite;

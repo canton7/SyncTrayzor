@@ -801,24 +801,6 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to API Key:.
-        /// </summary>
-        public static string SettingsView_ApiKey {
-            get {
-                return ResourceManager.GetString("SettingsView_ApiKey", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SyncTrayzor overrides the API key specified in Syncthing&apos;s configuration. However, you can set it to whatever value you like here..
-        /// </summary>
-        public static string SettingsView_ApiKey_ToolTip {
-            get {
-                return ResourceManager.GetString("SettingsView_ApiKey_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Close to tray.
         /// </summary>
         public static string SettingsView_CloseToTray {

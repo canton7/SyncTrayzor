@@ -220,13 +220,6 @@
   <data name="SettingsView_AlertOnNewVersion" xml:space="preserve">
     <value>Alert if a new version of SyncTrayzor is available</value>
   </data>
-  <data name="SettingsView_ApiKey" xml:space="preserve">
-    <value>API Key:</value>
-  </data>
-  <data name="SettingsView_ApiKey_ToolTip" xml:space="preserve">
-    <value>SyncTrayzor overrides the API key specified in Syncthing's configuration. However, you can set it to whatever value you like here.</value>
-    <comment>ToolTip shown when a user hovers over the SettingsView_ApiKey text input. This shows more information on the input.</comment>
-  </data>
   <data name="SettingsView_CloseToTray" xml:space="preserve">
     <value>Close to tray</value>
     <comment>Setting allowing the user to indicate that the 'close' button on the top right of the window should put Syncthing down into the tray, rather than closing the application</comment>
