@@ -62,6 +62,7 @@
                             </Grid>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceOrFolderRejectedBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceOrFolderRejectedBalloons}"/>
+                            <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
                         </DockPanel>
                     </GroupBox>
 
@@ -76,7 +77,6 @@
                                       Content="{l:Loc SettingsView_EnableConflictFileMonitoring}"/>
                             <CheckBox DockPanel.Dock="Top" IsChecked="{Binding EnableFailedTransferAlerts.Value}"
                                       Content="{l:Loc SettingsView_EnableFailedTransferAlerts}"/>
-                            <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
                         </DockPanel>
                     </GroupBox>
 
