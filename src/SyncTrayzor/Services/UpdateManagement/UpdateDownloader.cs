@@ -37,9 +37,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             var sha1sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sham1sumDownloadFileName, version.ToString(3)));
             var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(downloadedFileNameTemplate, version.ToString(3)));
 
-            // Always re-download the sha1sums file - it's small, and lets me change the contents of a download (if the hash changes, it will
-            // re-download the installer).
-            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, true, () =>
+            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, false, () =>
                 {
                     Stream sha1sumContents;
                     var passed = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath, out sha1sumContents);
