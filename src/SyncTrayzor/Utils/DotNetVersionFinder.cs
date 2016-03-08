@@ -14,20 +14,32 @@ namespace SyncTrayzor.Utils
                 using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
                 {
                     int releaseKey = Convert.ToInt32(ndpKey.GetValue("Release"));
-                    return CheckFor45DotVersion(releaseKey);
+                    return $"{CheckFor45DotVersion(releaseKey)} ({releaseKey})";
                 }
             }
-            catch
+            catch (Exception e)
             {
-                return "Unknown";
+                return $"Unknown ({e.Message})";
             }
         }
 
         private static string CheckFor45DotVersion(int releaseKey)
         {
-            if (releaseKey >= 393295)
+            if (releaseKey == 394271)
             {
-                return "4.6 or later";
+                return "4.6.1 on all other Windows OS versions";
+            }
+            if (releaseKey == 394254)
+            {
+                return "4.6.1 on Windows 10";
+            }
+            if (releaseKey == 393297)
+            {
+                return "4.6 on all other Windows OS versions";
+            }
+            if (releaseKey == 393295)
+            {
+                return "4.6 or later on Windows 10";
             }
             if ((releaseKey >= 379893))
             {
