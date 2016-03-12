@@ -128,8 +128,8 @@ namespace SyncTrayzor.Pages
         {
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
-            // Enable WPF touch scrolling - may cause issues, see https://github.com/cefsharp/CefSharp/pull/1418
-            webBrowser.IsManipulationEnabled = true;
+            // Don't enable touch scrolling yet - it's still buggy, and causes tapping on links to fail
+            //webBrowser.IsManipulationEnabled = true;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
 
             // So. Fun story. From https://github.com/cefsharp/CefSharp/issues/738#issuecomment-91099199, we need to set the zoom level
