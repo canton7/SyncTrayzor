@@ -8,6 +8,13 @@ using SyncTrayzor.Syncthing.Devices;
 
 namespace SyncTrayzor.Services.Metering
 {
+    // Device state: Unpaused, Paused, UnpausedRenegade, PausedRenegade
+    // If it's renegade, don't transition it.
+    // Event decide device needs pausing: Unpaused -> Paused
+    // Event decide device needs unpausing: Paused -> Unpaused
+    // Event device paused: Unpaused -> PausedRenegade, UnpausedRenegade -> Paused
+    // Event device resumed: Paused -> UnpausedRenegade, PausedRenegade -> Unpaused
+
     public interface IMeteredNetworkManager : IDisposable
     {
         event EventHandler PausedDevicesChanged;
@@ -47,10 +54,9 @@ namespace SyncTrayzor.Services.Metering
 
         private readonly object syncRoot = new object();
 
-        private readonly HashSet<string> _pausedDeviceIds = new HashSet<string>();
         public IReadOnlyList<string> PausedDeviceIds { get; private set; } = new List<string>().AsReadOnly();
 
-        private readonly HashSet<string> renegadeDeviceIds = new HashSet<string>();
+        private readonly Dictionary<string, DeviceState> deviceStates = new Dictionary<string, DeviceState>();
 
         public MeteredNetworkManager(ISyncthingManager syncthingManager, INetworkCostManager costManager)
         {
@@ -83,18 +89,22 @@ namespace SyncTrayzor.Services.Metering
             if (!this.IsEnabled)
                 return;
 
+            this.ClearAllDevices();
+
+            this.Update();
+        }
+
+        private void ClearAllDevices()
+        {
             bool changed;
             lock (this.syncRoot)
             {
-                changed = this._pausedDeviceIds.Count > 0;
-                this._pausedDeviceIds.Clear();
-                this.renegadeDeviceIds.Clear();
+                changed = this.deviceStates.Values.Any(x => x == DeviceState.Paused);
+                this.deviceStates.Clear();
             }
 
             if (changed)
                 this.UpdatePausedDeviceIds();
-
-            this.Update();
         }
 
         private void DevicePaused(object sender, DevicePausedEventArgs e)
@@ -102,13 +112,27 @@ namespace SyncTrayzor.Services.Metering
             if (!this.IsEnabled)
                 return;
 
-            bool changed;
+            bool changed = false;
             lock (this.syncRoot)
             {
-                changed = this._pausedDeviceIds.Add(e.Device.DeviceId);
+                DeviceState deviceState;
+                if (!this.deviceStates.TryGetValue(e.Device.DeviceId, out deviceState))
+                {
+                    logger.Warn($"Unable to pause device {e.Device.DeviceId} as we don't have a record of its state. This should not happen");
+                    return;
+                }
 
-                // We might not have been expecting this: user has manually paused
-                this.UpdateRenegadeDeviceIds(e.Device.DeviceId, changed);
+                if (deviceState == DeviceState.Unpaused)
+                {
+                    this.deviceStates[e.Device.DeviceId] = DeviceState.PausedRenegade;
+                    logger.Info($"Device {e.Device.DeviceId} has been paused, and has gone renegade");
+                }
+                else if (deviceState == DeviceState.UnpausedRenegade)
+                {
+                    this.deviceStates[e.Device.DeviceId] = DeviceState.Paused;
+                    logger.Info($"Device {e.Device.DeviceId} has been paused, and has stopped being renegade");
+                    changed = true;
+                }
             }
 
             if (changed)
@@ -120,13 +144,27 @@ namespace SyncTrayzor.Services.Metering
             if (!this.IsEnabled)
                 return;
 
-            bool changed;
+            bool changed = false;
             lock (this.syncRoot)
             {
-                changed = this._pausedDeviceIds.Remove(e.Device.DeviceId);
+                DeviceState deviceState;
+                if (!this.deviceStates.TryGetValue(e.Device.DeviceId, out deviceState))
+                {
+                    logger.Warn($"Unable to resume device {e.Device.DeviceId} as we don't have a record of its state. This should not happen");
+                    return;
+                }
 
-                // We might not have been expecting this: user has manually resumed
-                this.UpdateRenegadeDeviceIds(e.Device.DeviceId, changed);
+                if (deviceState == DeviceState.Paused)
+                {
+                    this.deviceStates[e.Device.DeviceId] = DeviceState.UnpausedRenegade;
+                    logger.Info($"Device {e.Device.DeviceId} has been resumed, and has gone renegade");
+                    changed = true;
+                }
+                else if (deviceState == DeviceState.PausedRenegade)
+                {
+                    this.deviceStates[e.Device.DeviceId] = DeviceState.Unpaused;
+                    logger.Info($"Device {e.Device.DeviceId} has been resumed, and has stopped being renegade");
+                }
             }
 
             if (changed)
@@ -155,6 +193,7 @@ namespace SyncTrayzor.Services.Metering
                 return;
 
             logger.Info("Network costs changed. Updating devices");
+            this.ResetRenegades();
             this.Update();
         }
 
@@ -164,23 +203,20 @@ namespace SyncTrayzor.Services.Metering
                 return;
 
             logger.Info("Networks changed. Updating devices");
+            this.ResetRenegades();
             this.Update();
         }
 
-        private void UpdateRenegadeDeviceIds(string deviceId, bool add)
+        private void ResetRenegades()
         {
-            // We should always be called from inside a lock, but just to be sure....
             lock (this.syncRoot)
             {
-                if (add)
+                foreach (var kvp in this.deviceStates.ToArray())
                 {
-                    if (this.renegadeDeviceIds.Add(deviceId))
-                        logger.Info($"Device {deviceId} became renegade");
-                }
-                else
-                {
-                    if (this.renegadeDeviceIds.Remove(deviceId))
-                        logger.Info($"Device {deviceId} stopped being renegade");
+                    if (kvp.Value == DeviceState.PausedRenegade)
+                        this.deviceStates[kvp.Key] = DeviceState.Paused;
+                    else if (kvp.Value == DeviceState.UnpausedRenegade)
+                        this.deviceStates[kvp.Key] = DeviceState.Unpaused;
                 }
             }
         }
@@ -189,7 +225,7 @@ namespace SyncTrayzor.Services.Metering
         {
             lock (this.syncRoot)
             {
-                this.PausedDeviceIds = this._pausedDeviceIds.ToList().AsReadOnly();
+                this.PausedDeviceIds = this.deviceStates.Where(x => x.Value == DeviceState.Paused).Select(x => x.Key).ToList().AsReadOnly();
             }
 
             this.PausedDevicesChanged?.Invoke(this, EventArgs.Empty);
@@ -200,26 +236,12 @@ namespace SyncTrayzor.Services.Metering
             this.Update();
         }
 
-        private void ClearAllDevices()
-        {
-            bool changed;
-            lock (this.syncRoot)
-            {
-                changed = this._pausedDeviceIds.Count > 0;
-                this._pausedDeviceIds.Clear();
-                this.renegadeDeviceIds.Clear();
-            }
-
-            if (changed)
-                this.UpdatePausedDeviceIds();
-        }
-
         private async void Disable()
         {
             List<string> deviceIdsToUnpause;
             lock (this.syncRoot)
             {
-                deviceIdsToUnpause = this._pausedDeviceIds.Except(this.renegadeDeviceIds).ToList();
+                deviceIdsToUnpause = this.deviceStates.Where(x => x.Value == DeviceState.Paused).Select(x => x.Key).ToList();
             }
 
             this.ClearAllDevices();
@@ -231,6 +253,23 @@ namespace SyncTrayzor.Services.Metering
         private async void Update()
         {
             var devices = this.syncthingManager.Devices.FetchDevices();
+
+            // Keep device states in sync with devices
+            lock (this.syncRoot)
+            {
+                foreach (var device in devices)
+                {
+                    if (!this.deviceStates.ContainsKey(device.DeviceId))
+                        this.deviceStates[device.DeviceId] = device.Paused ? DeviceState.Paused : DeviceState.Unpaused;
+                }
+                var deviceIds = new HashSet<string>(devices.Select(x => x.DeviceId));
+                foreach (var deviceStateId in this.deviceStates.Keys.ToList())
+                {
+                    if (!deviceIds.Contains(deviceStateId))
+                        this.deviceStates.Remove(deviceStateId);
+                }
+            }
+
             var updateTasks = devices.Select(device => this.UpdateDeviceAsync(device));
             var results = await Task.WhenAll(updateTasks);
 
@@ -240,16 +279,26 @@ namespace SyncTrayzor.Services.Metering
 
         private async Task<bool> UpdateDeviceAsync(Device device)
         {
+            // This is called when the list of devices changes, when the network cost changes, or when a device connects
+            // If the list of devices has changed, then the device won't be renegade
+
             if (!this.IsEnabled || this.syncthingManager.State != SyncthingState.Running || !this.syncthingManager.Capabilities.SupportsDevicePauseResume)
                 return false;
 
+            DeviceState deviceState;
             lock (this.syncRoot)
             {
-                if (this.renegadeDeviceIds.Contains(device.DeviceId))
+                if (!this.deviceStates.TryGetValue(device.DeviceId, out deviceState))
                 {
-                    logger.Info($"Skipping update of device {device.DeviceId} as it has gone renegade");
+                    logger.Warn($"Unable to fetch device state for device ID {device.DeviceId}. This should not happen.");
                     return false;
                 }
+            }
+
+            if (deviceState == DeviceState.PausedRenegade || deviceState == DeviceState.UnpausedRenegade)
+            {
+                logger.Info($"Skipping update of device {device.DeviceId} as it has gone renegade");
+                return false;
             }
 
             var shouldBePaused = device.IsConnected && this.costManager.IsConnectionMetered(device.Address.Address);
@@ -263,8 +312,9 @@ namespace SyncTrayzor.Services.Metering
 
                 lock (this.syncRoot)
                 {
-                    changed |= this._pausedDeviceIds.Add(device.DeviceId);
+                    this.deviceStates[device.DeviceId] = DeviceState.Paused;
                 }
+                changed = true;
             }
             else if (!shouldBePaused && device.Paused)
             {
@@ -273,8 +323,9 @@ namespace SyncTrayzor.Services.Metering
 
                 lock (this.syncRoot)
                 {
-                    changed |= this._pausedDeviceIds.Remove(device.DeviceId);
+                    this.deviceStates[device.DeviceId] = DeviceState.Unpaused;
                 }
+                changed = true;
             }
 
             return changed;
@@ -290,6 +341,14 @@ namespace SyncTrayzor.Services.Metering
             this.syncthingManager.Devices.DeviceDisconnected -= this.DeviceDisconnected;
             this.costManager.NetworkCostsChanged -= this.NetworkCostsChanged;
             this.costManager.NetworksChanged -= this.NetworksChanged;
+        }
+
+        private enum DeviceState
+        {
+            Paused,
+            Unpaused,
+            PausedRenegade,
+            UnpausedRenegade,
         }
     }
 }
