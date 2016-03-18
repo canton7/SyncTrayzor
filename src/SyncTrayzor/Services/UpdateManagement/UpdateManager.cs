@@ -24,7 +24,6 @@ namespace SyncTrayzor.Services.UpdateManagement
         Version LatestIgnoredVersion { get; set; }
         string UpdateCheckApiUrl { get; set; }
         bool CheckForUpdates { get; set; }
-        TimeSpan UpdateCheckInterval { get; set; }
 
         Task<VersionCheckResults> CheckForAcceptableUpdateAsync();
     }
@@ -32,6 +31,15 @@ namespace SyncTrayzor.Services.UpdateManagement
     public class UpdateManager : IUpdateManager
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private static readonly TimeSpan deadTimeAfterStarting = TimeSpan.FromSeconds(60);
+        // We'll never check more frequently than this, ever
+        private static readonly TimeSpan updateCheckDebounceTime = TimeSpan.FromMinutes(30);
+        // If 'remind me later' is active, we'll check this frequently
+        private static readonly TimeSpan remindMeLaterTime = TimeSpan.FromHours(24);
+        // How often the update checking timer should fire. Having it fire too often is OK: we won't
+        // take action
+        private static readonly TimeSpan updateCheckingTimerInterval = TimeSpan.FromHours(3);
 
         private readonly IApplicationState applicationState;
         private readonly IApplicationWindowState applicationWindowState;
@@ -41,6 +49,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         private readonly IUpdatePromptProvider updatePromptProvider;
         private readonly IAssemblyProvider assemblyProvider;
         private readonly Func<IUpdateVariantHandler> updateVariantHandlerFactory;
+
+        private readonly object promptTimerLock = new object();
         private readonly DispatcherTimer promptTimer;
 
         private readonly SemaphoreSlim versionCheckLock = new SemaphoreSlim(1, 1);
@@ -52,7 +62,6 @@ namespace SyncTrayzor.Services.UpdateManagement
         public event EventHandler<VersionIgnoredEventArgs> VersionIgnored;
         public Version LatestIgnoredVersion { get; set; }
         public string UpdateCheckApiUrl { get; set; }
-        public TimeSpan UpdateCheckInterval { get; set; }
 
         private bool _checkForUpdates;
         public bool CheckForUpdates
@@ -90,13 +99,21 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.promptTimer.Tick += this.PromptTimerElapsed;
 
             // Strategy time:
-            // We'll prompt the user a fixed period after the computer starts up / resumes from sleep
-            // (this is handled by CheckForUpdates being set to true, if appropriate, by another part of the application)
-            // We'll also check on a fixed interval since this point
-            // If 'remind me later' is active, we'll also check when the application is restored from tray
+            // We'll always check when the user starts up or resumes from sleep.
+            // We'll check whenever the user opens the app, debounced to a suitable period.
+            // We'll check periodically if none of the above have happened, on a longer interval.
+            // If 'remind me later' is active, we'll do none of the above for a long interval.
 
             this.applicationState.ResumeFromSleep += this.ResumeFromSleep;
             this.applicationWindowState.RootWindowActivated += this.RootWindowActivated;
+        }
+
+        private bool ShouldCheckForUpdates()
+        {
+            if (this.remindLaterActive)
+                return DateTime.UtcNow - this.lastCheckedTime > remindMeLaterTime;
+            else
+                return DateTime.UtcNow - this.lastCheckedTime > updateCheckDebounceTime;
         }
 
         private async void UpdateCheckForUpdates(bool checkForUpdates)
@@ -105,22 +122,27 @@ namespace SyncTrayzor.Services.UpdateManagement
             {
                 this.RestartTimer();
                 // Give them a minute to catch their breath
-                await Task.Delay(TimeSpan.FromSeconds(30));
-                if (this.UpdateCheckDue())
+                if (this.ShouldCheckForUpdates())
+                {
+                    await Task.Delay(deadTimeAfterStarting);
                     await this.CheckForUpdatesAsync();
+                }
             }
             else
             {
-                this.promptTimer.IsEnabled = false;
+                lock (this.promptTimerLock)
+                {
+                    this.promptTimer.IsEnabled = false;
+                }
             }
         }
 
         private async void ResumeFromSleep(object sender, EventArgs e)
         {
-            if (this.UpdateCheckDue())
+            if (this.ShouldCheckForUpdates())
             {
                 // We often wake up before the network does. Give the network some time to sort itself out
-                await Task.Delay(TimeSpan.FromSeconds(60));
+                await Task.Delay(deadTimeAfterStarting);
                 await this.CheckForUpdatesAsync();
             }
         }
@@ -130,14 +152,13 @@ namespace SyncTrayzor.Services.UpdateManagement
             if (this.toastCts != null)
                 this.toastCts.Cancel();
 
-            // If the user clicked 'remind me later', check on root window activated
-            if (this.remindLaterActive)
+            if (this.ShouldCheckForUpdates())
                 await this.CheckForUpdatesAsync();
         }
 
         private async void PromptTimerElapsed(object sender, EventArgs e)
         {
-            if (this.UpdateCheckDue())
+            if (this.ShouldCheckForUpdates())
                 await this.CheckForUpdatesAsync();
         }
 
@@ -146,20 +167,20 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.VersionIgnored?.Invoke(this, new VersionIgnoredEventArgs(ignoredVersion));
         }
 
-        private bool UpdateCheckDue()
-        {
-            return DateTime.UtcNow - this.lastCheckedTime > this.UpdateCheckInterval;
-        }
-
         private void RestartTimer()
         {
-            this.promptTimer.IsEnabled = false;
-            this.promptTimer.Interval = this.UpdateCheckInterval;
-            this.promptTimer.IsEnabled = true;
+            lock(this.promptTimerLock)
+            {
+                this.promptTimer.IsEnabled = false;
+                this.promptTimer.Interval = updateCheckingTimerInterval;
+                this.promptTimer.IsEnabled = true;
+            }
         }
 
         private async Task CheckForUpdatesAsync()
         {
+            this.RestartTimer();
+
             if (!this.versionCheckLock.Wait(0))
                 return;
 
@@ -169,8 +190,6 @@ namespace SyncTrayzor.Services.UpdateManagement
 
                 if (!this.CheckForUpdates)
                     return;
-
-                this.RestartTimer();
 
                 var variantHandler = this.updateVariantHandlerFactory();
 

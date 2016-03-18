@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pri.LongPath;
 using NLog;
-using SyncTrayzor.Utils;
 using System.Reactive.Linq;
 
 namespace SyncTrayzor.Services.Conflicts

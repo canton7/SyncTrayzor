@@ -28,10 +28,12 @@ namespace SyncTrayzor.Utils
 
         public static void SignFile(Stream input, Stream outputStream, Stream keyIn, char[] pass)
         {
+            var hashAlgorithm = HashAlgorithmTag.Sha512;
+
             var secretKey = ReadSecretKey(keyIn);
             var privateKey = secretKey.ExtractPrivateKey(pass);
 
-            var signatureGenerator = new PgpSignatureGenerator(secretKey.PublicKey.Algorithm, HashAlgorithmTag.Sha1);
+            var signatureGenerator = new PgpSignatureGenerator(secretKey.PublicKey.Algorithm, hashAlgorithm);
             var subpacketGenerator = new PgpSignatureSubpacketGenerator();
 
             signatureGenerator.InitSign(PgpSignature.CanonicalTextDocument, privateKey);
@@ -48,7 +50,7 @@ namespace SyncTrayzor.Utils
             var armouredOutputStream = new ArmoredOutputStream(outputStream);
             using (var bcpgOutputStream = new BcpgOutputStream(armouredOutputStream))
             {
-                armouredOutputStream.BeginClearText(HashAlgorithmTag.Sha1);
+                armouredOutputStream.BeginClearText(hashAlgorithm);
 
                 int chr;
                 while ((chr = input.ReadByte()) > 0)

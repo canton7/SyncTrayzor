@@ -17,5 +17,7 @@
         void Accept(FolderErrorsEvent evt);
         void Accept(DevicePausedEvent evt);
         void Accept(DeviceResumedEvent evt);
+        void Accept(DeviceRejectedEvent evt);
+        void Accept(FolderRejectedEvent evt);
     }
 }

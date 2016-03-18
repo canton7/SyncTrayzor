@@ -47,9 +47,9 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public async Task<bool> TryHandleUpdateAvailableAsync(VersionCheckResults checkResult)
         {
-            if (!String.IsNullOrWhiteSpace(checkResult.DownloadUrl) && !String.IsNullOrWhiteSpace(checkResult.Sha1sumDownloadUrl))
+            if (!String.IsNullOrWhiteSpace(checkResult.DownloadUrl) && !String.IsNullOrWhiteSpace(checkResult.Sha512sumDownloadUrl))
             {
-                var zipPath = await this.updateDownloader.DownloadUpdateAsync(checkResult.DownloadUrl, checkResult.Sha1sumDownloadUrl, checkResult.NewVersion, updateDownloadFileName);
+                var zipPath = await this.updateDownloader.DownloadUpdateAsync(checkResult.DownloadUrl, checkResult.Sha512sumDownloadUrl, checkResult.NewVersion, updateDownloadFileName);
                 if (zipPath == null)
                     return false;
 
@@ -94,7 +94,9 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             var pid = Process.GetCurrentProcess().Id;
 
-            var args = $"\"{Path.GetDirectoryName(this.assemblyProvider.Location)}\" \"{this.extractedZipPath}\" {pid} \"{pathToRestartApplication}\"";
+            // pathToRestartApplication IS ALREADY QUOTED: it's `"C:\Foo\Bar.exe"` or `"C:\Foo\Bar.exe" --minimized`. Portable installer
+            // knows to look for either 4 or 5 arguments to take account of the fact that pathToRestartApplication may contain two bits 
+            var args = $"\"{Path.GetDirectoryName(this.assemblyProvider.Location)}\" \"{this.extractedZipPath}\" {pid} {pathToRestartApplication}";
 
             this.processStartProvider.StartDetached(destPortableInstaller, args);
 

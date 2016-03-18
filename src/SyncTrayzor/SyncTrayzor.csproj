@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props')" />
-  <Import Project="..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -235,6 +235,9 @@
     <Compile Include="Services\IpcCommsServer.cs" />
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
+    <Compile Include="Syncthing\ApiClient\DeviceRejectedEvent.cs" />
+    <Compile Include="Syncthing\ApiClient\FolderRejectedEvent.cs" />
+    <Compile Include="Syncthing\DeviceRejectedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\DevicePausedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
@@ -272,11 +275,14 @@
     <Compile Include="Syncthing\DebugFacilities\SyncthingDebugFacilitiesManager.cs" />
     <Compile Include="Syncthing\EventWatcher\ConfigSavedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DevicePausedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\DeviceRejectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\FolderErrorsChangedEventArgs.cs" />
+    <Compile Include="Syncthing\EventWatcher\FolderRejectedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\FolderStatusChangedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemFinishedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\ItemStartedEventArgs.cs" />
+    <Compile Include="Syncthing\FolderRejectedEventArgs.cs" />
     <Compile Include="Syncthing\Folders\FolderError.cs" />
     <Compile Include="Syncthing\Folders\FolderErrorsChangedEventArgs.cs" />
     <Compile Include="Syncthing\Folders\FolderIgnores.cs" />
@@ -608,15 +614,15 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets'))" />
     <Error Condition="!Exists('..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.47.0.0\build\CefSharp.Wpf.props'))" />
     <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
     <Error Condition="!Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props'))" />
   </Target>
   <Import Project="..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets')" />
   <Import Project="..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets')" />
-  <Import Project="..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.47.0.0\build\CefSharp.Common.targets')" />
   <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
   <Import Project="..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets" Condition="Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" />
+  <Import Project="..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets')" />
 </Project>

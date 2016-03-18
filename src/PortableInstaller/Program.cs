@@ -15,8 +15,10 @@ namespace PortableInstaller
 
         public static int Main(string[] args)
         {
+            // args[4] is a new parameter containing arguments to args[3] (path to restart application)
+
             RecycleBinDeleter.Logger = s => Log("!! " + s);
-            if (args.Length != 4)
+            if (args.Length < 4 || args.Length > 5)
             {
                 Console.WriteLine("You should not invoke this executable directly. It is used as part of the automatic upgrade process for portable installations.");
                 Console.ReadKey();
@@ -27,6 +29,7 @@ namespace PortableInstaller
             var sourcePath = args[1];
             var waitForPid = Int32.Parse(args[2]);
             var pathToRestartApplication = args[3];
+            var pathToRestartApplicationParameters = (args.Length == 5) ? args[4] : String.Empty;
             var destinationPathParent = Path.GetDirectoryName(destinationPath);
 
             try
@@ -185,7 +188,7 @@ namespace PortableInstaller
                 }
 
                 Log($"Restarting application {pathToRestartApplication}");
-                Process.Start(pathToRestartApplication);
+                Process.Start(pathToRestartApplication, pathToRestartApplicationParameters);
 
                 return 0;
             }

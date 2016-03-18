@@ -41,7 +41,6 @@ namespace SyncTrayzor.Services.Config
         public bool EnableAutostartOnFirstStart { get; set; } = false;
         public int CefRemoteDebuggingPort { get; set; } = 0;
         public SyncTrayzorVariant Variant { get; set; } = SyncTrayzorVariant.Portable;
-        public int UpdateCheckIntervalSeconds { get; set; } = 43200;
         public int SyncthingConnectTimeoutSeconds { get; set; } = 600;
         public bool EnforceSingleProcessPerUser { get; set; } = true;
 

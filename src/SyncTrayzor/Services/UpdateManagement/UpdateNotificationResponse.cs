@@ -17,8 +17,8 @@ namespace SyncTrayzor.Services.UpdateManagement
         [JsonProperty("direct_download_url")]
         public string DirectDownloadUrl { get; set; }
 
-        [JsonProperty("sha1sum_download_url")]
-        public string Sha1sumDownloadUrl { get; set; }
+        [JsonProperty("sha512sum_download_url")]
+        public string Sha512sumDownloadUrl { get; set; }
 
         [JsonProperty("release_page_url")]
         public string ReleasePageUrl { get; set; }
@@ -28,7 +28,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public override string ToString()
         {
-            return $"<UpdateNotificationData version={this.Version.ToString(3)} direct_download_url={this.DirectDownloadUrl} sha1sum_download_url={this.Sha1sumDownloadUrl} " +
+            return $"<UpdateNotificationData version={this.Version.ToString(3)} direct_download_url={this.DirectDownloadUrl} sha512sum_download_url={this.Sha512sumDownloadUrl} " +
                 $"release_page_url={this.ReleasePageUrl} release_notes={this.ReleaseNotes}>";
         }
     }

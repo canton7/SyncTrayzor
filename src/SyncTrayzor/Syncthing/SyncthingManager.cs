@@ -27,6 +27,8 @@ namespace SyncTrayzor.Syncthing
         SyncthingConnectionStats TotalConnectionStats { get; }
         event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
         event EventHandler ProcessExitedWithError;
+        event EventHandler<DeviceRejectedEventArgs> DeviceRejected;
+        event EventHandler<FolderRejectedEventArgs> FolderRejected;
 
         string ExecutablePath { get; set; }
         string ApiKey { get; set; }
@@ -105,6 +107,8 @@ namespace SyncTrayzor.Syncthing
         public event EventHandler DataLoaded;
         public event EventHandler<SyncthingStateChangedEventArgs> StateChanged;
         public event EventHandler<MessageLoggedEventArgs> MessageLogged;
+        public event EventHandler<DeviceRejectedEventArgs> DeviceRejected;
+        public event EventHandler<FolderRejectedEventArgs> FolderRejected;
 
         private readonly object totalConnectionStatsLock = new object();
         private SyncthingConnectionStats _totalConnectionStats;
@@ -168,6 +172,8 @@ namespace SyncTrayzor.Syncthing
             this.eventWatcher.DeviceDisconnected += (o, e) => this.LastConnectivityEventTime = DateTime.UtcNow;
             this.eventWatcher.ConfigSaved += (o, e) => this.ReloadConfigDataAsync();
             this.eventWatcher.EventsSkipped += (o, e) => this.ReloadConfigDataAsync();
+            this.eventWatcher.DeviceRejected += (o, e) => this.OnDeviceRejected(e.DeviceId, e.Address);
+            this.eventWatcher.FolderRejected += (o, e) => this.OnFolderRejected(e.DeviceId, e.FolderId);
 
             this.connectionsWatcher = connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
@@ -532,6 +538,20 @@ namespace SyncTrayzor.Syncthing
         private void OnProcessExitedWithError()
         {
             this.eventDispatcher.Raise(this.ProcessExitedWithError);
+        }
+
+        private void OnDeviceRejected(string deviceId, string address)
+        {
+            this.eventDispatcher.Raise(this.DeviceRejected, new DeviceRejectedEventArgs(deviceId, address));
+        }
+
+        private void OnFolderRejected(string deviceId, string folderId)
+        {
+            Device device;
+            if (!this.Devices.TryFetchById(deviceId, out device))
+                return;
+
+            this.eventDispatcher.Raise(this.FolderRejected, new FolderRejectedEventArgs(device, folderId));
         }
 
         public void Dispose()

@@ -221,7 +221,7 @@ task :"create-checksums" => [:"build-checksum-util"] do
   files = Dir["#{DEPLOY_DIR}/*.{zip,exe}"]
 
   create_checksums(File.join(DEPLOY_DIR, 'sha1sum.txt.asc'), password, 'sha1', files)
-  create_checksums(File.join(DEPLOY_DIR, 'md5sum.txt.asc'), password, 'md5', files)
+  create_checksums(File.join(DEPLOY_DIR, 'sha512sum.txt.asc'), password, 'sha512', files)
 end
 
 desc 'Clean portable and installer, all architectures'

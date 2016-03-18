@@ -8,8 +8,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IInstallerCertificateVerifier
     {
-        bool VerifySha1sum(string filePath, out Stream cleartext);
-        bool VerifyUpdate(string filePath, Stream sha1sumFile, string originalFileName);
+        bool VerifySha512sum(string filePath, out Stream cleartext);
+        bool VerifyUpdate(string filePath, Stream sha512sumFile, string originalFileName);
     }
 
     public class InstallerCertificateVerifier : IInstallerCertificateVerifier
@@ -31,7 +31,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             return this.assemblyProvider.GetManifestResourceStream(certificateName);
         }
 
-        public bool VerifySha1sum(string filePath, out Stream cleartext)
+        public bool VerifySha512sum(string filePath, out Stream cleartext)
         {
             using (var file = this.filesystemProvider.OpenRead(filePath))
             using (var certificate = this.LoadCertificate())
@@ -40,14 +40,14 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
         }
 
-        public bool VerifyUpdate(string filePath, Stream sha1sumFile, string originalFileName)
+        public bool VerifyUpdate(string filePath, Stream sha512sumFile, string originalFileName)
         {
-            using (var hashAlgorithm = new SHA1Managed())
+            using (var hashAlgorithm = new SHA512Managed())
             using (var file = this.filesystemProvider.OpenRead(filePath))
             {
                 try
                 {
-                    return ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, sha1sumFile, originalFileName, file);
+                    return ChecksumFileUtilities.ValidateChecksum(hashAlgorithm, sha512sumFile, originalFileName, file);
                 }
                 catch (ArgumentException)
                 {

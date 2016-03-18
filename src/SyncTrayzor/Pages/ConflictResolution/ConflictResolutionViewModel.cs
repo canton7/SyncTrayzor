@@ -1,7 +1,6 @@
 ﻿using Stylet;
 using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Syncthing;
-using SyncTrayzor.Utils;
 using System;
 using System.Linq;
 using System.Threading;
@@ -12,7 +11,6 @@ using System.Windows;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using System.Reactive.Threading.Tasks;
 using System.Reactive.Linq;
 using System.Windows.Threading;
 
