@@ -11,7 +11,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 {
     public interface IUpdateDownloader
     {
-        Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version, string downloadedFileNameTemplate);
+        Task<string> DownloadUpdateAsync(string updateUrl, string sha512sumUrl, Version version, string downloadedFileNameTemplate);
     }
 
     public class UpdateDownloader : IUpdateDownloader
@@ -19,7 +19,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private static readonly TimeSpan fileMaxAge = TimeSpan.FromDays(3); // Arbitrary, but long
-        private const string sham1sumDownloadFileName = "sha1sum-{0}.txt.asc";
+        private const string sha512sumDownloadFileName = "sha512sum-{0}.txt.asc";
 
         private readonly string downloadsDir;
         private readonly IFilesystemProvider filesystemProvider;
@@ -32,30 +32,30 @@ namespace SyncTrayzor.Services.UpdateManagement
             this.installerVerifier = installerVerifier;
         }
 
-        public async Task<string> DownloadUpdateAsync(string updateUrl, string sha1sumUrl, Version version, string downloadedFileNameTemplate)
+        public async Task<string> DownloadUpdateAsync(string updateUrl, string sha512sumUrl, Version version, string downloadedFileNameTemplate)
         {
-            var sha1sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sham1sumDownloadFileName, version.ToString(3)));
+            var sha512sumDownloadPath = Path.Combine(this.downloadsDir, String.Format(sha512sumDownloadFileName, version.ToString(3)));
             var updateDownloadPath = Path.Combine(this.downloadsDir, String.Format(downloadedFileNameTemplate, version.ToString(3)));
 
-            var sha1sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha1sumUrl, version, sha1sumDownloadPath, false, () =>
+            var sha512sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha512sumUrl, version, sha512sumDownloadPath, false, () =>
                 {
-                    Stream sha1sumContents;
-                    var passed = this.installerVerifier.VerifySha1sum(sha1sumDownloadPath, out sha1sumContents);
-                    return Tuple.Create(passed, sha1sumContents);
+                    Stream sha512sumContents;
+                    var passed = this.installerVerifier.VerifySha512sum(sha512sumDownloadPath, out sha512sumContents);
+                    return Tuple.Create(passed, sha512sumContents);
                 });
 
             // Might be null, but if it's not make sure we dispose it (it's actually a MemoryStream, but let's be proper)
             bool updateSucceeded = false;
-            using (var sha1sumContents = sha1sumOutcome.Item2)
+            using (var sha512sumContents = sha512sumOutcome.Item2)
             {
-                if (sha1sumOutcome.Item1)
+                if (sha512sumOutcome.Item1)
                 {
                     updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(updateUrl, version, updateDownloadPath, false, () =>
                     {
                         var updateUri = new Uri(updateUrl);
                         // Make sure this is rewound - we might read from it multiple times
-                        sha1sumOutcome.Item2.Position = 0;
-                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha1sumOutcome.Item2, updateUri.Segments.Last());
+                        sha512sumOutcome.Item2.Position = 0;
+                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha512sumOutcome.Item2, updateUri.Segments.Last());
                         return Tuple.Create(updatePassed, (object)null);
                     })).Item1;
                 }

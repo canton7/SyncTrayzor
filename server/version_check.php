@@ -79,6 +79,7 @@ $versions = [
          ],
       ],     
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
+      'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
       'release_notes' => "- Handle thousands of conflicts in the conflict editor without crashing (#224)\n- Handle crash when syncing many files (reappearance of #112) (#227)\n- Fix rendering of some strings\n- Add logging to file to portable upgrades, in case of error",
    ]
@@ -173,6 +174,21 @@ $response_formatters = [
          'version' => $to_version,
          'direct_download_url' => get_with_wildcard($variant_info['direct_download_url'], $arch),
          'sha1sum_download_url' => $to_version_info['sha1sum_download_url'],
+         'release_page_url' => $to_version_info['release_page_url'],
+         'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
+      ];
+
+      return $data;
+   },
+   // Learnt about sha512sum
+   '5' => function($arch, $variant, $to_version, $to_version_info, $overrides)
+   {
+      $variant_info = isset($overrides[$variant]) ? get_with_wildcard($overrides, $variant) : get_with_wildcard($to_version_info, $variant);
+
+      $data = [
+         'version' => $to_version,
+         'direct_download_url' => get_with_wildcard($variant_info['direct_download_url'], $arch),
+         'sha512sum_download_url' => $to_version_info['sha512sum_download_url'],
          'release_page_url' => $to_version_info['release_page_url'],
          'release_notes' => isset($overrides['release_notes']) ? $overrides['release_notes'] : $to_version_info['release_notes'],
       ];

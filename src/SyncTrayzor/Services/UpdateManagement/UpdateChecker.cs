@@ -10,27 +10,27 @@ namespace SyncTrayzor.Services.UpdateManagement
     {
         public Version NewVersion { get; }
         public string DownloadUrl { get; }
-        public string Sha1sumDownloadUrl { get; }
+        public string Sha512sumDownloadUrl { get; }
         public string ReleaseNotes { get; }
         public string ReleasePageUrl { get; }
 
         public VersionCheckResults(
             Version newVersion,
             string downloadUrl,
-            string sha1sumDownloadUrl,
+            string sha512sumDownloadUrl,
             string releaseNotes,
             string releasePageUrl)
         {
             this.NewVersion = newVersion;
             this.DownloadUrl = downloadUrl;
-            this.Sha1sumDownloadUrl = sha1sumDownloadUrl;
+            this.Sha512sumDownloadUrl = sha512sumDownloadUrl;
             this.ReleaseNotes = releaseNotes;
             this.ReleasePageUrl = releasePageUrl;
         }
 
         public override string ToString()
         {
-            return $"<VersionCheckResults NewVersion={this.NewVersion} DownloadUrl={this.DownloadUrl} Sha1sumDownloadUrl={this.Sha1sumDownloadUrl} " +
+            return $"<VersionCheckResults NewVersion={this.NewVersion} DownloadUrl={this.DownloadUrl} Sha512sumDownloadUrl={this.Sha512sumDownloadUrl} " +
                 $"ReleaseNotes={this.ReleaseNotes} ReleasePageUrl={this.ReleasePageUrl}>";
         }
     }
@@ -100,7 +100,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     return null;
                 }
 
-                var results = new VersionCheckResults(updateData.Version, updateData.DirectDownloadUrl, update.Data.Sha1sumDownloadUrl, updateData.ReleaseNotes, updateData.ReleasePageUrl);
+                var results = new VersionCheckResults(updateData.Version, updateData.DirectDownloadUrl, update.Data.Sha512sumDownloadUrl, updateData.ReleaseNotes, updateData.ReleasePageUrl);
                 logger.Info("Found new version: {0}", results);
                 return results;
             }

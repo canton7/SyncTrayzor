@@ -112,7 +112,7 @@ namespace SyncTrayzor.Pages
                     Description = "BouncyCastle.Crypto is a cryptography API",
                     Homepage = "http://www.bouncycastle.org/csharp/",
                     License = "MIT",
-                    Notes = "Used to sign and verify sha1sum / md5sum files",
+                    Notes = "Used to sign and verify sha1sum / sha512 files",
                     LicenseText = this.LoadLicense("BouncyCastle.txt")
                 },
                 new ThirdPartyComponent()
