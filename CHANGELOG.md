@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v1.1.8
+------
+
+ - Fix portable upgrades when there's a space in the path (will fix upgrades from 1.1.8 -> 1.1.9) (#232)
+ - Improve quality of small tray icons slightly (#140)
+ - Add "new device" / "new folder" balloon messages (#235)
+ - Improve update checking schedule
+ - Don't confuse the user when pausing devices on Windows 8+ (#242)
+ - Fix touch screen operation (although touch screen scrolling is still broken upstream) (#241)
+ - Allow settings window to be resized vertically (#238)
+ - Move to SHA512 for verifying downloads
+ - Add logging to help debug case where Syncthing returns odd values on startup
+ - Remove API Key from settings
+
 v1.1.7
 ------
 
