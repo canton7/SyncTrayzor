@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.7' => [
+   '1.1.8' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,11 +81,12 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Handle thousands of conflicts in the conflict editor without crashing (#224)\n- Handle crash when syncing many files (reappearance of #112) (#227)\n- Fix rendering of some strings\n- Add logging to file to portable upgrades, in case of error",
+      'release_notes' => "- Fix portable upgrades when there's a space in the path (will fix upgrades from 1.1.8 -> 1.1.9) (#232)\n- Improve quality of small tray icons slightly (#140)\n- Add \"new device\" / \"new folder\" balloon messages (#235)\n- Improve update checking schedule\n- Don't confuse the user when pausing devices on Windows 8+ (#242)\n- Fix touch screen operation (although touch screen scrolling is still broken upstream) (#241)\n- Allow settings window to be resized vertically (#238)\n- Move to SHA512 for verifying downloads\n- Add logging to help debug case where Syncthing returns odd values on startup\n- Remove API Key from settings",
    ]
 ];
 
 $upgrades = [
+   '1.1.7' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.6' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.5' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.4' => ['to' => 'latest', 'formatter' => '4'],
