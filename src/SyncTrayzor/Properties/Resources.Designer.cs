@@ -792,7 +792,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to See the &apos;Folders&apos; tab for per-folder alert settings..
+        ///   Looks up a localized string similar to See the &apos;Folders&apos; tab for per-folder notification settings..
         /// </summary>
         public static string SettingsView_Alerts_SeeFolders {
             get {
@@ -1021,7 +1021,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show device Connected/Disconnected balloon messages.
+        ///   Looks up a localized string similar to Show &quot;Device Connected/Disconnected&quot; balloon messages.
         /// </summary>
         public static string SettingsView_ShowDeviceConnectivityBalloons {
             get {
@@ -1039,7 +1039,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show &apos;Synchronized&apos; balloon messages even if no files were updated.
+        ///   Looks up a localized string similar to Show &quot;Synchronized&quot; balloon messages even if no files were updated.
         /// </summary>
         public static string SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred {
             get {

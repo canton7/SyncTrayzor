@@ -453,7 +453,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Tray Icon</value>
   </data>
   <data name="SettingsView_ShowDeviceConnectivityBalloons" xml:space="preserve">
-    <value>Show device Connected/Disconnected balloon messages</value>
+    <value>Show "Device Connected/Disconnected" balloon messages</value>
   </data>
   <data name="TrayIcon_Balloon_DeviceConnected_Message" xml:space="preserve">
     <value>{0} connected</value>
@@ -634,7 +634,7 @@ Full Path: {1}</value>
     <comment>{0}: Number of files that were updated</comment>
   </data>
   <data name="SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred" xml:space="preserve">
-    <value>Show 'Synchronized' balloon messages even if no files were updated</value>
+    <value>Show "Synchronized" balloon messages even if no files were updated</value>
   </data>
   <data name="TrayIcon_Balloon_FinishedSyncing_Multiple" xml:space="preserve">
     <value>{0}: {1:l:{}|; }</value>
@@ -891,7 +891,7 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Metered Networks</value>
   </data>
   <data name="SettingsView_Alerts_SeeFolders" xml:space="preserve">
-    <value>See the 'Folders' tab for per-folder alert settings.</value>
+    <value>See the 'Folders' tab for per-folder notification settings.</value>
   </data>
   <data name="ViewerView_BrowseToFolder" xml:space="preserve">
     <value>Browse</value>
