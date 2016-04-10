@@ -35,9 +35,6 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("needFiles")]
         public int NeedFiles { get; set; }
 
-        [JsonProperty("ignorePatterns")]
-        public bool IgnorePatterns { get; set; }
-
         [JsonProperty("invalid")]
         public string Invalid { get; set; }
 
@@ -55,7 +52,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
             return $"<FolderStatus GlobalBytes={this.GlobalBytes} GlobalDeleted={this.GlobalDeleted} GlobalFiles={this.GlobalFiles} " +
                 $"LocalBytes={this.LocalBytes} LocalDeleted={this.LocalDeleted} LocalFiles={this.LocalFiles} " +
                 $"InSyncBytes={this.InSyncBytes} InSyncFiles={this.InSyncFiles} NeedBytes={this.NeedBytes} NeedFiles={this.NeedFiles} " +
-                $"IgnorePattners={this.IgnorePatterns}, Invalid={this.Invalid} State={this.State} StateChanged={this.StateChanged} Version={this.Version}>";
+                $"Invalid={this.Invalid} State={this.State} StateChanged={this.StateChanged} Version={this.Version}>";
         }
     }
 }

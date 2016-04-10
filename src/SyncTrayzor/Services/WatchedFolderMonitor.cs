@@ -17,7 +17,6 @@ namespace SyncTrayzor.Services
     public class WatchedFolderMonitor : IWatchedFolderMonitor
     {
         // Paths we don't alert Syncthing about
-        private static readonly string ignoresFilePath = ".stignore";
         private static readonly string[] specialPaths = new[] { ".stversions", ".stfolder", "~syncthing~", ".syncthing." };
 
         private readonly ISyncthingManager syncthingManager;
@@ -110,26 +109,8 @@ namespace SyncTrayzor.Services
             if (specialPaths.Any(x => subPath.StartsWith(x)))
                 return true;
 
-            if (subPath == ignoresFilePath)
-            {
-                // Extra: tell Syncthing to update its ignores list
-                this.syncthingManager.ReloadIgnoresAsync(folder.FolderId);
-                return true;
-            }
-
             if (folder.SyncState == FolderSyncState.Syncing || folder.IsSyncingPath(subPath))
                 return true;
-
-            // Syncthing applies regex from the top down - if a parent is ignored, all of its children are by default
-            var pathParts = subPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
-            var cumulative = String.Empty;
-            foreach (var pathPart in pathParts)
-            {
-                cumulative = Path.Combine(cumulative, pathPart);
-                // If there's an include match on it, and not an exclude match, we ignore it
-                if (folder.Ignores.IncludeRegex.Any(x => x.Match(cumulative).Success) && !folder.Ignores.ExcludeRegex.Any(x => x.Match(cumulative).Success))
-                    return true;
-            }
 
             return false;
         }

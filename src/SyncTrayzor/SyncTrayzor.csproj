@@ -285,7 +285,6 @@
     <Compile Include="Syncthing\FolderRejectedEventArgs.cs" />
     <Compile Include="Syncthing\Folders\FolderError.cs" />
     <Compile Include="Syncthing\Folders\FolderErrorsChangedEventArgs.cs" />
-    <Compile Include="Syncthing\Folders\FolderIgnores.cs" />
     <Compile Include="Syncthing\Folders\FolderStateTransformer.cs" />
     <Compile Include="Syncthing\Folders\FolderSyncState.cs" />
     <Compile Include="Syncthing\FreePortFinder.cs" />
@@ -329,7 +328,6 @@
     <Compile Include="Syncthing\ApiClient\EventType.cs" />
     <Compile Include="Syncthing\ApiClient\GenericEvent.cs" />
     <Compile Include="Syncthing\ApiClient\IEventVisitor.cs" />
-    <Compile Include="Syncthing\ApiClient\Ignores.cs" />
     <Compile Include="Syncthing\ApiClient\ItemFinishedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\ItemStartedEvent.cs" />
     <Compile Include="Syncthing\ApiClient\JsonCreationConverter.cs" />

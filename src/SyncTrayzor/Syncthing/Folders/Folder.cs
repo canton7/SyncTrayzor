@@ -21,13 +21,6 @@ namespace SyncTrayzor.Syncthing.Folders
 
         private HashSet<string> syncingPaths { get; set; }
 
-        private FolderIgnores _ignores;
-        public FolderIgnores Ignores
-        {
-            get { lock (this.syncRoot) { return this._ignores; } }
-            set { lock (this.syncRoot) { this._ignores = value; } }
-        }
-
         private FolderStatus _status;
         public FolderStatus Status
         {
@@ -43,13 +36,12 @@ namespace SyncTrayzor.Syncthing.Folders
         }
 
 
-        public Folder(string folderId, string path, FolderSyncState syncState, FolderIgnores ignores, FolderStatus status)
+        public Folder(string folderId, string path, FolderSyncState syncState, FolderStatus status)
         {
             this.FolderId = folderId;
             this.Path = path;
             this.SyncState = syncState;
             this.syncingPaths = new HashSet<string>();
-            this._ignores = ignores;
             this._status = status;
             this.FolderErrors = new List<FolderError>().AsReadOnly();
         }
