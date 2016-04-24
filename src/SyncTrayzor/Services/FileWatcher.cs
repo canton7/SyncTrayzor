@@ -202,7 +202,7 @@ namespace SyncTrayzor.Services
             this.RecordPathChange(e.FullPath, pathExists: true);
             // Irritatingly, e.OldFullPath will throw an exception if the path is longer than the windows max
             // (but e.FullPath is fine).
-            // So, construct it from e.FullPath and e.OldName
+            // So, construct it from e.FullPath and e.OldName.
             // Note that we're using Pri.LongPath to get a Path.GetDirectoryName implementation that can handle
             // long paths
 
@@ -212,11 +212,21 @@ namespace SyncTrayzor.Services
                 return;
             }
 
+            // Note that e.FullPath could be a file or a directory. If it's a directory, it could be a drive
+            // root. If it's a drive root, Path.GetDirectoryName will return null. I'm not sure *how* it could
+            // be a drive root though... Record a change to the drive root if so.
             var oldFullPathDirectory = Path.GetDirectoryName(e.FullPath);
-            var oldFileName = Path.GetFileName(e.OldName);
-            var oldFullPath = Path.Combine(oldFullPathDirectory, oldFileName);
+            if (oldFullPathDirectory == null)
+            {
+                this.RecordPathChange(e.FullPath, pathExists: true);
+            }
+            else
+            {
+                var oldFileName = Path.GetFileName(e.OldName);
+                var oldFullPath = Path.Combine(oldFullPathDirectory, oldFileName);
 
-            this.RecordPathChange(oldFullPath, pathExists: false);
+                this.RecordPathChange(oldFullPath, pathExists: false);
+            }
         }
 
         private void RecordPathChange(string path, bool pathExists)
