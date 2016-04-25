@@ -133,12 +133,12 @@ Good question. The answer depends on whether you installed SyncTrayzor using the
 
 SyncTrayzor will install itself into `C:\Program Files\SyncTrayzor`. 
 
-By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayor`, and let Syncthing use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
+By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayor`, and let Syncthing use its default folder for its database, which is `C:\Users\<You>\AppData\Roaming\Syncthing`.
 It will also create a registry key at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor` the first time that it is run, which will let it start when you log in.
 
 You can delete this registry key by unchecking "Automatically start on login" in the settings.
 
-If you uncheck "Use Syncthing's default database location" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing` for its database.
+If you uncheck "Use Syncthing's default database location" in the settings, then SyncTrayzor will tell Syncthing to use `C:\Users\<You>\AppData\Roaming\SyncTrayzor\syncthing` for its database.
 This is useful if you want to keep the copy of Syncthing managed by SyncTrayzor separate from another copy running on your machine.
 
 The auto-update mechanism may download updates to `%TEMP%\SyncTrayzor`.
@@ -148,9 +148,9 @@ This location is periodically cleared out (once every few days).
 
 SyncTrayzor will put its own configuration in `SyncTrayzorPortable\data`, and tell Syncthing to use `SyncTrayzorPortable\data\syncthing` for its database.
 This means that, when manually upgrading, you can simply move the 'data' folder over to move all your settings, and database.
-If you check "Use Syncthing's default database location" in the settings (on the Syncthing tab), then Syncthing will use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
+If you check "Use Syncthing's default database location" in the settings (on the Syncthing tab), then Syncthing will use its default folder for its database, which is `C:\Users\<You>\AppData\Roaming\Syncthing`.
 
-If you're moving from "raw" Syncthing to SyncTrayzor, you'll either want to check this setting or move/copy the contents of `C:\Users\<You>\AppData\Local\Syncthing` into `data\syncthing`.
+If you're moving from "raw" Syncthing to SyncTrayzor, you'll either want to check this setting or move/copy the contents of `C:\Users\<You>\AppData\Roaming\Syncthing` into `data\syncthing`.
 
 The portable version won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
 
@@ -162,13 +162,13 @@ Using Syncthing beta releases
 
 SyncTrayzor keeps two copies of syncthing.exe.
 
-The copy that is executed is at `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing.exe`.
+The copy that is executed is at `C:\Users\<You>\AppData\Roaming\SyncTrayzor\syncthing.exe`.
 This one is writable by the user, allowing Syncthing to auto-upgrade.
 
 There's also a backup copy in `C:\Program Files\SyncTrayzor\syncthing.exe`.
-This one is copied to `C:\Users\<You>\AppData\Local\SyncTrayzor\syncthing.exe` if that one does not exist (SyncTrayzor has never been run before for that user, for example).
+This one is copied to `C:\Users\<You>\AppData\Roaming\SyncTrayzor\syncthing.exe` if that one does not exist (SyncTrayzor has never been run before for that user, for example).
 
-If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace the `syncthing.exe` in `C:\Users\<You>\AppData\Local\SyncTrayzor`.
+If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace the `syncthing.exe` in `C:\Users\<You>\AppData\Roaming\SyncTrayzor`.
 
 
 ### Portable
