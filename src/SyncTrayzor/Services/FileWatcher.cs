@@ -241,7 +241,10 @@ namespace SyncTrayzor.Services
 
             // https://msdn.microsoft.com/en-us/library/dd465121.aspx
             if (!path.StartsWith(this.Directory, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.Warn($"Ignoring change to {path}, as it isn't in {this.Directory}");
                 return;
+            }
 
             var subPath = path.Substring(this.Directory.Length);
 
