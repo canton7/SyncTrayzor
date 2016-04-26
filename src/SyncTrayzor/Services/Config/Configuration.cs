@@ -72,6 +72,7 @@ namespace SyncTrayzor.Services.Config
         public bool ConflictResolverDeletesToRecycleBin { get; set; }
         public bool PauseDevicesOnMeteredNetworks { get; set; }
         public bool HaveDonated { get; set; }
+        public IconAnimationMode IconAnimationMode { get; set; }
 
         public Configuration()
         {
@@ -109,6 +110,7 @@ namespace SyncTrayzor.Services.Config
             this.ConflictResolverDeletesToRecycleBin = true;
             this.PauseDevicesOnMeteredNetworks = true;
             this.HaveDonated = false;
+            this.IconAnimationMode = IconAnimationMode.DataTransferring;
         }
 
         public Configuration(Configuration other)
@@ -145,6 +147,7 @@ namespace SyncTrayzor.Services.Config
             this.ConflictResolverDeletesToRecycleBin = other.ConflictResolverDeletesToRecycleBin;
             this.PauseDevicesOnMeteredNetworks = other.PauseDevicesOnMeteredNetworks;
             this.HaveDonated = other.HaveDonated;
+            this.IconAnimationMode = other.IconAnimationMode;
         }
 
         public override string ToString()
@@ -162,7 +165,7 @@ namespace SyncTrayzor.Services.Config
                 $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
                 $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+
                 $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks} "+
-                $"HaveDonated={this.HaveDonated}>";
+                $"HaveDonated={this.HaveDonated} IconAnimationMode={this.IconAnimationMode}>";
         }
     }
 }
