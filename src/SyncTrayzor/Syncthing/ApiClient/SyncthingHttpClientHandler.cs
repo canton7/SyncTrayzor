@@ -19,12 +19,6 @@ namespace SyncTrayzor.Syncthing.ApiClient
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var response = await base.SendAsync(request, cancellationToken);
-
-            // We're getting null bodies from somewhere: try and figure out where
-            var responseString = await response.Content.ReadAsStringAsync();
-            if (String.IsNullOrWhiteSpace(responseString))
-                logger.Warn($"Null response received from {request.RequestUri}. {response}. Content (again): {response.Content.ReadAsStringAsync()}");
-
             if (response.IsSuccessStatusCode)
                 logger.Trace(() => response.Content.ReadAsStringAsync().Result.Trim());
             else
