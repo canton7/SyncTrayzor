@@ -239,7 +239,8 @@ namespace SyncTrayzor.Services
             if (pathExists)
                 path = this.GetLongPathName(path);
 
-            if (!path.StartsWith(this.Directory))
+            // https://msdn.microsoft.com/en-us/library/dd465121.aspx
+            if (!path.StartsWith(this.Directory, StringComparison.OrdinalIgnoreCase))
                 return;
 
             var subPath = path.Substring(this.Directory.Length);

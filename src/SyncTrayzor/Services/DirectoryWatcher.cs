@@ -117,7 +117,7 @@ namespace SyncTrayzor.Services
             var result = new List<string>();
             for (int i = 0; i < Math.Min(parts1.Length, parts2.Length); i++)
             {
-                if (parts1[i] != parts2[i])
+                if (!String.Equals(parts1[i], parts2[i], StringComparison.OrdinalIgnoreCase))
                     break;
 
                 result.Add(parts1[i]);
