@@ -236,7 +236,7 @@ namespace SyncTrayzor.Services
             // There's also a chance that the file no longer exists. Catch that exception.
             // If a short path is renamed or deleted, then we do our best with it in a bit, by removing the short bits
             // If short path segments are used in the base directory path in this case, tough.
-            if (pathExists)
+            if (pathExists && path.Contains("~"))
                 path = this.GetLongPathName(path);
 
             // https://msdn.microsoft.com/en-us/library/dd465121.aspx
