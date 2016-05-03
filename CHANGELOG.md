@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.1.9
+------
+
+ - Add support for Syncthing v0.13 (#250)
+ - Add setting to control tray icon animation (#255)
+ - Don't refresh browser when un-minimizing (#248)
+ - Don't crash if the filesystem watcher sees a change at the drive root (#253)
+ - Handle filesystem notifications when Syncthing is configured with a path of the wrong case (#256)
+ - Clarify wording when device paused by metered network (#249)
+
 v1.1.8
 ------
 

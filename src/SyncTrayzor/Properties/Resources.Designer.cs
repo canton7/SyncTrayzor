@@ -196,7 +196,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following {0:p:device has|devices have} been paused because {0:p:it|they} connected to a metered network: {0:l:{}|, }..
+        ///   Looks up a localized string similar to The following {0:p:device has|devices have} been paused because {0:p:it|they} connected using a metered network: {0:l:{}|, }..
         /// </summary>
         public static string BarAlertsView_PausedDevicesFromMetering_AlertText {
             get {
@@ -801,6 +801,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Animate tray icon:.
+        /// </summary>
+        public static string SettingsView_AnimateTrayIcon {
+            get {
+                return ResourceManager.GetString("SettingsView_AnimateTrayIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close to tray.
         /// </summary>
         public static string SettingsView_CloseToTray {
@@ -1233,6 +1242,33 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Title {
             get {
                 return ResourceManager.GetString("SettingsView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Any data transfer.
+        /// </summary>
+        public static string SettingsView_TrayIconAnimation_DataTransferring {
+            get {
+                return ResourceManager.GetString("SettingsView_TrayIconAnimation_DataTransferring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Never.
+        /// </summary>
+        public static string SettingsView_TrayIconAnimation_Disabled {
+            get {
+                return ResourceManager.GetString("SettingsView_TrayIconAnimation_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Synchronizing.
+        /// </summary>
+        public static string SettingsView_TrayIconAnimation_Syncing {
+            get {
+                return ResourceManager.GetString("SettingsView_TrayIconAnimation_Syncing", resourceCulture);
             }
         }
         

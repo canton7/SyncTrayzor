@@ -2,6 +2,7 @@
 using SyncTrayzor.Pages;
 using SyncTrayzor.Pages.Settings;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.Syncthing;
 using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Utils;
@@ -18,6 +19,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IAlertsManager alertsManager;
+        private readonly IConfigurationProvider configurationProvider;
 
         public bool Visible { get; set; }
         public bool MainWindowVisible { get; set; }
@@ -38,13 +40,16 @@ namespace SyncTrayzor.NotifyIcon
 
         public bool SyncthingSyncing { get; private set; }
 
+        private IconAnimationMode iconAnimationmode;
+
         public NotifyIconViewModel(
             IWindowManager windowManager,
             ISyncthingManager syncthingManager,
             Func<SettingsViewModel> settingsViewModelFactory,
             IProcessStartProvider processStartProvider,
             IAlertsManager alertsManager,
-            FileTransfersTrayViewModel fileTransfersViewModel)
+            FileTransfersTrayViewModel fileTransfersViewModel,
+            IConfigurationProvider configurationProvider)
         {
             this.windowManager = windowManager;
             this.syncthingManager = syncthingManager;
@@ -52,14 +57,20 @@ namespace SyncTrayzor.NotifyIcon
             this.processStartProvider = processStartProvider;
             this.alertsManager = alertsManager;
             this.FileTransfersViewModel = fileTransfersViewModel;
+            this.configurationProvider = configurationProvider;
 
             this.syncthingManager.StateChanged += this.StateChanged;
             this.SyncthingState = this.syncthingManager.State;
 
             this.syncthingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
             this.syncthingManager.DataLoaded += this.DataLoaded;
+            this.syncthingManager.Folders.SyncStateChanged += this.FolderSyncStateChanged;
+
 
             this.alertsManager.AlertsStateChanged += this.AlertsStateChanged;
+
+            this.configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
+            this.iconAnimationmode = this.configurationProvider.Load().IconAnimationMode;
         }
 
         private void StateChanged(object sender, SyncthingStateChangedEventArgs e)
@@ -71,8 +82,11 @@ namespace SyncTrayzor.NotifyIcon
 
         private void TotalConnectionStatsChanged(object sender, ConnectionStatsChangedEventArgs e)
         {
-            var stats = e.TotalConnectionStats;
-            this.SyncthingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
+            if (this.iconAnimationmode == IconAnimationMode.DataTransferring)
+            {
+                var stats = e.TotalConnectionStats;
+                this.SyncthingSyncing = stats.InBytesPerSecond > 0 || stats.OutBytesPerSecond > 0;
+            }
         }
 
         private void DataLoaded(object sender, EventArgs e)
@@ -82,10 +96,26 @@ namespace SyncTrayzor.NotifyIcon
                     .OrderBy(x => x.FolderId));
         }
 
+        private void FolderSyncStateChanged(object sender, FolderSyncStateChangedEventArgs e)
+        {
+            if (this.iconAnimationmode == IconAnimationMode.Syncing)
+            {
+                var anySyncing = this.syncthingManager.Folders.FetchAll().Any(x => x.SyncState == FolderSyncState.Syncing);
+                this.SyncthingSyncing = anySyncing;
+            }
+        }
+
         private void AlertsStateChanged(object sender, EventArgs e)
         {
             this.NotifyOfPropertyChange(nameof(this.SyncthingDevicesPaused));
             this.NotifyOfPropertyChange(nameof(this.SyncthingWarning));
+        }
+
+        private void ConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+        {
+            this.iconAnimationmode = e.NewConfiguration.IconAnimationMode;
+            // Reset, just in case
+            this.SyncthingSyncing = false;
         }
 
         public void DoubleClick()
@@ -144,8 +174,11 @@ namespace SyncTrayzor.NotifyIcon
 
             this.syncthingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
             this.syncthingManager.DataLoaded -= this.DataLoaded;
+            this.syncthingManager.Folders.SyncStateChanged -= this.FolderSyncStateChanged;
 
             this.alertsManager.AlertsStateChanged -= this.AlertsStateChanged;
+
+            this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
         }
     }
 

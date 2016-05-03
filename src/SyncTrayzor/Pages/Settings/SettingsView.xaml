@@ -65,6 +65,10 @@
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceOrFolderRejectedBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceOrFolderRejectedBalloons}"/>
                                 <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
+                                    <Label Padding="0,0,5,0" Target="{Binding ElementName=IconAnimationModeSelect}" VerticalAlignment="Center" Content="{l:Loc SettingsView_AnimateTrayIcon}"/>
+                                    <ComboBox x:Name="IconAnimationModeSelect" ItemsSource="{Binding IconAnimationModes}" SelectedValuePath="Value" SelectedValue="{Binding IconAnimationMode.Value}"/>
+                                </StackPanel>
                             </DockPanel>
                         </GroupBox>
 
@@ -129,8 +133,8 @@
                                                 Content="{l:Loc SettingsView_SyncthingUseDefaultHome}"
                                                 ToolTip="{l:Loc SettingsView_SyncthingUseDefaultHome_ToolTip}"/>
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
-                                    <TextBlock Margin="0,0,5,0" Text="{l:Loc SettingsView_Syncthing_ProcessPriority}"/>
-                                    <ComboBox ItemsSource="{Binding PriorityLevels}" SelectedValuePath="Value" SelectedValue="{Binding SyncthingPriorityLevel.Value}"/>
+                                    <Label Padding="0,0,5,0" Target="{Binding ElementName=PropertyLevelsSelect}" VerticalAlignment="Center" Content="{l:Loc SettingsView_Syncthing_ProcessPriority}"/>
+                                    <ComboBox x:Name="PropertyLevelsSelect" ItemsSource="{Binding PriorityLevels}" SelectedValuePath="Value" SelectedValue="{Binding SyncthingPriorityLevel.Value}"/>
                                 </StackPanel>
 
                                 <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingAddress}" Content="{l:Loc SettingsView_SyncthingAddress}" ToolTip="{StaticResource AddressOverride}"/>

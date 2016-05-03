@@ -119,11 +119,6 @@ namespace SyncTrayzor.Pages
             this.RefreshBrowser();
         }
 
-        protected override void OnActivate()
-        {
-            this.RefreshBrowser();
-        }
-
         private void InitializeBrowser(ChromiumWebBrowser webBrowser)
         {
             webBrowser.RequestHandler = this;

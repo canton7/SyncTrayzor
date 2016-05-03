@@ -18,7 +18,7 @@ namespace PortableInstaller
             // args[4] is a new parameter containing arguments to args[3] (path to restart application)
 
             RecycleBinDeleter.Logger = s => Log("!! " + s);
-            if (args.Length < 4 || args.Length > 5)
+            if (args.Length < 4)
             {
                 Console.WriteLine("You should not invoke this executable directly. It is used as part of the automatic upgrade process for portable installations.");
                 Console.ReadKey();
@@ -28,8 +28,36 @@ namespace PortableInstaller
             var destinationPath = args[0];
             var sourcePath = args[1];
             var waitForPid = Int32.Parse(args[2]);
-            var pathToRestartApplication = args[3];
-            var pathToRestartApplicationParameters = (args.Length == 5) ? args[4] : String.Empty;
+
+            // Right, so we can be called in a variety of painful ways, depending on the version of SyncTrayzor
+            // we're upgrading from. Possible options:
+            // 1. { 'path\to\SyncTrayzor.exe' }
+            // 2. { 'path\to\SyncTrayzor.exe -minimized' }
+            // 3. { 'path', 'with', 'space\to\SyncTrayzor.exe -minimized' }
+            // 4. { 'path with space\to\SyncTrayzor.exe' }
+            // 5. { 'path with space\to\SyncTrayzor.exe', '-minimized' }
+
+            var pathToRestartParts = args.Skip(3).ToList();
+            var pathToRestartApplicationParameters = String.Empty;
+
+            // Does the last element end with '-minimized'? Strip it off, and add it as an element at the end
+            var lastElement = pathToRestartParts.Last();
+            if (lastElement.EndsWith(" -minimized"))
+            {
+                pathToRestartParts[pathToRestartParts.Count - 1] = lastElement.Substring(0, lastElement.Length - " -minimized".Length);
+                pathToRestartParts.Add("-minimized");
+            }
+
+            // Is the last element "-minimized"? Cut it off.
+            if (pathToRestartParts.Last() == "-minimized")
+            {
+                pathToRestartApplicationParameters = "-minimized";
+                pathToRestartParts.RemoveAt(pathToRestartParts.Count - 1);
+            }
+
+            // Join the rest together
+            var pathToRestartApplication = String.Join(" ", pathToRestartParts);
+
             var destinationPathParent = Path.GetDirectoryName(destinationPath);
 
             try

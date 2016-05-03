@@ -58,7 +58,6 @@ namespace SyncTrayzor.Syncthing
         void KillAllSyncthingProcesses();
 
         Task ScanAsync(string folderId, string subPath);
-        Task ReloadIgnoresAsync(string folderId);
     }
 
     public class SyncthingManager : ISyncthingManager
@@ -178,7 +177,7 @@ namespace SyncTrayzor.Syncthing
             this.connectionsWatcher = connectionsWatcherFactory.CreateConnectionsWatcher(this.apiClient);
             this.connectionsWatcher.TotalConnectionStatsChanged += (o, e) => this.OnTotalConnectionStatsChanged(e.TotalConnectionStats);
 
-            this._folders = new SyncthingFolderManager(this.apiClient, this.eventWatcher, TimeSpan.FromMinutes(10));
+            this._folders = new SyncthingFolderManager(this.apiClient, this.eventWatcher);
             this._devices = new SyncthingDeviceManager(this.apiClient, this.eventWatcher, this.Capabilities);
             this._transferHistory = new SyncthingTransferHistory(this.eventWatcher, this._folders);
             this._debugFacilities = new SyncthingDebugFacilitiesManager(this.apiClient, this.Capabilities);
@@ -277,11 +276,6 @@ namespace SyncTrayzor.Syncthing
         public Task ScanAsync(string folderId, string subPath)
         {
             return this.apiClient.Value.ScanAsync(folderId, subPath);
-        }
-
-        public Task ReloadIgnoresAsync(string folderId)
-        {
-            return this._folders.ReloadIgnoresAsync(folderId);
         }
 
         private void SetState(SyncthingState state)

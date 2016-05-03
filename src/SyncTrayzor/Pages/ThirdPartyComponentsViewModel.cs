@@ -37,11 +37,20 @@ namespace SyncTrayzor.Pages
                 new ThirdPartyComponent()
                 {
                     Name = "RestEase",
-                    Description = "Easy-to-use typesafe REST API client library, which is simple and customisableT",
+                    Description = "Easy-to-use typesafe REST API client library, which is simple and customisable",
                     Homepage = "https://github.com/canton7/RestEase",
                     License = "MIT",
                     Notes = "Used for making REST API request to Syncthing and Github",
                     LicenseText = this.LoadLicense("RestEase.txt")
+                },
+                new ThirdPartyComponent()
+                {
+                    Name = "NLog",
+                    Description = "NLog is a free logging platform for .NET, Xamarin, Silverlight and Windows Phone with rich log routing and management capabilities",
+                    Homepage = "http://nlog-project.org/",
+                    License = "BSD 3-clause",
+                    Notes = "Used for logging",
+                    LicenseText = this.LoadLicense("NLog.txt")
                 },
                 new ThirdPartyComponent()
                 {

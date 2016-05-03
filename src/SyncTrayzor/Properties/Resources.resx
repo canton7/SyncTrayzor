@@ -875,7 +875,7 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Please choose the version of the file you want to keep. The other versions will be deleted.</value>
   </data>
   <data name="BarAlertsView_PausedDevicesFromMetering_AlertText" xml:space="preserve">
-    <value>The following {0:p:device has|devices have} been paused because {0:p:it|they} connected to a metered network: {0:l:{}|, }.</value>
+    <value>The following {0:p:device has|devices have} been paused because {0:p:it|they} connected using a metered network: {0:l:{}|, }.</value>
     <comment>{0}: List of paused devices</comment>
   </data>
   <data name="String1" xml:space="preserve">
@@ -923,5 +923,17 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="TrayIcon_Balloon_FolderRejected_Title" xml:space="preserve">
     <value>Share folder?</value>
+  </data>
+  <data name="SettingsView_AnimateTrayIcon" xml:space="preserve">
+    <value>Animate tray icon:</value>
+  </data>
+  <data name="SettingsView_TrayIconAnimation_DataTransferring" xml:space="preserve">
+    <value>Any data transfer</value>
+  </data>
+  <data name="SettingsView_TrayIconAnimation_Disabled" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="SettingsView_TrayIconAnimation_Syncing" xml:space="preserve">
+    <value>Synchronizing</value>
   </data>
 </root>

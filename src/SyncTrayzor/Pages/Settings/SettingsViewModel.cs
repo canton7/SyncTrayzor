@@ -64,6 +64,9 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
         public SettingItem<bool> ShowDeviceOrFolderRejectedBalloons { get; }
 
+        public BindableCollection<LabelledValue<IconAnimationMode>> IconAnimationModes { get; }
+        public SettingItem<IconAnimationMode> IconAnimationMode { get; }
+
         public SettingItem<bool> StartSyncthingAutomatically { get; }
 
         public BindableCollection<LabelledValue<SyncthingPriorityLevel>> PriorityLevels { get; }
@@ -128,6 +131,14 @@ namespace SyncTrayzor.Pages.Settings
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
             this.ShowDeviceOrFolderRejectedBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceOrFolderRejectedBalloons);
+
+            this.IconAnimationModes = new BindableCollection<LabelledValue<IconAnimationMode>>()
+            {
+                LabelledValue.Create(Resources.SettingsView_TrayIconAnimation_DataTransferring, Services.Config.IconAnimationMode.DataTransferring),
+                LabelledValue.Create(Resources.SettingsView_TrayIconAnimation_Syncing, Services.Config.IconAnimationMode.Syncing),
+                LabelledValue.Create(Resources.SettingsView_TrayIconAnimation_Disabled, Services.Config.IconAnimationMode.Disabled),
+            };
+            this.IconAnimationMode = this.CreateBasicSettingItem(x => x.IconAnimationMode);
 
             this.StartSyncthingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
             this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);
