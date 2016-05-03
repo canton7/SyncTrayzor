@@ -35,5 +35,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
         DeviceResumed,
         LoginAttempt,
         ListenAddressChanged,
+        RelayStateChanged,
+        ExternalPortMappingChanged,
     }
 }
