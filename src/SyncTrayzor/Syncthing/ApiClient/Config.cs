@@ -7,7 +7,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
 {
     public class ConfigFolderDevice : IEquatable<ConfigFolderDevice>
     {
-        [JsonProperty("DeviceID")]
+        [JsonProperty("deviceId")]
         public string DeviceId { get; set; }
 
         public bool Equals(ConfigFolderDevice other)
@@ -23,19 +23,19 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
     public class ConfigFolder : IEquatable<ConfigFolder>
     {
-        [JsonProperty("ID")]
+        [JsonProperty("id")]
         public string ID { get; set; }
 
-        [JsonProperty("Path")]
+        [JsonProperty("path")]
         public string Path { get; set; }
 
-        [JsonProperty("Devices")]
+        [JsonProperty("devices")]
         public List<ConfigFolderDevice> Devices { get; set; }
 
-        [JsonProperty("ReadOnly")]
-        public bool ReadOnly { get; set; }
+        [JsonProperty("type")]
+        public bool Type { get; set; }
 
-        [JsonProperty("RescanIntervalS")]
+        [JsonProperty("rescanIntervalS")]
         public long RescanIntervalSeconds { get; set; }
 
         public TimeSpan RescanInterval
@@ -53,37 +53,37 @@ namespace SyncTrayzor.Syncthing.ApiClient
                 this.ID == other.ID &&
                 this.Path == other.Path &&
                 this.Devices.SequenceEqual(other.Devices) &&
-                this.ReadOnly == other.ReadOnly &&
+                this.Type == other.Type &&
                 this.RescanIntervalSeconds == other.RescanIntervalSeconds &&
                 this.Invalid == other.Invalid;
         }
 
         public override string ToString()
         {
-            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] readonly={this.ReadOnly} rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
+            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] type={this.Type} rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
         }
     }
 
     public class ConfigDevice : IEquatable<ConfigDevice>
     {
-        [JsonProperty("DeviceID")]
+        [JsonProperty("deviceID")]
         public string DeviceID { get; set; }
 
-        [JsonProperty("Name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("Addresses")]
+        [JsonProperty("addresses")]
         public List<string> Addresses { get; set; }
 
         // Apparently this can be 'never'
         // We don't use it, so commenting until it decided what data type it wants to be
-        //[JsonProperty("Compression")]
-        //public bool Compression { get; set; }
+        //[JsonProperty("compression")]
+        //public string Compression { get; set; }
 
-        [JsonProperty("CertName")]
+        [JsonProperty("certName")]
         public string CertName { get; set; }
 
-        [JsonProperty("Introducer")]
+        [JsonProperty("introducer")]
         public bool IsIntroducer { get; set; }
 
         public bool Equals(ConfigDevice other)
@@ -104,13 +104,13 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
     public class Config : IEquatable<Config>
     {
-        [JsonProperty("Version")]
+        [JsonProperty("version")]
         public long Version { get; set; }
 
-        [JsonProperty("Folders")]
+        [JsonProperty("folders")]
         public List<ConfigFolder> Folders { get; set; }
 
-        [JsonProperty("Devices")]
+        [JsonProperty("devices")]
         public List<ConfigDevice> Devices { get; set; }
 
         public bool Equals(Config other)
