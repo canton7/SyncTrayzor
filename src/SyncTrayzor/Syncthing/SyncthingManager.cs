@@ -447,8 +447,8 @@ namespace SyncTrayzor.Syncthing
 
             // There's a race where Syncthing died, and so we kill the API clients and set it to null,
             // but we still end up here, because threading.
+            var apiClient = this.apiClient.Value;
             cancellationToken.ThrowIfCancellationRequested();
-            var apiClient = this.apiClient.GetAsserted();
 
             var syncthingVersionTask = apiClient.FetchVersionAsync();
             var systemInfoTask = apiClient.FetchSystemInfoAsync();
@@ -477,7 +477,9 @@ namespace SyncTrayzor.Syncthing
 
         private async Task LoadConfigDataAsync(string tilde, bool isReload, CancellationToken cancellationToken)
         {
-            var apiClient = this.apiClient.GetAsserted();
+            // We can end up here just as Syncthing is restarting
+            var apiClient = this.apiClient.Value;
+            cancellationToken.ThrowIfCancellationRequested();
 
             var config = await apiClient.FetchConfigAsync();
             cancellationToken.ThrowIfCancellationRequested();
