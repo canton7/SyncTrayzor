@@ -878,9 +878,6 @@ Do you want to restart SyncTrayzor now?</value>
     <value>The following {0:p:device has|devices have} been paused because {0:p:it|they} connected using a metered network: {0:l:{}|, }.</value>
     <comment>{0}: List of paused devices</comment>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="SettingsView_MeteredNetworks" xml:space="preserve">
     <value>Pause devices which connect over a metered network</value>
   </data>
