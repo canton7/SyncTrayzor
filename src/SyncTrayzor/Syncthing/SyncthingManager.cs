@@ -346,19 +346,20 @@ namespace SyncTrayzor.Syncthing
             catch (ApiException e)
             {
                 var msg = $"RestEase Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
-                logger.Error(msg, e);
+                logger.Error(e, msg);
                 throw new SyncthingDidNotStartCorrectlyException(msg, e);
             }
             catch (HttpRequestException e)
             {
                 var msg = $"HttpRequestException while starting Syncthing: {e.Message}";
-                logger.Error(msg, e);
+                logger.Error(e, msg);
                 throw new SyncthingDidNotStartCorrectlyException(msg, e);
             }
             catch (Exception e)
             {
-                logger.Error(e, "Error starting Syncthing API");
-                throw;
+                var msg = $"Unexpected exception while starting Syncthing: {e.Message}";
+                logger.Error(e, msg);
+                throw new SyncthingDidNotStartCorrectlyException(msg, e);
             }
         }
 
