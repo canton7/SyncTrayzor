@@ -200,7 +200,10 @@ namespace SyncTrayzor.Services.UpdateManagement
                     return;
 
                 if (!await variantHandler.TryHandleUpdateAvailableAsync(checkResult))
+                {
+                    logger.Info("Can't update, as TryHandleUpdateAvailableAsync returned false");
                     return;
+                }
 
                 VersionPromptResult promptResult;
                 if (this.applicationState.HasMainWindow)
@@ -211,7 +214,10 @@ namespace SyncTrayzor.Services.UpdateManagement
                 {
                     // If another application is fullscreen, don't bother
                     if (this.userActivityMonitor.IsWindowFullscreen())
+                    {
+                        logger.Info("Another application was fullscreen, so we didn't prompt the user");
                         return;
+                    }
 
                     try
                     {

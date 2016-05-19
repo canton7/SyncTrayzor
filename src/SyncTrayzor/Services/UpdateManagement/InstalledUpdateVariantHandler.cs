@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Threading.Tasks;
 
 namespace SyncTrayzor.Services.UpdateManagement
@@ -6,6 +7,7 @@ namespace SyncTrayzor.Services.UpdateManagement
     public class InstalledUpdateVariantHandler : IUpdateVariantHandler
     {
         private const string updateDownloadFileName = "SyncTrayzorUpdate-{0}.exe";
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IUpdateDownloader updateDownloader;
         private readonly IProcessStartProvider processStartProvider;
@@ -37,6 +39,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             }
             else
             {
+                logger.Info($"Can't auto-install, as DownloadUrl is {checkResult.DownloadUrl} and sha512sumDownloadUrl is {checkResult.Sha512sumDownloadUrl}");
                 // Can continue, but not auto-install
                 this.CanAutoInstall = false;
 

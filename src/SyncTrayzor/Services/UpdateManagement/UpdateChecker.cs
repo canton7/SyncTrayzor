@@ -119,10 +119,16 @@ namespace SyncTrayzor.Services.UpdateManagement
                 return null;
 
             if (results.NewVersion <= this.applicationVersion)
+            {
+                logger.Warn($"Found update, but it's <= the current application version ({this.applicationVersion}), so ignoring");
                 return null;
+            }
 
             if (latestIgnoredVersion != null && results.NewVersion <= latestIgnoredVersion)
+            {
+                logger.Info($"Found update, but it's <= the latest ignored version ({latestIgnoredVersion}), so ignoring");
                 return null;
+            }
 
             return results;
         }

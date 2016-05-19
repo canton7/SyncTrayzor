@@ -37,5 +37,6 @@ namespace SyncTrayzor.Syncthing.ApiClient
         ListenAddressChanged,
         RelayStateChanged,
         ExternalPortMappingChanged,
+        ListenAddressesChanged,
     }
 }

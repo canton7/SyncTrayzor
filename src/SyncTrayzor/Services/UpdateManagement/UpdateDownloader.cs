@@ -106,6 +106,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 bool downloaded = await this.TryDownloadToFileAsync(downloadPath, url);
                 if (!downloaded)
                 {
+                    logger.Warn("Problem downloading the file. Aborting");
                     // EXIT POINT
                     return Tuple.Create(false, default(T));
                 }
@@ -123,6 +124,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 }
 
                 // EXIT POINT
+                logger.Info($"Downloaded validation result: {downloadedValidationResult}");
                 return downloadedValidationResult;
             }
             catch (Exception e)

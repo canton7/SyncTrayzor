@@ -108,6 +108,8 @@ namespace SyncTrayzor.Pages
                 {
                     settings.CefCommandLineArgs.Add("disable-gpu", "1");
                     settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
+                    settings.CefCommandLineArgs.Add("disable-cache", "1");
+                    settings.CefCommandLineArgs.Add("disable-application-cache", "1");
                 }
 
                 Cef.Initialize(settings);
@@ -180,7 +182,10 @@ namespace SyncTrayzor.Pages
         {
             this.Location = "about:blank";
             if (this.syncthingManager.State == SyncthingState.Running)
+            {
                 this.Location = this.GetSyncthingAddress().ToString();
+                //this.WebBrowser?.Reload(ignoreCache: true);
+            }
         }
 
         public void ZoomIn()

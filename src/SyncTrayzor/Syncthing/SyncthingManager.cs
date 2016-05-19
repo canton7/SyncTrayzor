@@ -346,19 +346,20 @@ namespace SyncTrayzor.Syncthing
             catch (ApiException e)
             {
                 var msg = $"RestEase Error. StatusCode: {e.StatusCode}. Content: {e.Content}. Reason: {e.ReasonPhrase}";
-                logger.Error(msg, e);
+                logger.Error(e, msg);
                 throw new SyncthingDidNotStartCorrectlyException(msg, e);
             }
             catch (HttpRequestException e)
             {
                 var msg = $"HttpRequestException while starting Syncthing: {e.Message}";
-                logger.Error(msg, e);
+                logger.Error(e, msg);
                 throw new SyncthingDidNotStartCorrectlyException(msg, e);
             }
             catch (Exception e)
             {
-                logger.Error(e, "Error starting Syncthing API");
-                throw;
+                var msg = $"Unexpected exception while starting Syncthing: {e.Message}";
+                logger.Error(e, msg);
+                throw new SyncthingDidNotStartCorrectlyException(msg, e);
             }
         }
 
@@ -447,8 +448,8 @@ namespace SyncTrayzor.Syncthing
 
             // There's a race where Syncthing died, and so we kill the API clients and set it to null,
             // but we still end up here, because threading.
+            var apiClient = this.apiClient.Value;
             cancellationToken.ThrowIfCancellationRequested();
-            var apiClient = this.apiClient.GetAsserted();
 
             var syncthingVersionTask = apiClient.FetchVersionAsync();
             var systemInfoTask = apiClient.FetchSystemInfoAsync();
@@ -477,7 +478,9 @@ namespace SyncTrayzor.Syncthing
 
         private async Task LoadConfigDataAsync(string tilde, bool isReload, CancellationToken cancellationToken)
         {
-            var apiClient = this.apiClient.GetAsserted();
+            // We can end up here just as Syncthing is restarting
+            var apiClient = this.apiClient.Value;
+            cancellationToken.ThrowIfCancellationRequested();
 
             var config = await apiClient.FetchConfigAsync();
             cancellationToken.ThrowIfCancellationRequested();
