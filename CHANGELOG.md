@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v1.1.10
+-------
+
+ - Ship with Syncthing 0.13 by default (only affects new users)
+ - Fix race condition when reloading config (#259)
+ - Don't show 'Finished Syncthing' halfway through a busy sync (#264)
+ - Don't crash when right-clicking tray icon early in startup process (#257)
+ - Attempt to fix issue where UI half-renders after update to Syncthing 0.13 (#262)
+
 v1.1.9
 ------
 
