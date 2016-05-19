@@ -123,6 +123,7 @@ namespace SyncTrayzor.Pages
         {
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
+            webBrowser.BrowserSettings.ApplicationCache = CefState.Disabled;
             // Don't enable touch scrolling yet - it's still buggy, and causes tapping on links to fail
             //webBrowser.IsManipulationEnabled = true;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
