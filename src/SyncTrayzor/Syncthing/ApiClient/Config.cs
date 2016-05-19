@@ -32,8 +32,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("devices")]
         public List<ConfigFolderDevice> Devices { get; set; }
 
-        [JsonProperty("type")]
-        public bool Type { get; set; }
+        // This has changed type, and we don't use it anyway
+        //[JsonProperty("type")]
+        //public bool Type { get; set; }
 
         [JsonProperty("rescanIntervalS")]
         public long RescanIntervalSeconds { get; set; }
@@ -53,14 +54,14 @@ namespace SyncTrayzor.Syncthing.ApiClient
                 this.ID == other.ID &&
                 this.Path == other.Path &&
                 this.Devices.SequenceEqual(other.Devices) &&
-                this.Type == other.Type &&
+                //this.Type == other.Type &&
                 this.RescanIntervalSeconds == other.RescanIntervalSeconds &&
                 this.Invalid == other.Invalid;
         }
 
         public override string ToString()
         {
-            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] type={this.Type} rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
+            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
         }
     }
 
