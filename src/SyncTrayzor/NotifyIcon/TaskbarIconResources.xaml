@@ -17,7 +17,7 @@
 
     <tb:TaskbarIcon x:Key="TaskbarIcon" x:Name="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                    DoubleClickCommand="{s:Action DoubleClick}"
+                    DoubleClickCommand="{s:Action DoubleClick, ActionNotFound=Disable}"
                     MenuActivation="RightClick">
         <tb:TaskbarIcon.TrayPopup>
             <Popup StaysOpen="False" Placement="Relative" HorizontalOffset="-150" VerticalOffset="100" Width="300" PlacementTarget="{Binding ElementName=TaskbarIcon}" AllowsTransparency="True">
