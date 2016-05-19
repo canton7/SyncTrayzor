@@ -198,7 +198,7 @@ namespace :portable do
           cp_to_portable(portable_dir, arch_config.syncthing_binaries[PORTABLE_SYNCTHING_VERSION], 'syncthing.exe')
         end
 
-        sh %Q{"#{SZIP}" a -tzip -mx=7 #{arch_config.portable_output_file} #{portable_dir}}
+        sh %Q{"#{SZIP}" a -tzip -mx=7 -y #{arch_config.portable_output_file} #{portable_dir}}
       end
     end
   end
@@ -301,7 +301,7 @@ namespace :syncthing do
           sh CHECKSUM_UTIL_EXE, 'verify', File.join(tmp, 'sha1sum.txt.asc'), 'sha1', SYNCTHING_RELEASES_CERT, download_file
 
           Dir.chdir(tmp) do
-            sh %Q{"#{SZIP}" e #{File.basename(download_file)}}
+            sh %Q{"#{SZIP}" e -y #{File.basename(download_file)}}
           end
 
           cp File.join(tmp, 'syncthing.exe'), File.join(arch_config.installer_dir, 'syncthing.exe')
