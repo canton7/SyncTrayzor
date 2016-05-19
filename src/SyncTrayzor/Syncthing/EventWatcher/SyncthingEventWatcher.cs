@@ -83,14 +83,17 @@ namespace SyncTrayzor.Syncthing.EventWatcher
 
             logger.Debug("Received {0} events", events.Count);
 
-            // Need to synchronously update the lastEventId
-            var oldLastEventId = this.lastEventId;
-            this.lastEventId = events[events.Count - 1].Id;
+            if (events.Count > 0)
+            {
+                // Assume we won't skip events in the middle of a response, just before it
+                bool skippedEvents = (this.lastEventId > 0 && (events[0].Id - this.lastEventId) != 1);
+                this.lastEventId = events[events.Count - 1].Id;
 
-            this.ProcessEvents(oldLastEventId, events, cancellationToken);
+                this.ProcessEvents(skippedEvents, events, cancellationToken);
+            }
         }
 
-        private async void ProcessEvents(int startingEventId, List<Event> events, CancellationToken cancellationToken)
+        private async void ProcessEvents(bool skippedEvents, List<Event> events, CancellationToken cancellationToken)
         {
             // Shove off the processing to another thread - means we can get back to polling quicker
             // However the task factory we use has a limited concurrency level of 1, so we won't process events out-of-order
@@ -100,19 +103,14 @@ namespace SyncTrayzor.Syncthing.EventWatcher
             {
                 return this.taskFactory.StartNew(() =>
                 {
-                    bool eventsSkipped = false;
-
                     // We receive events in ascending ID order
                     foreach (var evt in events)
                     {
-                        if (startingEventId > 0 && (evt.Id - startingEventId) != 1)
-                            eventsSkipped = true;
-                        startingEventId = evt.Id;
                         logger.Debug(evt);
                         evt.Visit(this);
                     }
 
-                    if (eventsSkipped)
+                    if (skippedEvents)
                     {
                         logger.Debug("Events were skipped");
                         this.OnEventsSkipped();
