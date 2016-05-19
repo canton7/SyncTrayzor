@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.9' => [
+   '1.1.10' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,11 +81,12 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Add support for Syncthing v0.13\n- Add setting to control tray icon animation\n- Don't refresh browser when un-minimizing\n- Don't crash if the filesystem watcher sees a change at the drive root\n- Handle filesystem notifications when Syncthing is configured with a path of the wrong case\n- Clarify wording when device paused by metered network",
+      'release_notes' => "- Fix race condition when reloading config (#259)\n- Don't show 'Finished Syncthing' halfway through a busy sync (#264)\n- Don't crash when right-clicking tray icon early in startup process (#257)\n- Attempt to fix issue where UI half-renders after update to Syncthing 0.13 (#262)",
    ]
 ];
 
 $upgrades = [
+   '1.1.9' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.8' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.7' => ['to' => 'latest', 'formatter' => '4'],
    '1.1.6' => ['to' => 'latest', 'formatter' => '4'],
