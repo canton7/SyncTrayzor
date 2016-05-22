@@ -23,6 +23,7 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using SyncTrayzor.Services.Metering;
+using System.Reflection;
 
 namespace SyncTrayzor
 {
@@ -201,6 +202,15 @@ namespace SyncTrayzor
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error(e.Exception, "An unhandled exception occurred");
+            var typeLoadException = e.Exception as ReflectionTypeLoadException;
+            if (typeLoadException != null)
+            {
+                logger.Error("Loader exceptions:");
+                foreach (var ex in typeLoadException.LoaderExceptions)
+                {
+                    logger.Error(ex);
+                }
+            }
 
             // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try
