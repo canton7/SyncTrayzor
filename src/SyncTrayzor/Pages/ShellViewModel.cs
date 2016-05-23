@@ -104,7 +104,7 @@ namespace SyncTrayzor.Pages
         public bool CanRefreshBrowser => this.SyncthingState == SyncthingState.Running;
         public void RefreshBrowser()
         {
-            this.Viewer.RefreshBrowser();
+            this.Viewer.RefreshBrowserNukeCache();
         }
 
         public bool CanOpenBrowser => this.SyncthingState == SyncthingState.Running;

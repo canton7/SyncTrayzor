@@ -178,13 +178,24 @@ namespace SyncTrayzor.Pages
             };
         }
 
+        public void RefreshBrowserNukeCache()
+        {
+            if (this.Location == this.GetSyncthingAddress().ToString())
+            {
+                this.WebBrowser?.Reload(ignoreCache: true);
+            }
+            else if (this.syncthingManager.State == SyncthingState.Running)
+            {
+                this.Location = this.GetSyncthingAddress().ToString();
+            }
+        }
+
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
             if (this.syncthingManager.State == SyncthingState.Running)
             {
                 this.Location = this.GetSyncthingAddress().ToString();
-                //this.WebBrowser?.Reload(ignoreCache: true);
             }
         }
 
