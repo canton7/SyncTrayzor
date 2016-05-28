@@ -146,13 +146,13 @@ This location is periodically cleared out (once every few days).
 
 ### Portable
 
-SyncTrayzor will put its own configuration in `SyncTrayzorPortable\data`, and tell Syncthing to use `SyncTrayzorPortable\data\syncthing` for its database.
+SyncTrayzor Portable will put its own configuration in `SyncTrayzorPortable\data`, and tell Syncthing to use `SyncTrayzorPortable\data\syncthing` for its database.
 This means that, when manually upgrading, you can simply move the 'data' folder over to move all your settings, and database.
 If you check "Use Syncthing's default database location" in the settings (on the Syncthing tab), then Syncthing will use its default folder for its database, which is `C:\Users\<You>\AppData\Roaming\Syncthing`.
 
-If you're moving from "raw" Syncthing to SyncTrayzor, you'll either want to check this setting or move/copy the contents of `C:\Users\<You>\AppData\Roaming\Syncthing` into `data\syncthing`.
+If you're moving from SyncTrayzor Installer (or from "raw" Syncthing) to SyncTrayzor Portable, you'll either want to check this setting or move/copy the contents of `C:\Users\<You>\AppData\Roaming\Syncthing` into `SyncTrayzorPortable\data\syncthing`. Performing the latter will ensure true portability.
 
-The portable version won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
+SyncTrayzor Portable won't start on login by default. If you check "Automatically start on login" in the settings, then a registry key will be created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor`.
 
 
 Using Syncthing beta releases
