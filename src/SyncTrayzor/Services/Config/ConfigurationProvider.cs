@@ -2,11 +2,11 @@
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Pri.LongPath;
 
 namespace SyncTrayzor.Services.Config
 {
@@ -114,6 +114,11 @@ namespace SyncTrayzor.Services.Config
             {
                 // We know that this.paths.SyncthingBackupPath exists, because we checked this above
                 logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
+
+                var expandedSyncthingPathDir = Path.GetDirectoryName(expandedSyncthingPath);
+                if (!this.filesystem.DirectoryExists(expandedSyncthingPathDir))
+                    this.filesystem.CreateDirectory(expandedSyncthingPathDir);
+
                 this.filesystem.Copy(this.paths.SyncthingBackupPath, expandedSyncthingPath);
             }
 
@@ -130,7 +135,7 @@ namespace SyncTrayzor.Services.Config
             // (creating if necessary)
             logger.Debug("Loaded default configuration: {0}", defaultConfiguration);
             XDocument defaultConfig;
-            using (var ms = new MemoryStream())
+            using (var ms = new System.IO.MemoryStream())
             {
                 serializer.Serialize(ms, defaultConfiguration);
                 ms.Position = 0;
@@ -346,7 +351,7 @@ namespace SyncTrayzor.Services.Config
                         break;
                     }
                 }
-                catch (IOException e)
+                catch (System.IO.IOException e)
                 {
                     lastException = e;
                     logger.Warn("Unable to save config file: maybe someone else has locked it. Trying again shortly", e);
