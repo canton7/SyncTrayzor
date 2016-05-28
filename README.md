@@ -133,7 +133,7 @@ Good question. The answer depends on whether you installed SyncTrayzor using the
 
 SyncTrayzor will install itself into `C:\Program Files\SyncTrayzor`. 
 
-By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayor`, and let Syncthing use [its default folder](https://docs.syncthing.net/users/config.html) for its database, which is `%AppData%/Syncthing` (Windows XP) or `%LocalAppData%/Syncthing` (Windows 7+).
+By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayor`, and let Syncthing use [the default Syncthing configuration folder](https://docs.syncthing.net/users/config.html) for its database, which is `%AppData%/Syncthing` (Windows XP) or `%LocalAppData%/Syncthing` (Windows 7+).
 It will also create a registry key at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor` the first time that it is run, which will let it start when you log in.
 
 You can delete this registry key by unchecking "Automatically start on login" in the settings.
@@ -148,7 +148,7 @@ This location is periodically cleared out (once every few days).
 
 SyncTrayzor will put its own configuration in `SyncTrayzorPortable\data`, and tell Syncthing to use `SyncTrayzorPortable\data\syncthing` for its database.
 This means that, when manually upgrading, you can simply move the 'data' folder over to move all your settings, and database.
-If you check "Use Syncthing's default database location" in the settings (on the Syncthing tab), then Syncthing will use its [its default folder](https://docs.syncthing.net/users/config.html) for its database, which is `%AppData%/Syncthing` (Windows XP) or `%LocalAppData%/Syncthing` (Windows 7+).
+If you check "Use Syncthing's default database location" in the settings (on the Syncthing tab), then Syncthing will use its [the default Syncthing configuration folder](https://docs.syncthing.net/users/config.html) for its database, which is `%AppData%/Syncthing` (Windows XP) or `%LocalAppData%/Syncthing` (Windows 7+).
 
 If you're moving from "raw" Syncthing to SyncTrayzor, you'll either want to check this setting or move/copy the contents of the default Syncthing folder into `data\syncthing`.
 
