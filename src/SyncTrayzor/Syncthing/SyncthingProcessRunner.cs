@@ -116,6 +116,8 @@ namespace SyncTrayzor.Syncthing
                 StandardErrorEncoding = Encoding.UTF8,
             };
 
+            processStartInfo.EnvironmentVariables["STGUIAPIKEY"] = this.ApiKey;
+
             if (this.DenyUpgrade)
                 processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
             if (this.DebugFacilities.Count > 0)
@@ -183,7 +185,6 @@ namespace SyncTrayzor.Syncthing
         {
             var args = new List<string>(defaultArguments)
             {
-                $"-gui-apikey=\"{this.ApiKey}\"",
                 $"-gui-address=\"{this.HostAddress}\""
             };
 
