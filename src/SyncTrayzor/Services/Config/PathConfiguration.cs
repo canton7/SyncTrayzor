@@ -12,10 +12,10 @@ namespace SyncTrayzor.Services.Config
 
         public PathConfiguration()
         {
-            this.LogFilePath = @"%EXEPATH%\logs";
-            this.ConfigurationFilePath = @"%EXEPATH%\data\config.xml";
-            this.ConfigurationFileBackupPath = @"%EXEPATH%\data\config-backups";
-            this.CefCachePath = @"%EXEPATH%\data\cef\cache";
+            this.LogFilePath = @"logs";
+            this.ConfigurationFilePath = @"data\config.xml";
+            this.ConfigurationFileBackupPath = @"data\config-backups";
+            this.CefCachePath = @"data\cef\cache";
         }
     }
 }

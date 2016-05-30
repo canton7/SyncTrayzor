@@ -383,6 +383,7 @@
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Design\ViewModelLocator.cs" />
     <Compile Include="Xaml\ActivateBehaviour.cs" />

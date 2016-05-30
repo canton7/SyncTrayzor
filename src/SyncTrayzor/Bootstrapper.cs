@@ -73,6 +73,7 @@ namespace SyncTrayzor
             builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
             builder.Bind<INetworkCostManager>().To<NetworkCostManager>();
             builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
+            builder.Bind<IPathTransformer>().To<PathTransformer>().InSingletonScope();
 
             if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
@@ -87,9 +88,11 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            var pathTransformer = this.Container.Get<IPathTransformer>();
+
             // Have to set the log path before anything else
             var pathConfiguration = AppSettings.Instance.PathConfiguration;
-            GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
+            GlobalDiagnosticsContext.Set("LogFilePath", pathTransformer.MakeAbsolute(pathConfiguration.LogFilePath));
 
             AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
 

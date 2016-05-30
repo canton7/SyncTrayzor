@@ -54,6 +54,7 @@ namespace SyncTrayzor.Services.Config
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly IApplicationPathsProvider paths;
         private readonly IFilesystemProvider filesystem;
+        private readonly IPathTransformer pathTransformer;
 
         private readonly object currentConfigLock = new object();
         private Configuration currentConfig;
@@ -63,10 +64,11 @@ namespace SyncTrayzor.Services.Config
         public bool HadToCreateConfiguration { get; }
         public bool WasUpgraded { get; private set; }
 
-        public ConfigurationProvider(IApplicationPathsProvider paths, IFilesystemProvider filesystemProvider)
+        public ConfigurationProvider(IApplicationPathsProvider paths, IFilesystemProvider filesystemProvider, IPathTransformer pathTransformer)
         {
             this.paths = paths;
             this.filesystem = filesystemProvider;
+            this.pathTransformer = pathTransformer;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
 
             this.migrations = new Func<XDocument, XDocument>[]
@@ -76,7 +78,8 @@ namespace SyncTrayzor.Services.Config
                 this.MigrateV3ToV4,
                 this.MigrateV4ToV5,
                 this.MigrateV5ToV6,
-                this.MigrateV6ToV7
+                this.MigrateV6ToV7,
+                this.MigrateV7ToV8,
             };
         }
 
@@ -104,7 +107,7 @@ namespace SyncTrayzor.Services.Config
                 }
             }
 
-            var expandedSyncthingPath = EnvVarTransformer.Transform(this.currentConfig.SyncthingPath);
+            var expandedSyncthingPath = this.pathTransformer.MakeAbsolute(this.currentConfig.SyncthingPath);
 
             if (!this.filesystem.FileExists(this.paths.SyncthingBackupPath))
                 throw new CouldNotFindSyncthingException(this.paths.SyncthingBackupPath);
@@ -288,6 +291,18 @@ namespace SyncTrayzor.Services.Config
                     );
                 }
             }
+
+            return configuration;
+        }
+
+        private XDocument MigrateV7ToV8(XDocument configuration)
+        {
+            // Get rid of %EXEPATH%
+            var syncthingPath = configuration.Root.Element("SyncthingPath");
+            syncthingPath.Value = syncthingPath.Value.TrimStart("%EXEPATH%\\");
+
+            var syncthingCustomHomePath = configuration.Root.Element("SyncthingCustomHomePath");
+            syncthingCustomHomePath.Value = syncthingCustomHomePath.Value.TrimStart("%EXEPAT%\\");
 
             return configuration;
         }

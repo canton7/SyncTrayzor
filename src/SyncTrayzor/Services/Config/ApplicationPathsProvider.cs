@@ -1,7 +1,6 @@
 ﻿using NLog;
-using SyncTrayzor.Utils;
 using System;
-using System.IO;
+using Pri.LongPath;
 
 namespace SyncTrayzor.Services.Config
 {
@@ -22,21 +21,34 @@ namespace SyncTrayzor.Services.Config
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private PathConfiguration pathConfiguration;
+        private readonly IPathTransformer pathTransformer;
 
-        public ApplicationPathsProvider(IAssemblyProvider assemblyProvider)
+        public string LogFilePath { get; private set; }
+        public string SyncthingBackupPath { get; private set; }
+        public string ConfigurationFilePath { get; private set; }
+        public string ConfigurationFileBackupPath { get; private set; }
+        public string CefCachePath { get; private set; }
+        public string UpdatesDownloadPath { get; private set; }
+        public string InstallCountFilePath { get; private set; }
+
+        public ApplicationPathsProvider(IPathTransformer pathTransformer)
         {
-            this.ExePath = Path.GetDirectoryName(assemblyProvider.Location);
+            this.pathTransformer = pathTransformer;
         }
 
         public void Initialize(PathConfiguration pathConfiguration)
         {
             if (pathConfiguration == null)
-                throw new ArgumentNullException("pathConfiguration");
+                throw new ArgumentNullException(nameof(pathConfiguration));
 
-            this.pathConfiguration = pathConfiguration;
+            this.LogFilePath = this.pathTransformer.MakeAbsolute(pathConfiguration.LogFilePath);
+            this.SyncthingBackupPath = this.pathTransformer.MakeAbsolute("syncthing.exe");
+            this.ConfigurationFilePath = this.pathTransformer.MakeAbsolute(pathConfiguration.ConfigurationFilePath);
+            this.ConfigurationFileBackupPath = this.pathTransformer.MakeAbsolute(pathConfiguration.ConfigurationFileBackupPath);
+            this.CefCachePath = this.pathTransformer.MakeAbsolute(pathConfiguration.CefCachePath);
+            this.UpdatesDownloadPath = Path.Combine(Path.GetTempPath(), "SyncTrayzor");
+            this.InstallCountFilePath = this.pathTransformer.MakeAbsolute("InstallCount.txt");
 
-            logger.Debug("ExePath: {0}", this.ExePath);
             logger.Debug("LogFilePath: {0}", this.LogFilePath);
             logger.Debug("SyncthingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
@@ -44,20 +56,6 @@ namespace SyncTrayzor.Services.Config
             logger.Debug("CefCachePath: {0}", this.CefCachePath);
         }
 
-        public string ExePath { get; set; }
-
-        public string LogFilePath => EnvVarTransformer.Transform(this.pathConfiguration.LogFilePath);
-
-        public string SyncthingBackupPath => Path.Combine(this.ExePath, "syncthing.exe");
-
-        public string ConfigurationFilePath =>  EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFilePath);
-
-        public string ConfigurationFileBackupPath => EnvVarTransformer.Transform(this.pathConfiguration.ConfigurationFileBackupPath);
-
-        public string CefCachePath => EnvVarTransformer.Transform(this.pathConfiguration.CefCachePath);
-
-        public string UpdatesDownloadPath =>  Path.Combine(Path.GetTempPath(), "SyncTrayzor");
-
-        public string InstallCountFilePath =>  Path.Combine(this.ExePath, "InstallCount.txt");
+        
     }
 }
