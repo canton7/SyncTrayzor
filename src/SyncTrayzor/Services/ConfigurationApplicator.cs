@@ -101,7 +101,9 @@ namespace SyncTrayzor.Services
             this.syncthingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncthingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncthingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
-            this.syncthingManager.ExecutablePath = this.pathTransformer.MakeAbsolute(configuration.SyncthingPath);
+            this.syncthingManager.ExecutablePath = String.IsNullOrWhiteSpace(configuration.SyncthingCustomPath) ?
+                this.pathsProvider.DefaultSyncthingPath :
+                this.pathTransformer.MakeAbsolute(configuration.SyncthingCustomPath);
             this.syncthingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);

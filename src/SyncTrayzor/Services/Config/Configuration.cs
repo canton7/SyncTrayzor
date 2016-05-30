@@ -9,7 +9,7 @@ namespace SyncTrayzor.Services.Config
     [XmlRoot("Configuration")]
     public class Configuration
     {
-        public const int CurrentVersion = 9;
+        public const int CurrentVersion = 10;
         public const double DefaultSyncthingConsoleHeight = 100;
 
         [XmlAttribute("Version")]
@@ -59,7 +59,7 @@ namespace SyncTrayzor.Services.Config
         public WindowPlacement WindowPlacement { get; set; }
         public double SyncthingWebBrowserZoomLevel { get; set; }
         public int LastSeenInstallCount { get; set; }
-        public string SyncthingPath { get; set; }
+        public string SyncthingCustomPath { get; set; }
         public string SyncthingCustomHomePath { get; set; }
         public bool DisableHardwareRendering { get; set; }
         public bool EnableFailedTransferAlerts { get; set; }
@@ -99,7 +99,7 @@ namespace SyncTrayzor.Services.Config
             this.WindowPlacement = null;
             this.SyncthingWebBrowserZoomLevel = 0;
             this.LastSeenInstallCount = 0;
-            this.SyncthingPath = @"data\syncthing.exe";
+            this.SyncthingCustomPath = null;
             this.SyncthingCustomHomePath = null;
             this.DisableHardwareRendering = false;
             this.EnableFailedTransferAlerts = true;
@@ -135,7 +135,7 @@ namespace SyncTrayzor.Services.Config
             this.WindowPlacement = other.WindowPlacement;
             this.SyncthingWebBrowserZoomLevel = other.SyncthingWebBrowserZoomLevel;
             this.LastSeenInstallCount = other.LastSeenInstallCount;
-            this.SyncthingPath = other.SyncthingPath;
+            this.SyncthingCustomPath = other.SyncthingCustomPath;
             this.SyncthingCustomHomePath = other.SyncthingCustomHomePath;
             this.DisableHardwareRendering = other.DisableHardwareRendering;
             this.EnableFailedTransferAlerts = other.EnableFailedTransferAlerts;
@@ -157,7 +157,7 @@ namespace SyncTrayzor.Services.Config
                 $"SyncthingDenyUpgrade={this.SyncthingDenyUpgrade} SyncthingPriorityLevel={this.SyncthingPriorityLevel} " +
                 $"Folders=[{String.Join(", ", this.Folders)}] NotifyOfNewVersions={this.NotifyOfNewVersions} LatestNotifiedVersion={this.LatestNotifiedVersion} " +
                 $"ObfuscateDeviceIDs={this.ObfuscateDeviceIDs} UseComputerCulture={this.UseComputerCulture} SyncthingConsoleHeight={this.SyncthingConsoleHeight} WindowPlacement={this.WindowPlacement} " +
-                $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingPath={this.SyncthingPath} " +
+                $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingCustomPath={this.SyncthingCustomPath} " +
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
                 $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
                 $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+

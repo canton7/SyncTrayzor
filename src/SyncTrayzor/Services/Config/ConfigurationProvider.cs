@@ -81,6 +81,7 @@ namespace SyncTrayzor.Services.Config
                 this.MigrateV6ToV7,
                 this.MigrateV7ToV8,
                 this.MigrateV8ToV9,
+                this.MigrateV9ToV10,
             };
         }
 
@@ -108,7 +109,10 @@ namespace SyncTrayzor.Services.Config
                 }
             }
 
-            var expandedSyncthingPath = this.pathTransformer.MakeAbsolute(this.currentConfig.SyncthingPath);
+            // This is duplicated between here and ConfigurationApplicator, and it's ugly.
+            var expandedSyncthingPath = String.IsNullOrWhiteSpace(this.currentConfig.SyncthingCustomPath) ?
+                this.paths.DefaultSyncthingPath :
+                this.pathTransformer.MakeAbsolute(this.currentConfig.SyncthingCustomPath);
 
             if (!this.filesystem.FileExists(this.paths.SyncthingBackupPath))
                 throw new CouldNotFindSyncthingException(this.paths.SyncthingBackupPath);
@@ -318,6 +322,18 @@ namespace SyncTrayzor.Services.Config
                 configuration.Root.Element("SyncthingCustomHomePath").Value = String.Empty;
 
             // SyncthingUseCustomHome will be removed when it's deserialized into Configuration
+
+            return configuration;
+        }
+
+        private XDocument MigrateV9ToV10(XDocument configuration)
+        {
+            // If SyncthingPath differs from the default, write it to SyncthingCustomPath.
+            // Otherwise leave it to be dropped.
+
+            var syncthingPath = configuration.Root.Element("SyncthingPath").Value;
+            if (!String.Equals(syncthingPath, this.paths.UnexpandedDefaultSyncthingPath, StringComparison.OrdinalIgnoreCase))
+                configuration.Root.Add(new XElement("SyncthingCustomPath", syncthingPath));
 
             return configuration;
         }
