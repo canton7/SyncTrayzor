@@ -95,9 +95,9 @@ namespace SyncTrayzor.Services
             this.syncthingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncthingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
             this.syncthingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
-            this.syncthingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
-                this.pathTransformer.MakeAbsolute(configuration.SyncthingCustomHomePath)
-                : null;
+            this.syncthingManager.SyncthingCustomHomeDir = String.IsNullOrWhiteSpace(configuration.SyncthingCustomHomePath) ?
+                this.pathsProvider.DefaultSyncthingHomePath :
+                this.pathTransformer.MakeAbsolute(configuration.SyncthingCustomHomePath);
             this.syncthingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncthingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncthingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;

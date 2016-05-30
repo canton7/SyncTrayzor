@@ -370,7 +370,7 @@
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
     <Compile Include="Utils\DotNetVersionFinder.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
-    <Compile Include="Utils\EnvVarTransformer.cs" />
+    <Compile Include="Services\PathTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\FormatUtils.cs" />
     <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />

@@ -72,7 +72,6 @@ namespace SyncTrayzor.Pages.Settings
         public BindableCollection<LabelledValue<SyncthingPriorityLevel>> PriorityLevels { get; }
         public SettingItem<SyncthingPriorityLevel> SyncthingPriorityLevel { get; }
 
-        public SettingItem<bool> SyncthingUseDefaultHome { get; }
         public SettingItem<string> SyncthingAddress { get; }
 
         public bool CanReadAutostart { get; set; }
@@ -84,6 +83,7 @@ namespace SyncTrayzor.Pages.Settings
         public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
         public SettingItem<string> SyncthingCommandLineFlags { get; }
         public SettingItem<string> SyncthingEnvironmentalVariables { get; }
+        public SettingItem<string> SyncthingCustomHomePath { get; }
         public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
         private bool updatingFolderSettings;
@@ -143,8 +143,6 @@ namespace SyncTrayzor.Pages.Settings
             this.StartSyncthingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
             this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);
             this.SyncthingPriorityLevel.RequiresSyncthingRestart = true;
-            this.SyncthingUseDefaultHome = this.CreateBasicSettingItem(x => !x.SyncthingUseCustomHome, (x, v) => x.SyncthingUseCustomHome = !v);
-            this.SyncthingUseDefaultHome.RequiresSyncthingRestart = true;
             this.SyncthingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncthingAddressValidator());
             this.SyncthingAddress.RequiresSyncthingRestart = true;
 
@@ -176,6 +174,9 @@ namespace SyncTrayzor.Pages.Settings
                     x.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection(envVars);
                 }, new SyncthingEnvironmentalVariablesValidator());
             this.SyncthingEnvironmentalVariables.RequiresSyncthingRestart = true;
+
+            this.SyncthingCustomHomePath = this.CreateBasicSettingItem(x => x.SyncthingCustomHomePath);
+            this.SyncthingCustomHomePath.RequiresSyncthingRestart = true;
 
             this.SyncthingDenyUpgrade = this.CreateBasicSettingItem(x => x.SyncthingDenyUpgrade);
             this.SyncthingDenyUpgrade.RequiresSyncthingRestart = true;

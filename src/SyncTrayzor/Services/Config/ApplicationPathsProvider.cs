@@ -13,6 +13,7 @@ namespace SyncTrayzor.Services.Config
         string UpdatesDownloadPath { get; }
         string InstallCountFilePath { get; }
         string CefCachePath { get; }
+        string DefaultSyncthingHomePath { get; }
 
         void Initialize(PathConfiguration pathConfiguration);
     }
@@ -30,6 +31,7 @@ namespace SyncTrayzor.Services.Config
         public string CefCachePath { get; private set; }
         public string UpdatesDownloadPath { get; private set; }
         public string InstallCountFilePath { get; private set; }
+        public string DefaultSyncthingHomePath { get; private set; }
 
         public ApplicationPathsProvider(IPathTransformer pathTransformer)
         {
@@ -48,12 +50,16 @@ namespace SyncTrayzor.Services.Config
             this.CefCachePath = this.pathTransformer.MakeAbsolute(pathConfiguration.CefCachePath);
             this.UpdatesDownloadPath = Path.Combine(Path.GetTempPath(), "SyncTrayzor");
             this.InstallCountFilePath = this.pathTransformer.MakeAbsolute("InstallCount.txt");
+            this.DefaultSyncthingHomePath = String.IsNullOrWhiteSpace(pathConfiguration.SyncthingHomePath) ?
+                null :
+                this.pathTransformer.MakeAbsolute(pathConfiguration.SyncthingHomePath);
 
             logger.Debug("LogFilePath: {0}", this.LogFilePath);
             logger.Debug("SyncthingBackupPath: {0}", this.SyncthingBackupPath);
             logger.Debug("ConfigurationFilePath: {0}", this.ConfigurationFilePath);
             logger.Debug("ConfigurationFileBackupPath: {0}", this.ConfigurationFileBackupPath);
             logger.Debug("CefCachePath: {0}", this.CefCachePath);
+            logger.Debug("DefaultSyncthingHomePath: {0}", this.DefaultSyncthingHomePath);
         }
 
         

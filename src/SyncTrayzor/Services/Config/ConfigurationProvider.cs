@@ -80,6 +80,7 @@ namespace SyncTrayzor.Services.Config
                 this.MigrateV5ToV6,
                 this.MigrateV6ToV7,
                 this.MigrateV7ToV8,
+                this.MigrateV8ToV9,
             };
         }
 
@@ -303,6 +304,20 @@ namespace SyncTrayzor.Services.Config
 
             var syncthingCustomHomePath = configuration.Root.Element("SyncthingCustomHomePath");
             syncthingCustomHomePath.Value = syncthingCustomHomePath.Value.TrimStart("%EXEPAT%\\");
+
+            return configuration;
+        }
+
+        private XDocument MigrateV8ToV9(XDocument configuration)
+        {
+            // We remove SyncthingUseCustomHome: if SyncthingCustomHomePath is set, it's used.
+            // Therefore to migrate, we need to check SyncthingUseCustomHome. If it's not set, we
+            // clear SyncthingCustomHomePath. If it's set, we keep SyncthingCustomHomePath.
+
+            if (!(bool)configuration.Root.Element("SyncthingUseCustomHome"))
+                configuration.Root.Element("SyncthingCustomHomePath").Value = String.Empty;
+
+            // SyncthingUseCustomHome will be removed when it's deserialized into Configuration
 
             return configuration;
         }

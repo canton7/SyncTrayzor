@@ -129,9 +129,6 @@
                                 </DockPanel.Resources>
 
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding StartSyncthingAutomatically.Value}" Content="{l:Loc SettingsView_StartSyncthingAutomatically}"/>
-                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding SyncthingUseDefaultHome.Value}"
-                                                Content="{l:Loc SettingsView_SyncthingUseDefaultHome}"
-                                                ToolTip="{l:Loc SettingsView_SyncthingUseDefaultHome_ToolTip}"/>
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
                                     <Label Padding="0,0,5,0" Target="{Binding ElementName=PropertyLevelsSelect}" VerticalAlignment="Center" Content="{l:Loc SettingsView_Syncthing_ProcessPriority}"/>
                                     <ComboBox x:Name="PropertyLevelsSelect" ItemsSource="{Binding PriorityLevels}" SelectedValuePath="Value" SelectedValue="{Binding SyncthingPriorityLevel.Value}"/>
@@ -151,8 +148,13 @@
 
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCommandLineFlags}" Content="Syncthing Command-line Flags"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingCommandLineFlags"  Text="{Binding SyncthingCommandLineFlags.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
+                                    
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingEnvironmentalVariables" Text="{Binding SyncthingEnvironmentalVariables.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
+
+                                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCustomHomePath}" Content="{l:Loc SettingsView_SyncthingCustomHomePath}"
+                                           ToolTip="{l:Loc SettingsView_SyncthingCustomHomePath}"/>
+                                    <TextBox DockPanel.Dock="Top" x:Name="SyncthingCustomHomePath" Text="{Binding SyncthingCustomHomePath.Value}"/>
                                 </DockPanel>
                             </GroupBox>
                         </Expander>
