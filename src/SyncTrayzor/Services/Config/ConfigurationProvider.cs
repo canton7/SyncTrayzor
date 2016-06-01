@@ -314,12 +314,34 @@ namespace SyncTrayzor.Services.Config
 
         private XDocument MigrateV8ToV9(XDocument configuration)
         {
-            // We remove SyncthingUseCustomHome: if SyncthingCustomHomePath is set, it's used.
-            // Therefore to migrate, we need to check SyncthingUseCustomHome. If it's not set, we
-            // clear SyncthingCustomHomePath. If it's set, we keep SyncthingCustomHomePath.
+            // The installed version defaulted to "don't use custom home", while the portable
+            // version defaulted to using it.
+            // Therefore if we were installed, clear SyncthingCustomHomePath if they opted not to use it.
+            // If we were portable:
+            // - If they were using the custom home path (the default), clear it if it equals SyncthingHomePath
+            // - If they weren't using a custom home, that means they went back to using syncthing's default dir,
+            //   so set that.
 
-            if (!(bool)configuration.Root.Element("SyncthingUseCustomHome"))
-                configuration.Root.Element("SyncthingCustomHomePath").Value = String.Empty;
+            // We want to hard-code these paths, as app.config may change in future, but this migration must
+            // always do the same thing.
+
+            bool useCustomHome = (bool)configuration.Root.Element("SyncthingUseCustomHome");
+            var customHomePath = configuration.Root.Element("SyncthingCustomHomePath").Value;
+            string result;
+
+            if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
+            {
+                result = useCustomHome ? customHomePath : String.Empty;
+            }
+            else
+            {
+                if (useCustomHome)
+                    result = (customHomePath == @"data\syncthing") ? String.Empty : customHomePath;
+                else
+                    result = @"%LOCALAPPDATA%\Syncthing";
+            }
+
+            configuration.Root.Element("SyncthingCustomHomePath").Value = result;
 
             // SyncthingUseCustomHome will be removed when it's deserialized into Configuration
 
