@@ -182,7 +182,7 @@
                                 lvlm:ListViewLayoutManager.Enabled="True">
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
-                                <GridViewColumn Header="{l:Loc SettingsView_WatchedFolders_Header_Folder}" DisplayMemberBinding="{Binding FolderName}" lvlm:RangeColumn.IsFillColumn="True"/>
+                                <GridViewColumn Header="{l:Loc SettingsView_WatchedFolders_Header_Folder}" DisplayMemberBinding="{Binding FolderLabel}" lvlm:RangeColumn.IsFillColumn="True"/>
                                 <GridViewColumn>
                                     <GridViewColumn.Header>
                                         <CheckBox IsChecked="{Binding AreAllFoldersWatched}" Content="{l:Loc SettingsView_WatchedFolders_Header_Watched}" Margin="4,0,5,0"/>

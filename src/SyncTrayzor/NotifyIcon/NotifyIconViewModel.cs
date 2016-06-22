@@ -63,7 +63,7 @@ namespace SyncTrayzor.NotifyIcon
             this.SyncthingState = this.syncthingManager.State;
 
             this.syncthingManager.TotalConnectionStatsChanged += this.TotalConnectionStatsChanged;
-            this.syncthingManager.DataLoaded += this.DataLoaded;
+            this.syncthingManager.Folders.FoldersChanged += this.FoldersChanged;
             this.syncthingManager.Folders.SyncStateChanged += this.FolderSyncStateChanged;
 
 
@@ -89,11 +89,11 @@ namespace SyncTrayzor.NotifyIcon
             }
         }
 
-        private void DataLoaded(object sender, EventArgs e)
+        private void FoldersChanged(object sender, EventArgs e)
         {
             this.Folders = new BindableCollection<FolderViewModel>(this.syncthingManager.Folders.FetchAll()
                     .Select(x => new FolderViewModel(x, this.processStartProvider))
-                    .OrderBy(x => x.FolderId));
+                    .OrderBy(x => x.FolderLabel));
         }
 
         private void FolderSyncStateChanged(object sender, FolderSyncStateChangedEventArgs e)
@@ -173,8 +173,8 @@ namespace SyncTrayzor.NotifyIcon
             this.syncthingManager.StateChanged -= this.StateChanged;
 
             this.syncthingManager.TotalConnectionStatsChanged -= this.TotalConnectionStatsChanged;
-            this.syncthingManager.DataLoaded -= this.DataLoaded;
             this.syncthingManager.Folders.SyncStateChanged -= this.FolderSyncStateChanged;
+            this.syncthingManager.Folders.FoldersChanged -= this.FoldersChanged;
 
             this.alertsManager.AlertsStateChanged -= this.AlertsStateChanged;
 
@@ -188,7 +188,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly Folder folder;
         private readonly IProcessStartProvider processStartProvider;
 
-        public string FolderId => this.folder.FolderId;
+        public string FolderLabel => this.folder.Label;
 
         public FolderViewModel(Folder folder, IProcessStartProvider processStartProvider)
         {
