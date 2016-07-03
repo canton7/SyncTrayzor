@@ -146,19 +146,36 @@ namespace SyncTrayzor.Pages
             {
                 if (e.Frame.IsMain && e.Url != "about:blank")
                 {
-                    var addOpenFolder =
-                    @"$('#folders .panel-footer .pull-right').prepend(" +
-                    @"  '<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
-                    @"      <span class=""fa fa-folder-open""></span>" +
-                    @"      <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
-                    @"  </button>')";
-                    webBrowser.ExecuteScriptAsync(addOpenFolder);
+                    // I tried to do this using Syncthing's events, but it's very painful - the DOM is updated some time
+                    // after the event is fired. It's a lot easier to just watch for changes on the DOM.
+                    var addOpenFolderButton =
+                    @"var syncTrayzorAddOpenFolderButton = function(elem) {" +
+                    @"    var $buttonContainer = elem.find('.panel-footer .pull-right');" +
+                    @"    $buttonContainer.find('.panel-footer .synctrayzor-add-folder-button').remove();" +
+                    @"    $buttonContainer.prepend(" +
+                    @"      '<button class=""btn btn-sm btn-default synctrayzor-add-folder-button"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
+                    @"          <span class=""fa fa-folder-open""></span>" +
+                    @"          <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
+                    @"      </button>');" +
+                    @"};" +
+                    @"new MutationObserver(function(mutations, observer) {" +
+                    @"  for (var i = 0; i < mutations.length; i++) {" +
+                    @"    for (var j = 0; j < mutations[i].addedNodes.length; j++) {" +
+                    @"      syncTrayzorAddOpenFolderButton($(mutations[i].addedNodes[j]));" +
+                    @"    }" +
+                    @"  }" +
+                    @"}).observe(document.getElementById('folders'), {" +
+                    @"  childList: true" +
+                    @"});" +
+                    @"syncTrayzorAddOpenFolderButton($('#folders'));" +
+                    @"";
+                    webBrowser.ExecuteScriptAsync(addOpenFolderButton);
 
-                    var addFolderBrowse = 
+                    var addFolderBrowse =
                     @"$('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
                     @"$('#folderPath').after(" +
                     @"  $('<button>').attr('id', 'folderPathBrowseButton')" +
-                    @"               .addClass('btn btn-sm btn-default')" +           
+                    @"               .addClass('btn btn-sm btn-default')" +
                     @"               .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
                     @"               .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
                     @"               .on('click', function() { callbackObject.browseFolderPath() })" +
