@@ -64,5 +64,15 @@ namespace SyncTrayzor.Syncthing.Devices
 
             return this.DeviceId == other.DeviceId;
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Device);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.DeviceId.GetHashCode();
+        }
     }
 }
