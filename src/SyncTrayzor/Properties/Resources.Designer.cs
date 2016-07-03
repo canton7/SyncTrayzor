@@ -1156,7 +1156,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing custom home path:.
+        ///   Looks up a localized string similar to Syncthing Custom Home Path:.
         /// </summary>
         public static string SettingsView_SyncthingCustomHomePath {
             get {
