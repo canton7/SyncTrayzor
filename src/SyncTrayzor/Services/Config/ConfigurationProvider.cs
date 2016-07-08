@@ -307,7 +307,7 @@ namespace SyncTrayzor.Services.Config
             syncthingPath.Value = syncthingPath.Value.TrimStart("%EXEPATH%\\");
 
             var syncthingCustomHomePath = configuration.Root.Element("SyncthingCustomHomePath");
-            syncthingCustomHomePath.Value = syncthingCustomHomePath.Value.TrimStart("%EXEPAT%\\");
+            syncthingCustomHomePath.Value = syncthingCustomHomePath.Value.TrimStart("%EXEPATH%\\");
 
             return configuration;
         }
