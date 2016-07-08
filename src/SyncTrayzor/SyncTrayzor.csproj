@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props')" />
-  <Import Project="..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.49.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.49.0.0\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -81,16 +81,16 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
-      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentValidation, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.6.1.0.0\lib\Net45\FluentValidation.dll</HintPath>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Interop.NETWORKLIST">
@@ -101,8 +101,8 @@
     <Reference Include="Itenso.Windows.Controls.ListViewLayout">
       <HintPath>..\..\lib\Itenso.Windows.Controls.ListViewLayout.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -110,33 +110,33 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="Pri.LongPath, Version=2.0.16.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pri.LongPath.2.0.16\lib\net45\Pri.LongPath.dll</HintPath>
+    <Reference Include="Pri.LongPath, Version=2.0.30.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pri.LongPath.2.0.30\lib\net45\Pri.LongPath.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PropertyChanged, Version=1.50.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.1.50.3\Lib\dotnet\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged, Version=1.51.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.1.51.0\lib\dotnet\PropertyChanged.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RestEase, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestEase.1.0.6\lib\net45\RestEase.dll</HintPath>
+    <Reference Include="RestEase, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestEase.1.0.8\lib\net45\RestEase.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SmartFormat.NET.1.6.1.0\lib\net40\SmartFormat.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stylet, Version=1.1.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stylet.1.1.13\lib\net45\Stylet.dll</HintPath>
+    <Reference Include="Stylet, Version=1.1.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stylet.1.1.15\lib\net45\Stylet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -189,6 +189,7 @@
     <Compile Include="Localization\CustomPluralLocalizationFormatter.cs" />
     <Compile Include="Localization\LocalizeConverters.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
+    <Compile Include="NotifyIcon\ConnectedEventDebouncer.cs" />
     <Compile Include="NotifyIcon\NotifyIconResolutionUtilities.cs" />
     <Compile Include="Pages\BarAlerts\AlertSeverity.cs" />
     <Compile Include="Pages\BarAlerts\AlertSeverityToBackgroundColorConverter.cs" />
@@ -370,7 +371,7 @@
     <Compile Include="Utils\ChecksumFileUtilities.cs" />
     <Compile Include="Utils\DotNetVersionFinder.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
-    <Compile Include="Utils\EnvVarTransformer.cs" />
+    <Compile Include="Services\PathTransformer.cs" />
     <Compile Include="Utils\FluentModelValidator.cs" />
     <Compile Include="Utils\FormatUtils.cs" />
     <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="Utils\SemaphoreSlimExtensions.cs" />
     <Compile Include="Utils\ShellTools.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Design\ViewModelLocator.cs" />
     <Compile Include="Xaml\ActivateBehaviour.cs" />
@@ -611,17 +613,15 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.47.0.3\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2623.1396\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2623.1396\build\cef.redist.x64.targets'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2623.1396\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2623.1396\build\cef.redist.x86.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.49.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.49.0.0\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2526.1362\build\cef.redist.x64.targets')" />
-  <Import Project="..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2526.1362\build\cef.redist.x86.targets')" />
-  <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
-  <Import Project="..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets" Condition="Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" />
-  <Import Project="..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.47.0.3\build\CefSharp.Common.targets')" />
+  <Import Project="..\packages\cef.redist.x64.3.2623.1396\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2623.1396\build\cef.redist.x64.targets')" />
+  <Import Project="..\packages\cef.redist.x86.3.2623.1396\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2623.1396\build\cef.redist.x86.targets')" />
+  <Import Project="..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.49.0.0\build\CefSharp.Common.targets')" />
+  <Import Project="..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
 </Project>

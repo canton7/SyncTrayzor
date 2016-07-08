@@ -15,7 +15,7 @@
     <Window.Resources>
         <CollectionViewSource x:Key="ConflictsItemsSource" Source="{Binding Conflicts}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="FolderId"/>
+                <PropertyGroupDescription PropertyName="FolderLabel"/>
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
         <Style x:Key="SectionBorderStyle" TargetType="Border">

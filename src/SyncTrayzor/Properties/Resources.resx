@@ -273,13 +273,6 @@
     <value>SyncTrayzor overrides the "GUI Listen Address" specified in Syncthing's configuration. However, you can set it to whatever value you like here.</value>
     <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingAddress text input. This shows more information on the input.</comment>
   </data>
-  <data name="SettingsView_SyncthingUseDefaultHome" xml:space="preserve">
-    <value>Use Syncthing's default database location</value>
-  </data>
-  <data name="SettingsView_SyncthingUseDefaultHome_ToolTip" xml:space="preserve">
-    <value>If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer.</value>
-    <comment>ToolTip shown when a user hovers over the SettingsView_SyncthingUseDefaultHome text input. This shows more information on the input.</comment>
-  </data>
   <data name="SettingsView_Title" xml:space="preserve">
     <value>Settings</value>
     <comment>Title of the 'settings' dialog</comment>
@@ -932,5 +925,11 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="SettingsView_TrayIconAnimation_Syncing" xml:space="preserve">
     <value>Synchronizing</value>
+  </data>
+  <data name="SettingsView_SyncthingCustomHomePath" xml:space="preserve">
+    <value>Syncthing Custom Home Path:</value>
+  </data>
+  <data name="SettingsView_SyncthingCustomHomePath_ToolTip" xml:space="preserve">
+    <value>If set, overrides the default path for Syncthing's database and configuration</value>
   </data>
 </root>

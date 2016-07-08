@@ -98,7 +98,7 @@ namespace SyncTrayzor.Services
         private void FolderErrorsChanged(object sender, FolderErrorsChangedEventArgs e)
         {
             var folders = this.syncthingManager.Folders.FetchAll();
-            this._foldersWithFailedTransferFiles = folders.Where(x => x.FolderErrors.Any()).Select(x => x.FolderId).ToList().AsReadOnly();
+            this._foldersWithFailedTransferFiles = folders.Where(x => x.FolderErrors.Any()).Select(x => x.Label).ToList().AsReadOnly();
  
             this.OnAlertsStateChanged();
         }

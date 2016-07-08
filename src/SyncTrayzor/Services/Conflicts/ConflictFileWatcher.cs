@@ -188,7 +188,7 @@ namespace SyncTrayzor.Services.Conflicts
             {
                 foreach (var folder in folders)
                 {
-                    logger.Debug("Starting watcher for folder: {0}", folder.FolderId);
+                    logger.Debug("Starting watcher for folder: {0} ({1})", folder.FolderId, folder.Label);
 
                     var watcher = this.fileWatcherFactory.Create(FileWatcherMode.CreatedOrDeleted, folder.Path, this.FolderExistenceCheckingInterval, this.conflictFileManager.ConflictPattern);
                     watcher.PathChanged += this.PathChanged;
@@ -240,7 +240,7 @@ namespace SyncTrayzor.Services.Conflicts
 
                     foreach (var folder in folders)
                     {
-                        logger.Debug("Scanning folder {0} ({1}) for conflict files", folder.FolderId, folder.Path);
+                        logger.Debug("Scanning folder {0} ({1}) ({2}) for conflict files", folder.FolderId, folder.Label, folder.Path);
 
                         var options = await this.conflictFileManager.FindConflicts(folder.Path)
                             .SelectMany(conflict => conflict.Conflicts)

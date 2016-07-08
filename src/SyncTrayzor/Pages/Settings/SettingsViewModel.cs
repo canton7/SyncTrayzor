@@ -12,12 +12,14 @@ using System.Linq.Expressions;
 using System.Windows;
 using System.IO;
 using SyncTrayzor.Services.Metering;
+using SyncTrayzor.Syncthing.Folders;
 
 namespace SyncTrayzor.Pages.Settings
 {
     public class FolderSettings : PropertyChangedBase
     {
-        public string FolderName { get; set; }
+        public string FolderId { get; set; }
+        public string FolderLabel { get; set; }
         public bool IsWatched { get; set; }
         public bool IsNotified { get; set; }
     }
@@ -72,7 +74,6 @@ namespace SyncTrayzor.Pages.Settings
         public BindableCollection<LabelledValue<SyncthingPriorityLevel>> PriorityLevels { get; }
         public SettingItem<SyncthingPriorityLevel> SyncthingPriorityLevel { get; }
 
-        public SettingItem<bool> SyncthingUseDefaultHome { get; }
         public SettingItem<string> SyncthingAddress { get; }
 
         public bool CanReadAutostart { get; set; }
@@ -84,6 +85,7 @@ namespace SyncTrayzor.Pages.Settings
         public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
         public SettingItem<string> SyncthingCommandLineFlags { get; }
         public SettingItem<string> SyncthingEnvironmentalVariables { get; }
+        public SettingItem<string> SyncthingCustomHomePath { get; }
         public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
         private bool updatingFolderSettings;
@@ -143,8 +145,6 @@ namespace SyncTrayzor.Pages.Settings
             this.StartSyncthingAutomatically = this.CreateBasicSettingItem(x => x.StartSyncthingAutomatically);
             this.SyncthingPriorityLevel = this.CreateBasicSettingItem(x => x.SyncthingPriorityLevel);
             this.SyncthingPriorityLevel.RequiresSyncthingRestart = true;
-            this.SyncthingUseDefaultHome = this.CreateBasicSettingItem(x => !x.SyncthingUseCustomHome, (x, v) => x.SyncthingUseCustomHome = !v);
-            this.SyncthingUseDefaultHome.RequiresSyncthingRestart = true;
             this.SyncthingAddress = this.CreateBasicSettingItem(x => x.SyncthingAddress, new SyncthingAddressValidator());
             this.SyncthingAddress.RequiresSyncthingRestart = true;
 
@@ -176,6 +176,9 @@ namespace SyncTrayzor.Pages.Settings
                     x.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection(envVars);
                 }, new SyncthingEnvironmentalVariablesValidator());
             this.SyncthingEnvironmentalVariables.RequiresSyncthingRestart = true;
+
+            this.SyncthingCustomHomePath = this.CreateBasicSettingItem(x => x.SyncthingCustomHomePath);
+            this.SyncthingCustomHomePath.RequiresSyncthingRestart = true;
 
             this.SyncthingDenyUpgrade = this.CreateBasicSettingItem(x => x.SyncthingDenyUpgrade);
             this.SyncthingDenyUpgrade.RequiresSyncthingRestart = true;
@@ -257,13 +260,26 @@ namespace SyncTrayzor.Pages.Settings
         {
             var configuration = this.configurationProvider.Load();
 
+            // We have to merge two sources of data: the folder settings from config, and the actual folder
+            // configuration from Syncthing (which we use to get the folder label). They should be in sync...
+
             this.FolderSettings.Clear();
-            this.FolderSettings.AddRange(configuration.Folders.OrderByDescending(x => x.ID).Select(x => new FolderSettings()
+
+            var folderSettings = configuration.Folders.Select(x =>
             {
-                FolderName = x.ID,
-                IsWatched = x.IsWatched,
-                IsNotified = x.NotificationsEnabled,
-            }));
+                Folder folder;
+                this.syncthingManager.Folders.TryFetchById(x.ID, out folder);
+
+                return new FolderSettings()
+                {
+                    FolderId = x.ID,
+                    FolderLabel = folder?.Label ?? x.ID,
+                    IsWatched = x.IsWatched,
+                    IsNotified = x.NotificationsEnabled,
+                };
+            });
+            this.FolderSettings.AddRange(folderSettings.OrderBy(x => x.FolderLabel));
+
             this.NotifyOfPropertyChange(nameof(this.FolderSettings));
 
             this.SyncthingDebugFacilities.Clear();
@@ -342,7 +358,7 @@ namespace SyncTrayzor.Pages.Settings
                     settingItem.SaveValue(configuration);
                 }
 
-                configuration.Folders = this.FolderSettings.Select(x => new FolderConfiguration(x.FolderName, x.IsWatched, x.IsNotified)).ToList();
+                configuration.Folders = this.FolderSettings.Select(x => new FolderConfiguration(x.FolderId, x.IsWatched, x.IsNotified)).ToList();
                 // The ConfigurationApplicator will propagate this to the DebugFacilitiesManager
                 configuration.SyncthingDebugFacilities = this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             });

@@ -25,7 +25,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public string InnerFolder => Path.GetFileName(this.Folder);
 
-        public string FolderId { get; }
+        public string FolderLabel { get; }
 
         public BindableCollection<ConflictOptionViewModel> ConflictOptions { get; }
 
@@ -37,7 +37,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public ConflictViewModel(ConflictSet conflictSet, string folderName)
         {
             this.ConflictSet = conflictSet;
-            this.FolderId = folderName;
+            this.FolderLabel = folderName;
 
             this.ConflictOptions = new BindableCollection<ConflictOptionViewModel>(this.ConflictSet.Conflicts.Select(x => new ConflictOptionViewModel(x)));
 

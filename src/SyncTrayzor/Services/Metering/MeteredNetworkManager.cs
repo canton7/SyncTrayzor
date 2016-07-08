@@ -301,7 +301,9 @@ namespace SyncTrayzor.Services.Metering
                 return false;
             }
 
-            var shouldBePaused = device.IsConnected && this.costManager.IsConnectionMetered(device.Address.Address);
+            // The device can become disconnected at any point....
+            var deviceAddress = device.Address;
+            var shouldBePaused = device.IsConnected && deviceAddress != null && this.costManager.IsConnectionMetered(deviceAddress.Address);
 
             bool changed = false;
 

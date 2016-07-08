@@ -100,7 +100,7 @@
                           Visibility="{Binding Folders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding FolderId, Converter={x:Static xaml:RemoveMnemonicsConverter.Instance}}"/>
+                            <Setter Property="Header" Value="{Binding FolderLabel, Converter={x:Static xaml:RemoveMnemonicsConverter.Instance}}"/>
                             <Setter Property="Command" Value="{Binding}"/>
                         </Style>
                     </MenuItem.ItemContainerStyle>

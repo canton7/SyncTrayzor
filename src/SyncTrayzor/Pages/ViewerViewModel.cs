@@ -146,19 +146,36 @@ namespace SyncTrayzor.Pages
             {
                 if (e.Frame.IsMain && e.Url != "about:blank")
                 {
-                    var addOpenFolder =
-                    @"$('#folders .panel-footer .pull-right').prepend(" +
-                    @"  '<button class=""btn btn-sm btn-default"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
-                    @"      <span class=""fa fa-folder-open""></span>" +
-                    @"      <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
-                    @"  </button>')";
-                    webBrowser.ExecuteScriptAsync(addOpenFolder);
+                    // I tried to do this using Syncthing's events, but it's very painful - the DOM is updated some time
+                    // after the event is fired. It's a lot easier to just watch for changes on the DOM.
+                    var addOpenFolderButton =
+                    @"var syncTrayzorAddOpenFolderButton = function(elem) {" +
+                    @"    var $buttonContainer = elem.find('.panel-footer .pull-right');" +
+                    @"    $buttonContainer.find('.panel-footer .synctrayzor-add-folder-button').remove();" +
+                    @"    $buttonContainer.prepend(" +
+                    @"      '<button class=""btn btn-sm btn-default synctrayzor-add-folder-button"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
+                    @"          <span class=""fa fa-folder-open""></span>" +
+                    @"          <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
+                    @"      </button>');" +
+                    @"};" +
+                    @"new MutationObserver(function(mutations, observer) {" +
+                    @"  for (var i = 0; i < mutations.length; i++) {" +
+                    @"    for (var j = 0; j < mutations[i].addedNodes.length; j++) {" +
+                    @"      syncTrayzorAddOpenFolderButton($(mutations[i].addedNodes[j]));" +
+                    @"    }" +
+                    @"  }" +
+                    @"}).observe(document.getElementById('folders'), {" +
+                    @"  childList: true" +
+                    @"});" +
+                    @"syncTrayzorAddOpenFolderButton($('#folders'));" +
+                    @"";
+                    webBrowser.ExecuteScriptAsync(addOpenFolderButton);
 
-                    var addFolderBrowse = 
+                    var addFolderBrowse =
                     @"$('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
                     @"$('#folderPath').after(" +
                     @"  $('<button>').attr('id', 'folderPathBrowseButton')" +
-                    @"               .addClass('btn btn-sm btn-default')" +           
+                    @"               .addClass('btn btn-sm btn-default')" +
                     @"               .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
                     @"               .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
                     @"               .on('click', function() { callbackObject.browseFolderPath() })" +
@@ -178,13 +195,24 @@ namespace SyncTrayzor.Pages
             };
         }
 
+        public void RefreshBrowserNukeCache()
+        {
+            if (this.Location == this.GetSyncthingAddress().ToString())
+            {
+                this.WebBrowser?.Reload(ignoreCache: true);
+            }
+            else if (this.syncthingManager.State == SyncthingState.Running)
+            {
+                this.Location = this.GetSyncthingAddress().ToString();
+            }
+        }
+
         public void RefreshBrowser()
         {
             this.Location = "about:blank";
             if (this.syncthingManager.State == SyncthingState.Running)
             {
                 this.Location = this.GetSyncthingAddress().ToString();
-                //this.WebBrowser?.Reload(ignoreCache: true);
             }
         }
 
@@ -350,6 +378,11 @@ namespace SyncTrayzor.Pages
             return false;
         }
 
+        IResponseFilter IRequestHandler.GetResourceResponseFilter(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response)
+        {
+            return null;
+        }
+
         void IRequestHandler.OnResourceLoadComplete(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response, UrlRequestStatus status, long receivedContentLength)
         {
         }
@@ -358,7 +391,7 @@ namespace SyncTrayzor.Pages
         {
         }
 
-        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browserControl, IBrowser browser, IFrame frame, string targetUrl, string targetFrameName, WindowOpenDisposition targetDisposition, bool userGesture, IWindowInfo windowInfo, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
+        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser browserControl, IBrowser browser, IFrame frame, string targetUrl, string targetFrameName, WindowOpenDisposition targetDisposition, bool userGesture, IPopupFeatures popupFeatures, IWindowInfo windowInfo, IBrowserSettings browserSettings, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
         {
             this.processStartProvider.StartDetached(targetUrl);
             newBrowser = null;

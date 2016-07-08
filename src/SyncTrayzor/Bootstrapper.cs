@@ -23,6 +23,7 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using SyncTrayzor.Services.Metering;
+using System.Reflection;
 
 namespace SyncTrayzor
 {
@@ -72,6 +73,8 @@ namespace SyncTrayzor
             builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
             builder.Bind<INetworkCostManager>().To<NetworkCostManager>();
             builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
+            builder.Bind<IPathTransformer>().To<PathTransformer>().InSingletonScope();
+            builder.Bind<IConnectedEventDebouncer>().To<ConnectedEventDebouncer>();
 
             if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
@@ -86,9 +89,11 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            var pathTransformer = this.Container.Get<IPathTransformer>();
+
             // Have to set the log path before anything else
             var pathConfiguration = AppSettings.Instance.PathConfiguration;
-            GlobalDiagnosticsContext.Set("LogFilePath", EnvVarTransformer.Transform(pathConfiguration.LogFilePath));
+            GlobalDiagnosticsContext.Set("LogFilePath", pathTransformer.MakeAbsolute(pathConfiguration.LogFilePath));
 
             AppDomain.CurrentDomain.UnhandledException += (o, e) => OnAppDomainUnhandledException(e);
 
@@ -201,6 +206,15 @@ namespace SyncTrayzor
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error(e.Exception, "An unhandled exception occurred");
+            var typeLoadException = e.Exception as ReflectionTypeLoadException;
+            if (typeLoadException != null)
+            {
+                logger.Error("Loader exceptions:");
+                foreach (var ex in typeLoadException.LoaderExceptions)
+                {
+                    logger.Error(ex);
+                }
+            }
 
             // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try

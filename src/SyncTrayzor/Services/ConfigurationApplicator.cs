@@ -23,6 +23,7 @@ namespace SyncTrayzor.Services
         private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly IAlertsManager alertsManager;
         private readonly IMeteredNetworkManager meteredNetworkManager;
+        private readonly IPathTransformer pathTransformer;
 
         public ConfigurationApplicator(
             IConfigurationProvider configurationProvider,
@@ -34,7 +35,8 @@ namespace SyncTrayzor.Services
             IUpdateManager updateManager,
             IConflictFileWatcher conflictFileWatcher,
             IAlertsManager alertsManager,
-            IMeteredNetworkManager meteredNetworkManager)
+            IMeteredNetworkManager meteredNetworkManager,
+            IPathTransformer pathTransformer)
         {
             this.configurationProvider = configurationProvider;
             this.configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
@@ -48,6 +50,7 @@ namespace SyncTrayzor.Services
             this.conflictFileWatcher = conflictFileWatcher;
             this.alertsManager = alertsManager;
             this.meteredNetworkManager = meteredNetworkManager;
+            this.pathTransformer = pathTransformer;
 
             this.syncthingManager.DataLoaded += this.OnDataLoaded;
             this.updateManager.VersionIgnored += this.VersionIgnored;
@@ -92,13 +95,15 @@ namespace SyncTrayzor.Services
             this.syncthingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncthingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
             this.syncthingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
-            this.syncthingManager.SyncthingCustomHomeDir = configuration.SyncthingUseCustomHome ?
-                EnvVarTransformer.Transform(configuration.SyncthingCustomHomePath)
-                : null;
+            this.syncthingManager.SyncthingCustomHomeDir = String.IsNullOrWhiteSpace(configuration.SyncthingCustomHomePath) ?
+                this.pathsProvider.DefaultSyncthingHomePath :
+                this.pathTransformer.MakeAbsolute(configuration.SyncthingCustomHomePath);
             this.syncthingManager.SyncthingDenyUpgrade = configuration.SyncthingDenyUpgrade;
             this.syncthingManager.SyncthingPriorityLevel = configuration.SyncthingPriorityLevel;
             this.syncthingManager.SyncthingHideDeviceIds = configuration.ObfuscateDeviceIDs;
-            this.syncthingManager.ExecutablePath = EnvVarTransformer.Transform(configuration.SyncthingPath);
+            this.syncthingManager.ExecutablePath = String.IsNullOrWhiteSpace(configuration.SyncthingCustomPath) ?
+                this.pathsProvider.DefaultSyncthingPath :
+                this.pathTransformer.MakeAbsolute(configuration.SyncthingCustomPath);
             this.syncthingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);

@@ -26,6 +26,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("id")]
         public string ID { get; set; }
 
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
         [JsonProperty("path")]
         public string Path { get; set; }
 
@@ -61,7 +64,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         public override string ToString()
         {
-            return $"<Folder id={this.ID} path={this.Path} devices=[{String.Join(", ", this.Devices)}] rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
+            return $"<Folder id={this.ID} label={this.Label} path={this.Path} devices=[{String.Join(", ", this.Devices)}] rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
         }
     }
 

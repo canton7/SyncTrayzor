@@ -1156,6 +1156,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing Custom Home Path:.
+        /// </summary>
+        public static string SettingsView_SyncthingCustomHomePath {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingCustomHomePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set, overrides the default path for Syncthing&apos;s database and configuration.
+        /// </summary>
+        public static string SettingsView_SyncthingCustomHomePath_ToolTip {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingCustomHomePath_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop Syncthing auto-upgrading.
         /// </summary>
         public static string SettingsView_SyncthingDenyUpgrade {
@@ -1179,24 +1197,6 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_SyncthingEnvironmentalVariables {
             get {
                 return ResourceManager.GetString("SettingsView_SyncthingEnvironmentalVariables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use Syncthing&apos;s default database location.
-        /// </summary>
-        public static string SettingsView_SyncthingUseDefaultHome {
-            get {
-                return ResourceManager.GetString("SettingsView_SyncthingUseDefaultHome", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to If unchecked, this will mean that SyncTrayzor will see a different set of configured folders to any other Syncthing instances on your computer..
-        /// </summary>
-        public static string SettingsView_SyncthingUseDefaultHome_ToolTip {
-            get {
-                return ResourceManager.GetString("SettingsView_SyncthingUseDefaultHome_ToolTip", resourceCulture);
             }
         }
         

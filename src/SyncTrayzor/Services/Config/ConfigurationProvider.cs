@@ -2,11 +2,11 @@
 using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Pri.LongPath;
 
 namespace SyncTrayzor.Services.Config
 {
@@ -54,6 +54,7 @@ namespace SyncTrayzor.Services.Config
         private readonly SynchronizedEventDispatcher eventDispatcher;
         private readonly IApplicationPathsProvider paths;
         private readonly IFilesystemProvider filesystem;
+        private readonly IPathTransformer pathTransformer;
 
         private readonly object currentConfigLock = new object();
         private Configuration currentConfig;
@@ -63,10 +64,11 @@ namespace SyncTrayzor.Services.Config
         public bool HadToCreateConfiguration { get; }
         public bool WasUpgraded { get; private set; }
 
-        public ConfigurationProvider(IApplicationPathsProvider paths, IFilesystemProvider filesystemProvider)
+        public ConfigurationProvider(IApplicationPathsProvider paths, IFilesystemProvider filesystemProvider, IPathTransformer pathTransformer)
         {
             this.paths = paths;
             this.filesystem = filesystemProvider;
+            this.pathTransformer = pathTransformer;
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
 
             this.migrations = new Func<XDocument, XDocument>[]
@@ -76,7 +78,10 @@ namespace SyncTrayzor.Services.Config
                 this.MigrateV3ToV4,
                 this.MigrateV4ToV5,
                 this.MigrateV5ToV6,
-                this.MigrateV6ToV7
+                this.MigrateV6ToV7,
+                this.MigrateV7ToV8,
+                this.MigrateV8ToV9,
+                this.MigrateV9ToV10,
             };
         }
 
@@ -104,7 +109,10 @@ namespace SyncTrayzor.Services.Config
                 }
             }
 
-            var expandedSyncthingPath = EnvVarTransformer.Transform(this.currentConfig.SyncthingPath);
+            // This is duplicated between here and ConfigurationApplicator, and it's ugly.
+            var expandedSyncthingPath = String.IsNullOrWhiteSpace(this.currentConfig.SyncthingCustomPath) ?
+                this.paths.DefaultSyncthingPath :
+                this.pathTransformer.MakeAbsolute(this.currentConfig.SyncthingCustomPath);
 
             if (!this.filesystem.FileExists(this.paths.SyncthingBackupPath))
                 throw new CouldNotFindSyncthingException(this.paths.SyncthingBackupPath);
@@ -114,6 +122,11 @@ namespace SyncTrayzor.Services.Config
             {
                 // We know that this.paths.SyncthingBackupPath exists, because we checked this above
                 logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
+
+                var expandedSyncthingPathDir = Path.GetDirectoryName(expandedSyncthingPath);
+                if (!this.filesystem.DirectoryExists(expandedSyncthingPathDir))
+                    this.filesystem.CreateDirectory(expandedSyncthingPathDir);
+
                 this.filesystem.Copy(this.paths.SyncthingBackupPath, expandedSyncthingPath);
             }
 
@@ -130,7 +143,7 @@ namespace SyncTrayzor.Services.Config
             // (creating if necessary)
             logger.Debug("Loaded default configuration: {0}", defaultConfiguration);
             XDocument defaultConfig;
-            using (var ms = new MemoryStream())
+            using (var ms = new System.IO.MemoryStream())
             {
                 serializer.Serialize(ms, defaultConfiguration);
                 ms.Position = 0;
@@ -287,6 +300,66 @@ namespace SyncTrayzor.Services.Config
             return configuration;
         }
 
+        private XDocument MigrateV7ToV8(XDocument configuration)
+        {
+            // Get rid of %EXEPATH%
+            var syncthingPath = configuration.Root.Element("SyncthingPath");
+            syncthingPath.Value = syncthingPath.Value.TrimStart("%EXEPATH%\\");
+
+            var syncthingCustomHomePath = configuration.Root.Element("SyncthingCustomHomePath");
+            syncthingCustomHomePath.Value = syncthingCustomHomePath.Value.TrimStart("%EXEPATH%\\");
+
+            return configuration;
+        }
+
+        private XDocument MigrateV8ToV9(XDocument configuration)
+        {
+            // The installed version defaulted to "don't use custom home", while the portable
+            // version defaulted to using it.
+            // Therefore if we were installed, clear SyncthingCustomHomePath if they opted not to use it.
+            // If we were portable:
+            // - If they were using the custom home path (the default), clear it if it equals SyncthingHomePath
+            // - If they weren't using a custom home, that means they went back to using syncthing's default dir,
+            //   so set that.
+
+            // We want to hard-code these paths, as app.config may change in future, but this migration must
+            // always do the same thing.
+
+            bool useCustomHome = (bool)configuration.Root.Element("SyncthingUseCustomHome");
+            var customHomePath = configuration.Root.Element("SyncthingCustomHomePath").Value;
+            string result;
+
+            if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
+            {
+                result = useCustomHome ? customHomePath : String.Empty;
+            }
+            else
+            {
+                if (useCustomHome)
+                    result = (customHomePath == @"data\syncthing") ? String.Empty : customHomePath;
+                else
+                    result = @"%LOCALAPPDATA%\Syncthing";
+            }
+
+            configuration.Root.Element("SyncthingCustomHomePath").Value = result;
+
+            // SyncthingUseCustomHome will be removed when it's deserialized into Configuration
+
+            return configuration;
+        }
+
+        private XDocument MigrateV9ToV10(XDocument configuration)
+        {
+            // If SyncthingPath differs from the default, write it to SyncthingCustomPath.
+            // Otherwise leave it to be dropped.
+
+            var syncthingPath = configuration.Root.Element("SyncthingPath").Value;
+            if (!String.Equals(syncthingPath, this.paths.UnexpandedDefaultSyncthingPath, StringComparison.OrdinalIgnoreCase))
+                configuration.Root.Add(new XElement("SyncthingCustomPath", syncthingPath));
+
+            return configuration;
+        }
+
         private XDocument LegacyMigrationConfiguration(XDocument configuration)
         {
             var address = configuration.Root.Element("SyncthingAddress").Value;
@@ -346,7 +419,7 @@ namespace SyncTrayzor.Services.Config
                         break;
                     }
                 }
-                catch (IOException e)
+                catch (System.IO.IOException e)
                 {
                     lastException = e;
                     logger.Warn("Unable to save config file: maybe someone else has locked it. Trying again shortly", e);

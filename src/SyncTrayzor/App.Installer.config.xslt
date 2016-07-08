@@ -10,10 +10,9 @@
   <xsl:template match="/configuration/settings/PathConfiguration/ConfigurationFilePath/text()">%APPDATA%\SyncTrayzor\config.xml</xsl:template>
   <xsl:template match="/configuration/settings/PathConfiguration/ConfigurationFileBackupPath/text()">%APPDATA%\SyncTrayzor\config-backups</xsl:template>
   <xsl:template match="/configuration/settings/PathConfiguration/CefCachePath/text()">%LOCALAPPDATA%\SyncTrayzor\cef\cache</xsl:template>
-
-  <xsl:template match="/configuration/settings/DefaultUserConfiguration/SyncthingUseCustomHome/text()">false</xsl:template>
-  <xsl:template match="/configuration/settings/DefaultUserConfiguration/SyncthingCustomHomePath/text()">%LOCALAPPDATA%\SyncTrayzor\syncthing</xsl:template>
-  <xsl:template match="/configuration/settings/DefaultUserConfiguration/SyncthingPath/text()">%APPDATA%\SyncTrayzor\syncthing.exe</xsl:template>
+  <xsl:template match="/configuration/settings/PathConfiguration/SyncthingPath/text()">%APPDATA%\SyncTrayzor\syncthing.exe</xsl:template>
+  <!-- null means use Syncthing's default -->
+  <xsl:template match="/configuration/settings/PathConfiguration/SyncthingHomePath/text()"></xsl:template>
   
   <!-- Default template -->
   <xsl:template match="node()|@*">

@@ -124,7 +124,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
                     {
                         await this.conflictFileManager.FindConflicts(folder.Path)
                             .ObserveOnDispatcher(DispatcherPriority.Background)
-                            .ForEachAsync(conflict => this.Conflicts.Add(new ConflictViewModel(conflict, folder.FolderId)), ct);
+                            .ForEachAsync(conflict => this.Conflicts.Add(new ConflictViewModel(conflict, folder.Label)), ct);
                     }
                     catch (OperationCanceledException) { }
                 }

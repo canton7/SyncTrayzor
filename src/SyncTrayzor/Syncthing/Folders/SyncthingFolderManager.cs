@@ -105,7 +105,7 @@ namespace SyncTrayzor.Syncthing.Folders
             var existingFolders = this.folders;
 
             // Maybe nothing changed?
-            if (existingFolders.Values.SequenceEqual(folders))
+            if (new HashSet<Folder>(existingFolders.Values).SetEquals(folders))
                 return;
 
             var changeNotifications = new List<Action>();
@@ -123,7 +123,8 @@ namespace SyncTrayzor.Syncthing.Folders
                         changeNotifications.Add(() => this.OnStatusChanged(folder, folder.Status));
                         existingFolder.SyncState = folder.SyncState;
                     }
-                    newFolders[folder.FolderId] = existingFolder;
+                    // Things like the label may have changed, so need to use the new folder instance
+                    newFolders[folder.FolderId] = folder;
                 }
                 else
                 {
@@ -160,7 +161,7 @@ namespace SyncTrayzor.Syncthing.Folders
                     if (path.StartsWith("~"))
                         path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
-                    return new Folder(folder.ID, path, syncState, status);
+                    return new Folder(folder.ID, folder.Label, path, syncState, status);
                 });
 
             cancellationToken.ThrowIfCancellationRequested();

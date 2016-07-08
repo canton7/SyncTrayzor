@@ -42,6 +42,7 @@ namespace SyncTrayzor.NotifyIcon
         private readonly IApplicationState application;
         private readonly IApplicationWindowState applicationWindowState;
         private readonly ISyncthingManager syncthingManager;
+        private readonly IConnectedEventDebouncer connectedEventDebouncer;
 
         private TaskbarIcon taskbarIcon;
 
@@ -77,13 +78,15 @@ namespace SyncTrayzor.NotifyIcon
             NotifyIconViewModel viewModel,
             IApplicationState application,
             IApplicationWindowState applicationWindowState,
-            ISyncthingManager syncthingManager)
+            ISyncthingManager syncthingManager,
+            IConnectedEventDebouncer connectedEventDebouncer)
         {
             this.viewManager = viewManager;
             this.viewModel = viewModel;
             this.application = application;
             this.applicationWindowState = applicationWindowState;
             this.syncthingManager = syncthingManager;
+            this.connectedEventDebouncer = connectedEventDebouncer;
 
             this.taskbarIcon = (TaskbarIcon)this.application.FindResource("TaskbarIcon");
             this.taskbarIcon.TrayBalloonTipClicked += (o, e) =>
@@ -115,6 +118,8 @@ namespace SyncTrayzor.NotifyIcon
             this.syncthingManager.Devices.DeviceDisconnected += this.DeviceDisconnected;
             this.syncthingManager.DeviceRejected += this.DeviceRejected;
             this.syncthingManager.FolderRejected += this.FolderRejected;
+
+            this.connectedEventDebouncer.DeviceConnected += this.DebouncedDeviceConnected;
         }
 
         private void ApplicationStartup(object sender, EventArgs e)
@@ -127,9 +132,14 @@ namespace SyncTrayzor.NotifyIcon
             if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
             {
-                this.taskbarIcon.HideBalloonTip();
-                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
+                this.connectedEventDebouncer.Connect(e.Device);
             }
+        }
+
+        private void DebouncedDeviceConnected(object sender, DeviceConnectedEventArgs e)
+        {
+            this.taskbarIcon.HideBalloonTip();
+            this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceConnected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceConnected_Message, e.Device.Name), BalloonIcon.Info);
         }
 
         private void DeviceDisconnected(object sender, DeviceDisconnectedEventArgs e)
@@ -137,8 +147,11 @@ namespace SyncTrayzor.NotifyIcon
             if (this.ShowDeviceConnectivityBalloons &&
                     DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
             {
-                this.taskbarIcon.HideBalloonTip();
-                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
+                if (this.connectedEventDebouncer.Disconnect(e.Device))
+                {
+                    this.taskbarIcon.HideBalloonTip();
+                    this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_DeviceDisconnected_Title, Localizer.F(Resources.TrayIcon_Balloon_DeviceDisconnected_Message, e.Device.Name), BalloonIcon.Info);
+                }
             }
         }
 

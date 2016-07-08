@@ -10,6 +10,7 @@ namespace SyncTrayzor.Syncthing.Folders
         private readonly object syncRoot = new object();
 
         public string FolderId { get; }
+        public string Label { get; }
         public string Path { get; }
 
         private FolderSyncState _syncState;
@@ -36,9 +37,10 @@ namespace SyncTrayzor.Syncthing.Folders
         }
 
 
-        public Folder(string folderId, string path, FolderSyncState syncState, FolderStatus status)
+        public Folder(string folderId, string label, string path, FolderSyncState syncState, FolderStatus status)
         {
             this.FolderId = folderId;
+            this.Label = String.IsNullOrWhiteSpace(label) ? folderId : label;
             this.Path = path;
             this.SyncState = syncState;
             this.syncingPaths = new HashSet<string>();
@@ -92,12 +94,41 @@ namespace SyncTrayzor.Syncthing.Folders
             if (Object.ReferenceEquals(other, null))
                 return false;
 
-            return this.FolderId == other.FolderId;
+            lock (this.syncRoot)
+            {
+                return this.FolderId == other.FolderId &&
+                    this.Label == other.Label &&
+                    this.Path == other.Path &&
+                    this.SyncState == other.SyncState &&
+                    this.Status == other.Status &&
+                    this.FolderErrors.SequenceEqual(other.FolderErrors) &&
+                    this.syncingPaths.SetEquals(other.syncingPaths);
+            }
         }
 
         public override int GetHashCode()
         {
-            return this.FolderId.GetHashCode();
+            unchecked
+            {
+                lock (this.syncRoot)
+                {
+                    int hash = 17;
+                    hash = hash * 23 + this.FolderId.GetHashCode();
+                    hash = hash * 23 + this.Label.GetHashCode();
+                    hash = hash * 23 + this.SyncState.GetHashCode();
+                    hash = hash * 23 + this.Status.GetHashCode();
+                    hash = hash * 23 + this.syncingPaths.GetHashCode();
+                    foreach (var folderError in this.FolderErrors)
+                    {
+                        hash = hash * 23 + folderError.GetHashCode();
+                    }
+                    foreach (var syncingPath in this.syncingPaths)
+                    {
+                        hash = hash * 23 + syncingPath.GetHashCode();
+                    }
+                    return hash;
+                }
+            }
         }
     }
 }
