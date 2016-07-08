@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.1.11
+-------
+
+ - Display folder labels instead of folder IDs (#284)
+ - Fix issue where 'Open Folder' and 'Browse' buttons might not be displayed (#281)
+ - Make F5 clear the browser cache, helping with issues were Syncthing's GUI assets have been incorrectly cached
+ - Don't spam connected/disconnected events if they happen too quickly (e.g. if a device is paused) (#289)
+ - Make it easier to convert between portable and installed versions (#271, #272)
+ - Fix race condition causing crash in metered network manager (#291)
+
 v1.1.10
 -------
 
