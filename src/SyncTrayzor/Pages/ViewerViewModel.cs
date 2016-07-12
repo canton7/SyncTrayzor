@@ -11,10 +11,11 @@ using SyncTrayzor.Services;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Syncthing.Folders;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using NLog;
 
 namespace SyncTrayzor.Pages
 {
-    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IDisposable
+    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IRenderProcessMessageHandler, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncthingManager syncthingManager;
@@ -125,6 +126,9 @@ namespace SyncTrayzor.Pages
         {
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
+            webBrowser.RenderProcessMessageHandler = this;
+            var logger = LogManager.GetCurrentClassLogger();
+            webBrowser.ConsoleMessage += (o, e) => logger.Debug(e.Message);
             // Don't enable touch scrolling yet - it's still buggy, and causes tapping on links to fail
             //webBrowser.IsManipulationEnabled = true;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
@@ -142,57 +146,6 @@ namespace SyncTrayzor.Pages
             // *everywhere*, and that means keeping a local field zoomLevel to track the current zoom level. Such is life
 
             webBrowser.FrameLoadStart += (o, e) => webBrowser.SetZoomLevel(this.zoomLevel);
-            webBrowser.FrameLoadEnd += (o, e) =>
-            {
-                if (e.Frame.IsMain && e.Url != "about:blank")
-                {
-                    // I tried to do this using Syncthing's events, but it's very painful - the DOM is updated some time
-                    // after the event is fired. It's a lot easier to just watch for changes on the DOM.
-                    var addOpenFolderButton =
-                    @"var syncTrayzorAddOpenFolderButton = function(elem) {" +
-                    @"    var $buttonContainer = elem.find('.panel-footer .pull-right');" +
-                    @"    $buttonContainer.find('.panel-footer .synctrayzor-add-folder-button').remove();" +
-                    @"    $buttonContainer.prepend(" +
-                    @"      '<button class=""btn btn-sm btn-default synctrayzor-add-folder-button"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
-                    @"          <span class=""fa fa-folder-open""></span>" +
-                    @"          <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
-                    @"      </button>');" +
-                    @"};" +
-                    @"new MutationObserver(function(mutations, observer) {" +
-                    @"  for (var i = 0; i < mutations.length; i++) {" +
-                    @"    for (var j = 0; j < mutations[i].addedNodes.length; j++) {" +
-                    @"      syncTrayzorAddOpenFolderButton($(mutations[i].addedNodes[j]));" +
-                    @"    }" +
-                    @"  }" +
-                    @"}).observe(document.getElementById('folders'), {" +
-                    @"  childList: true" +
-                    @"});" +
-                    @"syncTrayzorAddOpenFolderButton($('#folders'));" +
-                    @"";
-                    webBrowser.ExecuteScriptAsync(addOpenFolderButton);
-
-                    var addFolderBrowse =
-                    @"$('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
-                    @"$('#folderPath').after(" +
-                    @"  $('<button>').attr('id', 'folderPathBrowseButton')" +
-                    @"               .addClass('btn btn-sm btn-default')" +
-                    @"               .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
-                    @"               .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
-                    @"               .on('click', function() { callbackObject.browseFolderPath() })" +
-                    @");" +
-                    @"$('#folderPath').removeAttr('list');" +
-                    @"$('#directory-list').remove();" +
-                    @"$('#editFolder').on('shown.bs.modal', function() {" +
-                    @"  if ($('#folderPath').is('[readonly]')) {" +
-                    @"      $('#folderPathBrowseButton').attr('disabled', 'disabled');" +
-                    @"  }" +
-                    @"  else {" +
-                    @"      $('#folderPathBrowseButton').removeAttr('disabled');" +
-                    @"  }" +
-                    @"});";
-                    webBrowser.ExecuteScriptAsync(addFolderBrowse);
-                }
-            };
         }
 
         public void RefreshBrowserNukeCache()
@@ -405,6 +358,62 @@ namespace SyncTrayzor.Pages
         bool ILifeSpanHandler.DoClose(IWebBrowser browserControl, IBrowser browser)
         {
             return false;
+        }
+
+        void IRenderProcessMessageHandler.OnContextCreated(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+        {
+            if (!frame.IsMain || frame.Url == "about:blank")
+                return;
+
+            var script =
+            @"console.log('EXECUTING!');" +
+            @"var syncTrayzorAddOpenFolderButton = function(elem) {" +
+            @"    var $buttonContainer = elem.find('.panel-footer .pull-right');" +
+            @"    $buttonContainer.find('.panel-footer .synctrayzor-add-folder-button').remove();" +
+            @"    $buttonContainer.prepend(" +
+            @"      '<button class=""btn btn-sm btn-default synctrayzor-add-folder-button"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
+            @"          <span class=""fa fa-folder-open""></span>" +
+            @"          <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
+            @"      </button>');" +
+            @"};" +
+            @"" +
+            @"window.addEventListener('load', function() { " +
+            @"  console.log('READY!'); " +
+            @"  new MutationObserver(function(mutations, observer) {" +
+            @"    for (var i = 0; i < mutations.length; i++) {" +
+            @"      for (var j = 0; j < mutations[i].addedNodes.length; j++) {" +
+            @"        syncTrayzorAddOpenFolderButton($(mutations[i].addedNodes[j]));" +
+            @"      }" +
+            @"    }" +
+            @"  }).observe(document.getElementById('folders'), {" +
+            @"    childList: true" +
+            @"  });" +
+            @"  syncTrayzorAddOpenFolderButton($('#folders'));" +
+            @"" +
+            @"  $('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
+            @"  $('#folderPath').after(" +
+            @"    $('<button>').attr('id', 'folderPathBrowseButton')" +
+            @"                 .addClass('btn btn-sm btn-default')" +
+            @"                 .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
+            @"                 .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
+            @"                 .on('click', function() { callbackObject.browseFolderPath() })" +
+            @"  );" +
+            @"  $('#folderPath').removeAttr('list');" +
+            @"  $('#directory-list').remove();" +
+            @"  $('#editFolder').on('shown.bs.modal', function() {" +
+            @"    if ($('#folderPath').is('[readonly]')) {" +
+            @"        $('#folderPathBrowseButton').attr('disabled', 'disabled');" +
+            @"    }" +
+            @"    else {" +
+            @"        $('#folderPathBrowseButton').removeAttr('disabled');" +
+            @"    }" +
+            @"  });" +
+            @"});";
+            frame.ExecuteJavaScriptAsync(script);
+        }
+
+        void IRenderProcessMessageHandler.OnFocusedNodeChanged(IWebBrowser browserControl, IBrowser browser, IFrame frame, IDomNode node)
+        {
         }
 
         public void Dispose()
