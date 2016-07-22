@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.12
+-------
+
+ - No functional change. Release is so that new users get Syncthing 0.14 by default.
+
 v1.1.11
 -------
 
