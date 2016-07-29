@@ -14,7 +14,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace SyncTrayzor.Pages
 {
-    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IDisposable
+    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IContextMenuHandler, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncthingManager syncthingManager;
@@ -125,6 +125,7 @@ namespace SyncTrayzor.Pages
         {
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
+            webBrowser.MenuHandler = this;
             // Don't enable touch scrolling yet - it's still buggy, and causes tapping on links to fail
             //webBrowser.IsManipulationEnabled = true;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
@@ -403,6 +404,26 @@ namespace SyncTrayzor.Pages
         }
 
         bool ILifeSpanHandler.DoClose(IWebBrowser browserControl, IBrowser browser)
+        {
+            return false;
+        }
+
+        void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+        {
+            // Clear the default menu, just leaving our custom one
+            model.Clear();
+        }
+
+        bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
+        {
+            return false;
+        }
+
+        void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+        {
+        }
+
+        bool IContextMenuHandler.RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
         {
             return false;
         }
