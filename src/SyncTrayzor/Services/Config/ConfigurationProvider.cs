@@ -61,7 +61,7 @@ namespace SyncTrayzor.Services.Config
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
-        public bool HadToCreateConfiguration { get; }
+        public bool HadToCreateConfiguration { get; private set; }
         public bool WasUpgraded { get; private set; }
 
         public ConfigurationProvider(IApplicationPathsProvider paths, IFilesystemProvider filesystemProvider, IPathTransformer pathTransformer)
@@ -93,7 +93,9 @@ namespace SyncTrayzor.Services.Config
             if (!this.filesystem.DirectoryExists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
                 this.filesystem.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
-            this.currentConfig = this.LoadFromDisk(defaultConfiguration);
+            bool hadToCreateConfiguration;
+            this.currentConfig = this.LoadFromDisk(defaultConfiguration, out hadToCreateConfiguration);
+            this.HadToCreateConfiguration = hadToCreateConfiguration;
 
             bool updateConfigInstallCount = false;
             int latestInstallCount = 0;
@@ -137,8 +139,10 @@ namespace SyncTrayzor.Services.Config
             }
         }
 
-        private Configuration LoadFromDisk(Configuration defaultConfiguration)
+        private Configuration LoadFromDisk(Configuration defaultConfiguration, out bool hadToCreate)
         {
+            hadToCreate = false;
+
             // Merge any updates from app.config / Configuration into the configuration file on disk
             // (creating if necessary)
             logger.Debug("Loaded default configuration: {0}", defaultConfiguration);
@@ -168,6 +172,8 @@ namespace SyncTrayzor.Services.Config
                 }
                 else
                 {
+                    logger.Debug($"Configuration file {this.paths.ConfigurationFilePath} doesn't exist, so creating");
+                    hadToCreate = true;
                     loadedConfig = defaultConfig;
                 }
 
