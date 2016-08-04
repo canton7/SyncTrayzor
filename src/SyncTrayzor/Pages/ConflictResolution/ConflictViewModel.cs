@@ -44,9 +44,12 @@ namespace SyncTrayzor.Pages.ConflictResolution
             // These bindings aren't called lazilly, so don't bother being lazy
             using (var icon = ShellTools.GetIcon(this.ConflictSet.File.FilePath, isFile: true))
             {
-                var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                bs.Freeze();
-                this.Icon = bs;
+                if (icon != null)
+                {
+                    var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    bs.Freeze();
+                    this.Icon = bs;
+                }
             }
         }
     }
