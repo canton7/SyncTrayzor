@@ -272,7 +272,7 @@ namespace SyncTrayzor.Pages
 
         protected override void OnClose()
         {
-            this.WebBrowser.Dispose();
+            this.WebBrowser?.Dispose();
             this.WebBrowser = null;
 
             // This is such a dirty, horrible, hacky thing to do...
@@ -440,10 +440,10 @@ namespace SyncTrayzor.Pages
             private readonly Action browseFolderPathAction;
 
             public JavascriptCallbackObject(Action<string> openFolderAction, Action browseFolderPathAction)
-	        {
+            {
                 this.openFolderAction = openFolderAction;
                 this.browseFolderPathAction = browseFolderPathAction;
-	        }
+            }
 
             public void OpenFolder(string folderId)
             {
