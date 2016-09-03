@@ -199,9 +199,6 @@ namespace SyncTrayzor.Services.Conflicts
 
         private void PathChanged(object sender, PathChangedEventArgs e)
         {
-            if (e.IsDirectory)
-                return;
-
             var fullPath = Path.Combine(e.Directory, e.Path);
 
             if (this.conflictFileManager.IsPathIgnored(fullPath) || this.conflictFileManager.IsFileIgnored(fullPath))

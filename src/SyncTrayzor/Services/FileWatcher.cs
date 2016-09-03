@@ -21,14 +21,12 @@ namespace SyncTrayzor.Services
         public string Directory { get; }
         public string Path { get; }
         public bool PathExists { get; }
-        public bool IsDirectory { get; }
 
-        public PathChangedEventArgs(string directory, string path, bool pathExists, bool isDirectory)
+        public PathChangedEventArgs(string directory, string path, bool pathExists)
         {
             this.Directory = directory;
             this.Path = path;
             this.PathExists = pathExists;
-            this.IsDirectory = isDirectory;
         }
     }
 
@@ -252,16 +250,14 @@ namespace SyncTrayzor.Services
             // (e.g. because it was a deletion), then strip it back to the first component without an ~
             subPath = this.StripShortPathSegments(subPath);
 
-            bool isDirectory = !this.filesystem.FileExists(path);
-
-            this.OnPathChanged(subPath, pathExists, isDirectory);
+            this.OnPathChanged(subPath, pathExists);
         }
 
-        public virtual void OnPathChanged(string path, bool pathExists, bool isDirectory)
+        public virtual void OnPathChanged(string path, bool pathExists)
         {
             var handler = this.PathChanged;
             if (handler != null)
-                handler(this, new PathChangedEventArgs(this.Directory, path, pathExists, isDirectory));
+                handler(this, new PathChangedEventArgs(this.Directory, path, pathExists));
         }
 
         private string GetLongPathName(string path)

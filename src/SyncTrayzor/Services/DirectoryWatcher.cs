@@ -86,9 +86,9 @@ namespace SyncTrayzor.Services
             };
         }
 
-        public override void OnPathChanged(string subPath, bool pathExists, bool isDirectory)
+        public override void OnPathChanged(string subPath, bool pathExists)
         {
-            base.OnPathChanged(subPath, pathExists, isDirectory);
+            base.OnPathChanged(subPath, pathExists);
 
             if (this.OnPreviewDirectoryChanged(subPath, pathExists))
                 return;
