@@ -932,4 +932,7 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_SyncthingCustomHomePath_ToolTip" xml:space="preserve">
     <value>If set, overrides the default path for Syncthing's database and configuration</value>
   </data>
+  <data name="Settings_SyncthingCommandLineFlags" xml:space="preserve">
+    <value>Syncthing Command-line Flags</value>
+  </data>
 </root>

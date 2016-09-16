@@ -146,7 +146,7 @@
                                                     Content="{l:Loc SettingsView_SyncthingDenyUpgrade}"
                                                     ToolTip="{l:Loc SettingsView_SyncthingDenyUpgrade_ToolTip}"/>
 
-                                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCommandLineFlags}" Content="Syncthing Command-line Flags"/>
+                                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCommandLineFlags}" Content="{l:Loc Settings_SyncthingCommandLineFlags}"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingCommandLineFlags"  Text="{Binding SyncthingCommandLineFlags.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
                                     
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
