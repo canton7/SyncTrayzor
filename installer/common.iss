@@ -9,6 +9,7 @@
 #define AppURL "https://github.com/canton7/SyncTrayzor"
 #define AppDataFolder "SyncTrayzor"
 #define RunRegKey "Software\Microsoft\Windows\CurrentVersion\Run"
+#define DotNetInstallerExe "dotNet451Setup.exe"
 
 
 [Setup]
@@ -45,6 +46,14 @@ ArchitecturesAllowed=x64
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[CustomMessages]
+InstallingDotNetFramework=Installing .NET Framework. This might take a few minutes...
+DotNetFrameworkFailedToLaunch=Failed to launch .NET Framework Installer with error "%1". Please fix the error then run this installer again.
+DotNetFrameworkFailed1602=.NET Framework installation was cancelled. This installation can continue, but be aware that this application may not run unless the .NET Framework installation is completed successfully.
+DotNetFrameworkFailed1603=A fatal error occurred while installing the .NET Framework. Please fix the error, then run the installer again.
+DotNetFrameworkFailed5100=Your computer does not meet the requirements of the .NET Framework. Please consult the documentation.
+DotNetFrameworkFailedOther=The .NET Framework installer exited with an unexpected status code "%1". Please review any other messages shown by the installer to determine whether the installation completed successfully, and abort this installation and fix the problem if it did not.
+
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
@@ -52,6 +61,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "{userappdata}\{#AppDataFolder}"
 
 [Files]
+; Near the beginning, as it's extracted first and this makes it cheaper
+Source: "..\{#DotNetInstallerExe}"; DestDir: {tmp}; Flags: dontcopy nocompression noencryption
+
 Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,ffmpegsumo.dll,d3dcompiler_43.dll,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,pdf.dll"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
@@ -60,43 +72,91 @@ Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "syncthing.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Flags: ignoreversion
 
-Source: "..\dotNet451Setup.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: FrameworkIsNotInstalled
-
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#AppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{tmp}\dotNet451Setup.exe"; Parameters: "/passive /promptrestart"; Check: FrameworkIsNotInstalled; StatusMsg: "Microsoft .NET Framework 4.5.1 is being installed. Please wait..."
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
-function FrameworkIsNotInstalled: Boolean;
+var
+  GlobalRestartRequired: boolean;
+
+function DotNetIsMissing(): Boolean;
 var 
-  exists: boolean;
-  release: cardinal;
+  Exists: Boolean;
+  Release: Cardinal;
 begin
-  exists := RegQueryDWordValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release', release);
-  result := not exists or (release < 378758);
+  Exists := RegQueryDWordValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release', Release);
+  Result := not Exists or (Release < 378758);
+end;
+
+// Adapted from https://blogs.msdn.microsoft.com/davidrickard/2015/07/17/installing-net-framework-4-5-automatically-with-inno-setup/
+function InstallDotNet(): String;
+var
+  StatusText: string;
+  ResultCode: Integer;
+begin
+  StatusText := WizardForm.StatusLabel.Caption;
+  WizardForm.StatusLabel.Caption := CustomMessage('InstallingDotNetFramework');
+  WizardForm.ProgressGauge.Style := npbstMarquee;
+  try
+    ExtractTemporaryFile('{#DotNetInstallerExe}');
+    if not Exec(ExpandConstant('{tmp}\{#DotNetInstallerExe}'), '/passive /norestart /showrmui /showfinalerror', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+    begin
+      Result := FmtMessage(CustomMessage('DotNetFrameworkFailedToLaunch'), [SysErrorMessage(ResultCode)]);
+    end
+    else
+    begin
+      // See https://msdn.microsoft.com/en-us/library/ee942965(v=vs.110).aspx#return_codes
+      case resultCode of
+        0: begin
+          // Successful
+        end;
+        1602 : begin
+          MsgBox(CustomMessage('DotNetFrameworkFailed1602'), mbInformation, MB_OK);
+        end;
+        1603: begin
+          Result := CustomMessage('DotNetFrameworkFailed1603');
+        end;
+        1641: begin
+          GlobalRestartRequired := True;
+        end;
+        3010: begin
+          GlobalRestartRequired := True;
+        end;
+        5100: begin
+          Result := CustomMessage('DotNetFrameworkFailed5100');
+        end;
+        else begin
+          MsgBox(FmtMessage(CustomMessage('DotNetFrameworkFailedOther'), [IntToStr(ResultCode)]), mbError, MB_OK);
+        end;
+      end;
+    end;
+  finally
+    WizardForm.StatusLabel.Caption := StatusText;
+    WizardForm.ProgressGauge.Style := npbstNormal;
+  end;
 end;
 
 procedure BumpInstallCount;
 var
-  fileContents: AnsiString;
-  installCount: integer;
+  FileContents: AnsiString;
+  InstallCount: integer;
 begin
   { Increment the install count in InstallCount.txt if it exists, or create it with the contents '1' if it doesn't }
-  if LoadStringFromFile(ExpandConstant('{app}\InstallCount.txt'), fileContents) then
+  if LoadStringFromFile(ExpandConstant('{app}\InstallCount.txt'), FileContents) then
   begin
-    installCount := StrTointDef(Trim(string(fileContents)), 0) + 1;
+    InstallCount := StrTointDef(Trim(string(FileContents)), 0) + 1;
   end
   else
   begin
-    installCount := 1;
+    InstallCount := 1;
   end;
 
-  SaveStringToFile(ExpandConstant('{app}\InstallCount.txt'), IntToStr(installCount), False);
+  SaveStringToFile(ExpandConstant('{app}\InstallCount.txt'), IntToStr(InstallCount), False);
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
@@ -136,6 +196,23 @@ begin
       end;
     end;
   end
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  // 'NeedsRestart' only has an effect if we return a non-empty string, thus aborting the installation.
+  // If the installers indicate that they want a restart, this should be done at the end of installation.
+  // Therefore we set the global 'restartRequired' if a restart is needed, and return this from NeedRestart()
+
+  if DotNetIsMissing() then
+  begin
+    Result := InstallDotNet();
+  end;
+end;
+
+function NeedRestart(): Boolean;
+begin
+  Result := GlobalRestartRequired;
 end;
 
 [UninstallDelete]
