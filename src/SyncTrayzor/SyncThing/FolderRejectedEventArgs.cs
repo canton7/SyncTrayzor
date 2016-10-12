@@ -1,4 +1,5 @@
 ﻿using SyncTrayzor.Syncthing.Devices;
+using SyncTrayzor.Syncthing.Folders;
 using System;
 
 namespace SyncTrayzor.Syncthing
@@ -6,12 +7,12 @@ namespace SyncTrayzor.Syncthing
     public class FolderRejectedEventArgs : EventArgs
     {
         public Device Device { get; }
-        public string FolderId { get; }
+        public Folder Folder { get; }
 
-        public FolderRejectedEventArgs(Device device, string folderId)
+        public FolderRejectedEventArgs(Device device, Folder folder)
         {
             this.Device = device;
-            this.FolderId = folderId;
+            this.Folder = folder;
         }
     }
 }
