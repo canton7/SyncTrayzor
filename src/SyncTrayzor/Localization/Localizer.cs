@@ -4,6 +4,7 @@ using SyncTrayzor.Properties;
 using System;
 using System.Globalization;
 using System.Threading;
+using System.Windows;
 
 namespace SyncTrayzor.Localization
 {
@@ -12,6 +13,8 @@ namespace SyncTrayzor.Localization
         private static readonly SmartFormatter formatter;
         private static readonly CultureInfo baseCulture = new CultureInfo("en-US", false);
 
+        public static FlowDirection FlowDirection => Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+        
         static Localizer()
         {
             formatter = new SmartFormatter();

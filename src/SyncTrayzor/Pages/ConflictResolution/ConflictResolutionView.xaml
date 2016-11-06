@@ -11,7 +11,8 @@
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ConflictResolutionViewModel}"
-        Title="{l:Loc ConflictResolutionView_Title}" Height="500" Width="800">
+        Title="{l:Loc ConflictResolutionView_Title}" Height="500" Width="800"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <Window.Resources>
         <CollectionViewSource x:Key="ConflictsItemsSource" Source="{Binding Conflicts}">
             <CollectionViewSource.GroupDescriptions>

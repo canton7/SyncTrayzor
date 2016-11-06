@@ -14,7 +14,8 @@
         Title="{l:Loc SettingsView_Title}"
         MinWidth="430" MaxWidth="430"
         MinHeight="400" 
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <i:Interaction.Behaviors>
         <xaml:NoSizeBelowScreenBehaviour/>
     </i:Interaction.Behaviors>

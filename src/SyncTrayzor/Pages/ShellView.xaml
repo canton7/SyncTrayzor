@@ -5,6 +5,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}"
         Height="700" Width="1100"
         Title="SyncTrayzor">
     <i:Interaction.Behaviors>

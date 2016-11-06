@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
-        Title="{l:Loc ThirdPartyComponentsView_Title}" Height="700" Width="600">
+        Title="{l:Loc ThirdPartyComponentsView_Title}" Height="700" Width="600"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" Margin="0,10,0,10" TextWrapping="Wrap" Text="{l:Loc ThirdPartyComponentsView_Intro}"/>
 

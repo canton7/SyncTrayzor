@@ -6,7 +6,8 @@
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         Width="600" MaxHeight="600"
         Title="{l:Loc NewVersionAlertView_Title}"
-        SizeToContent="Height">
+        SizeToContent="Height"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
             <ContentControl Content="{l:Loc NewVersionAlertView_NewVersionAvailable, ValueBinding={Binding Version}}"/>

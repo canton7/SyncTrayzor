@@ -5,7 +5,8 @@
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="400" Width="250"
         WindowStyle="None" SizeToContent="Height"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
         <Style x:Key="DonateStyle" TargetType="TextBlock">
