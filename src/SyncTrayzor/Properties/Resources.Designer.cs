@@ -774,6 +774,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing Command-line Flags.
+        /// </summary>
+        public static string Settings_SyncthingCommandLineFlags {
+            get {
+                return ResourceManager.GetString("Settings_SyncthingCommandLineFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alert if a new version of SyncTrayzor is available.
         /// </summary>
         public static string SettingsView_AlertOnNewVersion {
@@ -1888,7 +1897,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Open Folder.
+        ///   Looks up a localized string similar to Open _Folder.
         /// </summary>
         public static string TrayIcon_Menu_OpenFolder {
             get {
@@ -1897,7 +1906,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to R_estart Syncthing.
+        ///   Looks up a localized string similar to _Restart Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_RestartSyncthing {
             get {
@@ -1906,7 +1915,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Restore.
+        ///   Looks up a localized string similar to _Open SyncTrayzor.
         /// </summary>
         public static string TrayIcon_Menu_Restore {
             get {

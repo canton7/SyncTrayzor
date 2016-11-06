@@ -11,11 +11,10 @@ using SyncTrayzor.Services;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Syncthing.Folders;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using NLog;
 
 namespace SyncTrayzor.Pages
 {
-    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IRenderProcessMessageHandler, IDisposable
+    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IContextMenuHandler, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncthingManager syncthingManager;
@@ -126,9 +125,7 @@ namespace SyncTrayzor.Pages
         {
             webBrowser.RequestHandler = this;
             webBrowser.LifeSpanHandler = this;
-            webBrowser.RenderProcessMessageHandler = this;
-            var logger = LogManager.GetCurrentClassLogger();
-            webBrowser.ConsoleMessage += (o, e) => logger.Debug(e.Message);
+            webBrowser.MenuHandler = this;
             // Don't enable touch scrolling yet - it's still buggy, and causes tapping on links to fail
             //webBrowser.IsManipulationEnabled = true;
             webBrowser.RegisterJsObject("callbackObject", this.callback);
@@ -146,6 +143,72 @@ namespace SyncTrayzor.Pages
             // *everywhere*, and that means keeping a local field zoomLevel to track the current zoom level. Such is life
 
             webBrowser.FrameLoadStart += (o, e) => webBrowser.SetZoomLevel(this.zoomLevel);
+            webBrowser.FrameLoadEnd += (o, e) =>
+            {
+                if (e.Frame.IsMain && e.Url != "about:blank")
+                {
+                    // I tried to do this using Syncthing's events, but it's very painful - the DOM is updated some time
+                    // after the event is fired. It's a lot easier to just watch for changes on the DOM.
+                    var addOpenFolderButton =
+                    @"var syncTrayzorAddOpenFolderButton = function(elem) {" +
+                    @"    var $buttonContainer = elem.find('.panel-footer .pull-right');" +
+                    @"    $buttonContainer.find('.panel-footer .synctrayzor-add-folder-button').remove();" +
+                    @"    $buttonContainer.prepend(" +
+                    @"      '<button class=""btn btn-sm btn-default synctrayzor-add-folder-button"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
+                    @"          <span class=""fa fa-folder-open""></span>" +
+                    @"          <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
+                    @"      </button>');" +
+                    @"};" +
+                    @"new MutationObserver(function(mutations, observer) {" +
+                    @"  for (var i = 0; i < mutations.length; i++) {" +
+                    @"    for (var j = 0; j < mutations[i].addedNodes.length; j++) {" +
+                    @"      syncTrayzorAddOpenFolderButton($(mutations[i].addedNodes[j]));" +
+                    @"    }" +
+                    @"  }" +
+                    @"}).observe(document.getElementById('folders'), {" +
+                    @"  childList: true" +
+                    @"});" +
+                    @"syncTrayzorAddOpenFolderButton($('#folders'));" +
+                    @"";
+                    webBrowser.ExecuteScriptAsync(addOpenFolderButton);
+
+                    var addFolderBrowse =
+                    @"$('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
+                    @"$('#folderPath').after(" +
+                    @"  $('<button>').attr('id', 'folderPathBrowseButton')" +
+                    @"               .addClass('btn btn-sm btn-default')" +
+                    @"               .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
+                    @"               .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
+                    @"               .on('click', function() { callbackObject.browseFolderPath() })" +
+                    @");" +
+                    @"$('#folderPath').removeAttr('list');" +
+                    @"$('#directory-list').remove();" +
+                    @"$('#editFolder').on('shown.bs.modal', function() {" +
+                    @"  if ($('#folderPath').is('[readonly]')) {" +
+                    @"      $('#folderPathBrowseButton').attr('disabled', 'disabled');" +
+                    @"  }" +
+                    @"  else {" +
+                    @"      $('#folderPathBrowseButton').removeAttr('disabled');" +
+                    @"  }" +
+                    @"});";
+                    webBrowser.ExecuteScriptAsync(addFolderBrowse);
+                }
+            };
+
+            // Chinese IME workaround, copied from
+            // https://github.com/cefsharp/CefSharp/commit/c7c90581da7ed3dda80fd8304a856462d133d9a7
+            webBrowser.PreviewTextInput += (o, e) =>
+            {
+                var host = webBrowser.GetBrowser().GetHost();
+                var keyEvent = new KeyEvent();
+                foreach (var character in e.Text)
+                {
+                    keyEvent.WindowsKeyCode = character;
+                    keyEvent.Type = KeyEventType.Char;
+                    host.SendKeyEvent(keyEvent);
+                }
+                e.Handled = true;
+            };
         }
 
         public void RefreshBrowserNukeCache()
@@ -224,7 +287,7 @@ namespace SyncTrayzor.Pages
 
         protected override void OnClose()
         {
-            this.WebBrowser.Dispose();
+            this.WebBrowser?.Dispose();
             this.WebBrowser = null;
 
             // This is such a dirty, horrible, hacky thing to do...
@@ -360,60 +423,24 @@ namespace SyncTrayzor.Pages
             return false;
         }
 
-        void IRenderProcessMessageHandler.OnContextCreated(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+        void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
         {
-            if (!frame.IsMain || frame.Url == "about:blank")
-                return;
-
-            var script =
-            @"console.log('EXECUTING!');" +
-            @"var syncTrayzorAddOpenFolderButton = function(elem) {" +
-            @"    var $buttonContainer = elem.find('.panel-footer .pull-right');" +
-            @"    $buttonContainer.find('.panel-footer .synctrayzor-add-folder-button').remove();" +
-            @"    $buttonContainer.prepend(" +
-            @"      '<button class=""btn btn-sm btn-default synctrayzor-add-folder-button"" onclick=""callbackObject.openFolder(angular.element(this).scope().folder.id)"">" +
-            @"          <span class=""fa fa-folder-open""></span>" +
-            @"          <span style=""margin-left: 3px"">" + Resources.ViewerView_OpenFolder + @"</span>" +
-            @"      </button>');" +
-            @"};" +
-            @"" +
-            @"window.addEventListener('load', function() { " +
-            @"  console.log('READY!'); " +
-            @"  new MutationObserver(function(mutations, observer) {" +
-            @"    for (var i = 0; i < mutations.length; i++) {" +
-            @"      for (var j = 0; j < mutations[i].addedNodes.length; j++) {" +
-            @"        syncTrayzorAddOpenFolderButton($(mutations[i].addedNodes[j]));" +
-            @"      }" +
-            @"    }" +
-            @"  }).observe(document.getElementById('folders'), {" +
-            @"    childList: true" +
-            @"  });" +
-            @"  syncTrayzorAddOpenFolderButton($('#folders'));" +
-            @"" +
-            @"  $('#folderPath').wrap($('<div/>').css('display', 'flex'));" +
-            @"  $('#folderPath').after(" +
-            @"    $('<button>').attr('id', 'folderPathBrowseButton')" +
-            @"                 .addClass('btn btn-sm btn-default')" +
-            @"                 .html('" + Resources.ViewerView_BrowseToFolder + @"')" +
-            @"                 .css({'flex-grow': 1, 'margin': '0 0 0 5px'})" +
-            @"                 .on('click', function() { callbackObject.browseFolderPath() })" +
-            @"  );" +
-            @"  $('#folderPath').removeAttr('list');" +
-            @"  $('#directory-list').remove();" +
-            @"  $('#editFolder').on('shown.bs.modal', function() {" +
-            @"    if ($('#folderPath').is('[readonly]')) {" +
-            @"        $('#folderPathBrowseButton').attr('disabled', 'disabled');" +
-            @"    }" +
-            @"    else {" +
-            @"        $('#folderPathBrowseButton').removeAttr('disabled');" +
-            @"    }" +
-            @"  });" +
-            @"});";
-            frame.ExecuteJavaScriptAsync(script);
+            // Clear the default menu, just leaving our custom one
+            model.Clear();
         }
 
-        void IRenderProcessMessageHandler.OnFocusedNodeChanged(IWebBrowser browserControl, IBrowser browser, IFrame frame, IDomNode node)
+        bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
         {
+            return false;
+        }
+
+        void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+        {
+        }
+
+        bool IContextMenuHandler.RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
+        {
+            return false;
         }
 
         public void Dispose()
@@ -428,10 +455,10 @@ namespace SyncTrayzor.Pages
             private readonly Action browseFolderPathAction;
 
             public JavascriptCallbackObject(Action<string> openFolderAction, Action browseFolderPathAction)
-	        {
+            {
                 this.openFolderAction = openFolderAction;
                 this.browseFolderPathAction = browseFolderPathAction;
-	        }
+            }
 
             public void OpenFolder(string folderId)
             {

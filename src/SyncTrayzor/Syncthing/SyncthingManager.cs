@@ -548,7 +548,11 @@ namespace SyncTrayzor.Syncthing
             if (!this.Devices.TryFetchById(deviceId, out device))
                 return;
 
-            this.eventDispatcher.Raise(this.FolderRejected, new FolderRejectedEventArgs(device, folderId));
+            Folder folder;
+            if (!this.Folders.TryFetchById(folderId, out folder))
+                return;
+
+            this.eventDispatcher.Raise(this.FolderRejected, new FolderRejectedEventArgs(device, folder));
         }
 
         public void Dispose()

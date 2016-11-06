@@ -1,16 +1,17 @@
-﻿using System;
+﻿using SyncTrayzor.Syncthing.Folders;
+using System;
 using System.Collections.Generic;
 
 namespace SyncTrayzor.Syncthing.TransferHistory
 {
     public class FolderSynchronizationFinishedEventArgs : EventArgs
     {
-        public string FolderId { get; }
+        public Folder Folder { get; }
         public IReadOnlyList<FileTransfer> FileTransfers { get; }
 
-        public FolderSynchronizationFinishedEventArgs(string folderId, List<FileTransfer> fileTransfers)
+        public FolderSynchronizationFinishedEventArgs(Folder folder, List<FileTransfer> fileTransfers)
         {
-            this.FolderId = folderId;
+            this.Folder = folder;
             this.FileTransfers = fileTransfers.AsReadOnly();
         }
     }

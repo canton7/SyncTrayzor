@@ -268,7 +268,11 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
         private void OnFolderSynchronizationFinished(string folderId, List<FileTransfer> fileTransfers)
         {
-            this.eventDispatcher.Raise(this.FolderSynchronizationFinished, new FolderSynchronizationFinishedEventArgs(folderId, fileTransfers));
+            Folder folder;
+            if (!this.folderManager.TryFetchById(folderId, out folder))
+                return;
+
+            this.eventDispatcher.Raise(this.FolderSynchronizationFinished, new FolderSynchronizationFinishedEventArgs(folder, fileTransfers));
         }
 
         public void Dispose()

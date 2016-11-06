@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.11' => [
+   '1.1.13' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,7 +81,7 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Display folder labels instead of folder IDs (#284)\n- Fix issue where 'Open Folder' and 'Browse' buttons might not be displayed (#281)\n- Make F5 clear the browser cache, helping with issues were Syncthing's GUI assets have been incorrectly cached\n- Don't spam connected/disconnected events if they happen too quickly (e.g. if a device is paused) (#289)\n- Make it easier to convert between portable and installed versions (#271, #272)\n- Fix race condition causing crash in metered network manager (#291)",
+      'release_notes' => "- Improve 'Browse' button next to folder selection input (#297)\n- Fix right-click context menu in embedded browser (#300)\n- Fix crash on conflict resolution screen when Windows can't find an icon for the file type (#301)\n- Fix crash when opening SyncTrayzor (#303, #306, #318)\n- Indication of file conflict in tray icon didn't disappear in some cases (#307)\n- (Hopefully) add workaround for Chinese IME not working (#314)\n- Display folder names instead of folder IDs in tray notifications (#315)\n- Rename 'Restore' option in tray icon context menu (#320)",
    ]
 ];
 

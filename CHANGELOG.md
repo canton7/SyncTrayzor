@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.1.13
+-------
+
+ - Improve 'Browse' button next to folder selection input (#297)
+ - Fix right-click context menu in embedded browser (#300)
+ - Fix crash on conflict resolution screen when Windows can't find an icon for the file type (#301)
+ - Fix crash when opening SyncTrayzor (#303, #306, #318)
+ - Indication of file conflict in tray icon didn't disappear in some cases (#307)
+ - (Hopefully) add workaround for Chinese IME not working (#314)
+ - Display folder names instead of folder IDs in tray notifications (#315)
+ - Rename 'Restore' option in tray icon context menu (#320)
+
 v1.1.12
 -------
 

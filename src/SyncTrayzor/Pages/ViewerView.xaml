@@ -10,7 +10,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ContentControl Content="{Binding WebBrowser}"/>
+        <ContentControl Content="{Binding WebBrowser}">
+            <ContentControl.Resources>
+                <Style TargetType="cefSharp:ChromiumWebBrowser">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="{l:Loc Generic_Cut}" Command="{Binding WebBrowser.CutCommand}"/>
+                                <MenuItem Header="{l:Loc Generic_Copy}" Command="{Binding WebBrowser.CopyCommand}"/>
+                                <MenuItem Header="{l:Loc Generic_Paste}" Command="{Binding WebBrowser.PasteCommand}"/>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ContentControl.Resources>
+        </ContentControl>
 
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:Loc ViewerView_SyncthingStarting}"
                    Visibility="{Binding ShowSyncthingStarting, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"

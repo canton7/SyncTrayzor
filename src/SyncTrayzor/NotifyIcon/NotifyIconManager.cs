@@ -68,6 +68,7 @@ namespace SyncTrayzor.NotifyIcon
             set { this._closeToTray = value; this.SetShutdownMode(); }
         }
 
+        // FolderId -> is enabled
         public Dictionary<string, bool> FolderNotificationsEnabled { get; set; }
         public bool ShowSynchronizedBalloonEvenIfNothingDownloaded { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
@@ -169,7 +170,7 @@ namespace SyncTrayzor.NotifyIcon
             if (this.ShowDeviceOrFolderRejectedBalloons)
             {
                 this.taskbarIcon.HideBalloonTip();
-                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FolderRejected_Title, Localizer.F(Resources.TrayIcon_Balloon_FolderRejected_Message, e.Device.Name, e.FolderId), BalloonIcon.Info);
+                this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FolderRejected_Title, Localizer.F(Resources.TrayIcon_Balloon_FolderRejected_Message, e.Device.Name, e.Folder.Label), BalloonIcon.Info);
             }
         }
 
@@ -182,7 +183,7 @@ namespace SyncTrayzor.NotifyIcon
                 return;
 
             bool notificationsEnabled;
-            if (this.FolderNotificationsEnabled != null && this.FolderNotificationsEnabled.TryGetValue(e.FolderId, out notificationsEnabled) && notificationsEnabled)
+            if (this.FolderNotificationsEnabled != null && this.FolderNotificationsEnabled.TryGetValue(e.Folder.FolderId, out notificationsEnabled) && notificationsEnabled)
             {
                 if (e.FileTransfers.Count == 0)
                 {
@@ -191,7 +192,7 @@ namespace SyncTrayzor.NotifyIcon
                         DateTime.UtcNow - this.syncthingManager.StartedTime > syncedDeadTime)
                     {
                         this.taskbarIcon.HideBalloonTip();
-                        this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.FolderId), BalloonIcon.Info);
+                        this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, String.Format(Resources.TrayIcon_Balloon_FinishedSyncing_Message, e.Folder.Label), BalloonIcon.Info);
                     }
                 }
                 else if (e.FileTransfers.Count == 1)
@@ -201,16 +202,16 @@ namespace SyncTrayzor.NotifyIcon
                     if (fileTransfer.Error == null)
                     { 
                         if (fileTransfer.ActionType == ItemChangedActionType.Update)
-                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_UpdatedSingleFile, e.Folder.Label, Path.GetFileName(fileTransfer.Path));
                         else if (fileTransfer.ActionType == ItemChangedActionType.Delete)
-                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path));
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedSingleFile, e.Folder.Label, Path.GetFileName(fileTransfer.Path));
                     }
                     else
                     {
                         if (fileTransfer.ActionType == ItemChangedActionType.Update)
-                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_FailedToUpdateSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path), fileTransfer.Error);
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_FailedToUpdateSingleFile, e.Folder.Label, Path.GetFileName(fileTransfer.Path), fileTransfer.Error);
                         else if (fileTransfer.ActionType == ItemChangedActionType.Delete)
-                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_FailedToDeleteSingleFile, e.FolderId, Path.GetFileName(fileTransfer.Path), fileTransfer.Error);
+                            msg = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_FailedToDeleteSingleFile, e.Folder.Label, Path.GetFileName(fileTransfer.Path), fileTransfer.Error);
                     }
 
                     if (msg != null)
@@ -245,7 +246,7 @@ namespace SyncTrayzor.NotifyIcon
                             messageParts.Add(Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_DeletedFile, deletes.Length));
                     }
                         
-                    var text = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_Multiple, e.FolderId, messageParts);
+                    var text = Localizer.F(Resources.TrayIcon_Balloon_FinishedSyncing_Multiple, e.Folder.Label, messageParts);
 
                     this.taskbarIcon.HideBalloonTip();
                     this.taskbarIcon.ShowBalloonTip(Resources.TrayIcon_Balloon_FinishedSyncing_Title, text, BalloonIcon.Info);

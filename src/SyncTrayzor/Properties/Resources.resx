@@ -383,7 +383,7 @@ Details on each component, and its license text, are shown below.</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to exit</comment>
   </data>
   <data name="TrayIcon_Menu_Restore" xml:space="preserve">
-    <value>_Restore</value>
+    <value>_Open SyncTrayzor</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restore itself from the tray, and be visible to the user</comment>
   </data>
   <data name="TrayIcon_Menu_Settings" xml:space="preserve">
@@ -470,7 +470,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>R_estart</value>
   </data>
   <data name="TrayIcon_Menu_RestartSyncthing" xml:space="preserve">
-    <value>R_estart Syncthing</value>
+    <value>_Restart Syncthing</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to restart</comment>
   </data>
   <data name="SettingsView_Tab_Syncthing" xml:space="preserve">
@@ -488,7 +488,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>Stop Syncthing from auto-upgrading. This is useful if a new version of Syncthing breaks compatibility with SyncTrayzor. You will need to downgrade the syncthing.exe file in SyncTrayzor's config folder</value>
   </data>
   <data name="TrayIcon_Menu_OpenFolder" xml:space="preserve">
-    <value>_Open Folder</value>
+    <value>Open _Folder</value>
     <comment>Menu option available when right-clicking the tray icon. Is a header for a list of folders, each of which can be clicked to open it in Explorer</comment>
   </data>
   <data name="ViewerView_OpenFolder" xml:space="preserve">
@@ -931,5 +931,8 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="SettingsView_SyncthingCustomHomePath_ToolTip" xml:space="preserve">
     <value>If set, overrides the default path for Syncthing's database and configuration</value>
+  </data>
+  <data name="Settings_SyncthingCommandLineFlags" xml:space="preserve">
+    <value>Syncthing Command-line Flags</value>
   </data>
 </root>
