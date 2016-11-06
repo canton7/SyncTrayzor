@@ -1897,7 +1897,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Open Folder.
+        ///   Looks up a localized string similar to Open _Folder.
         /// </summary>
         public static string TrayIcon_Menu_OpenFolder {
             get {
@@ -1906,7 +1906,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to R_estart Syncthing.
+        ///   Looks up a localized string similar to _Restart Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_RestartSyncthing {
             get {
@@ -1915,7 +1915,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Restore.
+        ///   Looks up a localized string similar to _Open SyncTrayzor.
         /// </summary>
         public static string TrayIcon_Menu_Restore {
             get {
