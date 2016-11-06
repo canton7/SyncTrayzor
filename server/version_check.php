@@ -86,6 +86,8 @@ $versions = [
 ];
 
 $upgrades = [
+   '1.1.12' => ['to' => 'latest', 'formatter' => '5'],
+   '1.1.11' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.10' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.9' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.8' => ['to' => 'latest', 'formatter' => '5'],
