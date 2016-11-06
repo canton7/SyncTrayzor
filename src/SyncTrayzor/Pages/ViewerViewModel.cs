@@ -194,6 +194,21 @@ namespace SyncTrayzor.Pages
                     webBrowser.ExecuteScriptAsync(addFolderBrowse);
                 }
             };
+
+            // Chinese IME workaround, copied from
+            // https://github.com/cefsharp/CefSharp/commit/c7c90581da7ed3dda80fd8304a856462d133d9a7
+            webBrowser.PreviewTextInput += (o, e) =>
+            {
+                var host = webBrowser.GetBrowser().GetHost();
+                var keyEvent = new KeyEvent();
+                foreach (var character in e.Text)
+                {
+                    keyEvent.WindowsKeyCode = character;
+                    keyEvent.Type = KeyEventType.Char;
+                    host.SendKeyEvent(keyEvent);
+                }
+                e.Handled = true;
+            };
         }
 
         public void RefreshBrowserNukeCache()
