@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="SyncTrayzor.Pages.ConflictResolution.SingleConflictResolutionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SyncTrayzor.Pages.ConflictResolution"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:l="clr-namespace:SyncTrayzor.Localization"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:SingleConflictResolutionViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel Margin="5">
+        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,10" TextWrapping="Wrap" Text="{l:Loc ConflictResolutionView_ChooseDescription}"/>
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding View.Columns[0].ActualWidth, ElementName=SelectConflictOptions}"/>
+                <ColumnDefinition Width="{Binding View.Columns[1].ActualWidth, ElementName=SelectConflictOptions}"/>
+                <ColumnDefinition Width="{Binding View.Columns[2].ActualWidth, ElementName=SelectConflictOptions}"/>
+                <ColumnDefinition Width="{Binding View.Columns[3].ActualWidth, ElementName=SelectConflictOptions}"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style x:Key="Header" TargetType="TextBlock">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Margin" Value="0,0,0,5"/>
+                </Style>
+                <Style x:Key="Value" TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="7,0,0,0"/>
+                </Style>
+            </Grid.Resources>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_OriginalFile}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_LastModified}"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_Size}"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Value}" Text="{Binding Conflict.FileName}"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding Conflict.LastModified}"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding Conflict.Size}"/>
+            <Button Grid.Row="1" Grid.Column="3"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource Value}"
+                                Padding="5,0"
+                                Command="{s:Action ChooseOriginal}"
+                                Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
+        </Grid>
+
+        <Button DockPanel.Dock="Bottom" Margin="0,8,0,5" Padding="7,2"
+                        HorizontalAlignment="Left"
+                        Command="{s:Action ShowFileInFolder}" Content="{l:Loc ConflictResolutionView_Button_ShowInFolder}"/>
+
+        <ListView x:Name="SelectConflictOptions"
+                          ItemsSource="{Binding Conflict.ConflictOptions}"
+                          Style="{StaticResource BoringListViewStyle}"
+                          BorderThickness="0"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ConflictingFileName}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,0,10,0" Text="{Binding FileName}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ConflictCreated}"
+                                            DisplayMemberBinding="{Binding DateCreated}"/>
+                    <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_Size}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <!-- The size in the 'Original File' table may be smaller - hack by adding padding here (which does make it look better anyway) -->
+                                <TextBlock Margin="0,0,20,0" Text="{Binding Size}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Button Command="{s:Action ChooseConflictFile}"
+                                                    CommandParameter="{Binding}"
+                                                    Padding="5,0"
+                                                    Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</UserControl>

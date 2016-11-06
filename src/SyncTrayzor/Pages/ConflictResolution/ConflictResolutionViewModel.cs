@@ -24,6 +24,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         private readonly IConflictFileWatcher conflictFileWatcher;
         private readonly IWindowManager windowManager;
         private readonly IConfigurationProvider configurationProvider;
+        private readonly Func<SingleConflictResolutionViewModel> singleConflictResolutionViewModelFactory;
+        private readonly Func<MultipleConflictsResolutionViewModel> multipleConflictsResolutionViewModelFactory;
 
         private bool wasConflictFileWatcherEnabled;
 
@@ -35,9 +37,9 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public bool HasFinishedLoadingAndNoConflictsFound => !this.IsSyncthingStopped && !this.IsLoading && this.Conflicts.Count == 0;
         public bool IsSyncthingStopped { get; private set; }
 
-        public bool DeleteToRecycleBin { get; set; }
+        public IScreen ResolutionViewModel { get; private set; }
 
-        public ConflictViewModel SelectedConflict { get; set; }
+        public bool DeleteToRecycleBin { get; set; }
 
         public ConflictResolutionViewModel(
             ISyncthingManager syncthingManager,
@@ -45,7 +47,9 @@ namespace SyncTrayzor.Pages.ConflictResolution
             IProcessStartProvider processStartProvider,
             IConflictFileWatcher conflictFileWatcher,
             IWindowManager windowManager,
-            IConfigurationProvider configurationProvider)
+            IConfigurationProvider configurationProvider,
+            Func<SingleConflictResolutionViewModel> singleConflictResolutionViewModelFactory,
+            Func<MultipleConflictsResolutionViewModel> multipleConflictsResolutionViewModelFactory)
         {
             this.syncthingManager = syncthingManager;
             this.conflictFileManager = conflictFileManager;
@@ -53,6 +57,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.conflictFileWatcher = conflictFileWatcher;
             this.configurationProvider = configurationProvider;
             this.windowManager = windowManager;
+            this.singleConflictResolutionViewModelFactory = singleConflictResolutionViewModelFactory;
+            this.multipleConflictsResolutionViewModelFactory = multipleConflictsResolutionViewModelFactory;
 
             this.DeleteToRecycleBin = this.configurationProvider.Load().ConflictResolverDeletesToRecycleBin;
             this.Bind(s => s.DeleteToRecycleBin, (o, e) => this.configurationProvider.AtomicLoadAndSave(c => c.ConflictResolverDeletesToRecycleBin = e.NewValue));
@@ -67,8 +73,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
                     this.NotifyOfPropertyChange(nameof(this.IsLoadingAndNoConflictsFound));
                     this.NotifyOfPropertyChange(nameof(this.HasFinishedLoadingAndNoConflictsFound));
 
-                    if (this.SelectedConflict == null && this.Conflicts.Count > 0)
-                        this.SelectedConflict = this.Conflicts[0];
+                    if (!this.Conflicts.Any(x => x.IsSelected) && this.Conflicts.Count > 0)
+                        this.Conflicts[0].IsSelected = true;
                 }
             };
         }
@@ -140,35 +146,22 @@ namespace SyncTrayzor.Pages.ConflictResolution
             this.loadingCts.Cancel();
         }
 
-        public void ListViewDoubleClick(object sender, RoutedEventArgs e)
-        {
-            // Check that we were called on a row, not on a header
-            if ((e.OriginalSource as FrameworkElement)?.DataContext is ConflictViewModel)
-                this.ShowFileInFolder();
-        }
-
-        public void ShowFileInFolder()
-        {
-            this.processStartProvider.ShowInExplorer(this.SelectedConflict.FilePath);
-        }
-
         public void ChooseOriginal(ConflictViewModel conflict)
         {
-            if (!this.ResolveConflict(this.SelectedConflict.ConflictSet, conflict.ConflictSet.File.FilePath))
+            if (!this.ResolveConflict(conflict.ConflictSet, conflict.ConflictSet.File.FilePath))
                 return;
 
             // The conflict will no longer exist, so remove it
             this.Conflicts.Remove(conflict);
         }
 
-        public void ChooseConflictFile(ConflictOptionViewModel conflictOption)
+        public void ChooseConflictFile(ConflictViewModel conflict, ConflictOptionViewModel conflictOption)
         {
-            if (!this.ResolveConflict(this.SelectedConflict.ConflictSet, conflictOption.ConflictOption.FilePath))
+            if (!this.ResolveConflict(conflict.ConflictSet, conflictOption.ConflictOption.FilePath))
                 return;
 
             // The conflict will no longer exist, so remove it
-            var correspondingVm = this.Conflicts.First(x => x.ConflictOptions.Contains(conflictOption));
-            this.Conflicts.Remove(correspondingVm);
+            this.Conflicts.Remove(conflict);
         }
 
         private bool ResolveConflict(ConflictSet conflictSet, string filePath)
@@ -189,6 +182,42 @@ namespace SyncTrayzor.Pages.ConflictResolution
                 );
                 return false;
             }
+        }
+
+        public void SelectionChanged()
+        {
+            var selected = this.Conflicts.Where(x => x.IsSelected).ToList();
+            if (selected.Count == 0)
+            {
+                this.ResolutionViewModel = null;
+            }
+            else if (selected.Count == 1)
+            {
+                var vm = this.singleConflictResolutionViewModelFactory();
+                vm.Delegate = this;
+                vm.Conflict = selected[0];
+                this.ResolutionViewModel = vm;
+            }
+            else
+            {
+                var vm = this.multipleConflictsResolutionViewModelFactory();
+                vm.Delegate = this;
+                vm.Conflicts = selected;
+                this.ResolutionViewModel = vm;
+            }
+        }
+
+        public void ListViewDoubleClick(object sender, RoutedEventArgs e)
+        {
+            // Check that we were called on a row, not on a header
+            var vm = (e.OriginalSource as FrameworkElement)?.DataContext as ConflictViewModel;
+            if (vm != null)
+                this.ShowFileInFolder(vm);
+        }
+
+        public void ShowFileInFolder(ConflictViewModel conflict)
+        {
+            this.processStartProvider.ShowInExplorer(conflict.FilePath);
         }
 
         public void Close()

@@ -204,6 +204,8 @@
     <Compile Include="Pages\ConflictResolution\ConflictOptionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\MultipleConflictsResolutionViewModel.cs" />
+    <Compile Include="Pages\ConflictResolution\SingleConflictResolutionViewModel.cs" />
     <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
@@ -450,6 +452,14 @@
     <Page Include="Pages\ConflictResolution\ConflictResolutionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ConflictResolution\MultipleConflictsResolutionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ConflictResolution\SingleConflictResolutionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\FileTransfersTrayView.xaml">
       <SubType>Designer</SubType>

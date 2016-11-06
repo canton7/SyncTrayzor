@@ -935,4 +935,25 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="Settings_SyncthingCommandLineFlags" xml:space="preserve">
     <value>Syncthing Command-line Flags</value>
   </data>
+  <data name="ConflictResolutionView_ChooseNewestConflict_Button" xml:space="preserve">
+    <value>Choose Newest Conflict</value>
+  </data>
+  <data name="ConflictResolutionView_ChooseNewestConflict_Text" xml:space="preserve">
+    <value>Chooses the conflict which was created most recently&lt;</value>
+  </data>
+  <data name="ConflictResolutionView_ChooseNewest_Button" xml:space="preserve">
+    <value>Choose Newest</value>
+  </data>
+  <data name="ConflictResolutionView_ChooseNewest_Text" xml:space="preserve">
+    <value>Chooses the 'Original' file if its 'Last Modified' date is newest, or the conflict which was created most recently</value>
+  </data>
+  <data name="ConflictResolutionView_ChooseOriginal_Button" xml:space="preserve">
+    <value>Choose Original</value>
+  </data>
+  <data name="ConflictResolutionView_ChooseOriginal_Text" xml:space="preserve">
+    <value>Takes the 'Original' file from each conflict, and deletes all conflicting files</value>
+  </data>
+  <data name="ConfliectResolutionView_ChooseMultipleDescription" xml:space="preserve">
+    <value>You have selected {0} conflicts. Choose how you want to resolve them. The other versions will be deleted.</value>
+  </data>
 </root>
