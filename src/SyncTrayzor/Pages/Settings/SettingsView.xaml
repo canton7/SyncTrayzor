@@ -24,8 +24,8 @@
     </Window.Resources>
     <DockPanel Margin="0,10">
         <StackPanel DockPanel.Dock="Bottom" Margin="0,10,10,0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button IsCancel="True" Command="{s:Action Cancel}" Content="{l:Loc Generic_Dialog_Cancel}" Style="{StaticResource DialogButton}"/>
             <Button IsDefault="True" Command="{s:Action Save}" Content="{l:Loc Generic_Dialog_Save}" Style="{StaticResource DialogButton}"/>
+            <Button IsCancel="True" Command="{s:Action Cancel}" Content="{l:Loc Generic_Dialog_Cancel}" Style="{StaticResource DialogButton}"/>
         </StackPanel>
 
         <TabControl Background="Transparent" BorderThickness="0,1,0,0" SelectedIndex="{Binding SelectedTabIndex}">
