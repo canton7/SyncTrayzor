@@ -1536,7 +1536,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Console.
+        ///   Looks up a localized string similar to Syncthing _Console.
         /// </summary>
         public static string ShellView_Menu_View_SyncthingConsole {
             get {
