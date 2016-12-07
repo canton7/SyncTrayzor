@@ -375,7 +375,7 @@ Details on each component, and its license text, are shown below.</value>
     <value>Finished Syncing</value>
   </data>
   <data name="TrayIcon_Menu_CloseToTray" xml:space="preserve">
-    <value>Close to Tray</value>
+    <value>_Close to Tray</value>
     <comment>Menu option available when right-clicking the tray icon. Instructs SyncTrayzor to minimize itself to the tray</comment>
   </data>
   <data name="TrayIcon_Menu_Exit" xml:space="preserve">
@@ -506,7 +506,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <value>_View</value>
   </data>
   <data name="ShellView_Menu_View_SyncthingConsole" xml:space="preserve">
-    <value>Syncthing Console</value>
+    <value>Syncthing _Console</value>
   </data>
   <data name="NewVersionAlertView_Button_Install" xml:space="preserve">
     <value>Install Now</value>

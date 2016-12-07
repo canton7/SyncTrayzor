@@ -6,6 +6,7 @@
         Height="400" Width="250"
         WindowStyle="None" SizeToContent="Height"
         ShowInTaskbar="False"
+        ResizeMode="NoResize"
         FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
@@ -65,7 +66,7 @@
                 <TextBlock Text="{l:Loc AboutView_ShowOtherLicenses}"/>
             </Hyperlink>
         </TextBlock>
-        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True"
+        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True" IsCancel="True"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,5,0,0"
                 Style="{StaticResource DialogButton}"
                 Content="{l:Loc Generic_Dialog_Close}"/>
