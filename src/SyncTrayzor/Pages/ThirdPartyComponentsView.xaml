@@ -14,6 +14,7 @@
                 Margin="0,10,0,0"
                 Command="{s:Action RequestClose}"
                 IsDefault="True"
+                IsCancel="True"
                 Content="{l:Loc Generic_Dialog_Close}"
                 Style="{StaticResource DialogButton}"/>
 
