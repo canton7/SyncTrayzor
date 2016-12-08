@@ -6,7 +6,7 @@
         Height="400" Width="250"
         WindowStyle="None" SizeToContent="Height"
         ShowInTaskbar="False"
-        ResizeMode="CanMinimize"
+        ResizeMode="NoResize"
         FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
