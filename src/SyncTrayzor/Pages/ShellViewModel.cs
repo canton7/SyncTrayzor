@@ -118,7 +118,7 @@ namespace SyncTrayzor.Pages
             if (this.windowManager.ShowMessageBox(
                     Resources.Dialog_ConfirmKillAllProcesses_Message,
                     Resources.Dialog_ConfirmKillAllProcesses_Title,
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 this.syncthingManager.KillAllSyncthingProcesses();
         }
 

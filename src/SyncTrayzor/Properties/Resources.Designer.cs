@@ -1536,7 +1536,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Console.
+        ///   Looks up a localized string similar to Syncthing _Console.
         /// </summary>
         public static string ShellView_Menu_View_SyncthingConsole {
             get {
@@ -1879,7 +1879,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close to Tray.
+        ///   Looks up a localized string similar to _Close to Tray.
         /// </summary>
         public static string TrayIcon_Menu_CloseToTray {
             get {

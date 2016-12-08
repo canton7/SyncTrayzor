@@ -7,6 +7,7 @@
         Width="600" MaxHeight="600"
         Title="{l:Loc NewVersionAlertView_Title}"
         SizeToContent="Height"
+        MinHeight="250" MinWidth="500"
         FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
@@ -31,7 +32,7 @@
             <Button IsDefault="True" Command="{s:Action Download}" Content="{l:Loc NewVersionAlertView_Button_Download}"
                     Visibility="{Binding CanInstall, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
             <Button IsCancel="True" Command="{s:Action RemindLater}" Content="{l:Loc NewVersionAlertView_Button_RemindLater}"/>
-            <Button IsCancel="True" Command="{s:Action DontRemind}" Content="{l:Loc NewVersionAlertView_Button_DontRemind}"/>
+            <Button Command="{s:Action DontRemind}" Content="{l:Loc NewVersionAlertView_Button_DontRemind}"/>
         </StackPanel>
         <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" Margin="0,10,0,0" Text="{l:Loc NewVersionAlertView_DontRemindMeExplanation}"/>
 
