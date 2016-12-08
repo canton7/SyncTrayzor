@@ -4,6 +4,7 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="400" Width="600"
+        MinHeight="300" MinWidth="400"
         Title="{l:Loc UnhandledExceptionView_Title}"
         FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <DockPanel Margin="10">
