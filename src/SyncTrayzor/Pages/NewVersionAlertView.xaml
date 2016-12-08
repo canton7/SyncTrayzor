@@ -7,6 +7,7 @@
         Width="600" MaxHeight="600"
         Title="{l:Loc NewVersionAlertView_Title}"
         SizeToContent="Height"
+        MinHeight="250" MinWidth="500"
         FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">
