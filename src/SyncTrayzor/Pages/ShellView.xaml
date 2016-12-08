@@ -7,7 +7,7 @@
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         FlowDirection="{x:Static l:Localizer.FlowDirection}"
         Height="700" Width="1100"
-        MinHeight="300" MinWidth="300"
+        MinHeight="300" MinWidth="400"
         Title="SyncTrayzor">
     <i:Interaction.Behaviors>
         <xaml:WindowPlacementBehaviour Placement="{Binding Placement}"/>
