@@ -15,10 +15,10 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" LastChildFill="False" Height="27">
             <TextBlock DockPanel.Dock="Left" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="Bold" Text="{l:Loc ConsoleView_Title}"/>
-            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="75" Command="{s:Action ShowSettings}" Content="{l:Loc ConsoleView_SettingsButton}"/>
-            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="75" Command="{s:Action ClearLog}" Content="{l:Loc ConsoleView_ClearButton}"/>
-            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="75" Command="{s:Action PauseLog}" Content="{l:Loc ConsoleView_PauseButton}" Visibility="{Binding LogPaused, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
-            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="75" Command="{s:Action ResumeLog}" Content="{l:Loc ConsoleView_ResumeButton}" Visibility="{Binding LogPaused, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="50" Command="{s:Action ShowSettings}" Content="{l:Loc ConsoleView_SettingsButton}"/>
+            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="50" Command="{s:Action ClearLog}" Content="{l:Loc ConsoleView_ClearButton}"/>
+            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="50" Command="{s:Action PauseLog}" Content="{l:Loc ConsoleView_PauseButton}" Visibility="{Binding LogPaused, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
+            <Button DockPanel.Dock="Right" Padding="3,0" Margin="0,3,5,3" Height="NaN" MinWidth="50" Command="{s:Action ResumeLog}" Content="{l:Loc ConsoleView_ResumeButton}" Visibility="{Binding LogPaused, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
         </DockPanel>
         <TextBox ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
