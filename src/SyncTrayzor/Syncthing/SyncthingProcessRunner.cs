@@ -263,7 +263,14 @@ namespace SyncTrayzor.Syncthing
             logger.Debug("Kill all Syncthing processes");
             foreach (var process in Process.GetProcessesByName("syncthing"))
             {
-                process.Kill();
+                try
+                {
+                    process.Kill();
+                }
+                catch (Exception e)
+                {
+                    logger.Warn(e, $"Failed to kill Syncthing process ${process}");
+                }
             }
         }
     }
