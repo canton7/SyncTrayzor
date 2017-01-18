@@ -22,6 +22,12 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("data")]
         public ItemStartedEventData Data { get; set; }
 
+        public override bool IsValid => this.Data != null &&
+            !string.IsNullOrWhiteSpace(this.Data.Item) &&
+            !string.IsNullOrWhiteSpace(this.Data.Folder) &&
+            this.Data.Type != ItemChangedItemType.Unknown &&
+            this.Data.Action != ItemChangedActionType.Unknown;
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);

@@ -5,6 +5,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
 {
     public class GenericEvent : Event
     {
+        public override bool IsValid => true;
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);

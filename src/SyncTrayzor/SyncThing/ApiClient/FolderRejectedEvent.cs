@@ -16,6 +16,10 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("data")]
         public FolderRejectedEventData Data { get; set; }
 
+        public override bool IsValid => this.Data != null &&
+            !string.IsNullOrWhiteSpace(this.Data.DeviceId) &&
+            !string.IsNullOrWhiteSpace(this.Data.FolderId);
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);

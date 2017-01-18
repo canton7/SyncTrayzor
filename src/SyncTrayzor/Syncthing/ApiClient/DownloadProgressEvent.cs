@@ -60,6 +60,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("data")]
         public Dictionary<string, Dictionary<string, DownloadProgressEventFileData>> Data { get; set; }
 
+        public override bool IsValid => this.Data != null;
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);

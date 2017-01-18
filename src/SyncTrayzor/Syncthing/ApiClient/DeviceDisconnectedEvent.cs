@@ -16,6 +16,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("data")]
         public DeviceDisconnectedEventData Data { get; set; }
 
+        public override bool IsValid => this.Data != null &&
+            !string.IsNullOrWhiteSpace(this.Data.Id);
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);

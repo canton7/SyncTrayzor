@@ -106,8 +106,15 @@ namespace SyncTrayzor.Syncthing.EventWatcher
                     // We receive events in ascending ID order
                     foreach (var evt in events)
                     {
-                        logger.Debug(evt);
-                        evt.Visit(this);
+                        if (evt.IsValid)
+                        {
+                            logger.Debug(evt);
+                            evt.Visit(this);
+                        }
+                        else
+                        {
+                            logger.Warn($"Invalid event {evt}. Ignoring...");
+                        }
                     }
 
                     if (skippedEvents)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace SyncTrayzor.Syncthing.ApiClient
 {
@@ -15,6 +16,10 @@ namespace SyncTrayzor.Syncthing.ApiClient
     {
         [JsonProperty("data")]
         public DeviceConnectedEventData Data { get; set; }
+
+        public override bool IsValid => this.Data != null &&
+            !string.IsNullOrWhiteSpace(this.Data.Address) &&
+            !string.IsNullOrWhiteSpace(this.Data.Id);
 
         public override void Visit(IEventVisitor visitor)
         {

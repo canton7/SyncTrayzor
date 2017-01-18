@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace SyncTrayzor.Syncthing.ApiClient
 {
@@ -6,6 +7,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
     {
         [JsonProperty("myID")]
         public string MyID { get; set; }
+
+        public override bool IsValid => !string.IsNullOrWhiteSpace(this.MyID);
 
         public override void Visit(IEventVisitor visitor)
         {

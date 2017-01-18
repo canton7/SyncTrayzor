@@ -13,6 +13,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("data")]
         public DevicePausedEventData Data { get; set; }
 
+        public override bool IsValid => this.Data != null &&
+            !string.IsNullOrEmpty(this.Data.DeviceId);
+
         public override void Visit(IEventVisitor visitor)
         {
             visitor.Accept(this);
