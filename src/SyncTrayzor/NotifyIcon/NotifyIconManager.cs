@@ -55,7 +55,7 @@ namespace SyncTrayzor.NotifyIcon
             set
             {
                 this._showOnlyOnClose = value;
-                this.viewModel.Visible = !this._showOnlyOnClose || this.applicationWindowState.State == ScreenState.Closed;
+                this.viewModel.Visible = !this._showOnlyOnClose || this.applicationWindowState.ScreenState == ScreenState.Closed;
             }
         }
 
