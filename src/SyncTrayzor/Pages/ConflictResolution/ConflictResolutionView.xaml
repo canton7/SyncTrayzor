@@ -44,95 +44,8 @@
 
         <Border DockPanel.Dock="Bottom" Margin="0,10,0,0"
                 Style="{StaticResource SectionBorderStyle}"
-                Visibility="{Binding SelectedConflict, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
-            <DockPanel Margin="5">
-                <TextBlock DockPanel.Dock="Top" Margin="0,0,0,10" TextWrapping="Wrap" Text="{l:Loc ConflictResolutionView_ChooseDescription}"/>
-
-                <Grid DockPanel.Dock="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{Binding View.Columns[0].ActualWidth, ElementName=SelectConflictOptions}"/>
-                        <ColumnDefinition Width="{Binding View.Columns[1].ActualWidth, ElementName=SelectConflictOptions}"/>
-                        <ColumnDefinition Width="{Binding View.Columns[2].ActualWidth, ElementName=SelectConflictOptions}"/>
-                        <ColumnDefinition Width="{Binding View.Columns[3].ActualWidth, ElementName=SelectConflictOptions}"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.Resources>
-                        <Style x:Key="Header" TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="Margin" Value="0,0,0,5"/>
-                        </Style>
-                        <Style x:Key="Value" TargetType="FrameworkElement">
-                            <Setter Property="Margin" Value="7,0,0,0"/>
-                        </Style>
-                    </Grid.Resources>
-
-                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_OriginalFile}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_LastModified}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Header}" Text="{l:Loc ConflictResolutionView_Header_Size}"/>
-
-                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Value}" Text="{Binding SelectedConflict.FileName}"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding SelectedConflict.LastModified}"/>
-                    <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding SelectedConflict.Size}"/>
-                    <Button Grid.Row="1" Grid.Column="3"
-                                HorizontalAlignment="Left"
-                                Style="{StaticResource Value}"
-                                Padding="5,0"
-                                Command="{s:Action ChooseOriginal}"
-                                CommandParameter="{Binding SelectedConflict}"
-                                Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
-                </Grid>
-
-                <CheckBox DockPanel.Dock="Bottom" Margin="0,5"
-                          IsChecked="{Binding DeleteToRecycleBin}"
-                          Content="{l:Loc ConflictResolutionView_DeleteToRecycleBin}"/>
-
-                <Button DockPanel.Dock="Bottom" Margin="0,8,0,5" Padding="7,2"
-                        HorizontalAlignment="Left"
-                        Command="{s:Action ShowFileInFolder}" Content="{l:Loc ConflictResolutionView_Button_ShowInFolder}"/>
-
-                <ListView x:Name="SelectConflictOptions"
-                          ItemsSource="{Binding SelectedConflict.ConflictOptions}"
-                          Style="{StaticResource BoringListViewStyle}"
-                          BorderThickness="0"
-                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ConflictingFileName}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Margin="0,0,10,0" Text="{Binding FileName}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ConflictCreated}"
-                                            DisplayMemberBinding="{Binding DateCreated}"/>
-                            <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_Size}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <!-- The size in the 'Original File' table may be smaller - hack by adding padding here (which does make it look better anyway) -->
-                                        <TextBlock Margin="0,0,20,0" Text="{Binding Size}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <Button Command="{s:Action ChooseConflictFile}"
-                                                    CommandParameter="{Binding}"
-                                                    Padding="5,0"
-                                                    Content="{l:Loc ConflictResolutionView_Button_Choose}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </DockPanel>
+                Visibility="{Binding ResolutionViewModel, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+            <ContentControl s:View.Model="{Binding ResolutionViewModel}"/>
         </Border>
 
         <Border Margin="0,10,0,0" Style="{StaticResource SectionBorderStyle}">
@@ -152,14 +65,14 @@
                 <TextBlock Style="{StaticResource MessageStyle}"
                            Visibility="{Binding IsSyncthingStopped, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                            Text="{l:Loc ConflictResolutionView_Status_SyncthingNotRunning}"/>
-                
+
                 <ListView Visibility="{Binding Conflicts, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                           ItemsSource="{Binding Source={StaticResource ConflictsItemsSource}}"
                           SelectedItem="{Binding SelectedConflict}"
-                          SelectionMode="Single"
+                          SelectionMode="Extended"
                           MouseDoubleClick="{s:Action ListViewDoubleClick}"
                           BorderThickness="0"
-                          MinHeight="10">
+                          MinHeight="10" SelectionChanged="{s:Action SelectionChanged}">
                     <i:Interaction.Behaviors>
                         <xaml:GridViewSortByBehaviour/>
                     </i:Interaction.Behaviors>
@@ -167,6 +80,10 @@
                         <Style TargetType="GridViewColumnHeader">
                             <Setter Property="HorizontalContentAlignment" Value="Left"/>
                             <Setter Property="Padding" Value="5,0"/>
+                        </Style>
+                        <Style                    TargetType="{x:Type ListViewItem}"
+>
+                            <Setter                    Property="IsSelected" Value="{Binding IsSelected}"/>
                         </Style>
                     </ListView.Resources>
                     <ListView.View>
