@@ -13,7 +13,7 @@ Quick Links
 Introduction
 ------------
 
-SyncTrayzor is a little tray utility for [Syncthing](http://syncthing.net/) on Windows.
+SyncTrayzor is a little tray utility for [Syncthing](https://syncthing.net/) on Windows.
 It hosts and wraps Syncthing, making it behave more like a native Windows application and less like a command-line utility with a web browser interface.
 
 Features include:
@@ -51,7 +51,7 @@ If you already have SyncTrayzor installed, this will update it.
 
 ### Standalone
 
-First, you'll need .net 4.5. [Download the offline](http://www.microsoft.com/en-gb/download/details.aspx?id=42642) or [web installer](http://www.microsoft.com/en-gb/download/details.aspx?id=42643) if you don't have it installed already.
+First, you'll need .net 4.5. [Download the offline](https://www.microsoft.com/en-gb/download/details.aspx?id=42642) or [web installer](https://www.microsoft.com/en-gb/download/details.aspx?id=42643) if you don't have it installed already.
 
 [Download `SyncTrayzorPortable-x64.zip` or `SyncTrayzorPortable-x86.zip`](https://github.com/canton7/SyncTrayzor/releases/latest).
 Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `data` folder across from your previous standalone installation.
@@ -68,7 +68,7 @@ C:\> choco install synctrayzor
 Something went wrong!
 ---------------------
 
-First, what went wrong? Remember that SyncTrayzor is a wrapper around [Syncthing](http://github.com/syncthing/syncthing).
+First, what went wrong? Remember that SyncTrayzor is a wrapper around [Syncthing](https://github.com/syncthing/syncthing).
 Syncthing is the file synchronization program, which has a web interface.
 SyncTrayzor is the tray utility, looks like a normal Windows program, and has menus and suchlike, and a big area where Syncthing's web interface is displayed.
 
