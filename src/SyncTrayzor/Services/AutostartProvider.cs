@@ -65,7 +65,14 @@ namespace SyncTrayzor.Services
         {
             try
             {
-                this.OpenRegistryKey(true).Dispose();
+                // Apparently just opening the key is not enough - there's an ACL where it will still crash when trying to write
+                // to it
+                using (var key = this.OpenRegistryKey(true))
+                {
+                    var value = key.GetValue(this.keyName);
+                    key.SetValue(this.keyName, value);
+                }
+
                 this._canWrite = true;
                 this._canRead = true;
                 logger.Info("Have read/write access to the registry");
@@ -75,7 +82,11 @@ namespace SyncTrayzor.Services
 
             try
             {
-                this.OpenRegistryKey(false).Dispose();
+                using (var key = this.OpenRegistryKey(false))
+                {
+                    var value = key.GetValue(this.keyName);
+                }
+
                 this._canRead = true;
                 logger.Info("Have read-only access to the registry");
                 return;
