@@ -85,15 +85,6 @@ Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.
 Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
 
 
-Buy me a beer
--------------
-
-I develop SyncTrayzor in my free time because I enjoy it.
-SyncTrayzor will never become paid-for.
-However, if you find SyncTrayzor useful, please consider [buying me a beer](https://synctrayzor.antonymale.co.uk/donate).
-Thanks!
-
-
 Will SyncTrayzor phone home / give away my secrets / etc?
 ---------------------------------------------------------
 

@@ -852,12 +852,6 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConflictResolutionView_Button_ShowInFolder" xml:space="preserve">
     <value>Show in Folder</value>
   </data>
-  <data name="AboutView_Donate_Link" xml:space="preserve">
-    <value>Please buy me a beer!</value>
-  </data>
-  <data name="AboutView_Donate_Text" xml:space="preserve">
-    <value>Find SyncTrayzor useful?</value>
-  </data>
   <data name="ConflictResolutionView_DeleteToRecycleBin" xml:space="preserve">
     <value>Move deleted files to the recycle bin, rather than deleting permanently</value>
   </data>
@@ -889,9 +883,6 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="ConsoleView_ResumeButton" xml:space="preserve">
     <value>Resume</value>
-  </data>
-  <data name="AboutView_DonateThanks" xml:space="preserve">
-    <value>Cheers! Thanks for buying me a beer.</value>
   </data>
   <data name="SettingsView_ShowDeviceOrFolderRejectedBalloons" xml:space="preserve">
     <value>Show "Add New Device / Folder" balloon messages</value>
