@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v1.1.14
+-------
+
+ - Support selecting and resolving multiple conflicts at once
+ - Add better support for changes to Syncthing's event format
+ - UI tweaks and improvements
+ - Fix a few crashes
+ - Better support for right-to-left languages
+
 v1.1.13
 -------
 
