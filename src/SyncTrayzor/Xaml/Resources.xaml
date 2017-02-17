@@ -29,4 +29,17 @@ Width="20" Height="20" CornerRadius="5">
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Separator">
+                    <Grid SnapsToDevicePixels="True" Margin="0,1,0,2">
+                        <Rectangle Height="1" Margin="30,0,1,1" Fill="#E0E0E0"/>
+                        <Rectangle Height="1" Margin="30,1,1,0" Fill="White"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

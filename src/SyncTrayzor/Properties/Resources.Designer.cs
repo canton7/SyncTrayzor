@@ -70,33 +70,6 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please buy me a beer!.
-        /// </summary>
-        public static string AboutView_Donate_Link {
-            get {
-                return ResourceManager.GetString("AboutView_Donate_Link", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Find SyncTrayzor useful?.
-        /// </summary>
-        public static string AboutView_Donate_Text {
-            get {
-                return ResourceManager.GetString("AboutView_Donate_Text", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cheers! Thanks for buying me a beer..
-        /// </summary>
-        public static string AboutView_DonateThanks {
-            get {
-                return ResourceManager.GetString("AboutView_DonateThanks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Open Download Page.
         /// </summary>
         public static string AboutView_DownloadNewVersion {
@@ -228,6 +201,60 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_ChooseDescription {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_ChooseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Newest.
+        /// </summary>
+        public static string ConflictResolutionView_ChooseNewest_Button {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseNewest_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chooses the &apos;Original&apos; file if its &apos;Last Modified&apos; date is newest, or the conflict which was created most recently.
+        /// </summary>
+        public static string ConflictResolutionView_ChooseNewest_Text {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseNewest_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Newest Conflict.
+        /// </summary>
+        public static string ConflictResolutionView_ChooseNewestConflict_Button {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseNewestConflict_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chooses the conflict which was created most recently&lt;.
+        /// </summary>
+        public static string ConflictResolutionView_ChooseNewestConflict_Text {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseNewestConflict_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Original.
+        /// </summary>
+        public static string ConflictResolutionView_ChooseOriginal_Button {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseOriginal_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Takes the &apos;Original&apos; file from each conflict, and deletes all conflicting files.
+        /// </summary>
+        public static string ConflictResolutionView_ChooseOriginal_Text {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_ChooseOriginal_Text", resourceCulture);
             }
         }
         
@@ -372,6 +399,15 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_Title {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have selected {0} conflicts. Choose how you want to resolve them. The other versions will be deleted..
+        /// </summary>
+        public static string ConfliectResolutionView_ChooseMultipleDescription {
+            get {
+                return ResourceManager.GetString("ConfliectResolutionView_ChooseMultipleDescription", resourceCulture);
             }
         }
         
@@ -1536,7 +1572,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syncthing Console.
+        ///   Looks up a localized string similar to Syncthing _Console.
         /// </summary>
         public static string ShellView_Menu_View_SyncthingConsole {
             get {
@@ -1879,7 +1915,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close to Tray.
+        ///   Looks up a localized string similar to _Close to Tray.
         /// </summary>
         public static string TrayIcon_Menu_CloseToTray {
             get {

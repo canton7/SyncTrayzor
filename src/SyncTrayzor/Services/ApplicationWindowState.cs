@@ -10,7 +10,7 @@ namespace SyncTrayzor.Services
         event EventHandler<DeactivationEventArgs> RootWindowDeactivated;
         event EventHandler<CloseEventArgs> RootWindowClosed;
 
-        ScreenState State { get; }
+        ScreenState ScreenState { get; }
 
         void Setup(ShellViewModel rootViewModel);
 
@@ -50,7 +50,7 @@ namespace SyncTrayzor.Services
             this.RootWindowClosed?.Invoke(this, e);
         }
 
-        public ScreenState State => this.rootViewModel.State;
+        public ScreenState ScreenState => this.rootViewModel.ScreenState;
 
         public void CloseToTray()
         {

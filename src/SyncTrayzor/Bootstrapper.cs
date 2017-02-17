@@ -24,6 +24,7 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 using SyncTrayzor.Services.Metering;
 using System.Reflection;
+using SyncTrayzor.Localization;
 
 namespace SyncTrayzor
 {
@@ -160,6 +161,8 @@ namespace SyncTrayzor
                 { MessageBoxResult.OK, Resources.Generic_Dialog_OK },
                 { MessageBoxResult.Yes, Resources.Generic_Dialog_Yes },
             };
+
+            MessageBoxViewModel.DefaultFlowDirection = Localizer.FlowDirection;
 
             RecycleBinDeleter.Logger = s => LogManager.GetLogger(typeof(RecycleBinDeleter).FullName).Error(s);
         }

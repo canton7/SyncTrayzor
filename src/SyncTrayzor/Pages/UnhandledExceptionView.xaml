@@ -4,7 +4,9 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
         Height="400" Width="600"
-        Title="{l:Loc UnhandledExceptionView_Title}">
+        MinHeight="300" MinWidth="400"
+        Title="{l:Loc UnhandledExceptionView_Title}"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="{Binding Icon, Converter={x:Static s:IconToBitmapSourceConverter.Instance}}"
@@ -20,12 +22,13 @@
             <TextBlock Text="{l:Loc UnhandledExceptionView_PleaseOpenIssue_Post}"/>
         </TextBlock>
 
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" Content="{l:Loc Generic_Dialog_Close}" Style="{StaticResource DialogButton}"/>
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Command="{s:Action Close}" Content="{l:Loc Generic_Dialog_Close}" Style="{StaticResource DialogButton}"
+                IsDefault="True" IsCancel="True"/>
         <TextBlock DockPanel.Dock="Bottom" Margin="0,10" TextWrapping="Wrap">
             <TextBlock Text="{l:Loc UnhandledExceptionView_LogFileLocation_Description}"/>
             <Hyperlink Command="{s:Action OpenLogFilePath}"><TextBlock Text="{l:Loc UnhandledExceptionView_LogFileLocation_Link}"/></Hyperlink>
         </TextBlock>
 
-        <TextBox IsReadOnly="True" Text="{Binding ErrorMessage, Mode=OneWay}"/>
+        <TextBox IsReadOnly="True" Text="{Binding ErrorMessage, Mode=OneWay}" FlowDirection="LeftToRight"/>
     </DockPanel>
 </Window>

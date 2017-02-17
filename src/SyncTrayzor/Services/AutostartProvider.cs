@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using System.Security.Permissions;
 using System.Text.RegularExpressions;
 
 namespace SyncTrayzor.Services
@@ -33,6 +34,7 @@ namespace SyncTrayzor.Services
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const string applicationName = "SyncTrayzor";
+        private const string runPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
         // Matches 'SyncTrayzor' and 'SyncTrayzor (n)' (where n is a digit)
         private static readonly Regex keyRegex = new Regex("^" + applicationName + @"(?: \((\d+)\))?$");
         private readonly string keyName;
@@ -66,6 +68,10 @@ namespace SyncTrayzor.Services
             try
             {
                 this.OpenRegistryKey(true).Dispose();
+
+                // Not sure if the above check is needed now that we have this
+                new RegistryPermission(RegistryPermissionAccess.AllAccess, runPath).Demand();
+
                 this._canWrite = true;
                 this._canRead = true;
                 logger.Info("Have read/write access to the registry");
@@ -76,6 +82,10 @@ namespace SyncTrayzor.Services
             try
             {
                 this.OpenRegistryKey(false).Dispose();
+
+                // Not sure if the above check is needed now that we have this
+                new RegistryPermission(RegistryPermissionAccess.Read, runPath).Demand();
+
                 this._canRead = true;
                 logger.Info("Have read-only access to the registry");
                 return;
@@ -137,7 +147,7 @@ namespace SyncTrayzor.Services
 
         private RegistryKey OpenRegistryKey(bool writable)
         {
-            return Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable);
+            return Registry.CurrentUser.OpenSubKey(runPath, writable);
         }
 
         public AutostartConfiguration GetCurrentSetup()

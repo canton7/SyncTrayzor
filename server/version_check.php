@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.13' => [
+   '1.1.14' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,11 +81,14 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Improve 'Browse' button next to folder selection input (#297)\n- Fix right-click context menu in embedded browser (#300)\n- Fix crash on conflict resolution screen when Windows can't find an icon for the file type (#301)\n- Fix crash when opening SyncTrayzor (#303, #306, #318)\n- Indication of file conflict in tray icon didn't disappear in some cases (#307)\n- (Hopefully) add workaround for Chinese IME not working (#314)\n- Display folder names instead of folder IDs in tray notifications (#315)\n- Rename 'Restore' option in tray icon context menu (#320)",
+      'release_notes' => "- Support selecting and resolving multiple conflicts at once\n- Add better support for changes to Syncthing's event format\n- UI tweaks and improvements\n- Fix a few crashes\n- Better support for right-to-left languages",
    ]
 ];
 
 $upgrades = [
+   '1.1.13' => ['to' => 'latest', 'formatter' => '5'],
+   '1.1.12' => ['to' => 'latest', 'formatter' => '5'],
+   '1.1.11' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.10' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.9' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.8' => ['to' => 'latest', 'formatter' => '5'],

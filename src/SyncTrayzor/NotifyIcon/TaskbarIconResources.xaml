@@ -18,7 +18,8 @@
     <tb:TaskbarIcon x:Key="TaskbarIcon" x:Name="TaskbarIcon"
                     Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
                     DoubleClickCommand="{s:Action DoubleClick, ActionNotFound=Disable}"
-                    MenuActivation="RightClick">
+                    MenuActivation="RightClick"
+                    ToolTipText="SyncTrayzor">
         <tb:TaskbarIcon.TrayPopup>
             <Popup StaysOpen="False" Placement="Relative" HorizontalOffset="-150" VerticalOffset="100" Width="300" PlacementTarget="{Binding ElementName=TaskbarIcon}" AllowsTransparency="True">
                 <i:Interaction.Behaviors>
@@ -93,9 +94,12 @@
                 <!-- TaskbarIcon starts by setting the DataContext to itself, so just ignore this... -->
                 <MenuItem Header="{l:Loc TrayIcon_Menu_Restore}" FontWeight="Bold"  Command="{s:Action Restore, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
+                <Separator Visibility="{Binding MainWindowVisible, Converter={StaticResource RestoreVisibility}}"/>
+                
                 <MenuItem Header="{l:Loc TrayIcon_Menu_CloseToTray}" Command="{s:Action Minimize, ActionNotFound=Disable}"
                           Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
-
+                <Separator Visibility="{Binding MainWindowVisible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                
                 <MenuItem Header="{l:Loc TrayIcon_Menu_OpenFolder}" ItemsSource="{Binding Folders}"
                           Visibility="{Binding Folders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
                     <MenuItem.ItemContainerStyle>
@@ -105,12 +109,16 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
+                <Separator Visibility="{Binding Folders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
                 
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StopSyncthing}" Command="{s:Action Stop, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_RestartSyncthing}" Command="{s:Action Restart, ActionNotFound=Disable}"/>
+                <Separator/>
 
                 <MenuItem Header="{l:Loc TrayIcon_Menu_Settings}" Command="{s:Action ShowSettings, ActionNotFound=Disable}"/>
+                <Separator/>
+                
                 <MenuItem Header="{l:Loc TrayIcon_Menu_Exit}" Command="{s:Action Exit, ActionNotFound=Disable}"/>
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>

@@ -112,7 +112,7 @@ namespace SyncTrayzor.Services
 
         private void PausedDevicesChanged(object sender, EventArgs e)
         {
-            this.PausedDeviceIdsFromMetering = this.meteredNetworkManager.PausedDeviceIds.ToList().AsReadOnly();
+            this.PausedDeviceIdsFromMetering = this.meteredNetworkManager.PausedDevices.Select(x => x.DeviceId).ToList().AsReadOnly();
 
             this.OnAlertsStateChanged();
         }

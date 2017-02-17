@@ -3,16 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
-        Height="400" Width="250"
+        Height="400" 
+        Width="250" MinWidth="250"
         WindowStyle="None" SizeToContent="Height"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
-        <Style x:Key="DonateStyle" TargetType="TextBlock">
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,25"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-        </Style>
     </Window.Resources>
     <DockPanel LastChildFill="False" Margin="10">
         <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
@@ -36,23 +33,6 @@
                        Visibility="{Binding ShowTranslatorAttributation, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
         </Grid>
 
-        <TextBlock DockPanel.Dock="Top"
-                   Visibility="{Binding HaveDonated, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                   Style="{StaticResource DonateStyle}"
-                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"
-                   Text="{l:Loc AboutView_DonateThanks}"/>
-
-        <TextBlock DockPanel.Dock="Top"
-                   Visibility="{Binding HaveDonated, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"
-                   Style="{StaticResource DonateStyle}"
-                   FontSize="14"
-                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
-            <TextBlock Text="{l:Loc AboutView_Donate_Text}"/><LineBreak/>
-            <Hyperlink Command="{s:Action BuyMeABeer}">
-                <TextBlock Text="{l:Loc AboutView_Donate_Link}"/>
-            </Hyperlink>
-        </TextBlock>
-        
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>
@@ -64,7 +44,7 @@
                 <TextBlock Text="{l:Loc AboutView_ShowOtherLicenses}"/>
             </Hyperlink>
         </TextBlock>
-        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True"
+        <Button DockPanel.Dock="Bottom" Command="{s:Action Close}" IsDefault="True" IsCancel="True"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,5,0,0"
                 Style="{StaticResource DialogButton}"
                 Content="{l:Loc Generic_Dialog_Close}"/>

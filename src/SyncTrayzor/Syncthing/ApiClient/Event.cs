@@ -14,6 +14,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("time")]
         public DateTime Time { get; set; }
 
+        public abstract bool IsValid { get; }
+
         public abstract void Visit(IEventVisitor visitor);
     }
 }

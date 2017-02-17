@@ -5,7 +5,9 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
         xmlns:l="clr-namespace:SyncTrayzor.Localization"
+        FlowDirection="{x:Static l:Localizer.FlowDirection}"
         Height="700" Width="1100"
+        MinHeight="300" MinWidth="400"
         Title="SyncTrayzor">
     <i:Interaction.Behaviors>
         <xaml:WindowPlacementBehaviour Placement="{Binding Placement}"/>
@@ -29,18 +31,22 @@
             <MenuItem Header="{l:Loc ShellView_Menu_File}">
                 <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_File_ConflictResolver}" Command="{s:Action ShowConflictResolver}"/>
+                <Separator/>
                 <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
             </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Restart}" Command="{s:Action Restart}"/>
+                <Separator/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" InputGestureText="F5" Command="{s:Action RefreshBrowser}"/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
+                <Separator/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
             </MenuItem>
             <MenuItem Header="{l:Loc ShellView_Menu_View}">
                 <MenuItem Header="{l:Loc ShellView_Menu_View_SyncthingConsole}" IsCheckable="True" IsChecked="{Binding ShowConsole}"/>
+                <Separator/>
                 <MenuItem Header="{l:Loc ShellView_Menu_Zoom}" IsEnabled="{Binding CanZoomBrowser}">
                     <MenuItem Header="{l:Loc ShellView_Menu_Zoom_In}" InputGestureText="Ctrl++" Command="{s:Action BrowserZoomIn}"/>
                     <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Out}" InputGestureText="Ctrl+-" Command="{s:Action BrowserZoomOut}"/>

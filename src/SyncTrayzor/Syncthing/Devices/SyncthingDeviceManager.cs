@@ -21,8 +21,8 @@ namespace SyncTrayzor.Syncthing.Devices
         bool TryFetchById(string deviceId, out Device device);
         IReadOnlyCollection<Device> FetchDevices();
 
-        Task PauseDeviceAsync(string deviceId);
-        Task ResumeDeviceAsync(string deviceId);
+        Task PauseDeviceAsync(Device device);
+        Task ResumeDeviceAsync(Device device);
     }
 
     public class SyncthingDeviceManager : ISyncthingDeviceManager
@@ -49,6 +49,13 @@ namespace SyncTrayzor.Syncthing.Devices
 
         public SyncthingDeviceManager(SynchronizedTransientWrapper<ISyncthingApiClient> apiClient, ISyncthingEventWatcher eventWatcher, ISyncthingCapabilities capabilities)
         {
+            if (apiClient == null)
+                throw new ArgumentNullException(nameof(apiClient));
+            if (eventWatcher == null)
+                throw new ArgumentNullException(nameof(eventWatcher));
+            if (capabilities == null)
+                throw new ArgumentNullException(nameof(capabilities));
+
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.apiClient = apiClient;
             this.eventWatcher = eventWatcher;
@@ -128,31 +135,30 @@ namespace SyncTrayzor.Syncthing.Devices
             return devices;
         }
         
-        public async Task PauseDeviceAsync(string deviceId)
+        public async Task PauseDeviceAsync(Device device)
         {
             if (!this.capabilities.SupportsDevicePauseResume)
                 throw new InvalidOperationException("Syncthing version does not support device pause and resume");
 
-            Device device;
-            if (!this.devices.TryGetValue(deviceId, out device))
-                return;
+            var client = this.apiClient.Value;
+            if (client == null)
+                throw new InvalidOperationException("Client is not connected");
 
             device.SetPaused();
-            await this.apiClient.Value?.PauseDeviceAsync(deviceId);
-
+            await client.PauseDeviceAsync(device.DeviceId);
         }
 
-        public async Task ResumeDeviceAsync(string deviceId)
+        public async Task ResumeDeviceAsync(Device device)
         {
             if (!this.capabilities.SupportsDevicePauseResume)
                 throw new InvalidOperationException("Syncthing version does not support device pause and resume");
 
-            Device device;
-            if (!this.devices.TryGetValue(deviceId, out device))
-                return;
+            var client = this.apiClient.Value;
+            if (client == null)
+                throw new InvalidOperationException("Client is not connected");
 
             device.SetResumed();
-            await this.apiClient.Value?.ResumeDeviceAsync(deviceId);
+            await client.ResumeDeviceAsync(device.DeviceId);
         }
 
         private void EventDeviceConnected(object sender, EventWatcher.DeviceConnectedEventArgs e)

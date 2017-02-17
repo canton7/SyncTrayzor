@@ -32,6 +32,8 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public ImageSource Icon { get; }
 
         public string Size => FormatUtils.BytesToHuman(this.ConflictSet.File.SizeBytes, 1);
+
+        public bool IsSelected { get; set; }
         
 
         public ConflictViewModel(ConflictSet conflictSet, string folderName)
