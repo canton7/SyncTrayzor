@@ -249,11 +249,10 @@ if ($error != null)
 $output = json_encode($rsp, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
 
 $date = date('c');
-$log_msg = "$date\t{$_SERVER['REMOTE_ADDR']}\t$version\t$arch\t$variant\t$output\t$loggable_error\n";
 
 $fp = fopen('log.txt', 'a+');
 flock($fp, LOCK_EX);
-fputcsv($fp, [$date, $_SERVER['REMOTE_ADDR'], $version, $arch, $variant, $output, $loggable_error]);
+fputcsv($fp, [$date, $_SERVER['REMOTE_ADDR'], $version, $arch, $variant, $data == null ? "N" : "Y", $loggable_error]);
 fclose($fp);
 
 echo $output;
