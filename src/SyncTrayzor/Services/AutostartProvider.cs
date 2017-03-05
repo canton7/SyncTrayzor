@@ -68,30 +68,40 @@ namespace SyncTrayzor.Services
         {
             try
             {
-                this.OpenRegistryKey(true).Dispose();
+                using (var key = this.OpenRegistryKey(true))
+                {
+                    if (key != null) // It's null if "there was an error"
+                    {
+                        // We can open it, but not have access to create subkeys, I think
+                        new RegistryPermission(RegistryPermissionAccess.AllAccess, runPathWithHive).Demand();
 
-                // Not sure if the above check is needed now that we have this
-                new RegistryPermission(RegistryPermissionAccess.AllAccess, runPathWithHive).Demand();
-
-                this._canWrite = true;
-                this._canRead = true;
-                logger.Info("Have read/write access to the registry");
-                return;
+                        this._canWrite = true;
+                        this._canRead = true;
+                        logger.Info("Have read/write access to the registry");
+                        return;
+                    }
+                }
             }
             catch (SecurityException) { }
+            catch (UnauthorizedAccessException) { }
 
             try
             {
-                this.OpenRegistryKey(false).Dispose();
+                using (var key = this.OpenRegistryKey(false))
+                {
+                    if (key != null) // It's null if "there was an error"
+                    {
+                        // We can open it, but not have access to read subkeys, I think
+                        new RegistryPermission(RegistryPermissionAccess.Read, runPathWithHive).Demand();
 
-                // Not sure if the above check is needed now that we have this
-                new RegistryPermission(RegistryPermissionAccess.Read, runPathWithHive).Demand();
-
-                this._canRead = true;
-                logger.Info("Have read-only access to the registry");
-                return;
+                        this._canRead = true;
+                        logger.Info("Have read-only access to the registry");
+                        return;
+                    }
+                }
             }
             catch (SecurityException) { }
+            catch (UnauthorizedAccessException) { }
 
             logger.Info("Have no access to the registry");
         }
@@ -148,7 +158,8 @@ namespace SyncTrayzor.Services
 
         private RegistryKey OpenRegistryKey(bool writable)
         {
-            return Registry.CurrentUser.OpenSubKey(runPath, writable);
+            var key = Registry.CurrentUser.CreateSubKey(runPath, writable ? RegistryKeyPermissionCheck.ReadWriteSubTree : RegistryKeyPermissionCheck.ReadSubTree);
+            return key;
         }
 
         public AutostartConfiguration GetCurrentSetup()
