@@ -35,6 +35,7 @@ namespace SyncTrayzor.Services
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const string applicationName = "SyncTrayzor";
         private const string runPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+        private const string runPathWithHive = @"HKEY_CURRENT_USER\" + runPath;
         // Matches 'SyncTrayzor' and 'SyncTrayzor (n)' (where n is a digit)
         private static readonly Regex keyRegex = new Regex("^" + applicationName + @"(?: \((\d+)\))?$");
         private readonly string keyName;
@@ -70,7 +71,7 @@ namespace SyncTrayzor.Services
                 this.OpenRegistryKey(true).Dispose();
 
                 // Not sure if the above check is needed now that we have this
-                new RegistryPermission(RegistryPermissionAccess.AllAccess, runPath).Demand();
+                new RegistryPermission(RegistryPermissionAccess.AllAccess, runPathWithHive).Demand();
 
                 this._canWrite = true;
                 this._canRead = true;
@@ -84,7 +85,7 @@ namespace SyncTrayzor.Services
                 this.OpenRegistryKey(false).Dispose();
 
                 // Not sure if the above check is needed now that we have this
-                new RegistryPermission(RegistryPermissionAccess.Read, runPath).Demand();
+                new RegistryPermission(RegistryPermissionAccess.Read, runPathWithHive).Demand();
 
                 this._canRead = true;
                 logger.Info("Have read-only access to the registry");
