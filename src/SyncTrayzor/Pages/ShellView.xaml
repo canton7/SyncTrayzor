@@ -27,36 +27,43 @@
         <KeyBinding Key="F5" Command="{s:Action RefreshBrowser}"/>
     </Window.InputBindings>
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{l:Loc ShellView_Menu_File}">
-                <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
-                <MenuItem Header="{l:Loc ShellView_Menu_File_ConflictResolver}" Command="{s:Action ShowConflictResolver}"/>
-                <Separator/>
-                <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
-            </MenuItem>
-            <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Restart}" Command="{s:Action Restart}"/>
-                <Separator/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" InputGestureText="F5" Command="{s:Action RefreshBrowser}"/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
-                <Separator/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
-            </MenuItem>
-            <MenuItem Header="{l:Loc ShellView_Menu_View}">
-                <MenuItem Header="{l:Loc ShellView_Menu_View_SyncthingConsole}" IsCheckable="True" IsChecked="{Binding ShowConsole}"/>
-                <Separator/>
-                <MenuItem Header="{l:Loc ShellView_Menu_Zoom}" IsEnabled="{Binding CanZoomBrowser}">
-                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom_In}" InputGestureText="Ctrl++" Command="{s:Action BrowserZoomIn}"/>
-                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Out}" InputGestureText="Ctrl+-" Command="{s:Action BrowserZoomOut}"/>
-                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Reset}" InputGestureText="Ctrl+0" Command="{s:Action BrowserZoomReset}"/>
+        <Grid DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="{l:Loc ShellView_Menu_File}">
+                    <MenuItem Header="{l:Loc ShellView_Menu_File_Settings}" Command="{s:Action ShowSettings}"/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_File_ConflictResolver}" Command="{s:Action ShowConflictResolver}"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_File_Exit}" Command="{s:Action Shutdown}"/>
                 </MenuItem>
-            </MenuItem>
-            <MenuItem Header="{l:Loc ShellView_Menu_Help}">
-                <MenuItem Header="{l:Loc ShellView_Menu_Help_About}" Command="{s:Action ShowAbout}"/>
-            </MenuItem>
-        </Menu>
+                <MenuItem Header="{l:Loc ShellView_Menu_Syncthing}">
+                    <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Start}" Command="{s:Action Start}"/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Stop}" Command="{s:Action Stop}"/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Restart}" Command="{s:Action Restart}"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_Refresh}" InputGestureText="F5" Command="{s:Action RefreshBrowser}"/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_OpenExternal}" Command="{s:Action OpenBrowser}"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Syncthing_KillAll}" Command="{s:Action KillAllSyncthingProcesses}"/>
+                </MenuItem>
+                <MenuItem Header="{l:Loc ShellView_Menu_View}">
+                    <MenuItem Header="{l:Loc ShellView_Menu_View_SyncthingConsole}" IsCheckable="True" IsChecked="{Binding ShowConsole}"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc ShellView_Menu_Zoom}" IsEnabled="{Binding CanZoomBrowser}">
+                        <MenuItem Header="{l:Loc ShellView_Menu_Zoom_In}" InputGestureText="Ctrl++" Command="{s:Action BrowserZoomIn}"/>
+                        <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Out}" InputGestureText="Ctrl+-" Command="{s:Action BrowserZoomOut}"/>
+                        <MenuItem Header="{l:Loc ShellView_Menu_Zoom_Reset}" InputGestureText="Ctrl+0" Command="{s:Action BrowserZoomReset}"/>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="{l:Loc ShellView_Menu_Help}">
+                    <MenuItem Header="{l:Loc ShellView_Menu_Help_About}" Command="{s:Action ShowAbout}"/>
+                </MenuItem>
+            </Menu>
+            <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" Visibility="{Binding DonationManager.HaveDonated, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}">
+                <Hyperlink s:View.ActionTarget="{Binding DonationManager}" Command="{s:Action Donate}" >
+                    <TextBlock Text="{l:Loc ShellView_Donate}"/>
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
 
         <Grid>
             <Grid.RowDefinitions>

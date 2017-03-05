@@ -76,6 +76,7 @@ namespace SyncTrayzor
             builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
             builder.Bind<IPathTransformer>().To<PathTransformer>().InSingletonScope();
             builder.Bind<IConnectedEventDebouncer>().To<ConnectedEventDebouncer>();
+            builder.Bind<IDonationManager>().To<DonationManager>().InSingletonScope();
 
             if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();

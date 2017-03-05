@@ -12,9 +12,9 @@ namespace SyncTrayzor.Pages
 {
     public class AboutViewModel : Screen
     {
+        // Not in the app.config, in case some sysadmin wants to change it
         private readonly IWindowManager windowManager;
         private readonly ISyncthingManager syncthingManager;
-        private readonly IConfigurationProvider configurationProvider;
         private readonly IUpdateManager updateManager;
         private readonly Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
@@ -30,28 +30,28 @@ namespace SyncTrayzor.Pages
         }
         private string newerVersionDownloadUrl;
 
+        public IDonationManager DonationManager { get; }
+
         public AboutViewModel(
             IWindowManager windowManager,
             ISyncthingManager syncthingManager,
-            IConfigurationProvider configurationProvider,
             IUpdateManager updateManager,
             Func<ThirdPartyComponentsViewModel> thirdPartyComponentsViewModelFactory,
-            IProcessStartProvider processStartProvider)
+            IProcessStartProvider processStartProvider,
+            IDonationManager donationManager)
         {
             this.windowManager = windowManager;
             this.syncthingManager = syncthingManager;
-            this.configurationProvider = configurationProvider;
             this.updateManager = updateManager;
             this.thirdPartyComponentsViewModelFactory = thirdPartyComponentsViewModelFactory;
             this.processStartProvider = processStartProvider;
+            this.DonationManager = donationManager;
 
             this.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             this.HomepageUrl = AppSettings.Instance.HomepageUrl;
 
             this.syncthingManager.DataLoaded += this.SyncthingDataLoaded;
             this.LoadSyncthingVersion();
-
-            var configuration = this.configurationProvider.Load();
 
             this.CheckForNewerVersionAsync();
         }

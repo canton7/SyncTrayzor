@@ -27,6 +27,7 @@ namespace SyncTrayzor.Pages
         public bool ShowConsole { get; set; }
         public double ConsoleHeight { get; set; }
         public WindowPlacement Placement { get; set; }
+        public IDonationManager DonationManager { get; }
 
         private readonly Subject<bool> _activateObservable = new Subject<bool>();
         public IObservable<bool> ActivateObservable => this._activateObservable;
@@ -47,7 +48,8 @@ namespace SyncTrayzor.Pages
             Func<SettingsViewModel> settingsViewModelFactory,
             Func<AboutViewModel> aboutViewModelFactory,
             Func<ConflictResolutionViewModel> confictResolutionViewModelFactory,
-            IProcessStartProvider processStartProvider)
+            IProcessStartProvider processStartProvider,
+            IDonationManager donationManager)
         {
             this.windowManager = windowManager;
             this.syncthingManager = syncthingManager;
@@ -60,6 +62,7 @@ namespace SyncTrayzor.Pages
             this.aboutViewModelFactory = aboutViewModelFactory;
             this.confictResolutionViewModelFactory = confictResolutionViewModelFactory;
             this.processStartProvider = processStartProvider;
+            this.DonationManager = donationManager;
 
             var configuration = this.configurationProvider.Load();
 

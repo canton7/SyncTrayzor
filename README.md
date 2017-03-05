@@ -7,7 +7,7 @@ Quick Links
 
  - [Download and install SyncTrayzor now](#installation)
  - [Something went wrong](#something-went-wrong)
- - [Buy me a beer!](#buy-me-a-beer)
+ - [Donate to my charity fundraiser](#donate-to-my-charity-fundraiser)
 
 
 Introduction
@@ -83,6 +83,17 @@ Contributing
 Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.com/canton7/SyncTrayzor/wiki/Localization).
 
 Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
+
+
+Donate to my charity fundraiser
+-------------------------------
+
+I develop SyncTrayzor in my free time because I enjoy it.
+SyncTrayzor will never become paid-for.
+
+However, if you find SyncTrayzor useful and want to say thanks, please consider [donating to my charity fundraiser](https://synctrayzor.antonymale.co.uk/donate).
+I'm currently raising money for Médecins Sans Frontières (Doctors Without Borders).
+Thanks!
 
 
 Will SyncTrayzor phone home / give away my secrets / etc?

@@ -852,6 +852,13 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConflictResolutionView_Button_ShowInFolder" xml:space="preserve">
     <value>Show in Folder</value>
   </data>
+  <data name="AboutView_Donate_Link" xml:space="preserve">
+    <value>Donate now</value>
+  </data>
+  <data name="AboutView_Donate_Text" xml:space="preserve">
+    <value>Find SyncTrayzor useful?
+Please donate to my charity fundraising campaign.</value>
+  </data>
   <data name="ConflictResolutionView_DeleteToRecycleBin" xml:space="preserve">
     <value>Move deleted files to the recycle bin, rather than deleting permanently</value>
   </data>
@@ -883,6 +890,9 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="ConsoleView_ResumeButton" xml:space="preserve">
     <value>Resume</value>
+  </data>
+  <data name="AboutView_DonateThanks" xml:space="preserve">
+    <value>Cheers! Thanks for donating.</value>
   </data>
   <data name="SettingsView_ShowDeviceOrFolderRejectedBalloons" xml:space="preserve">
     <value>Show "Add New Device / Folder" balloon messages</value>
@@ -946,5 +956,12 @@ Do you want to restart SyncTrayzor now?</value>
   </data>
   <data name="ConfliectResolutionView_ChooseMultipleDescription" xml:space="preserve">
     <value>You have selected {0} conflicts. Choose how you want to resolve them. The other versions will be deleted.</value>
+  </data>
+  <data name="AboutView_DonateAgain_Link" xml:space="preserve">
+    <value>Donate again</value>
+  </data>
+  <data name="ShellView_Donate" xml:space="preserve">
+    <value>Donate to my charity fundraiser</value>
+    <comment>Shown in the top right of the menu bar, if the user hasn't yet donated</comment>
   </data>
 </root>

@@ -234,6 +234,7 @@
     <Compile Include="Services\Config\WindowPlacement.cs" />
     <Compile Include="Services\Conflicts\ConflictFileManager.cs" />
     <Compile Include="Services\Conflicts\ConflictFileWatcher.cs" />
+    <Compile Include="Services\DonationManager.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\IpcCommsClient.cs" />
