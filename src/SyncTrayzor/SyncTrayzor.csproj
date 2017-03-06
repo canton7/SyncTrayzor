@@ -209,7 +209,7 @@
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\MultipleConflictsResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\SingleConflictResolutionViewModel.cs" />
-    <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
+    <Compile Include="Pages\Tray\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
     <Compile Include="Pages\Settings\SettingItem.cs" />
@@ -217,6 +217,7 @@
     <Compile Include="Pages\Settings\SyncthingApiKeyValidator.cs" />
     <Compile Include="Pages\Settings\SyncthingCommandLineFlagsValidator.cs" />
     <Compile Include="Pages\Settings\SyncthingEnvironmentalVariablesValidator.cs" />
+    <Compile Include="Pages\Tray\FileTransferViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -467,7 +468,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\FileTransfersTrayView.xaml">
+    <Page Include="Pages\Tray\FileTransfersTrayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
