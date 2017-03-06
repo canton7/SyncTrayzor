@@ -38,7 +38,9 @@
                                Text="{l:Loc FileTransfersTrayView_InConnectionRate, ValueBinding={Binding InConnectionRate}}"/>
                 </DockPanel>
             </Border>
-            
+
+            <ContentControl DockPanel.Dock="Top" Height="100" s:View.Model="{Binding NetworkGraph}"/>
+
             <Grid>
                 <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"
                        Visibility="{Binding AnyTransfers, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"

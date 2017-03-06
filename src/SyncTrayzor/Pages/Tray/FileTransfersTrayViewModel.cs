@@ -16,6 +16,8 @@ namespace SyncTrayzor.Pages.Tray
         private readonly ISyncthingManager syncthingManager;
         private readonly IProcessStartProvider processStartProvider;
 
+        public NetworkGraphViewModel NetworkGraph { get; }
+
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
 
@@ -27,10 +29,11 @@ namespace SyncTrayzor.Pages.Tray
 
         public bool AnyTransfers => this.HasCompletedTransfers || this.HasInProgressTransfers;
 
-        public FileTransfersTrayViewModel(ISyncthingManager syncthingManager, IProcessStartProvider processStartProvider)
+        public FileTransfersTrayViewModel(ISyncthingManager syncthingManager, IProcessStartProvider processStartProvider, NetworkGraphViewModel networkGraph)
         {
             this.syncthingManager = syncthingManager;
             this.processStartProvider = processStartProvider;
+            this.NetworkGraph = networkGraph;
 
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
