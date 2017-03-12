@@ -263,7 +263,7 @@ namespace SyncTrayzor.Pages
             if (!this.syncthingManager.Folders.TryFetchById(folderId, out folder))
                 return;
 
-            this.processStartProvider.StartDetached("explorer.exe", folder.Path);
+            this.processStartProvider.ShowFolderInExplorer(folder.Path);
         }
 
         private void BrowseFolderPath()

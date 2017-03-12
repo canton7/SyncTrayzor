@@ -57,7 +57,7 @@ namespace SyncTrayzor.Pages
 
         public void OpenLogFilePath()
         {
-            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
+            this.processStartProvider.ShowFileInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
         }
 
         public void Close()

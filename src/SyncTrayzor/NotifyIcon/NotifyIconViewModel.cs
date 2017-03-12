@@ -201,7 +201,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public void Execute(object parameter)
         {
-            this.processStartProvider.StartDetached("explorer.exe", this.folder.Path);
+            this.processStartProvider.ShowFolderInExplorer(this.folder.Path);
         }
     }
 }

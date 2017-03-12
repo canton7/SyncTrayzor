@@ -217,7 +217,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
 
         public void ShowFileInFolder(ConflictViewModel conflict)
         {
-            this.processStartProvider.ShowInExplorer(conflict.FilePath);
+            this.processStartProvider.ShowFileInExplorer(conflict.FilePath);
         }
 
         public void Close()

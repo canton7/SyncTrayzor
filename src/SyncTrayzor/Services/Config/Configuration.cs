@@ -72,6 +72,8 @@ namespace SyncTrayzor.Services.Config
         public bool PauseDevicesOnMeteredNetworks { get; set; }
         public bool HaveDonated { get; set; }
         public IconAnimationMode IconAnimationMode { get; set; }
+        public string OpenFolderCommand { get; set; }
+        public string ShowFileInFolderCommand { get; set; }
 
         public Configuration()
         {
@@ -109,6 +111,8 @@ namespace SyncTrayzor.Services.Config
             this.PauseDevicesOnMeteredNetworks = true;
             this.HaveDonated = false;
             this.IconAnimationMode = IconAnimationMode.DataTransferring;
+            this.OpenFolderCommand = "explorer.exe \"{0}\"";
+            this.ShowFileInFolderCommand = "explorer.exe /select, \"{0}\"";
         }
 
         public Configuration(Configuration other)
@@ -145,6 +149,8 @@ namespace SyncTrayzor.Services.Config
             this.PauseDevicesOnMeteredNetworks = other.PauseDevicesOnMeteredNetworks;
             this.HaveDonated = other.HaveDonated;
             this.IconAnimationMode = other.IconAnimationMode;
+            this.OpenFolderCommand = other.OpenFolderCommand;
+            this.ShowFileInFolderCommand = other.ShowFileInFolderCommand;
         }
 
         public override string ToString()
@@ -162,7 +168,8 @@ namespace SyncTrayzor.Services.Config
                 $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
                 $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+
                 $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks} "+
-                $"HaveDonated={this.HaveDonated} IconAnimationMode={this.IconAnimationMode}>";
+                $"HaveDonated={this.HaveDonated} IconAnimationMode={this.IconAnimationMode} OpenFolderCommand={this.OpenFolderCommand} ShowFileInFolderCommand={this.ShowFileInFolderCommand}" +
+                $">";
         }
     }
 }

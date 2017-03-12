@@ -223,9 +223,9 @@ namespace SyncTrayzor.Pages
             if (fileTransfer.ActionType == ItemChangedActionType.Update)
             {
                 if (fileTransfer.ItemType == ItemChangedItemType.File)
-                    this.processStartProvider.ShowInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
+                    this.processStartProvider.ShowFileInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
                 else if (fileTransfer.ItemType == ItemChangedItemType.Dir)
-                    this.processStartProvider.StartDetached("explorer.exe", Path.Combine(folder.Path, fileTransfer.Path));
+                    this.processStartProvider.ShowFolderInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
             }
         }
     }
