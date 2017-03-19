@@ -187,6 +187,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Localization\CustomPluralLocalizationFormatter.cs" />
     <Compile Include="Localization\LocalizeConverters.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="Services\AlertsManager.cs" />
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\CommandLineOptionsParser.cs" />
     <Compile Include="Services\Config\AppSettings.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
     <Compile Include="Services\Config\ConfigFolderCleaner.cs" />
@@ -237,8 +239,9 @@
     <Compile Include="Services\DonationManager.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\FileWatcher.cs" />
-    <Compile Include="Services\IpcCommsClient.cs" />
-    <Compile Include="Services\IpcCommsServer.cs" />
+    <Compile Include="Services\Ipc\IpcCommsClient.cs" />
+    <Compile Include="Services\Ipc\IpcCommsClientFactory.cs" />
+    <Compile Include="Services\Ipc\IpcCommsServer.cs" />
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
     <Compile Include="Syncthing\ApiClient\DeviceRejectedEvent.cs" />
@@ -248,7 +251,6 @@
     <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
-    <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
@@ -381,6 +383,7 @@
     <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="Utils\ListExtensions.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
+    <Compile Include="Utils\Options.cs" />
     <Compile Include="Utils\PathEx.cs" />
     <Compile Include="Utils\PgpClearsignUtilities.cs" />
     <Compile Include="Utils\RecycleBinDeleter.cs" />
