@@ -30,7 +30,7 @@ CHECKSUM_FILE_PRIV_KEY = 'security/private_key.asc'
 
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
-PORTABLE_SYNCTHING_VERSION = '0.12'
+PORTABLE_SYNCTHING_VERSION = 'latest'
 
 class ArchDirConfig
   attr_reader :arch
@@ -51,7 +51,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(DEPLOY_DIR, "SyncTrayzorPortable-#{@arch}.zip")
-    @syncthing_binaries = { '0.12' => 'syncthing.exe' }
+    @syncthing_binaries = { 'latest' => 'syncthing.exe' }
   end
 
   def sha1sum_download_uri(version)
@@ -63,7 +63,7 @@ class ArchDirConfig
   end
 end
 
-SYNCTHING_VERSIONS_TO_UPDATE = ['0.12']
+SYNCTHING_VERSIONS_TO_UPDATE = ['latest']
 
 ARCH_CONFIG = [ArchDirConfig.new('x64', 'amd64'), ArchDirConfig.new('x86', '386')]
 ASSEMBLY_INFOS = FileList['**/AssemblyInfo.cs']
