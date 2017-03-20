@@ -8,9 +8,10 @@ require_relative 'build/CsprojResxWriter'
 ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
 SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
 SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
-MSBUILD = ENV['MSBUILD'] || %q{C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe}
+VSWHERE = 'build/vswhere.exe'
 
 CONFIG = ENV['CONFIG'] || 'Release'
+MSBUILD_VERSION = '15.0'
 MSBUILD_LOGGER = ENV['MSBUILD_LOGGER']
 
 SRC_DIR = 'src/SyncTrayzor'
@@ -58,7 +59,7 @@ class ArchDirConfig
   end
 
   def download_uri(version)
-  	"https://github.com/syncthing/syncthing/releases/download/v#{version}/syncthing-windows-#{@github_arch}-v#{version}.zip"
+    "https://github.com/syncthing/syncthing/releases/download/v#{version}/syncthing-windows-#{@github_arch}-v#{version}.zip"
   end
 end
 
@@ -75,8 +76,16 @@ def ensure_7zip
 end
 
 def build(sln, platform, rebuild = true)
+  if ENV['MSBUILD']
+    msbuild = ENV['MSBUILD']
+  else
+    path = `#{VSWHERE} -version #{MSBUILD_VERSION} -requires Microsoft.Component.MSBuild -format value -property installationPath`.chomp
+    msbuild = File.join(path, 'MSBuild', MSBUILD_VERSION, 'Bin', 'MSBuild.exe')
+  end
+
+  puts "MSBuild is at #{msbuild}"
   tasks = rebuild ? 'Clean;Rebuild' : 'Build'
-  cmd = "\"#{MSBUILD}\" \"#{sln}\" /t:#{tasks} /p:Configuration=#{CONFIG};Platform=#{platform}"
+  cmd = "\"#{msbuild}\" \"#{sln}\" /t:#{tasks} /p:Configuration=#{CONFIG};Platform=#{platform}"
   if MSBUILD_LOGGER
     cmd << " /logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
   else
