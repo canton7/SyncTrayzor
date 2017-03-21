@@ -16,12 +16,10 @@ namespace SyncTrayzor.Syncthing.Devices
             // Therefore do some mapping...
 
             // Use a URI to parse off the port
-            Uri uri;
-            if (!Uri.TryCreate($"tcp://{input}", UriKind.Absolute, out uri))
+            if (!Uri.TryCreate($"tcp://{input}", UriKind.Absolute, out Uri uri))
                 throw new FormatException($"Unable to parse input '{input}' into a URI");
 
-            IPAddress ipWithoutScope;
-            if (!IPAddress.TryParse(uri.Host, out ipWithoutScope))
+            if (!IPAddress.TryParse(uri.Host, out IPAddress ipWithoutScope))
                 throw new FormatException($"Unable to parse URI host {uri.Host} into an IPAddress");
 
             IPAddress ipWithScope;
@@ -46,8 +44,7 @@ namespace SyncTrayzor.Syncthing.Devices
                 var scopeName = hostWithScopeParts[1];
 
                 // Just in case Syncthing ever starts returning proper scope IDs...
-                long scopeId;
-                if (!Int64.TryParse(scopeName, out scopeId))
+                if (!Int64.TryParse(scopeName, out long scopeId))
                 {
 
                     var scopeLevel = ipWithoutScope.IsIPv6SiteLocal ? ScopeLevel.Site : ScopeLevel.Interface;

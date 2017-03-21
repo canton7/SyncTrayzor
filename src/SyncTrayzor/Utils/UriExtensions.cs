@@ -8,8 +8,10 @@ namespace SyncTrayzor.Utils
         {
             if (uri.Host == "0.0.0.0")
             {
-                var builder = new UriBuilder(uri);
-                builder.Host = "127.0.0.1";
+                var builder = new UriBuilder(uri)
+                {
+                    Host = "127.0.0.1"
+                };
                 uri = builder.Uri;
             }
             return uri;

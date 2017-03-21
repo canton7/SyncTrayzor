@@ -22,9 +22,9 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
         public bool Equals(FailingTransfer other)
         {
-            if (Object.ReferenceEquals(other, null))
+            if (ReferenceEquals(other, null))
                 return false;
-            if (Object.ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
                 return true;
 
             return this.FolderId == other.FolderId && this.Path == other.Path;

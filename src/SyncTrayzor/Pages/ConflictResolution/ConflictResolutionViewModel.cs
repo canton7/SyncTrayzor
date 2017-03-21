@@ -210,8 +210,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public void ListViewDoubleClick(object sender, RoutedEventArgs e)
         {
             // Check that we were called on a row, not on a header
-            var vm = (e.OriginalSource as FrameworkElement)?.DataContext as ConflictViewModel;
-            if (vm != null)
+            if ((e.OriginalSource as FrameworkElement)?.DataContext is ConflictViewModel vm)
                 this.ShowFileInFolder(vm);
         }
 

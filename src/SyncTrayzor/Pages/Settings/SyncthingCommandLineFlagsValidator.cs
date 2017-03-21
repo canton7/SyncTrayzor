@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using SyncTrayzor.Localization;
@@ -16,8 +15,7 @@ namespace SyncTrayzor.Pages.Settings
         {
             RuleFor(x => x.Value).Must(str =>
             {
-                IEnumerable<KeyValuePair<string, string>> result;
-                return KeyValueStringParser.TryParse(str, out result, mustHaveValue: false);
+                return KeyValueStringParser.TryParse(str, out var result, mustHaveValue: false);
             }).WithMessage(Resources.SettingsView_Validation_SyncthingCommandLineFlagsMustHaveFormat);
 
             RuleFor(x => x.Value).SetValidator(new IndividualFlagsValidator());
@@ -29,8 +27,7 @@ namespace SyncTrayzor.Pages.Settings
             {
                 Custom(str =>
                 {
-                    IEnumerable<KeyValuePair<string, string>> result;
-                    KeyValueStringParser.TryParse(str, out result, mustHaveValue: false);
+                    KeyValueStringParser.TryParse(str, out var result, mustHaveValue: false);
 
                     if (!result.All(flag => flag.Key.StartsWith("-")))
                         return new ValidationFailure(null, Resources.SettingsView_Validation_SyncthingCommandLineFlagsMustBeginWithHyphen);

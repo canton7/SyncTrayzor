@@ -4,7 +4,6 @@ using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
 using SyncTrayzor.Syncthing.ApiClient;
-using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
@@ -87,13 +86,19 @@ namespace SyncTrayzor.Pages
                             FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
                             FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
                     }
-                    
-                    this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / (float)this.FileTransfer.TotalBytes) * 100;
+
+                    this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / this.FileTransfer.TotalBytes) * 100;
                     break;
 
                 case FileTransferStatus.Completed:
                     this.ProgressPercent = 100;
                     this.ProgressString = null;
+                    break;
+
+                case FileTransferStatus.Started:
+                    break;
+
+                default:
                     break;
             }
 
@@ -111,22 +116,13 @@ namespace SyncTrayzor.Pages
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
 
-        public bool HasCompletedTransfers
-        {
-            get { return this.CompletedTransfers.Count > 0; }
-        }
-        public bool HasInProgressTransfers
-        {
-            get { return this.InProgressTransfers.Count > 0; }
-        }
+        public bool HasCompletedTransfers => this.CompletedTransfers.Count > 0;
+        public bool HasInProgressTransfers => this.InProgressTransfers.Count > 0;
 
         public string InConnectionRate { get; private set; }
         public string OutConnectionRate { get; private set; }
 
-        public bool AnyTransfers
-        {
-            get { return this.HasCompletedTransfers || this.HasInProgressTransfers; }
-        }
+        public bool AnyTransfers => this.HasCompletedTransfers || this.HasInProgressTransfers;
 
         public FileTransfersTrayViewModel(ISyncthingManager syncthingManager, IProcessStartProvider processStartProvider)
         {
@@ -215,8 +211,7 @@ namespace SyncTrayzor.Pages
         public void ItemClicked(FileTransferViewModel fileTransferVm)
         {
             var fileTransfer = fileTransferVm.FileTransfer;
-            Folder folder;
-            if (!this.syncthingManager.Folders.TryFetchById(fileTransfer.FolderId, out folder))
+            if (!this.syncthingManager.Folders.TryFetchById(fileTransfer.FolderId, out var folder))
                 return; // Huh? Nothing we can do about it...
 
             // Not sure of the best way to deal with deletions yet...

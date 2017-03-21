@@ -19,13 +19,8 @@ namespace SyncTrayzor.Utils
         public AtomicFileStream(string path, string tempPath)
             : base(tempPath, FileMode.Create, FileAccess.ReadWrite)
         {
-            if (path == null)
-                throw new ArgumentNullException("path");
-            if (tempPath == null)
-                throw new ArgumentNullException("tempPath");
-
-            this.path = path;
-            this.tempPath = tempPath;
+            this.path = path ?? throw new ArgumentNullException("path");
+            this.tempPath = tempPath ?? throw new ArgumentNullException("tempPath");
         }
 
         private static string TempFilePath(string path)

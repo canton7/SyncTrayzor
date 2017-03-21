@@ -10,8 +10,7 @@ namespace SyncTrayzor.Localization
 {
     public class CustomPluralLocalizationFormatter : IFormatter
     {
-        private string[] names = { "plural", "p", "" };
-        public string[] Names { get { return names; } set { names = value; } }
+        public string[] Names { get; set; } = { "plural", "p", "" };
 
         /// <summary>
         /// Initializes the plugin with rules for many common languages.
@@ -27,10 +26,7 @@ namespace SyncTrayzor.Localization
         private string defaultTwoLetterISOLanguageName;
         public string DefaultTwoLetterISOLanguageName
         {
-            get
-            {
-                return this.defaultTwoLetterISOLanguageName;
-            }
+            get => this.defaultTwoLetterISOLanguageName;
             set
             {
                 this.defaultTwoLetterISOLanguageName = value;
@@ -59,8 +55,7 @@ namespace SyncTrayzor.Localization
             }
 
             // Use the CultureInfo, if provided:
-            var cultureInfo = provider as CultureInfo;
-            if (cultureInfo != null)
+            if (provider is CultureInfo cultureInfo)
             {
                 var culturePluralRule = PluralRules.GetPluralRule(cultureInfo.TwoLetterISOLanguageName);
                 return culturePluralRule;

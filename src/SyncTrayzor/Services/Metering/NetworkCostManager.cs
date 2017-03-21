@@ -66,8 +66,7 @@ namespace SyncTrayzor.Services.Metering
 
             try
             {
-                uint costVal;
-                this.networkListManager.GetCost(out costVal, ref sockAddr);
+                this.networkListManager.GetCost(out uint costVal, ref sockAddr);
                 var cost = (NLM_CONNECTION_COST)costVal;
                 return !cost.HasFlag(NLM_CONNECTION_COST.NLM_CONNECTION_COST_UNRESTRICTED);
             }

@@ -17,8 +17,7 @@ namespace SyncTrayzor.Syncthing.Folders
 
         public static FolderSyncState SyncStateFromString(string state)
         {
-            FolderSyncState syncState;
-            if (folderSyncStateLookup.TryGetValue(state, out syncState))
+            if (folderSyncStateLookup.TryGetValue(state, out var syncState))
                 return syncState;
 
             logger.Warn($"Unknown folder sync state {state}. Defaulting to Idle");

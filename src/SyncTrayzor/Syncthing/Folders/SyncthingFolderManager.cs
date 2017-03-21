@@ -1,5 +1,4 @@
 ﻿using NLog;
-using RestEase;
 using SyncTrayzor.Syncthing.ApiClient;
 using SyncTrayzor.Syncthing.EventWatcher;
 using SyncTrayzor.Utils;
@@ -8,7 +7,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -113,8 +111,7 @@ namespace SyncTrayzor.Syncthing.Folders
             // Re-use the existing folder object if possible
             foreach (var folder in folders)
             {
-                Folder existingFolder;
-                if (existingFolders.TryGetValue(folder.FolderId, out existingFolder))
+                if (existingFolders.TryGetValue(folder.FolderId, out var existingFolder))
                 {
                     if (existingFolder.SyncState != folder.SyncState)
                     {
@@ -179,8 +176,7 @@ namespace SyncTrayzor.Syncthing.Folders
 
         private void ItemStarted(string folderId, string item)
         {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out var folder))
                 return; // Don't know about it
 
             folder.AddSyncingPath(item);
@@ -188,8 +184,7 @@ namespace SyncTrayzor.Syncthing.Folders
 
         private void ItemFinished(string folderId, string item)
         {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out var folder))
                 return; // Don't know about it
 
             folder.RemoveSyncingPath(item);
@@ -197,8 +192,7 @@ namespace SyncTrayzor.Syncthing.Folders
 
         private void FolderErrorsChangedEvt(string folderId, List<FolderErrorData> errors)
         {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out var folder))
                 return; // Don't know about it
 
             var folderErrors = errors.Select(x => new FolderError(x.Error, x.Path)).ToList();
@@ -208,8 +202,7 @@ namespace SyncTrayzor.Syncthing.Folders
 
         private void FolderSyncStateChanged(SyncStateChangedEventArgs e)
         {
-            Folder folder;
-            if (!this.folders.TryGetValue(e.FolderId, out folder))
+            if (!this.folders.TryGetValue(e.FolderId, out var folder))
                 return; // We don't know about this folder
 
             var syncState = FolderStateTransformer.SyncStateFromString(e.SyncState);
@@ -226,8 +219,7 @@ namespace SyncTrayzor.Syncthing.Folders
 
         private void FolderStatusChanged(string folderId, FolderStatus folderStatus)
         {
-            Folder folder;
-            if (!this.folders.TryGetValue(folderId, out folder))
+            if (!this.folders.TryGetValue(folderId, out var folder))
                 return; // Don't know about it
 
             folder.Status = folderStatus;

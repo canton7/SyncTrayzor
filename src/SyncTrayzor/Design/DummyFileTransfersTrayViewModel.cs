@@ -10,14 +10,8 @@ namespace SyncTrayzor.Design
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
 
-        public bool HasCompletedTransfers
-        {
-            get { return this.CompletedTransfers.Count > 0; }
-        }
-        public bool HasInProgressTransfers
-        {
-            get { return this.InProgressTransfers.Count > 0; }
-        }
+        public bool HasCompletedTransfers => this.CompletedTransfers.Count > 0;
+        public bool HasInProgressTransfers => this.InProgressTransfers.Count > 0;
 
         public string InConnectionRate { get; private set; }
         public string OutConnectionRate { get; private set; }

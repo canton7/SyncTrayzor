@@ -20,7 +20,7 @@ namespace SyncTrayzor.Syncthing
         protected T _value;
         public virtual T Value
         {
-            get { return this._value; }
+            get => this._value;
             set
             {
                 var oldValue = this._value;
@@ -87,8 +87,8 @@ namespace SyncTrayzor.Syncthing
 
         public T UnsynchronizedValue
         {
-            get { return base.Value; }
-            set { base.Value = value; }
+            get => base.Value;
+            set => base.Value = value;
         }
 
         public SynchronizedTransientWrapper()

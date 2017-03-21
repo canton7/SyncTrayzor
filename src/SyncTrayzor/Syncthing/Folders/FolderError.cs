@@ -15,9 +15,9 @@ namespace SyncTrayzor.Syncthing.Folders
 
         public bool Equals(FolderError other)
         {
-            if (Object.ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
                 return true;
-            if (Object.ReferenceEquals(other, null))
+            if (ReferenceEquals(other, null))
                 return false;
 
             return this.Error == other.Error &&

@@ -11,8 +11,7 @@ namespace SyncTrayzor.Xaml
 
         private static void AlwaysScrollToEndChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            TextBox tb = sender as TextBox;
-            if (tb != null)
+            if (sender is TextBox tb)
             {
                 bool alwaysScrollToEnd = (e.NewValue != null) && (bool)e.NewValue;
                 if (alwaysScrollToEnd)

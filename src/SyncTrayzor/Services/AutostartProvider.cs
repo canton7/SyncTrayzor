@@ -126,8 +126,7 @@ namespace SyncTrayzor.Services
                             numbersSeen.Add(Int32.Parse(numberValue));
 
                         // See if this one points to our application
-                        var keyValue = key.GetValue(entry) as string;
-                        if (keyValue != null && keyValue.StartsWith($"\"{this.assemblyProvider.Location}\""))
+                        if (key.GetValue(entry) is string keyValue && keyValue.StartsWith($"\"{this.assemblyProvider.Location}\""))
                         {
                             foundKey = entry;
                             break;
@@ -172,8 +171,7 @@ namespace SyncTrayzor.Services
 
             using (var registryKey = this.OpenRegistryKey(false))
             {
-                var value = registryKey.GetValue(this.keyName) as string;
-                if (value != null)
+                if (registryKey.GetValue(this.keyName) is string value)
                 {
                     autoStart = true;
                     if (value.Contains(" -minimized"))

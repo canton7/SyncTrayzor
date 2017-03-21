@@ -155,7 +155,7 @@ namespace SyncTrayzor
                 autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
 
             // Needs to be done before ConfigurationApplicator is run
-            this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
+            this.Container.Get<IApplicationWindowState>().Setup(this.RootViewModel);
 
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
@@ -225,8 +225,7 @@ namespace SyncTrayzor
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error(e.Exception, "An unhandled exception occurred");
-            var typeLoadException = e.Exception as ReflectionTypeLoadException;
-            if (typeLoadException != null)
+            if (e.Exception is ReflectionTypeLoadException typeLoadException)
             {
                 logger.Error("Loader exceptions:");
                 foreach (var ex in typeLoadException.LoaderExceptions)
@@ -251,8 +250,7 @@ namespace SyncTrayzor
             {
                 var windowManager = this.Container.Get<IWindowManager>();
 
-                var couldNotFindSyncthingException = e.Exception as CouldNotFindSyncthingException;
-                if (couldNotFindSyncthingException != null)
+                if (e.Exception is CouldNotFindSyncthingException couldNotFindSyncthingException)
                 {
                     var msg = $"Could not find syncthing.exe at {couldNotFindSyncthingException.SyncthingPath}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
                     "antivirus program quarantined it, restore it. If all else fails, download syncthing.exe from https://github.com/syncthing/syncthing/releases the put it " +
@@ -265,8 +263,7 @@ namespace SyncTrayzor
                     return;
                 }
 
-                var configurationException = e.Exception as BadConfigurationException;
-                if (configurationException != null)
+                if (e.Exception is BadConfigurationException configurationException)
                 {
                     var inner = configurationException.InnerException.Message;
                     if (configurationException.InnerException.InnerException != null)
@@ -284,8 +281,7 @@ namespace SyncTrayzor
                     return;
                 }
 
-                var couldNotSaveConfigurationException = e.Exception as CouldNotSaveConfigurationExeption;
-                if (couldNotSaveConfigurationException != null)
+                if (e.Exception is CouldNotSaveConfigurationExeption couldNotSaveConfigurationException)
                 {
                     var msg = $"Could not save configuration file.\n\n" +
                         $"{couldNotSaveConfigurationException.InnerException.GetType().Name}: {couldNotSaveConfigurationException.InnerException.Message}.\n\n" +

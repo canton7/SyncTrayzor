@@ -27,13 +27,13 @@ namespace SyncTrayzor.Services
         private List<string> _watchedFolders;
         public IEnumerable<string> WatchedFolderIDs
         {
-            get { return this._watchedFolders; }
+            get => this._watchedFolders;
             set
             {
                 if (this._watchedFolders != null && value != null && this._watchedFolders.SequenceEqual(value))
                     return;
 
-                this._watchedFolders = value != null ? value.ToList() : null;
+                this._watchedFolders = value?.ToList();
                 this.Reset();
             }
         }

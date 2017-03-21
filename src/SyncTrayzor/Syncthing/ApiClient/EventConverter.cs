@@ -44,8 +44,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
             if (eventType == EventType.Unknown)
                 logger.Warn($"Unknown event type: {jObject["type"]}");
 
-            Type type;
-            if (eventTypes.TryGetValue(eventType, out type))
+            if (eventTypes.TryGetValue(eventType, out Type type))
                 return (Event)jObject.ToObject(type);
             else
                 return jObject.ToObject<GenericEvent>();

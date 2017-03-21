@@ -38,8 +38,7 @@ namespace SyncTrayzor.Utils
 
         private static string DescriptionForReleaseKey(int releaseKey)
         {
-            string description;
-            if (!versionMapping.TryGetValue(releaseKey, out description))
+            if (!versionMapping.TryGetValue(releaseKey, out var description))
                 description = "Unknown";
 
             return description;

@@ -13,11 +13,7 @@ namespace SyncTrayzor.Services.Config
     public class ConfigurationChangedEventArgs : EventArgs
     {
         private readonly Configuration baseConfiguration;
-        public Configuration NewConfiguration
-        {
-            // Ensure we always clone it, so people can modify
-            get { return new Configuration(this.baseConfiguration); }
-        }
+        public Configuration NewConfiguration => new Configuration(this.baseConfiguration);
 
         public ConfigurationChangedEventArgs(Configuration newConfiguration)
         {
@@ -93,8 +89,7 @@ namespace SyncTrayzor.Services.Config
             if (!this.filesystem.DirectoryExists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
                 this.filesystem.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
-            bool hadToCreateConfiguration;
-            this.currentConfig = this.LoadFromDisk(defaultConfiguration, out hadToCreateConfiguration);
+            this.currentConfig = this.LoadFromDisk(defaultConfiguration, out bool hadToCreateConfiguration);
             this.HadToCreateConfiguration = hadToCreateConfiguration;
 
             bool updateConfigInstallCount = false;

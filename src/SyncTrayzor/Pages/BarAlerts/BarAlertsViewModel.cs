@@ -2,7 +2,6 @@
 using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
-using SyncTrayzor.Syncthing.Devices;
 using System;
 using System.Collections.Generic;
 
@@ -63,8 +62,7 @@ namespace SyncTrayzor.Pages.BarAlerts
                 var pausedDeviceNames = new List<string>();
                 foreach (var deviceId in pausedDeviceIds)
                 {
-                    Device device;
-                    if (this.syncthingManager.Devices.TryFetchById(deviceId, out device))
+                    if (this.syncthingManager.Devices.TryFetchById(deviceId, out var device))
                         pausedDeviceNames.Add(device.Name);
                 }
 

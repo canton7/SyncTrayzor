@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Stylet;
-using SyncTrayzor.Services;
-using SyncTrayzor.Services.Conflicts;
-using System.IO;
-using SyncTrayzor.Localization;
-using SyncTrayzor.Properties;
-using System.Windows;
+﻿using Stylet;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {

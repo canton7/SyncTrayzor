@@ -15,7 +15,7 @@ namespace SyncTrayzor.Services.Config
         [XmlAttribute("Version")]
         public int Version
         {
-            get { return CurrentVersion; }
+            get => CurrentVersion;
             set
             {
                 if (CurrentVersion != value)
@@ -50,8 +50,8 @@ namespace SyncTrayzor.Services.Config
         [XmlElement("LatestNotifiedVersion")]
         public string LatestNotifiedVersionRaw
         {
-            get { return this.LatestNotifiedVersion == null ? null : this.LatestNotifiedVersion.ToString(); }
-            set { this.LatestNotifiedVersion = value == null ? null : new Version(value); }
+            get => this.LatestNotifiedVersion?.ToString();
+            set => this.LatestNotifiedVersion = value == null ? null : new Version(value);
         }
 
         public bool UseComputerCulture { get; set; }
@@ -97,7 +97,7 @@ namespace SyncTrayzor.Services.Config
             this.ObfuscateDeviceIDs = true;
             this.LatestNotifiedVersion = null;
             this.UseComputerCulture = true;
-            this.SyncthingConsoleHeight = Configuration.DefaultSyncthingConsoleHeight;
+            this.SyncthingConsoleHeight = DefaultSyncthingConsoleHeight;
             this.WindowPlacement = null;
             this.SyncthingWebBrowserZoomLevel = 0;
             this.LastSeenInstallCount = 0;

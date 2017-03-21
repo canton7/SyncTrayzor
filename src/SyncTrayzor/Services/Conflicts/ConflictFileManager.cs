@@ -166,13 +166,11 @@ namespace SyncTrayzor.Services.Conflicts
                         if (this.IsFileIgnored(filePath))
                             continue;
 
-                        ParsedConflictFileInfo conflictFileInfo;
                         // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
-                        if (!this.TryFindBaseFileForConflictFile(filePath, out conflictFileInfo))
+                        if (!this.TryFindBaseFileForConflictFile(filePath, out var conflictFileInfo))
                             continue;
 
-                        List<ParsedConflictFileInfo> existingConflicts;
-                        if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out existingConflicts))
+                        if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out var existingConflicts))
                         {
                             existingConflicts = new List<ParsedConflictFileInfo>();
                             conflictLookup.Add(conflictFileInfo.OriginalPath, existingConflicts);

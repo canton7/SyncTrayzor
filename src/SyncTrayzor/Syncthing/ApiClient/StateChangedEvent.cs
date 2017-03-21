@@ -19,8 +19,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         public TimeSpan Duration
         {
-            get { return TimeSpan.FromSeconds(this.DurationSeconds); }
-            set { this.DurationSeconds = value.TotalSeconds; }
+            get => TimeSpan.FromSeconds(this.DurationSeconds);
+            set => this.DurationSeconds = value.TotalSeconds;
         }
     }
 

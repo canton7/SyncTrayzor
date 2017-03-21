@@ -39,8 +39,7 @@ namespace SyncTrayzor.Services.UpdateManagement
 
             var sha512sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha512sumUrl, version, sha512sumDownloadPath, false, () =>
                 {
-                    Stream sha512sumContents;
-                    var passed = this.installerVerifier.VerifySha512sum(sha512sumDownloadPath, out sha512sumContents);
+                    var passed = this.installerVerifier.VerifySha512sum(sha512sumDownloadPath, out Stream sha512sumContents);
                     return Tuple.Create(passed, sha512sumContents);
                 });
 
