@@ -27,7 +27,6 @@ namespace SyncTrayzor.Syncthing
         
         private DateTime lastPollCompletion;
         private Connections prevConnections;
-        private bool haveNotifiedOfNoChange;
 
         public event EventHandler<ConnectionStatsChangedEventArgs> TotalConnectionStatsChanged;
 
@@ -40,11 +39,16 @@ namespace SyncTrayzor.Syncthing
         protected override void OnStart()
         {
             this.apiClient = this.apiClientWrapper.Value;
+            this.prevConnections = null;
         }
 
         protected override void OnStop()
         {
             this.apiClient = null;
+            var prev = this.prevConnections.Total;
+
+            // Send an update with zero transfer rate, since that's what we're now doing
+            this.Update(this.prevConnections);
         }
 
         protected override async Task PollAsync(CancellationToken cancellationToken)
@@ -53,7 +57,12 @@ namespace SyncTrayzor.Syncthing
 
             // We can be stopped in the time it takes this to complete
             cancellationToken.ThrowIfCancellationRequested();
-            
+
+            this.Update(connections);
+        }
+
+        private void Update(Connections connections)
+        {
             var elapsed = DateTime.UtcNow - this.lastPollCompletion;
             this.lastPollCompletion = DateTime.UtcNow;
 
@@ -63,23 +72,11 @@ namespace SyncTrayzor.Syncthing
                 var total = connections.Total;
                 var prevTotal = this.prevConnections.Total;
 
-                if (total.InBytesTotal != prevTotal.InBytesTotal || total.OutBytesTotal != prevTotal.OutBytesTotal)
-                {
-                    this.haveNotifiedOfNoChange = false;
+                double inBytesPerSecond = (total.InBytesTotal - prevTotal.InBytesTotal) / elapsed.TotalSeconds;
+                double outBytesPerSecond = (total.OutBytesTotal - prevTotal.OutBytesTotal) / elapsed.TotalSeconds;
 
-                    double inBytesPerSecond = (total.InBytesTotal - prevTotal.InBytesTotal) / elapsed.TotalSeconds;
-                    double outBytesPerSecond = (total.OutBytesTotal - prevTotal.OutBytesTotal) / elapsed.TotalSeconds;
-
-                    var totalStats = new SyncthingConnectionStats(total.InBytesTotal, total.OutBytesTotal, inBytesPerSecond, outBytesPerSecond);
-                    this.OnTotalConnectionStatsChanged(totalStats);
-                }
-                else if (!this.haveNotifiedOfNoChange)
-                {
-                    this.haveNotifiedOfNoChange = true;
-
-                    var totalStats = new SyncthingConnectionStats(total.InBytesTotal, total.OutBytesTotal, 0, 0);
-                    this.OnTotalConnectionStatsChanged(totalStats);
-                }
+                var totalStats = new SyncthingConnectionStats(total.InBytesTotal, total.OutBytesTotal, inBytesPerSecond, outBytesPerSecond);
+                this.OnTotalConnectionStatsChanged(totalStats);
             }
             this.prevConnections = connections;
         }

@@ -5,11 +5,12 @@ using SyncTrayzor.Syncthing;
 using SyncTrayzor.Syncthing.ApiClient;
 using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
+using System;
 using System.Linq;
 
 namespace SyncTrayzor.Pages.Tray
 {
-    public class FileTransfersTrayViewModel : Screen
+    public class FileTransfersTrayViewModel : Screen, IDisposable
     {
         private const int initialCompletedTransfersToDisplay = 100;
 
@@ -33,7 +34,9 @@ namespace SyncTrayzor.Pages.Tray
         {
             this.syncthingManager = syncthingManager;
             this.processStartProvider = processStartProvider;
+
             this.NetworkGraph = networkGraph;
+            this.NetworkGraph.ConductWith(this);
 
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
@@ -102,16 +105,8 @@ namespace SyncTrayzor.Pages.Tray
 
         private void UpdateConnectionStats(SyncthingConnectionStats connectionStats)
         {
-            if (connectionStats == null)
-            {
-                this.InConnectionRate = "0.0B";
-                this.OutConnectionRate = "0.0B";
-            }
-            else
-            {
-                this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1);
-                this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1);
-            }
+            this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1);
+            this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1);
         }
 
         public void ItemClicked(FileTransferViewModel fileTransferVm)
@@ -128,6 +123,11 @@ namespace SyncTrayzor.Pages.Tray
                 else if (fileTransfer.ItemType == ItemChangedItemType.Dir)
                     this.processStartProvider.ShowFolderInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
             }
+        }
+
+        public void Dispose()
+        {
+            this.NetworkGraph.Dispose();
         }
     }
 }

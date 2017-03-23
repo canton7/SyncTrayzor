@@ -39,7 +39,7 @@
                 </DockPanel>
             </Border>
 
-            <ContentControl DockPanel.Dock="Top" Height="100" s:View.Model="{Binding NetworkGraph}"/>
+            <ContentControl DockPanel.Dock="Top" s:View.Model="{Binding NetworkGraph}"/>
 
             <Grid>
                 <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"
