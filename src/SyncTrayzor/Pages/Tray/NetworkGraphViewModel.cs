@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using Stylet;
 using SyncTrayzor.Syncthing;
+using SyncTrayzor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace SyncTrayzor.Pages.Tray
         private static readonly DateTime epoch = DateTime.UtcNow; // Some arbitrary value in the past
         private static readonly TimeSpan window = TimeSpan.FromMinutes(5);
 
+        private const double minYValue = 500 * 1024;
+
         private readonly ISyncthingManager syncthingManager;
 
         private readonly LinearAxis yAxis;
@@ -27,11 +30,13 @@ namespace SyncTrayzor.Pages.Tray
         public PlotModel OxyPlotModel { get; } = new PlotModel();
         public bool ShowGraph { get; private set; }
 
+        public string MaxYValue { get; private set; }
+
         public NetworkGraphViewModel(ISyncthingManager syncthingManager)
         {
             this.syncthingManager = syncthingManager;
 
-            this.OxyPlotModel.PlotAreaBorderColor = OxyColors.Transparent;
+            this.OxyPlotModel.PlotAreaBorderColor = OxyColors.LightGray;
 
             this.xAxis = new LinearAxis()
             {
@@ -39,6 +44,8 @@ namespace SyncTrayzor.Pages.Tray
                 IsZoomEnabled = false,
                 IsPanEnabled = false,
                 IsAxisVisible = false,
+                MajorGridlineColor = OxyColors.Gray,
+                MajorGridlineStyle = LineStyle.Dash,
             };
             this.OxyPlotModel.Axes.Add(this.xAxis);
 
@@ -48,8 +55,7 @@ namespace SyncTrayzor.Pages.Tray
                 IsZoomEnabled = false,
                 IsPanEnabled = false,
                 IsAxisVisible = false,
-                Minimum = 0,
-                MinimumRange = 500 * 1024, // Half a meg
+                AbsoluteMinimum = 0,
             };
             this.OxyPlotModel.Axes.Add(this.yAxis);
 
@@ -100,6 +106,9 @@ namespace SyncTrayzor.Pages.Tray
             this.xAxis.Minimum = earliest;
             this.xAxis.Maximum = latest;
 
+            this.yAxis.Maximum = minYValue;
+            this.MaxYValue = FormatUtils.BytesToHuman(minYValue) + "/s";
+
             if (this.IsActive)
                 this.OxyPlotModel.InvalidatePlot(true);
         }
@@ -119,6 +128,12 @@ namespace SyncTrayzor.Pages.Tray
 
             this.xAxis.Minimum = earliest;
             this.xAxis.Maximum = (now - epoch).TotalSeconds;
+
+            // This increases in units of 100kBit/s
+            // TODO: This needs to be smarter, and not increase in smaller steps than the value we display does
+            var maxValue = this.inboundSeries.Points.Concat(this.outboundSeries.Points).Max(x => x.Y);
+            this.yAxis.Maximum = Math.Max(minYValue, Math.Floor(maxValue / (1024 * 100)) * (1024 * 100));
+            this.MaxYValue = FormatUtils.BytesToHuman(this.yAxis.Maximum) + "/s";
 
             if (this.IsActive)
                 this.OxyPlotModel.InvalidatePlot(true);
