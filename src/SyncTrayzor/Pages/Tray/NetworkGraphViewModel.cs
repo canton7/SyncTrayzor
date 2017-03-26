@@ -17,7 +17,7 @@ namespace SyncTrayzor.Pages.Tray
         private static readonly DateTime epoch = DateTime.UtcNow; // Some arbitrary value in the past
         private static readonly TimeSpan window = TimeSpan.FromMinutes(5);
 
-        private const double minYValue = 500 * 1024;
+        private const double minYValue = 1024;
 
         private readonly ISyncthingManager syncthingManager;
 
@@ -129,11 +129,21 @@ namespace SyncTrayzor.Pages.Tray
             this.xAxis.Minimum = earliest;
             this.xAxis.Maximum = (now - epoch).TotalSeconds;
 
-            // This increases in units of 100kBit/s
-            // TODO: This needs to be smarter, and not increase in smaller steps than the value we display does
-            var maxValue = this.inboundSeries.Points.Concat(this.outboundSeries.Points).Max(x => x.Y);
-            this.yAxis.Maximum = Math.Max(minYValue, Math.Floor(maxValue / (1024 * 100)) * (1024 * 100));
-            this.MaxYValue = FormatUtils.BytesToHuman(this.yAxis.Maximum) + "/s";
+            // This increases the value to the nearest 1024 boundary
+            double maxValue = this.inboundSeries.Points.Concat(this.outboundSeries.Points).Max(x => x.Y);
+            double roundedMax;
+            if (maxValue > 0)
+            {
+                double factor = Math.Pow(1024, (int)Math.Log(maxValue, 1024));
+                roundedMax = Math.Max(minYValue, Math.Ceiling(maxValue / factor) * factor);
+            }
+            else
+            {
+                roundedMax = minYValue;
+            }
+
+            this.yAxis.Maximum = roundedMax;
+            this.MaxYValue = FormatUtils.BytesToHuman(roundedMax) + "/s";
 
             if (this.IsActive)
                 this.OxyPlotModel.InvalidatePlot(true);
