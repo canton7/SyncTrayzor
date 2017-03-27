@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Services;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace SyncTrayzor.Pages
@@ -169,7 +170,16 @@ namespace SyncTrayzor.Pages
                     Notes = "Used internally for some background operations",
                     LicenseText = this.LoadLicense("Rx.txt")
                 },
-            });
+                new ThirdPartyComponent()
+                {
+                    Name = "OxyPlot",
+                    Description = "OxyPlot is a cross-platform plotting library for .NET",
+                    Homepage = "http://www.oxyplot.org",
+                    License = "MIT",
+                    Notes = "Use to draw the network usage graph in the tray popup",
+                    LicenseText = this.LoadLicense("OxyPlot.txt")
+                }
+            }.OrderBy(x => x.Name));
         }
 
         private string LoadLicense(string licenseName)
