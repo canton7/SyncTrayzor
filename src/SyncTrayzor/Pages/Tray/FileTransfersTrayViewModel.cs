@@ -1,6 +1,5 @@
 ﻿using Pri.LongPath;
 using Stylet;
-using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Syncthing;
 using SyncTrayzor.Syncthing.ApiClient;
@@ -8,110 +7,17 @@ using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
 using System.Linq;
-using System.Windows.Threading;
-using System.Windows.Media;
-using System.Windows.Interop;
-using System.Windows;
-using System.Windows.Media.Imaging;
 
-namespace SyncTrayzor.Pages
+namespace SyncTrayzor.Pages.Tray
 {
-    public class FileTransferViewModel : PropertyChangedBase
-    {
-        public readonly FileTransfer FileTransfer;
-        private readonly DispatcherTimer completedTimeAgoUpdateTimer;
-
-        public string Path { get; }
-        public string FolderId { get; }
-        public string FullPath { get; }
-        public ImageSource Icon { get; }
-        public string Error { get; private set; }
-        public bool WasDeleted { get;  }
-
-        public DateTime Completed => this.FileTransfer.FinishedUtc.GetValueOrDefault().ToLocalTime();
-
-        public string CompletedTimeAgo
-        {
-            get
-            {
-                if (this.FileTransfer.FinishedUtc.HasValue)
-                    return FormatUtils.TimeSpanToTimeAgo(DateTime.UtcNow - this.FileTransfer.FinishedUtc.Value);
-                else
-                    return null;
-            }
-        }
-
-        public string ProgressString { get; private set; }
-        public float ProgressPercent { get; private set; }
-
-        public FileTransferViewModel(FileTransfer fileTransfer)
-        {
-            this.completedTimeAgoUpdateTimer = new DispatcherTimer()
-            {
-                Interval = TimeSpan.FromMinutes(1),
-            };
-            this.completedTimeAgoUpdateTimer.Tick += (o, e) => this.NotifyOfPropertyChange(() => this.CompletedTimeAgo);
-            this.completedTimeAgoUpdateTimer.Start();
-
-            this.FileTransfer = fileTransfer;
-            this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
-            this.FullPath = this.FileTransfer.Path;
-            this.FolderId = this.FileTransfer.FolderId;
-            using (var icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Dir))
-            {
-                var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                bs.Freeze();
-                this.Icon = bs;
-            }
-            this.WasDeleted = this.FileTransfer.ActionType == ItemChangedActionType.Delete;
-
-            this.UpdateState();
-        }
-
-        public void UpdateState()
-        {
-            switch (this.FileTransfer.Status)
-            {
-                case FileTransferStatus.InProgress:
-                    if (this.FileTransfer.DownloadBytesPerSecond.HasValue)
-                    {
-                        this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading_RateKnown,
-                            FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
-                            FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes),
-                            FormatUtils.BytesToHuman(this.FileTransfer.DownloadBytesPerSecond.Value, 1));
-                    }
-                    else
-                    {
-                        this.ProgressString = String.Format(Resources.FileTransfersTrayView_Downloading_RateUnknown,
-                            FormatUtils.BytesToHuman(this.FileTransfer.BytesTransferred),
-                            FormatUtils.BytesToHuman(this.FileTransfer.TotalBytes));
-                    }
-
-                    this.ProgressPercent = ((float)this.FileTransfer.BytesTransferred / this.FileTransfer.TotalBytes) * 100;
-                    break;
-
-                case FileTransferStatus.Completed:
-                    this.ProgressPercent = 100;
-                    this.ProgressString = null;
-                    break;
-
-                case FileTransferStatus.Started:
-                    break;
-
-                default:
-                    break;
-            }
-
-            this.Error = this.FileTransfer.Error;
-        }
-    }
-
-    public class FileTransfersTrayViewModel : Screen
+    public class FileTransfersTrayViewModel : Screen, IDisposable
     {
         private const int initialCompletedTransfersToDisplay = 100;
 
         private readonly ISyncthingManager syncthingManager;
         private readonly IProcessStartProvider processStartProvider;
+
+        public NetworkGraphViewModel NetworkGraph { get; }
 
         public BindableCollection<FileTransferViewModel> CompletedTransfers { get; private set; }
         public BindableCollection<FileTransferViewModel> InProgressTransfers { get; private set; }
@@ -124,10 +30,15 @@ namespace SyncTrayzor.Pages
 
         public bool AnyTransfers => this.HasCompletedTransfers || this.HasInProgressTransfers;
 
-        public FileTransfersTrayViewModel(ISyncthingManager syncthingManager, IProcessStartProvider processStartProvider)
+        public FileTransfersTrayViewModel(ISyncthingManager syncthingManager, IProcessStartProvider processStartProvider, NetworkGraphViewModel networkGraph)
         {
             this.syncthingManager = syncthingManager;
             this.processStartProvider = processStartProvider;
+
+            this.syncthingManager.StateChanged += this.SyncthingStateChanged;
+
+            this.NetworkGraph = networkGraph;
+            this.NetworkGraph.ConductWith(this);
 
             this.CompletedTransfers = new BindableCollection<FileTransferViewModel>();
             this.InProgressTransfers = new BindableCollection<FileTransferViewModel>();
@@ -194,18 +105,33 @@ namespace SyncTrayzor.Pages
             this.UpdateConnectionStats(e.TotalConnectionStats);
         }
 
+        private void SyncthingStateChanged(object sender, SyncthingStateChangedEventArgs e)
+        {
+            if (this.syncthingManager.State == SyncthingState.Running)
+                this.UpdateConnectionStats(0, 0);
+            else
+                this.UpdateConnectionStats(null, null);
+        }
+
         private void UpdateConnectionStats(SyncthingConnectionStats connectionStats)
         {
-            if (connectionStats == null)
-            {
-                this.InConnectionRate = "0.0B";
-                this.OutConnectionRate = "0.0B";
-            }
+            if (this.syncthingManager.State == SyncthingState.Running)
+                this.UpdateConnectionStats(connectionStats.InBytesPerSecond, connectionStats.OutBytesPerSecond);
             else
-            {
-                this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1);
-                this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1);
-            }
+                this.UpdateConnectionStats(null, null);
+        }
+
+        private void UpdateConnectionStats(double? inBytesPerSecond, double? outBytesPerSecond)
+        {
+            if (inBytesPerSecond == null)
+                this.InConnectionRate = null;
+            else
+                this.InConnectionRate = FormatUtils.BytesToHuman(inBytesPerSecond.Value, 1);
+
+            if (outBytesPerSecond == null)
+                this.OutConnectionRate = null;
+            else
+                this.OutConnectionRate = FormatUtils.BytesToHuman(outBytesPerSecond.Value, 1);
         }
 
         public void ItemClicked(FileTransferViewModel fileTransferVm)
@@ -222,6 +148,13 @@ namespace SyncTrayzor.Pages
                 else if (fileTransfer.ItemType == ItemChangedItemType.Dir)
                     this.processStartProvider.ShowFolderInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
             }
+        }
+
+        public void Dispose()
+        {
+            this.syncthingManager.StateChanged -= this.SyncthingStateChanged;
+
+            this.NetworkGraph.Dispose();
         }
     }
 }

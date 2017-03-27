@@ -110,7 +110,7 @@ namespace SyncTrayzor.Syncthing
         public event EventHandler<FolderRejectedEventArgs> FolderRejected;
 
         private readonly object totalConnectionStatsLock = new object();
-        private SyncthingConnectionStats _totalConnectionStats;
+        private SyncthingConnectionStats _totalConnectionStats = new SyncthingConnectionStats(0, 0, 0, 0);
         public SyncthingConnectionStats TotalConnectionStats
         {
             get { lock (this.totalConnectionStatsLock) { return this._totalConnectionStats; } }
