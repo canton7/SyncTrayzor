@@ -35,6 +35,8 @@ namespace SyncTrayzor.Pages.Tray
             this.syncthingManager = syncthingManager;
             this.processStartProvider = processStartProvider;
 
+            this.syncthingManager.StateChanged += this.SyncthingStateChanged;
+
             this.NetworkGraph = networkGraph;
             this.NetworkGraph.ConductWith(this);
 
@@ -103,10 +105,33 @@ namespace SyncTrayzor.Pages.Tray
             this.UpdateConnectionStats(e.TotalConnectionStats);
         }
 
+        private void SyncthingStateChanged(object sender, SyncthingStateChangedEventArgs e)
+        {
+            if (this.syncthingManager.State == SyncthingState.Running)
+                this.UpdateConnectionStats(0, 0);
+            else
+                this.UpdateConnectionStats(null, null);
+        }
+
         private void UpdateConnectionStats(SyncthingConnectionStats connectionStats)
         {
-            this.InConnectionRate = FormatUtils.BytesToHuman(connectionStats.InBytesPerSecond, 1);
-            this.OutConnectionRate = FormatUtils.BytesToHuman(connectionStats.OutBytesPerSecond, 1);
+            if (this.syncthingManager.State == SyncthingState.Running)
+                this.UpdateConnectionStats(connectionStats.InBytesPerSecond, connectionStats.OutBytesPerSecond);
+            else
+                this.UpdateConnectionStats(null, null);
+        }
+
+        private void UpdateConnectionStats(double? inBytesPerSecond, double? outBytesPerSecond)
+        {
+            if (inBytesPerSecond == null)
+                this.InConnectionRate = null;
+            else
+                this.InConnectionRate = FormatUtils.BytesToHuman(inBytesPerSecond.Value, 1);
+
+            if (outBytesPerSecond == null)
+                this.OutConnectionRate = null;
+            else
+                this.OutConnectionRate = FormatUtils.BytesToHuman(outBytesPerSecond.Value, 1);
         }
 
         public void ItemClicked(FileTransferViewModel fileTransferVm)
@@ -127,6 +152,8 @@ namespace SyncTrayzor.Pages.Tray
 
         public void Dispose()
         {
+            this.syncthingManager.StateChanged -= this.SyncthingStateChanged;
+
             this.NetworkGraph.Dispose();
         }
     }

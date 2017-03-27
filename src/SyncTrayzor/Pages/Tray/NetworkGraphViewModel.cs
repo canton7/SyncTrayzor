@@ -15,9 +15,9 @@ namespace SyncTrayzor.Pages.Tray
     public class NetworkGraphViewModel : Screen, IDisposable
     {
         private static readonly DateTime epoch = DateTime.UtcNow; // Some arbitrary value in the past
-        private static readonly TimeSpan window = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan window = TimeSpan.FromMinutes(15);
 
-        private const double minYValue = 1024;
+        private const double minYValue = 1024 * 100; // 100 KBit/s
 
         private readonly ISyncthingManager syncthingManager;
 
@@ -55,14 +55,20 @@ namespace SyncTrayzor.Pages.Tray
                 IsZoomEnabled = false,
                 IsPanEnabled = false,
                 IsAxisVisible = false,
-                AbsoluteMinimum = 0,
+                AbsoluteMinimum = -1, // Leave a little bit of room for the line to draw
             };
             this.OxyPlotModel.Axes.Add(this.yAxis);
 
-            this.inboundSeries = new LineSeries();
+            this.inboundSeries = new LineSeries()
+            {
+                Color = OxyColors.Red,
+            };
             this.OxyPlotModel.Series.Add(this.inboundSeries);
 
-            this.outboundSeries = new LineSeries();
+            this.outboundSeries = new LineSeries()
+            {
+                Color = OxyColors.Green,
+            };
             this.OxyPlotModel.Series.Add(this.outboundSeries);
 
             this.ResetToEmptyGraph();
@@ -132,17 +138,18 @@ namespace SyncTrayzor.Pages.Tray
             // This increases the value to the nearest 1024 boundary
             double maxValue = this.inboundSeries.Points.Concat(this.outboundSeries.Points).Max(x => x.Y);
             double roundedMax;
-            if (maxValue > 0)
+            if (maxValue > minYValue)
             {
                 double factor = Math.Pow(1024, (int)Math.Log(maxValue, 1024));
-                roundedMax = Math.Max(minYValue, Math.Ceiling(maxValue / factor) * factor);
+                roundedMax = Math.Ceiling(maxValue / factor) * factor;
             }
             else
             {
                 roundedMax = minYValue;
             }
 
-            this.yAxis.Maximum = roundedMax;
+            // Give the graph a little bit of headroom, otherwise the line gets chopped
+            this.yAxis.Maximum = roundedMax * 1.05;
             this.MaxYValue = FormatUtils.BytesToHuman(roundedMax) + "/s";
 
             if (this.IsActive)

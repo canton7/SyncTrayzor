@@ -9,10 +9,11 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:NetworkGraphViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
+             Height="50"
              Visibility="{Binding ShowGraph, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
     <DockPanel>
         <TextBlock DockPanel.Dock="Right" VerticalAlignment="Top" Margin="0,3,5,0" Foreground="DarkGray" FontSize="10" Text="{Binding MaxYValue}"/>
 
-        <oxy:PlotView Grid.Row="0" Model="{Binding OxyPlotModel}" DefaultTrackerTemplate="{x:Null}" Height="50"/>
+        <oxy:PlotView Grid.Row="0" Model="{Binding OxyPlotModel}" DefaultTrackerTemplate="{x:Null}"/>
     </DockPanel>
 </UserControl>
