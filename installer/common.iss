@@ -1,3 +1,4 @@
+
 #define AppExeName "SyncTrayzor.exe"
 #define AppRoot "..\.."
 #define AppSrc AppRoot + "\src\SyncTrayzor"
@@ -28,6 +29,7 @@ LicenseFile={#AppRoot}\LICENSE.txt
 OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
+WizardSmallImageFile=..\icon.bmp
 Compression=lzma2/max
 ;Compression=None
 SolidCompression=yes
