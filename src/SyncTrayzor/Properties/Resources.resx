@@ -961,7 +961,7 @@ Please donate to my charity fundraising campaign.</value>
     <value>Donate again</value>
   </data>
   <data name="ShellView_Donate" xml:space="preserve">
-    <value>Donate to my charity fundraiser</value>
+    <value>Donate</value>
     <comment>Shown in the top right of the menu bar, if the user hasn't yet donated</comment>
   </data>
 </root>

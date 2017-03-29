@@ -1483,7 +1483,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Donate to my charity fundraiser.
+        ///   Looks up a localized string similar to Donate.
         /// </summary>
         public static string ShellView_Donate {
             get {
