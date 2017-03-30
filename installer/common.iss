@@ -1,4 +1,3 @@
-
 #define AppExeName "SyncTrayzor.exe"
 #define AppRoot "..\.."
 #define AppSrc AppRoot + "\src\SyncTrayzor"
@@ -11,7 +10,7 @@
 #define AppDataFolder "SyncTrayzor"
 #define RunRegKey "Software\Microsoft\Windows\CurrentVersion\Run"
 #define DotNetInstallerExe "dotNet451Setup.exe"
-
+#define DonateUrl = "https://synctrayzor.antonymale.co.uk/donate"
 
 [Setup]
 AppId={{#AppId}
@@ -30,8 +29,8 @@ OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
 WizardSmallImageFile=..\icon.bmp
-Compression=lzma2/max
-;Compression=None
+;Compression=lzma2/max
+Compression=None
 SolidCompression=yes
 PrivilegesRequired=admin
 CloseApplications=yes
@@ -161,6 +160,28 @@ begin
   SaveStringToFile(ExpandConstant('{app}\InstallCount.txt'), IntToStr(InstallCount), False);
 end;
 
+procedure URLLabelOnClick(Sender: TObject);
+var
+	ErrorCode: Integer;
+begin
+	ShellExec('open', '{#DonateUrl}', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;
+
+procedure InitializeWizard;
+var
+  URLLabel: TNewStaticText;
+begin
+  URLLabel := TNewStaticText.Create(WizardForm);
+  URLLabel.Caption := 'Donate';
+  URLLabel.Cursor := crHand;
+  URLLabel.Parent := WizardForm;
+  URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
+	URLLabel.Font.Color := clBlue;
+	URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 15;
+  URLLabel.Left := ScaleX(10)
+  URLLabel.OnClick := @URLLabelOnClick;
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   FindRec: TFindRec;
@@ -222,3 +243,5 @@ Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: files; Name: "{app}\InstallCount.txt"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{localappdata}\{#AppDataFolder}"
+
+
