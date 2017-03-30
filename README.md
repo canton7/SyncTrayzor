@@ -7,7 +7,7 @@ Quick Links
 
  - [Download and install SyncTrayzor now](#installation)
  - [Something went wrong](#something-went-wrong)
- - [Donate to my charity fundraiser](#donate-to-my-charity-fundraiser)
+ - [Find SyncTrayzor useful? Please donate!](#find-synctrayzor-useful-please-donate)
 
 
 Introduction
@@ -85,8 +85,8 @@ Multi-lingual? SyncTrayzor needs you! Please read [Localization](https://github.
 Want to make a contribution? Fantastic, and thank you! Please read [Contributing](https://github.com/canton7/SyncTrayzor/wiki/Contributing) first.
 
 
-Donate to my charity fundraiser
--------------------------------
+Find SyncTrayzor useful? Please donate!
+---------------------------------------
 
 I develop SyncTrayzor in my free time because I enjoy it.
 SyncTrayzor will never become paid-for.
@@ -192,14 +192,16 @@ If you want to manually upgrade (e.g. to a beta version) you should download Syn
 
 ### Portable
 
-SyncTrayzor keeps a single version of `syncthing.exe`, next to `SyncTrayzor.exe`.
+SyncTrayzor keeps two copies of syncthing.exe.
 
-If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace this `syncthing.exe`.
+There's a copy in `data\syncthing.exe`, which is the one which is run. There's also a copy next to `SyncTrayzor.exe`, which is used if the one in `data\` is missing.
+
+If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace the one at `data\syncthing.exe`.
 
 
 Building from Source
 --------------------
 
-You'll need [Visual Studio 2015](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx).
+You'll need [Visual Studio 2017](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx).
 Clone/download the repository, open `src\SyncTrayzor.sln`, and compile.
 You'll also need to [download syncthing.exe](https://github.com/syncthing/syncthing/releases) and place it in the `bin\x86\Debug`, `bin\x64\Debug`, `bin\x86\Release`, or `bin\x64\Release` folder as appropriate.
