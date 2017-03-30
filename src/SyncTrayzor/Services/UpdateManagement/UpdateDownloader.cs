@@ -40,23 +40,23 @@ namespace SyncTrayzor.Services.UpdateManagement
             var sha512sumOutcome = await this.DownloadAndVerifyFileAsync<Stream>(sha512sumUrl, version, sha512sumDownloadPath, false, () =>
                 {
                     var passed = this.installerVerifier.VerifySha512sum(sha512sumDownloadPath, out Stream sha512sumContents);
-                    return Tuple.Create(passed, sha512sumContents);
+                    return (passed, sha512sumContents);
                 });
 
             // Might be null, but if it's not make sure we dispose it (it's actually a MemoryStream, but let's be proper)
             bool updateSucceeded = false;
-            using (var sha512sumContents = sha512sumOutcome.Item2)
+            using (var sha512sumContents = sha512sumOutcome.contents)
             {
-                if (sha512sumOutcome.Item1)
+                if (sha512sumOutcome.passed)
                 {
                     updateSucceeded = (await this.DownloadAndVerifyFileAsync<object>(updateUrl, version, updateDownloadPath, false, () =>
                     {
                         var updateUri = new Uri(updateUrl);
                         // Make sure this is rewound - we might read from it multiple times
-                        sha512sumOutcome.Item2.Position = 0;
-                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha512sumOutcome.Item2, updateUri.Segments.Last());
-                        return Tuple.Create(updatePassed, (object)null);
-                    })).Item1;
+                        sha512sumOutcome.contents.Position = 0;
+                        var updatePassed = this.installerVerifier.VerifyUpdate(updateDownloadPath, sha512sumOutcome.contents, updateUri.Segments.Last());
+                        return (updatePassed, (object)null);
+                    })).passed;
                 }
             }
 
@@ -65,7 +65,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             return updateSucceeded ? updateDownloadPath : null;
         }
 
-        private async Task<Tuple<bool, T>> DownloadAndVerifyFileAsync<T>(string url, Version version, string downloadPath, bool deleteIfExists, Func<Tuple<bool, T>> verifier)
+        private async Task<(bool passed, T contents)> DownloadAndVerifyFileAsync<T>(string url, Version version, string downloadPath, bool deleteIfExists, Func<(bool passed, T contents)> verifier)
         {
             // This really needs refactoring to not be multiple-return...
 
@@ -79,7 +79,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 {
                     logger.Info("Skipping download as file {0} already exists", downloadPath);
                     var initialValidationResult = verifier();
-                    if (initialValidationResult.Item1)
+                    if (initialValidationResult.passed)
                     {
                         // Touch the file, so we (or someone else!) doesn't delete when cleaning up
                         try
@@ -107,19 +107,19 @@ namespace SyncTrayzor.Services.UpdateManagement
                 {
                     logger.Warn("Problem downloading the file. Aborting");
                     // EXIT POINT
-                    return Tuple.Create(false, default(T));
+                    return (passed: false, contents: default(T));
                 }
 
                 logger.Info("Verifying...");
 
                 var downloadedValidationResult = verifier();
-                if (!downloadedValidationResult.Item1)
+                if (!downloadedValidationResult.passed)
                 {
                     logger.Warn("Download verification failed. Deleting {0}", downloadPath);
                     this.filesystemProvider.DeleteFile(downloadPath);
 
                     // EXIT POINT
-                    return Tuple.Create(false, default(T));
+                    return (passed: false, contents: default(T));
                 }
 
                 // EXIT POINT
@@ -131,7 +131,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                 logger.Error(e, "Error in DownloadUpdateAsync");
 
                 // EXIT POINT
-                return Tuple.Create(false, default(T));
+                return (passed: false, contents: default(T));
             }
         }
 
