@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.1.15
+-------
+
+ - Add a network usage graph to the tray icon popup
+ - Add command-line parameters to start and stop Syncthing programatically
+ - Fix problems setting up auto-start on some machines
+ - Support custom file browsers (instead of Explorer)
+
 v1.1.14
 -------
 
