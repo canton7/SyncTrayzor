@@ -1,28 +1,36 @@
-﻿using System;
+﻿using NLog;
+using SyncTrayzor.Syncthing;
+using System;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Ipc
 {
     public interface IIpcCommsServer : IDisposable
     {
-        event EventHandler MainWindowShowRequested;
         void StartServer();
         void StopServer();
     }
 
     public class IpcCommsServer : IIpcCommsServer
     {
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+
+        private readonly ISyncthingManager syncthingManager;
+        private readonly IApplicationWindowState windowState;
+
         private CancellationTokenSource cts;
 
-        private const int CmdShowMainWindow = 2;
-
-        public event EventHandler MainWindowShowRequested;
-
         public string PipeName =>  $"SyncTrayzor-{Process.GetCurrentProcess().Id}";
+
+        public IpcCommsServer(ISyncthingManager syncthingManager, IApplicationWindowState windowState)
+        {
+            this.syncthingManager = syncthingManager;
+            this.windowState = windowState;
+        }
 
         public void StartServer()
         {
@@ -78,7 +86,15 @@ namespace SyncTrayzor.Services
             switch (command)
             {
                 case "ShowMainWindow":
-                    this.OnMainWindowShowRequested();
+                    this.ShowMainWindow();
+                    return "OK";
+
+                case "StartSyncthing":
+                    this.StartSyncthing();
+                    return "OK";
+
+                case "StopSyncthing":
+                    this.StopSyncthing();
                     return "OK";
 
                 default:
@@ -86,9 +102,51 @@ namespace SyncTrayzor.Services
             }
         }
 
-        private void OnMainWindowShowRequested()
+        private void ShowMainWindow()
         {
-            this.MainWindowShowRequested?.Invoke(this, EventArgs.Empty);
+            this.windowState.EnsureInForeground();
+        }
+
+        private async void StartSyncthing()
+        {
+            if (this.syncthingManager.State == SyncthingState.Stopped)
+            {
+                logger.Debug("IPC client requested Syncthing start, so starting");
+
+                try
+                {
+                    await this.syncthingManager.StartAsync();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e, "Failed to start syncthing");
+                }
+            }
+            else
+            {
+                logger.Debug($"IPC client requested Syncthing start, but its state is {this.syncthingManager.State}, so not starting");
+            }
+        }
+
+        private async void StopSyncthing()
+        {
+            if (this.syncthingManager.State == SyncthingState.Running)
+            {
+                logger.Debug("IPC client requested Syncthing stop, so stopping");
+
+                try
+                {
+                    await this.syncthingManager.StopAsync();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e, "Failed to stop Syncthing");
+                }
+            }
+            else
+            {
+                logger.Debug($"IPC client requested Syncthing stop, but its state is {this.syncthingManager.State}, so not stopping");
+            }
         }
 
         public void Dispose()

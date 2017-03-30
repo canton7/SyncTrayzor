@@ -70,6 +70,43 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donate now.
+        /// </summary>
+        public static string AboutView_Donate_Link {
+            get {
+                return ResourceManager.GetString("AboutView_Donate_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find SyncTrayzor useful?
+        ///Please donate to my charity fundraising campaign..
+        /// </summary>
+        public static string AboutView_Donate_Text {
+            get {
+                return ResourceManager.GetString("AboutView_Donate_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate again.
+        /// </summary>
+        public static string AboutView_DonateAgain_Link {
+            get {
+                return ResourceManager.GetString("AboutView_DonateAgain_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cheers! Thanks for donating..
+        /// </summary>
+        public static string AboutView_DonateThanks {
+            get {
+                return ResourceManager.GetString("AboutView_DonateThanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Download Page.
         /// </summary>
         public static string AboutView_DownloadNewVersion {
@@ -1442,6 +1479,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_WatchedFolders_Unavailable {
             get {
                 return ResourceManager.GetString("SettingsView_WatchedFolders_Unavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate.
+        /// </summary>
+        public static string ShellView_Donate {
+            get {
+                return ResourceManager.GetString("ShellView_Donate", resourceCulture);
             }
         }
         

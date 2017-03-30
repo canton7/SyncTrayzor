@@ -18,8 +18,7 @@ namespace SyncTrayzor.NotifyIcon
             this.view = view;
             this.tcs = tcs;
 
-            var childAsIChild = this.child as IChild;
-            if (childAsIChild != null)
+            if (this.child is IChild childAsIChild)
                 childAsIChild.Parent = this;
         }
 

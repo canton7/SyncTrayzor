@@ -15,8 +15,8 @@ namespace SyncTrayzor.Xaml
 
         public WindowPlacement Placement
         {
-            get { return (WindowPlacement)GetValue(PlacementProperty); }
-            set { SetValue(PlacementProperty, value); }
+            get => (WindowPlacement)GetValue(PlacementProperty);
+            set => SetValue(PlacementProperty, value);
         }
 
         public static readonly DependencyProperty PlacementProperty =
@@ -54,13 +54,13 @@ namespace SyncTrayzor.Xaml
                 length = Marshal.SizeOf(typeof(WINDOWPLACEMENT)),
                 flags = 0,
                 showCmd = this.Placement.IsMaximised ? SW_SHOWMAXIMIZED : SW_SHOWNORMAL,
-                maxPosition = new POINT((int)this.Placement.MaxPosition.X, (int)this.Placement.MaxPosition.Y),
-                minPosition = new POINT((int)this.Placement.MinPosition.X, (int)this.Placement.MinPosition.Y),
+                maxPosition = new POINT(this.Placement.MaxPosition.X, this.Placement.MaxPosition.Y),
+                minPosition = new POINT(this.Placement.MinPosition.X, this.Placement.MinPosition.Y),
                 normalPosition = new RECT(
-                    (int)this.Placement.NormalPosition.Left,
-                    (int)this.Placement.NormalPosition.Top,
-                    (int)this.Placement.NormalPosition.Right,
-                    (int)this.Placement.NormalPosition.Bottom),
+                    this.Placement.NormalPosition.Left,
+                    this.Placement.NormalPosition.Top,
+                    this.Placement.NormalPosition.Right,
+                    this.Placement.NormalPosition.Bottom),
             };
 
             if (!NativeMethods.SetWindowPlacement(new WindowInteropHelper(this.AssociatedObject).Handle, ref nativePlacement))

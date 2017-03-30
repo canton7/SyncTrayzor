@@ -255,9 +255,7 @@ namespace SyncTrayzor.Services
 
         public virtual void OnPathChanged(string path, bool pathExists)
         {
-            var handler = this.PathChanged;
-            if (handler != null)
-                handler(this, new PathChangedEventArgs(this.Directory, path, pathExists));
+            this.PathChanged?.Invoke(this, new PathChangedEventArgs(this.Directory, path, pathExists));
         }
 
         private string GetLongPathName(string path)

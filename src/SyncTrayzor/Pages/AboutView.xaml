@@ -10,6 +10,11 @@
         FlowDirection="{x:Static l:Localizer.FlowDirection}">
     <Window.Resources>
         <s:BoolToVisibilityConverter x:Key="NoNewVersionVisibility" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+        <Style x:Key="DonateStyle" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,25"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
     </Window.Resources>
     <DockPanel LastChildFill="False" Margin="10">
         <TextBlock DockPanel.Dock="Top" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,20">SyncTrayzor</TextBlock>
@@ -33,6 +38,27 @@
                        Visibility="{Binding ShowTranslatorAttributation, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"/>
         </Grid>
 
+        <TextBlock DockPanel.Dock="Top"
+                   Visibility="{Binding DonationManager.HaveDonated, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                   Style="{StaticResource DonateStyle}"
+                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
+            <TextBlock Text="{l:Loc AboutView_DonateThanks}"/><LineBreak/>
+            <Hyperlink s:View.ActionTarget="{Binding DonationManager}" Command="{s:Action Donate}">
+                <TextBlock Text="{l:Loc AboutView_DonateAgain_Link}"/>
+            </Hyperlink>
+        </TextBlock>
+
+        <TextBlock DockPanel.Dock="Top"
+                   Visibility="{Binding DonationManager.HaveDonated, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"
+                   Style="{StaticResource DonateStyle}"
+                   FontSize="14"
+                   Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}">
+            <TextBlock Text="{l:Loc AboutView_Donate_Text}" TextWrapping="Wrap"/><LineBreak/>
+            <Hyperlink s:View.ActionTarget="{Binding DonationManager}" Command="{s:Action Donate}">
+                <TextBlock Text="{l:Loc AboutView_Donate_Link}"/>
+            </Hyperlink>
+        </TextBlock>
+        
         <TextBlock DockPanel.Dock="Top" Margin="0,5">
             <Hyperlink Command="{s:Action ShowHomepage}">
                 <TextBlock Text="{Binding HomepageUrl}"/>

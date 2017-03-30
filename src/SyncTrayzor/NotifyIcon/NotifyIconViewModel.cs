@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages;
 using SyncTrayzor.Pages.Settings;
+using SyncTrayzor.Pages.Tray;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
 using SyncTrayzor.Syncthing;
@@ -201,7 +202,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public void Execute(object parameter)
         {
-            this.processStartProvider.StartDetached("explorer.exe", this.folder.Path);
+            this.processStartProvider.ShowFolderInExplorer(this.folder.Path);
         }
     }
 }

@@ -32,8 +32,7 @@ namespace SyncTrayzor.Services
                 //Check we haven't picked up the desktop or the shell
                 if (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle)))
                 {
-                    RECT appBounds;
-                    NativeMethods.GetWindowRect(hWnd, out appBounds);
+                    NativeMethods.GetWindowRect(hWnd, out RECT appBounds);
                     //determine if window is fullscreen
                     // TODO: Not sure if there's a nice non-winforms way of doing this
                     var screenBounds = Screen.FromHandle(hWnd).Bounds;

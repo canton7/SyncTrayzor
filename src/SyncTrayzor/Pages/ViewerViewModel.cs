@@ -9,7 +9,7 @@ using SyncTrayzor.Services.Config;
 using System.Threading;
 using SyncTrayzor.Services;
 using SyncTrayzor.Properties;
-using SyncTrayzor.Syncthing.Folders;
+
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace SyncTrayzor.Pages
@@ -28,7 +28,7 @@ namespace SyncTrayzor.Pages
 
         public string Location
         {
-            get { return this.WebBrowser?.Address; }
+            get => this.WebBrowser?.Address;
             private set
             {
                 if (this.WebBrowser != null)
@@ -259,11 +259,10 @@ namespace SyncTrayzor.Pages
 
         private void OpenFolder(string folderId)
         {
-            Folder folder;
-            if (!this.syncthingManager.Folders.TryFetchById(folderId, out folder))
+            if (!this.syncthingManager.Folders.TryFetchById(folderId, out var folder))
                 return;
 
-            this.processStartProvider.StartDetached("explorer.exe", folder.Path);
+            this.processStartProvider.ShowFolderInExplorer(folder.Path);
         }
 
         private void BrowseFolderPath()
@@ -310,8 +309,10 @@ namespace SyncTrayzor.Pages
         {
             // SyncthingManager will always request over HTTPS, whether Syncthing enforces this or not.
             // However in an attempt to avoid #201 we'll use HTTP if available, and if not Syncthing will redirect us.
-            var uriBuilder = new UriBuilder(this.syncthingManager.Address.NormalizeZeroHost());
-            uriBuilder.Scheme = "http";
+            var uriBuilder = new UriBuilder(this.syncthingManager.Address.NormalizeZeroHost())
+            {
+                Scheme = "http"
+            };
             return uriBuilder.Uri;
         }
 

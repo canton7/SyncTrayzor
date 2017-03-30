@@ -117,8 +117,7 @@ namespace SyncTrayzor.Xaml
             if (initialSortColumn == null)
                 return;
 
-            var header = initialSortColumn.Header as GridViewColumnHeader;
-            if (header != null)
+            if (initialSortColumn.Header is GridViewColumnHeader header)
                 this.ApplyColumnSort(header, initialSortColumn, ListSortDirection.Ascending);
         }
 

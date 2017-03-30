@@ -3,7 +3,6 @@ using SyncTrayzor.Services.Config;
 using SyncTrayzor.Services.Conflicts;
 using SyncTrayzor.Services.UpdateManagement;
 using SyncTrayzor.Syncthing;
-using SyncTrayzor.Utils;
 using System;
 using System.Linq;
 using SyncTrayzor.Services.Metering;

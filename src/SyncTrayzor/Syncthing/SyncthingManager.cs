@@ -110,7 +110,7 @@ namespace SyncTrayzor.Syncthing
         public event EventHandler<FolderRejectedEventArgs> FolderRejected;
 
         private readonly object totalConnectionStatsLock = new object();
-        private SyncthingConnectionStats _totalConnectionStats;
+        private SyncthingConnectionStats _totalConnectionStats = new SyncthingConnectionStats(0, 0, 0, 0);
         public SyncthingConnectionStats TotalConnectionStats
         {
             get { lock (this.totalConnectionStatsLock) { return this._totalConnectionStats; } }
@@ -396,8 +396,10 @@ namespace SyncTrayzor.Syncthing
             // Things will attempt to talk to Syncthing over http. If Syncthing is set to 'https only', this will redirect.
             var preferredAddressWithScheme = new Uri("https://" + this.PreferredHostAndPort);
             var port = this.freePortFinder.FindFreePort(preferredAddressWithScheme.Port);
-            var uriBuilder = new UriBuilder(preferredAddressWithScheme);
-            uriBuilder.Port = port;
+            var uriBuilder = new UriBuilder(preferredAddressWithScheme)
+            {
+                Port = port
+            };
             this.Address = uriBuilder.Uri;
 
             this.processRunner.ApiKey = this.ApiKey;
@@ -544,12 +546,10 @@ namespace SyncTrayzor.Syncthing
 
         private void OnFolderRejected(string deviceId, string folderId)
         {
-            Device device;
-            if (!this.Devices.TryFetchById(deviceId, out device))
+            if (!this.Devices.TryFetchById(deviceId, out var device))
                 return;
 
-            Folder folder;
-            if (!this.Folders.TryFetchById(folderId, out folder))
+            if (!this.Folders.TryFetchById(folderId, out var folder))
                 return;
 
             this.eventDispatcher.Raise(this.FolderRejected, new FolderRejectedEventArgs(device, folder));

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for SyncTrayzor" Description="Code analysis rules for SyncTrayzor.csproj." ToolsVersion="14.0">
+<RuleSet Name="Rules for SyncTrayzor" Description="Code analysis rules for SyncTrayzor.csproj." ToolsVersion="15.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />
     <Rule Id="CA1009" Action="Warning" />
@@ -64,7 +64,44 @@
     <Rule Id="CA2241" Action="Warning" />
     <Rule Id="CA2242" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.EditorFeatures" RuleNamespace="Microsoft.CodeAnalysis.CSharp.EditorFeatures">
+    <Rule Id="IDE0032" Action="Info" />
+  </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0001" Action="Info" />
+    <Rule Id="IDE0002" Action="None" />
     <Rule Id="IDE0003" Action="None" />
+    <Rule Id="IDE0004" Action="Info" />
+    <Rule Id="IDE0005" Action="Info" />
+    <Rule Id="IDE0007" Action="Info" />
+    <Rule Id="IDE0008" Action="Info" />
+    <Rule Id="IDE0009" Action="Info" />
+    <Rule Id="IDE0011" Action="None" />
+    <Rule Id="IDE0012" Action="Info" />
+    <Rule Id="IDE0013" Action="Info" />
+    <Rule Id="IDE0014" Action="Info" />
+    <Rule Id="IDE0015" Action="Info" />
+    <Rule Id="IDE0016" Action="Info" />
+    <Rule Id="IDE0017" Action="Info" />
+    <Rule Id="IDE0018" Action="Info" />
+    <Rule Id="IDE0019" Action="Info" />
+    <Rule Id="IDE0020" Action="Info" />
+    <Rule Id="IDE0021" Action="Info" />
+    <Rule Id="IDE0022" Action="None" />
+    <Rule Id="IDE0023" Action="Info" />
+    <Rule Id="IDE0024" Action="Info" />
+    <Rule Id="IDE0025" Action="Info" />
+    <Rule Id="IDE0026" Action="Info" />
+    <Rule Id="IDE0027" Action="Info" />
+    <Rule Id="IDE0028" Action="Info" />
+    <Rule Id="IDE0029" Action="Info" />
+    <Rule Id="IDE0030" Action="Info" />
+    <Rule Id="IDE0031" Action="Info" />
+    <Rule Id="IDE1005" Action="Info" />
+    <Rule Id="IDE1006" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.Features" RuleNamespace="Microsoft.CodeAnalysis.Features">
+    <Rule Id="IDE0010" Action="Info" />
+    <Rule Id="IDE0033" Action="Info" />
   </Rules>
 </RuleSet>

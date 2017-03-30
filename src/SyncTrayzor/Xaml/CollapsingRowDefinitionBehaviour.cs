@@ -9,24 +9,24 @@ namespace SyncTrayzor.Xaml
     {
         public GridLength Height
         {
-            get { return (GridLength)GetValue(HeightProperty); }
-            set { SetValue(HeightProperty, value); }
+            get => (GridLength)GetValue(HeightProperty);
+            set => SetValue(HeightProperty, value);
         }
         public static readonly DependencyProperty HeightProperty =
             DependencyProperty.Register("Height", typeof(GridLength), typeof(CollapsingRowDefinitionBehaviour), new PropertyMetadata(GridLength.Auto));
 
         public double MinHeight
         {
-            get { return (double)GetValue(MinHeightProperty); }
-            set { SetValue(MinHeightProperty, value); }
+            get => (double)GetValue(MinHeightProperty);
+            set => SetValue(MinHeightProperty, value);
         }
         public static readonly DependencyProperty MinHeightProperty =
             DependencyProperty.Register("MinHeight", typeof(double), typeof(CollapsingRowDefinitionBehaviour), new PropertyMetadata(0.0));
 
         public Visibility RowVisibility
         {
-            get { return (Visibility)GetValue(RowVisibilityProperty); }
-            set { SetValue(RowVisibilityProperty, value); }
+            get => (Visibility)GetValue(RowVisibilityProperty);
+            set => SetValue(RowVisibilityProperty, value);
         }
         public static readonly DependencyProperty RowVisibilityProperty =
             DependencyProperty.Register("RowVisibility", typeof(Visibility), typeof(CollapsingRowDefinitionBehaviour), new PropertyMetadata(Visibility.Visible, (d, e) =>

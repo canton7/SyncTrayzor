@@ -25,18 +25,14 @@ using System.Windows.Threading;
 using SyncTrayzor.Services.Metering;
 using System.Reflection;
 using SyncTrayzor.Localization;
+using SyncTrayzor.Services.Ipc;
 
 namespace SyncTrayzor
 {
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
+        private CommandLineOptionsParser options;
         private bool exiting;
-        private bool startMinimized;
-
-        protected override void OnStart()
-        {
-            this.startMinimized = this.Args.Contains("-minimized");
-        }
 
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
@@ -67,15 +63,15 @@ namespace SyncTrayzor
             builder.Bind<IConflictFileManager>().To<ConflictFileManager>(); // Could be singleton... Not often used
             builder.Bind<IConflictFileWatcher>().To<ConflictFileWatcher>().InSingletonScope();
             builder.Bind<IAlertsManager>().To<AlertsManager>().InSingletonScope();
-            builder.Bind<IIpcCommsClient>().To<IpcCommsClient>();
-            builder.Bind<IIpcCommsServer>().To<IpcCommsServer>();
-            builder.Bind<ISingleApplicationInstanceManager>().To<SingleApplicationInstanceManager>().InSingletonScope();
+            builder.Bind<IIpcCommsClientFactory>().To<IpcCommsClientFactory>().InSingletonScope();
+            builder.Bind<IIpcCommsServer>().To<IpcCommsServer>().InSingletonScope();
             builder.Bind<IFileWatcherFactory>().To<FileWatcherFactory>();
             builder.Bind<IDirectoryWatcherFactory>().To<DirectoryWatcherFactory>();
             builder.Bind<INetworkCostManager>().To<NetworkCostManager>();
             builder.Bind<IMeteredNetworkManager>().To<MeteredNetworkManager>().InSingletonScope();
             builder.Bind<IPathTransformer>().To<PathTransformer>().InSingletonScope();
             builder.Bind<IConnectedEventDebouncer>().To<ConnectedEventDebouncer>();
+            builder.Bind<IDonationManager>().To<DonationManager>().InSingletonScope();
 
             if (AppSettings.Instance.Variant == SyncTrayzorVariant.Installed)
                 builder.Bind<IUpdateVariantHandler>().To<InstalledUpdateVariantHandler>();
@@ -90,6 +86,10 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            this.options = this.Container.Get<CommandLineOptionsParser>();
+            if (!this.options.Parse(this.Args))
+                Environment.Exit(0);
+
             var pathTransformer = this.Container.Get<IPathTransformer>();
 
             // Have to set the log path before anything else
@@ -102,10 +102,26 @@ namespace SyncTrayzor
             var assembly = this.Container.Get<IAssemblyProvider>();
             logger.Debug("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
 
-            if (AppSettings.Instance.EnforceSingleProcessPerUser)
+            var client = this.Container.Get<IIpcCommsClientFactory>().TryCreateClient();
+            if (client != null)
             {
-                if (this.Container.Get<ISingleApplicationInstanceManager>().ShouldExit())
+                if (this.options.StartSyncthing || this.options.StopSyncthing)
+                {
+                    if (this.options.StartSyncthing)
+                        client.StartSyncthing();
+                    else if (this.options.StopSyncthing)
+                        client.StopSyncthing();
+                    if (!this.options.StartMinimized)
+                        client.ShowMainWindow();
                     Environment.Exit(0);
+                }
+
+                if (AppSettings.Instance.EnforceSingleProcessPerUser)
+                {
+                    if (!this.options.StartMinimized)
+                        client.ShowMainWindow();
+                    Environment.Exit(0);
+                }
             }
 
             this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
@@ -116,7 +132,7 @@ namespace SyncTrayzor
 
             if (AppSettings.Instance.EnforceSingleProcessPerUser)
             {
-                this.Container.Get<ISingleApplicationInstanceManager>().StartServer();
+                this.Container.Get<IIpcCommsServer>().StartServer();
             }
 
             // Has to be done before the VMs are fetched from the container
@@ -139,7 +155,7 @@ namespace SyncTrayzor
                 autostartProvider.SetAutoStart(new AutostartConfiguration() { AutoStart = true, StartMinimized = true });
 
             // Needs to be done before ConfigurationApplicator is run
-            this.Container.Get<IApplicationWindowState>().Setup((ShellViewModel)this.RootViewModel);
+            this.Container.Get<IApplicationWindowState>().Setup(this.RootViewModel);
 
             this.Container.Get<ConfigurationApplicator>().ApplyConfiguration();
 
@@ -169,7 +185,7 @@ namespace SyncTrayzor
 
         protected override void Launch()
         {
-            if (this.startMinimized)
+            if (this.options.StartMinimized)
                 this.Container.Get<INotifyIconManager>().EnsureIconVisible();
             else
                 base.Launch();
@@ -180,11 +196,11 @@ namespace SyncTrayzor
             this.Container.Get<IApplicationState>().ApplicationStarted();
 
             var config = this.Container.Get<IConfigurationProvider>().Load();
-            if (config.StartSyncthingAutomatically && !this.Args.Contains("-noautostart"))
-                ((ShellViewModel)this.RootViewModel).Start();
+            if (this.options.StartSyncthing || (config.StartSyncthingAutomatically && !this.options.StopSyncthing))
+                this.RootViewModel.Start();
 
             // If we've just been upgraded, and we're minimized, show a bit of toast explaining the fact
-            if (this.startMinimized && this.Container.Get<IConfigurationProvider>().WasUpgraded)
+            if (this.options.StartMinimized && this.Container.Get<IConfigurationProvider>().WasUpgraded)
             {
                 var updatedVm = this.Container.Get<NewVersionInstalledToastViewModel>();
                 updatedVm.Version = this.Container.Get<IAssemblyProvider>().Version;
@@ -209,8 +225,7 @@ namespace SyncTrayzor
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error(e.Exception, "An unhandled exception occurred");
-            var typeLoadException = e.Exception as ReflectionTypeLoadException;
-            if (typeLoadException != null)
+            if (e.Exception is ReflectionTypeLoadException typeLoadException)
             {
                 logger.Error("Loader exceptions:");
                 foreach (var ex in typeLoadException.LoaderExceptions)
@@ -235,8 +250,7 @@ namespace SyncTrayzor
             {
                 var windowManager = this.Container.Get<IWindowManager>();
 
-                var couldNotFindSyncthingException = e.Exception as CouldNotFindSyncthingException;
-                if (couldNotFindSyncthingException != null)
+                if (e.Exception is CouldNotFindSyncthingException couldNotFindSyncthingException)
                 {
                     var msg = $"Could not find syncthing.exe at {couldNotFindSyncthingException.SyncthingPath}\n\nIf you deleted it manually, put it back. If an over-enthsiastic " +
                     "antivirus program quarantined it, restore it. If all else fails, download syncthing.exe from https://github.com/syncthing/syncthing/releases the put it " +
@@ -249,8 +263,7 @@ namespace SyncTrayzor
                     return;
                 }
 
-                var configurationException = e.Exception as BadConfigurationException;
-                if (configurationException != null)
+                if (e.Exception is BadConfigurationException configurationException)
                 {
                     var inner = configurationException.InnerException.Message;
                     if (configurationException.InnerException.InnerException != null)
@@ -268,8 +281,7 @@ namespace SyncTrayzor
                     return;
                 }
 
-                var couldNotSaveConfigurationException = e.Exception as CouldNotSaveConfigurationExeption;
-                if (couldNotSaveConfigurationException != null)
+                if (e.Exception is CouldNotSaveConfigurationExeption couldNotSaveConfigurationException)
                 {
                     var msg = $"Could not save configuration file.\n\n" +
                         $"{couldNotSaveConfigurationException.InnerException.GetType().Name}: {couldNotSaveConfigurationException.InnerException.Message}.\n\n" +

@@ -37,7 +37,7 @@ namespace SyncTrayzor.Services.Metering
         private bool _isEnabled;
         public bool IsEnabled
         {
-            get { return this._isEnabled; }
+            get => this._isEnabled;
             set
             {
                 if (this._isEnabled == value)
@@ -115,8 +115,7 @@ namespace SyncTrayzor.Services.Metering
             bool changed = false;
             lock (this.syncRoot)
             {
-                DeviceState deviceState;
-                if (!this.deviceStates.TryGetValue(e.Device, out deviceState))
+                if (!this.deviceStates.TryGetValue(e.Device, out var deviceState))
                 {
                     logger.Warn($"Unable to pause device {e.Device.DeviceId} as we don't have a record of its state. This should not happen");
                     return;
@@ -147,8 +146,7 @@ namespace SyncTrayzor.Services.Metering
             bool changed = false;
             lock (this.syncRoot)
             {
-                DeviceState deviceState;
-                if (!this.deviceStates.TryGetValue(e.Device, out deviceState))
+                if (!this.deviceStates.TryGetValue(e.Device, out var deviceState))
                 {
                     logger.Warn($"Unable to resume device {e.Device.DeviceId} as we don't have a record of its state. This should not happen");
                     return;

@@ -36,7 +36,7 @@ namespace SyncTrayzor.Services
 
         public ShutdownMode ShutdownMode
         {
-            get { return this.application.ShutdownMode; }
+            get => this.application.ShutdownMode;
             set
             {
                 // This will fail if we're shutting down

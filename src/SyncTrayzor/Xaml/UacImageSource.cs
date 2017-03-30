@@ -13,9 +13,10 @@ namespace SyncTrayzor.Xaml
 
         static UacImageSource()
         {
-            SHSTOCKICONINFO sii = new SHSTOCKICONINFO();
-            sii.cbSize = (UInt32)Marshal.SizeOf(typeof(SHSTOCKICONINFO));
-
+            SHSTOCKICONINFO sii = new SHSTOCKICONINFO()
+            {
+                cbSize = (UInt32)Marshal.SizeOf(typeof(SHSTOCKICONINFO))
+            };
             Marshal.ThrowExceptionForHR(NativeMethods.SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD,
                 SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON,
                 ref sii));
@@ -25,7 +26,7 @@ namespace SyncTrayzor.Xaml
             NativeMethods.DestroyIcon(sii.hIcon);
         }
 
-        [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private struct SHSTOCKICONINFO
         {
             public UInt32 cbSize;

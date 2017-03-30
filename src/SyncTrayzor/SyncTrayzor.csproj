@@ -33,6 +33,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
   </PropertyGroup>
   <PropertyGroup>
   </PropertyGroup>
@@ -117,6 +118,14 @@
       <HintPath>..\packages\NLog.4.4.2\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.1.0.0\lib\net45\OxyPlot.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="Pri.LongPath, Version=2.0.42.0, Culture=neutral, processorArchitecture=MSIL">
@@ -167,6 +176,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -187,6 +199,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Design\DummyFileTransfersTrayViewModel.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Localization\CustomPluralLocalizationFormatter.cs" />
     <Compile Include="Localization\LocalizeConverters.cs" />
     <Compile Include="NotifyIcon\BalloonConductor.cs" />
@@ -207,7 +220,7 @@
     <Compile Include="Pages\ConflictResolution\ConflictViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\MultipleConflictsResolutionViewModel.cs" />
     <Compile Include="Pages\ConflictResolution\SingleConflictResolutionViewModel.cs" />
-    <Compile Include="Pages\FileTransfersTrayViewModel.cs" />
+    <Compile Include="Pages\Tray\FileTransfersTrayViewModel.cs" />
     <Compile Include="Pages\NewVersionInstalledToastViewModel.cs" />
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
     <Compile Include="Pages\Settings\SettingItem.cs" />
@@ -215,6 +228,8 @@
     <Compile Include="Pages\Settings\SyncthingApiKeyValidator.cs" />
     <Compile Include="Pages\Settings\SyncthingCommandLineFlagsValidator.cs" />
     <Compile Include="Pages\Settings\SyncthingEnvironmentalVariablesValidator.cs" />
+    <Compile Include="Pages\Tray\FileTransferViewModel.cs" />
+    <Compile Include="Pages\Tray\NetworkGraphViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -223,6 +238,7 @@
     <Compile Include="Services\AlertsManager.cs" />
     <Compile Include="Services\ApplicationWindowState.cs" />
     <Compile Include="Services\AssemblyProvider.cs" />
+    <Compile Include="Services\CommandLineOptionsParser.cs" />
     <Compile Include="Services\Config\AppSettings.cs" />
     <Compile Include="Services\Config\ApplicationPathsProvider.cs" />
     <Compile Include="Services\Config\ConfigFolderCleaner.cs" />
@@ -234,10 +250,12 @@
     <Compile Include="Services\Config\WindowPlacement.cs" />
     <Compile Include="Services\Conflicts\ConflictFileManager.cs" />
     <Compile Include="Services\Conflicts\ConflictFileWatcher.cs" />
+    <Compile Include="Services\DonationManager.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\FileWatcher.cs" />
-    <Compile Include="Services\IpcCommsClient.cs" />
-    <Compile Include="Services\IpcCommsServer.cs" />
+    <Compile Include="Services\Ipc\IpcCommsClient.cs" />
+    <Compile Include="Services\Ipc\IpcCommsClientFactory.cs" />
+    <Compile Include="Services\Ipc\IpcCommsServer.cs" />
     <Compile Include="Services\Metering\MeteredNetworkManager.cs" />
     <Compile Include="Services\Metering\NetworkCostManager.cs" />
     <Compile Include="Syncthing\ApiClient\DeviceRejectedEvent.cs" />
@@ -247,7 +265,6 @@
     <Compile Include="Syncthing\Devices\DeviceResumedEventArgs.cs" />
     <Compile Include="Syncthing\Devices\SyncthingAddressParser.cs" />
     <Compile Include="Services\ProcessStartProvider.cs" />
-    <Compile Include="Services\SingleApplicationInstanceManager.cs" />
     <Compile Include="Services\UpdateManagement\InstalledUpdateVariantHandler.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateNotificationApi.cs" />
     <Compile Include="Services\UpdateManagement\IUpdateVariantHandler.cs" />
@@ -380,6 +397,7 @@
     <Compile Include="Utils\LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="Utils\ListExtensions.cs" />
     <Compile Include="Utils\ObservableQueue.cs" />
+    <Compile Include="Utils\Options.cs" />
     <Compile Include="Utils\PathEx.cs" />
     <Compile Include="Utils\PgpClearsignUtilities.cs" />
     <Compile Include="Utils\RecycleBinDeleter.cs" />
@@ -462,7 +480,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\FileTransfersTrayView.xaml">
+    <Page Include="Pages\Tray\FileTransfersTrayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -495,6 +513,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ThirdPartyComponentsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Tray\NetworkGraphView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -608,6 +630,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Licenses\Rx.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Licenses\OxyPlot.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="Configs">

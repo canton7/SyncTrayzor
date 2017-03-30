@@ -66,7 +66,7 @@ namespace SyncTrayzor.Services.UpdateManagement
         private bool _checkForUpdates;
         public bool CheckForUpdates
         {
-            get { return this._checkForUpdates; }
+            get => this._checkForUpdates;
             set
             {
                 if (this._checkForUpdates == value)
@@ -246,7 +246,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     case VersionPromptResult.InstallNow:
                         Debug.Assert(variantHandler.CanAutoInstall);
                         logger.Info("Auto-installing {0}", checkResult.NewVersion);
-                        variantHandler. AutoInstall(this.PathToRestartApplication());
+                        variantHandler.AutoInstall(this.PathToRestartApplication());
                         break;
 
                     case VersionPromptResult.Download:
@@ -264,6 +264,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                         logger.Info("Not installing version {0}, but will remind later", checkResult.NewVersion);
                         break;
 
+                    case VersionPromptResult.ShowMoreDetails:
                     default:
                         Debug.Assert(false);
                         break;

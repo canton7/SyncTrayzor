@@ -117,10 +117,7 @@ namespace SyncTrayzor.Utils
         }
 
         // Gets the maximum concurrency level supported by this scheduler.  
-        public sealed override int MaximumConcurrencyLevel
-        {
-            get { return this.maxDegreeOfParallelism; }
-        }
+        public sealed override int MaximumConcurrencyLevel => this.maxDegreeOfParallelism;
 
         // Gets an enumerable of the tasks currently scheduled on this scheduler.  
         protected sealed override IEnumerable<Task> GetScheduledTasks()

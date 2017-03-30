@@ -8,9 +8,10 @@ require_relative 'build/CsprojResxWriter'
 ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
 SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
 SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
-MSBUILD = ENV['MSBUILD'] || %q{C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe}
+VSWHERE = 'build/vswhere.exe'
 
 CONFIG = ENV['CONFIG'] || 'Release'
+MSBUILD_VERSION = '15.0'
 MSBUILD_LOGGER = ENV['MSBUILD_LOGGER']
 
 SRC_DIR = 'src/SyncTrayzor'
@@ -29,7 +30,7 @@ CHECKSUM_FILE_PRIV_KEY = 'security/private_key.asc'
 
 PFX = ENV['PFX'] || File.join(INSTALLER_DIR, 'SyncTrayzorCA.pfx')
 
-PORTABLE_SYNCTHING_VERSION = '0.12'
+PORTABLE_SYNCTHING_VERSION = 'latest'
 
 class ArchDirConfig
   attr_reader :arch
@@ -50,7 +51,7 @@ class ArchDirConfig
     @installer_iss = File.join(@installer_dir, "installer-#{@arch}.iss")
     @portable_output_dir = "SyncTrayzorPortable-#{@arch}"
     @portable_output_file = File.join(DEPLOY_DIR, "SyncTrayzorPortable-#{@arch}.zip")
-    @syncthing_binaries = { '0.12' => 'syncthing.exe' }
+    @syncthing_binaries = { 'latest' => 'syncthing.exe' }
   end
 
   def sha1sum_download_uri(version)
@@ -58,11 +59,11 @@ class ArchDirConfig
   end
 
   def download_uri(version)
-  	"https://github.com/syncthing/syncthing/releases/download/v#{version}/syncthing-windows-#{@github_arch}-v#{version}.zip"
+    "https://github.com/syncthing/syncthing/releases/download/v#{version}/syncthing-windows-#{@github_arch}-v#{version}.zip"
   end
 end
 
-SYNCTHING_VERSIONS_TO_UPDATE = ['0.12']
+SYNCTHING_VERSIONS_TO_UPDATE = ['latest']
 
 ARCH_CONFIG = [ArchDirConfig.new('x64', 'amd64'), ArchDirConfig.new('x86', '386')]
 ASSEMBLY_INFOS = FileList['**/AssemblyInfo.cs']
@@ -75,8 +76,16 @@ def ensure_7zip
 end
 
 def build(sln, platform, rebuild = true)
+  if ENV['MSBUILD']
+    msbuild = ENV['MSBUILD']
+  else
+    path = `#{VSWHERE} -version #{MSBUILD_VERSION} -requires Microsoft.Component.MSBuild -format value -property installationPath`.chomp
+    msbuild = File.join(path, 'MSBuild', MSBUILD_VERSION, 'Bin', 'MSBuild.exe')
+  end
+
+  puts "MSBuild is at #{msbuild}"
   tasks = rebuild ? 'Clean;Rebuild' : 'Build'
-  cmd = "\"#{MSBUILD}\" \"#{sln}\" /t:#{tasks} /p:Configuration=#{CONFIG};Platform=#{platform}"
+  cmd = "\"#{msbuild}\" \"#{sln}\" /t:#{tasks} /p:Configuration=#{CONFIG};Platform=#{platform}"
   if MSBUILD_LOGGER
     cmd << " /logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
   else

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SyncTrayzor.Syncthing.Devices;
@@ -35,8 +33,7 @@ namespace SyncTrayzor.NotifyIcon
 
             lock (this.syncRoot)
             {
-                CancellationTokenSource existingCts;
-                if (this.pendingDeviceIds.TryGetValue(device, out existingCts))
+                if (this.pendingDeviceIds.TryGetValue(device, out var existingCts))
                 {
                     // It already exists. Cancel it, restart.
                     existingCts.Cancel();
@@ -78,8 +75,7 @@ namespace SyncTrayzor.NotifyIcon
         {
             lock (this.syncRoot)
             {
-                CancellationTokenSource cts;
-                if (this.pendingDeviceIds.TryGetValue(device, out cts))
+                if (this.pendingDeviceIds.TryGetValue(device, out var cts))
                 {
                     cts.Cancel();
                     this.pendingDeviceIds.Remove(device);

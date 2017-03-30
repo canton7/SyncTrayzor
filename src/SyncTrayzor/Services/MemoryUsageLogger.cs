@@ -16,8 +16,8 @@ namespace SyncTrayzor.Services
 
         public bool Enabled
         {
-            get { return this.timer.Enabled; }
-            set { this.timer.Enabled = value; }
+            get => this.timer.Enabled;
+            set => this.timer.Enabled = value;
         }
 
         public MemoryUsageLogger()

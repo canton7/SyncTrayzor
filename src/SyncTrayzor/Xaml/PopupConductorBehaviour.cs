@@ -9,8 +9,8 @@ namespace SyncTrayzor.Xaml
     {
         public object DataContext
         {
-            get { return (object)GetValue(DataContextProperty); }
-            set { SetValue(DataContextProperty, value); }
+            get => GetValue(DataContextProperty);
+            set => SetValue(DataContextProperty, value);
         }
 
         public static readonly DependencyProperty DataContextProperty =
@@ -30,15 +30,13 @@ namespace SyncTrayzor.Xaml
 
         private void Opened(object sender, EventArgs e)
         {
-            var screenState = this.DataContext as IScreenState;
-            if (screenState != null)
+            if (this.DataContext is IScreenState screenState)
                 screenState.Activate();
         }
 
         private void Closed(object sender, EventArgs e)
         {
-            var screenState = this.DataContext as IScreenState;
-            if (screenState != null)
+            if (this.DataContext is IScreenState screenState)
                 screenState.Close();
         }
     }

@@ -12,8 +12,8 @@ namespace SyncTrayzor.Utils
 
         public static Icon GetIcon(string path, bool isFile)
         {
-            var flags = (uint)(SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
-            var attribute = isFile ? (uint)FILE_ATTRIBUTE_FILE : (uint)FILE_ATTRIBUTE_DIRECTORY;
+            var flags = SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON;
+            var attribute = isFile ? FILE_ATTRIBUTE_FILE : FILE_ATTRIBUTE_DIRECTORY;
             var shfi = new SHFileInfo();
             IntPtr res;
             try

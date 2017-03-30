@@ -35,6 +35,7 @@ namespace SyncTrayzor.Services
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const string applicationName = "SyncTrayzor";
         private const string runPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+        private const string runPathWithHive = @"HKEY_CURRENT_USER\" + runPath;
         // Matches 'SyncTrayzor' and 'SyncTrayzor (n)' (where n is a digit)
         private static readonly Regex keyRegex = new Regex("^" + applicationName + @"(?: \((\d+)\))?$");
         private readonly string keyName;
@@ -67,30 +68,40 @@ namespace SyncTrayzor.Services
         {
             try
             {
-                this.OpenRegistryKey(true).Dispose();
+                using (var key = this.OpenRegistryKey(true))
+                {
+                    if (key != null) // It's null if "there was an error"
+                    {
+                        // We can open it, but not have access to create subkeys, I think
+                        new RegistryPermission(RegistryPermissionAccess.AllAccess, runPathWithHive).Demand();
 
-                // Not sure if the above check is needed now that we have this
-                new RegistryPermission(RegistryPermissionAccess.AllAccess, runPath).Demand();
-
-                this._canWrite = true;
-                this._canRead = true;
-                logger.Info("Have read/write access to the registry");
-                return;
+                        this._canWrite = true;
+                        this._canRead = true;
+                        logger.Info("Have read/write access to the registry");
+                        return;
+                    }
+                }
             }
             catch (SecurityException) { }
+            catch (UnauthorizedAccessException) { }
 
             try
             {
-                this.OpenRegistryKey(false).Dispose();
+                using (var key = this.OpenRegistryKey(false))
+                {
+                    if (key != null) // It's null if "there was an error"
+                    {
+                        // We can open it, but not have access to read subkeys, I think
+                        new RegistryPermission(RegistryPermissionAccess.Read, runPathWithHive).Demand();
 
-                // Not sure if the above check is needed now that we have this
-                new RegistryPermission(RegistryPermissionAccess.Read, runPath).Demand();
-
-                this._canRead = true;
-                logger.Info("Have read-only access to the registry");
-                return;
+                        this._canRead = true;
+                        logger.Info("Have read-only access to the registry");
+                        return;
+                    }
+                }
             }
             catch (SecurityException) { }
+            catch (UnauthorizedAccessException) { }
 
             logger.Info("Have no access to the registry");
         }
@@ -115,8 +126,7 @@ namespace SyncTrayzor.Services
                             numbersSeen.Add(Int32.Parse(numberValue));
 
                         // See if this one points to our application
-                        var keyValue = key.GetValue(entry) as string;
-                        if (keyValue != null && keyValue.StartsWith($"\"{this.assemblyProvider.Location}\""))
+                        if (key.GetValue(entry) is string keyValue && keyValue.StartsWith($"\"{this.assemblyProvider.Location}\""))
                         {
                             foundKey = entry;
                             break;
@@ -147,7 +157,8 @@ namespace SyncTrayzor.Services
 
         private RegistryKey OpenRegistryKey(bool writable)
         {
-            return Registry.CurrentUser.OpenSubKey(runPath, writable);
+            var key = Registry.CurrentUser.CreateSubKey(runPath, writable ? RegistryKeyPermissionCheck.ReadWriteSubTree : RegistryKeyPermissionCheck.ReadSubTree);
+            return key;
         }
 
         public AutostartConfiguration GetCurrentSetup()
@@ -160,8 +171,7 @@ namespace SyncTrayzor.Services
 
             using (var registryKey = this.OpenRegistryKey(false))
             {
-                var value = registryKey.GetValue(this.keyName) as string;
-                if (value != null)
+                if (registryKey.GetValue(this.keyName) is string value)
                 {
                     autoStart = true;
                     if (value.Contains(" -minimized"))

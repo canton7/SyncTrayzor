@@ -44,8 +44,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         public TimeSpan RescanInterval
         {
-            get { return TimeSpan.FromSeconds(this.RescanIntervalSeconds); }
-            set { this.RescanIntervalSeconds = (long)value.TotalSeconds; }
+            get => TimeSpan.FromSeconds(this.RescanIntervalSeconds);
+            set => this.RescanIntervalSeconds = (long)value.TotalSeconds;
         }
 
         [JsonProperty("invalid")]

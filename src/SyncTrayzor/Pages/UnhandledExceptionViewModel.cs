@@ -18,14 +18,8 @@ namespace SyncTrayzor.Pages
 
         public string IssuesUrl { get; }
 
-        public string ErrorMessage
-        {
-            get { return this.GenerateErrorMessage(); }
-        }
-        public Icon Icon
-        {
-            get { return SystemIcons.Error; }
-        }
+        public string ErrorMessage => this.GenerateErrorMessage();
+        public Icon Icon => SystemIcons.Error;
 
         public UnhandledExceptionViewModel(IApplicationPathsProvider applicationPathsProvider, IProcessStartProvider processStartProvider, IAssemblyProvider assemblyProvider)
         {
@@ -57,7 +51,7 @@ namespace SyncTrayzor.Pages
 
         public void OpenLogFilePath()
         {
-            this.processStartProvider.ShowInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
+            this.processStartProvider.ShowFileInExplorer(Path.Combine(this.applicationPathsProvider.LogFilePath, "SyncTrayzor.log"));
         }
 
         public void Close()

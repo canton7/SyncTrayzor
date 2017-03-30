@@ -35,16 +35,10 @@ namespace SyncTrayzor.Services
 
 
         private IReadOnlyList<string> _conflictedFiles = EmptyReadOnlyList<string>.Instance;
-        public IReadOnlyList<string> ConflictedFiles
-        {
-            get { return this._enableConflictedFileAlerts ? this._conflictedFiles : EmptyReadOnlyList<string>.Instance; }
-        }
+        public IReadOnlyList<string> ConflictedFiles => this._enableConflictedFileAlerts ? this._conflictedFiles : EmptyReadOnlyList<string>.Instance;
 
         private IReadOnlyList<string> _foldersWithFailedTransferFiles = EmptyReadOnlyList<string>.Instance;
-        public IReadOnlyList<string> FoldersWithFailedTransferFiles
-        {
-            get { return this._enableFailedTransferAlerts ? this._foldersWithFailedTransferFiles : EmptyReadOnlyList<string>.Instance; }
-        }
+        public IReadOnlyList<string> FoldersWithFailedTransferFiles => this._enableFailedTransferAlerts ? this._foldersWithFailedTransferFiles : EmptyReadOnlyList<string>.Instance;
 
         public IReadOnlyList<string> PausedDeviceIdsFromMetering { get; private set; } = EmptyReadOnlyList<string>.Instance;
 
@@ -53,7 +47,7 @@ namespace SyncTrayzor.Services
         private bool _enableFailedTransferAlerts;
         public bool EnableFailedTransferAlerts
         {
-            get { return this._enableFailedTransferAlerts; }
+            get => this._enableFailedTransferAlerts;
             set
             {
                 if (this._enableFailedTransferAlerts == value)
@@ -66,7 +60,7 @@ namespace SyncTrayzor.Services
         private bool _enableConflictedFileAlerts;
         public bool EnableConflictedFileAlerts
         {
-            get { return this._enableConflictedFileAlerts; }
+            get => this._enableConflictedFileAlerts;
             set
             {
                 if (this._enableConflictedFileAlerts == value)

@@ -10,8 +10,8 @@ namespace SyncTrayzor.Xaml
 
         public IObservable<bool> ActivateObservable
         {
-            get { return (IObservable<bool>)GetValue(ActivateObservableProperty); }
-            set { SetValue(ActivateObservableProperty, value); }
+            get => (IObservable<bool>)GetValue(ActivateObservableProperty);
+            set => SetValue(ActivateObservableProperty, value);
         }
 
         public static readonly DependencyProperty ActivateObservableProperty =

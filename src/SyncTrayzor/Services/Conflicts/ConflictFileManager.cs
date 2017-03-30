@@ -159,20 +159,18 @@ namespace SyncTrayzor.Services.Conflicts
                 var searchDirectory = stack.Pop();
                 var directory = searchDirectory.Directory;
 
-                this.TryFilesystemOperation(() =>
+                this.TryFilesystemEnumeration(() =>
                 {
                     foreach (var filePath in this.filesystemProvider.EnumerateFiles(directory, conflictPattern, System.IO.SearchOption.TopDirectoryOnly))
                     {
                         if (this.IsFileIgnored(filePath))
                             continue;
 
-                        ParsedConflictFileInfo conflictFileInfo;
                         // We may not be able to parse it properly (conflictPattern is pretty basic), or it might not exist, or...
-                        if (!this.TryFindBaseFileForConflictFile(filePath, out conflictFileInfo))
+                        if (!this.TryFindBaseFileForConflictFile(filePath, out var conflictFileInfo))
                             continue;
 
-                        List<ParsedConflictFileInfo> existingConflicts;
-                        if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out existingConflicts))
+                        if (!conflictLookup.TryGetValue(conflictFileInfo.OriginalPath, out var existingConflicts))
                         {
                             existingConflicts = new List<ParsedConflictFileInfo>();
                             conflictLookup.Add(conflictFileInfo.OriginalPath, existingConflicts);
@@ -185,15 +183,23 @@ namespace SyncTrayzor.Services.Conflicts
 
                 foreach (var kvp in conflictLookup)
                 {
-                    var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key), this.filesystemProvider.GetFileSize(kvp.Key));
-                    var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created, this.filesystemProvider.GetFileSize(x.FilePath))).ToList();
-                    observer.OnNext(new ConflictSet(file, conflicts));
-                    cancellationToken.ThrowIfCancellationRequested();
+                    // The file can have disappeared between us finding it, and this
+                    try
+                    {
+                        var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key), this.filesystemProvider.GetFileSize(kvp.Key));
+                        var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created, this.filesystemProvider.GetFileSize(x.FilePath))).ToList();
+                        observer.OnNext(new ConflictSet(file, conflicts));
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e, $"Error while trying to access {kvp.Key}, maybe it was deleted since we scanned it?");
+                    }
                 }
 
                 if (searchDirectory.Depth < maxSearchDepth)
                 {
-                    this.TryFilesystemOperation(() =>
+                    this.TryFilesystemEnumeration(() =>
                     {
                         foreach (var subDirectory in this.filesystemProvider.EnumerateDirectories(directory, "*", System.IO.SearchOption.TopDirectoryOnly))
                         {
@@ -213,7 +219,7 @@ namespace SyncTrayzor.Services.Conflicts
             }
         }
 
-        private void TryFilesystemOperation(Action action, string path, string itemType)
+        private void TryFilesystemEnumeration(Action action, string path, string itemType)
         {
             try
             {

@@ -10,8 +10,8 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         public Version Version
         {
-            get { return String.IsNullOrWhiteSpace(this.VersionRaw) ? null : new Version(this.VersionRaw); }
-            set { this.VersionRaw = value.ToString(3); }
+            get => String.IsNullOrWhiteSpace(this.VersionRaw) ? null : new Version(this.VersionRaw);
+            set => this.VersionRaw = value.ToString(3);
         }
 
         [JsonProperty("direct_download_url")]

@@ -171,8 +171,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
                 }
                 else
                 {
-                    FailingTransfer failingTransfer;
-                    if (!this.currentlyFailingTransfers.TryGetValue(key, out failingTransfer) || failingTransfer.Error != error)
+                    if (!this.currentlyFailingTransfers.TryGetValue(key, out var failingTransfer) || failingTransfer.Error != error)
                     {
                         // Remove will only do something in the case that the failure existed, but the error changed
                         this.currentlyFailingTransfers.Remove(key);
@@ -190,8 +189,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
                 if (this.completedTransfers.Count > maxCompletedTransfers)
                     this.completedTransfers.Dequeue();
 
-                List<FileTransfer> recentlySynchronizedList;
-                if (!this.recentlySynchronized.TryGetValue(fileTransfer.FolderId, out recentlySynchronizedList))
+                if (!this.recentlySynchronized.TryGetValue(fileTransfer.FolderId, out var recentlySynchronizedList))
                 {
                     recentlySynchronizedList = new List<FileTransfer>();
                     this.recentlySynchronized[fileTransfer.FolderId] = recentlySynchronizedList;
@@ -268,8 +266,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
         private void OnFolderSynchronizationFinished(string folderId, List<FileTransfer> fileTransfers)
         {
-            Folder folder;
-            if (!this.folderManager.TryFetchById(folderId, out folder))
+            if (!this.folderManager.TryFetchById(folderId, out var folder))
                 return;
 
             this.eventDispatcher.Raise(this.FolderSynchronizationFinished, new FolderSynchronizationFinishedEventArgs(folder, fileTransfers));

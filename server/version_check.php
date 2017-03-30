@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.14' => [
+   '1.1.15' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,11 +81,12 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Support selecting and resolving multiple conflicts at once\n- Add better support for changes to Syncthing's event format\n- UI tweaks and improvements\n- Fix a few crashes\n- Better support for right-to-left languages",
+      'release_notes' => "- Add a network usage graph to the tray icon popup\n- Add command-line parameters to start and stop Syncthing programatically\n- Fix problems setting up auto-start on some machines\n- Support custom file browsers (instead of Explorer)",
    ]
 ];
 
 $upgrades = [
+   '1.1.14' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.13' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.12' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.11' => ['to' => 'latest', 'formatter' => '5'],
@@ -249,11 +250,10 @@ if ($error != null)
 $output = json_encode($rsp, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
 
 $date = date('c');
-$log_msg = "$date\t{$_SERVER['REMOTE_ADDR']}\t$version\t$arch\t$variant\t$output\t$loggable_error\n";
 
 $fp = fopen('log.txt', 'a+');
 flock($fp, LOCK_EX);
-fputcsv($fp, [$date, $_SERVER['REMOTE_ADDR'], $version, $arch, $variant, $output, $loggable_error]);
+fputcsv($fp, [$date, $_SERVER['REMOTE_ADDR'], $version, $arch, $variant, $data == null ? "N" : "Y", $loggable_error]);
 fclose($fp);
 
 echo $output;

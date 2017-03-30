@@ -2,7 +2,7 @@
 using System.IO.Pipes;
 using System.Text;
 
-namespace SyncTrayzor.Services
+namespace SyncTrayzor.Services.Ipc
 {
     public class UnknownIpcCommandException : Exception
     {
@@ -14,21 +14,41 @@ namespace SyncTrayzor.Services
 
     public interface IIpcCommsClient
     {
-        void RequestShowMainWindow(int pid);
+        void ShowMainWindow();
+        void StartSyncthing();
+        void StopSyncthing();
     }
 
     public class IpcCommsClient : IIpcCommsClient
     {
-        private string PipeNameForPid(int pid) => $"SyncTrayzor-{pid}";
+        private readonly int pid;
 
-        public void RequestShowMainWindow(int pid)
+        private string PipeName => $"SyncTrayzor-{this.pid}";
+
+        public IpcCommsClient(int pid)
         {
-            this.SendCommand(pid, "ShowMainWindow");
+            this.pid = pid;
         }
 
-        private void SendCommand(int pid, string command)
+        public void ShowMainWindow()
         {
-            var clientStream = new NamedPipeClientStream(".", this.PipeNameForPid(pid), PipeDirection.InOut, PipeOptions.Asynchronous);
+            this.SendCommand("ShowMainWindow");
+        }
+
+        public void StartSyncthing()
+        {
+            this.SendCommand("StartSyncthing");
+        }
+
+        public void StopSyncthing()
+        {
+            this.SendCommand("StopSyncthing");
+        }
+
+        private void SendCommand(string command)
+        {
+            var clientStream = new NamedPipeClientStream(".", this.PipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+
             clientStream.Connect(500);
             clientStream.ReadMode = PipeTransmissionMode.Message;
             var commandBytes = Encoding.ASCII.GetBytes(command);
