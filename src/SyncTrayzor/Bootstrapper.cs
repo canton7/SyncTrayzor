@@ -102,6 +102,10 @@ namespace SyncTrayzor
             var assembly = this.Container.Get<IAssemblyProvider>();
             logger.Debug("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
 
+            // This needs to happen before anything which might cause the unhandled exception stuff to be shown, as that wants to know
+            // where to find the log file.
+            this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
+
             var client = this.Container.Get<IIpcCommsClientFactory>().TryCreateClient();
             if (client != null)
             {
@@ -123,8 +127,6 @@ namespace SyncTrayzor
                     Environment.Exit(0);
                 }
             }
-
-            this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
             configurationProvider.Initialize(AppSettings.Instance.DefaultUserConfiguration);
