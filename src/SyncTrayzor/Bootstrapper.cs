@@ -109,22 +109,29 @@ namespace SyncTrayzor
             var client = this.Container.Get<IIpcCommsClientFactory>().TryCreateClient();
             if (client != null)
             {
-                if (this.options.StartSyncthing || this.options.StopSyncthing)
+                try
                 {
-                    if (this.options.StartSyncthing)
-                        client.StartSyncthing();
-                    else if (this.options.StopSyncthing)
-                        client.StopSyncthing();
-                    if (!this.options.StartMinimized)
-                        client.ShowMainWindow();
-                    Environment.Exit(0);
-                }
+                    if (this.options.StartSyncthing || this.options.StopSyncthing)
+                    {
+                        if (this.options.StartSyncthing)
+                            client.StartSyncthing();
+                        else if (this.options.StopSyncthing)
+                            client.StopSyncthing();
+                        if (!this.options.StartMinimized)
+                            client.ShowMainWindow();
+                        Environment.Exit(0);
+                    }
 
-                if (AppSettings.Instance.EnforceSingleProcessPerUser)
+                    if (AppSettings.Instance.EnforceSingleProcessPerUser)
+                    {
+                        if (!this.options.StartMinimized)
+                            client.ShowMainWindow();
+                        Environment.Exit(0);
+                    }
+                }
+                catch (Exception e)
                 {
-                    if (!this.options.StartMinimized)
-                        client.ShowMainWindow();
-                    Environment.Exit(0);
+                    logger.Error(e, $"Failed to talk to {client}: {e.Message}. Pretending that it doesn't exist...");
                 }
             }
 

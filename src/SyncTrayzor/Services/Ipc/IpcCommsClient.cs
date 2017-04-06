@@ -76,5 +76,10 @@ namespace SyncTrayzor.Services.Ipc
 
             throw new UnknownIpcCommandException($"Remote side replied with {response}");
         }
+
+        public override string ToString()
+        {
+            return $"<IpcCommsClient PID={this.pid}>";
+        }
     }
 }
