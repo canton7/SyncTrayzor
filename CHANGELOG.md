@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.1.16
+-------
+
+ - Fix some crashes on startup
+ - Fix bug where 'show logs' link on the crash screen would cause another crash
+ - Reduce how often SyncTrayzor checks for updates
+
 v1.1.15
 -------
 
