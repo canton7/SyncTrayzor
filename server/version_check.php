@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.15' => [
+   '1.1.16' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,11 +81,12 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Add a network usage graph to the tray icon popup\n- Add command-line parameters to start and stop Syncthing programatically\n- Fix problems setting up auto-start on some machines\n- Support custom file browsers (instead of Explorer)",
+      'release_notes' => "- Fix some crashes on startup\n- Fix bug where 'show logs' link on the crash screen would cause another crash\n- Reduce how often SyncTrayzor checks for updates",
    ]
 ];
 
 $upgrades = [
+   '1.1.15' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.14' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.13' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.12' => ['to' => 'latest', 'formatter' => '5'],

@@ -102,29 +102,38 @@ namespace SyncTrayzor
             var assembly = this.Container.Get<IAssemblyProvider>();
             logger.Debug("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
 
+            // This needs to happen before anything which might cause the unhandled exception stuff to be shown, as that wants to know
+            // where to find the log file.
+            this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
+
             var client = this.Container.Get<IIpcCommsClientFactory>().TryCreateClient();
             if (client != null)
             {
-                if (this.options.StartSyncthing || this.options.StopSyncthing)
+                try
                 {
-                    if (this.options.StartSyncthing)
-                        client.StartSyncthing();
-                    else if (this.options.StopSyncthing)
-                        client.StopSyncthing();
-                    if (!this.options.StartMinimized)
-                        client.ShowMainWindow();
-                    Environment.Exit(0);
-                }
+                    if (this.options.StartSyncthing || this.options.StopSyncthing)
+                    {
+                        if (this.options.StartSyncthing)
+                            client.StartSyncthing();
+                        else if (this.options.StopSyncthing)
+                            client.StopSyncthing();
+                        if (!this.options.StartMinimized)
+                            client.ShowMainWindow();
+                        Environment.Exit(0);
+                    }
 
-                if (AppSettings.Instance.EnforceSingleProcessPerUser)
+                    if (AppSettings.Instance.EnforceSingleProcessPerUser)
+                    {
+                        if (!this.options.StartMinimized)
+                            client.ShowMainWindow();
+                        Environment.Exit(0);
+                    }
+                }
+                catch (Exception e)
                 {
-                    if (!this.options.StartMinimized)
-                        client.ShowMainWindow();
-                    Environment.Exit(0);
+                    logger.Error(e, $"Failed to talk to {client}: {e.Message}. Pretending that it doesn't exist...");
                 }
             }
-
-            this.Container.Get<IApplicationPathsProvider>().Initialize(pathConfiguration);
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
             configurationProvider.Initialize(AppSettings.Instance.DefaultUserConfiguration);

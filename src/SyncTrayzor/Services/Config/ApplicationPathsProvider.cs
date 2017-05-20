@@ -73,7 +73,5 @@ namespace SyncTrayzor.Services.Config
             logger.Debug("DefaultSyncthingPath: {0}", this.DefaultSyncthingPath);
             logger.Debug("DefaultSyncthingHomePath: {0}", this.DefaultSyncthingHomePath);
         }
-
-        
     }
 }
