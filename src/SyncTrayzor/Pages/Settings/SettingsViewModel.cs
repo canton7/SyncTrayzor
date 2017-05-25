@@ -94,6 +94,9 @@ namespace SyncTrayzor.Pages.Settings
 
         public BindableCollection<DebugFacilitySetting> SyncthingDebugFacilities { get; } = new BindableCollection<DebugFacilitySetting>();
 
+        public BindableCollection<LabelledValue<LogLevel>> LogLevels { get; }
+        public SettingItem<LogLevel> SelectedLogLevel { get; set; }
+
         public SettingsViewModel(
             IConfigurationProvider configurationProvider,
             IAutostartProvider autostartProvider,
@@ -180,6 +183,22 @@ namespace SyncTrayzor.Pages.Settings
             this.SyncthingDenyUpgrade = this.CreateBasicSettingItem(x => x.SyncthingDenyUpgrade);
             this.SyncthingDenyUpgrade.RequiresSyncthingRestart = true;
 
+            this.PriorityLevels = new BindableCollection<LabelledValue<SyncthingPriorityLevel>>()
+            {
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_AboveNormal, Services.Config.SyncthingPriorityLevel.AboveNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Normal, Services.Config.SyncthingPriorityLevel.Normal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_BelowNormal, Services.Config.SyncthingPriorityLevel.BelowNormal),
+                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Idle, Services.Config.SyncthingPriorityLevel.Idle),
+            };
+
+            this.LogLevels = new BindableCollection<LabelledValue<LogLevel>>()
+            {
+                LabelledValue.Create(Resources.SettingsView_Logging_LogLevel_Info, LogLevel.Info),
+                LabelledValue.Create(Resources.SettingsView_Logging_LogLevel_Debug, LogLevel.Debug),
+                LabelledValue.Create(Resources.SettingsView_Logging_LogLevel_Trace, LogLevel.Trace),
+            };
+            this.SelectedLogLevel = this.CreateBasicSettingItem(x => x.LogLevel);
+
             var configuration = this.configurationProvider.Load();
 
             foreach (var settingItem in this.settings)
@@ -192,14 +211,6 @@ namespace SyncTrayzor.Pages.Settings
                 folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
                 folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
             }
-
-            this.PriorityLevels = new BindableCollection<LabelledValue<SyncthingPriorityLevel>>()
-            {
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_AboveNormal, Services.Config.SyncthingPriorityLevel.AboveNormal),
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Normal, Services.Config.SyncthingPriorityLevel.Normal),
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_BelowNormal, Services.Config.SyncthingPriorityLevel.BelowNormal),
-                LabelledValue.Create(Resources.SettingsView_Syncthing_ProcessPriority_Idle, Services.Config.SyncthingPriorityLevel.Idle),
-            };
 
             this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
             {

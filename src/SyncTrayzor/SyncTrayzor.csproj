@@ -245,6 +245,7 @@
     <Compile Include="Services\Config\EnvironmentalVariableCollection.cs" />
     <Compile Include="Services\Config\FolderConfiguration.cs" />
     <Compile Include="Services\Config\IconAnimationMode.cs" />
+    <Compile Include="Services\Config\LogLevel.cs" />
     <Compile Include="Services\Config\SyncthingPriorityLevel.cs" />
     <Compile Include="Services\Config\SyncTrayzorVariant.cs" />
     <Compile Include="Services\Config\WindowPlacement.cs" />

@@ -100,7 +100,7 @@ namespace SyncTrayzor
 
             var logger = LogManager.GetCurrentClassLogger();
             var assembly = this.Container.Get<IAssemblyProvider>();
-            logger.Debug("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
+            logger.Info("SyncTrazor version {0} ({1}) started at {2} (.NET version: {3})", assembly.FullVersion, assembly.ProcessorArchitecture, assembly.Location, DotNetVersionFinder.FindDotNetVersion());
 
             // This needs to happen before anything which might cause the unhandled exception stuff to be shown, as that wants to know
             // where to find the log file.

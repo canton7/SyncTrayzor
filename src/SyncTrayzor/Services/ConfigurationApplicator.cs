@@ -6,6 +6,7 @@ using SyncTrayzor.Syncthing;
 using System;
 using System.Linq;
 using SyncTrayzor.Services.Metering;
+using System.Collections.Generic;
 
 namespace SyncTrayzor.Services
 {
@@ -116,6 +117,33 @@ namespace SyncTrayzor.Services
 
             this.alertsManager.EnableConflictedFileAlerts = configuration.EnableConflictFileMonitoring;
             this.alertsManager.EnableFailedTransferAlerts = configuration.EnableFailedTransferAlerts;
+
+            SetLogLevel(configuration);
+        }
+
+        private static readonly Dictionary<LogLevel, NLog.LogLevel> logLevelMapping = new Dictionary<Config.LogLevel, NLog.LogLevel>()
+        {
+            { LogLevel.Info, NLog.LogLevel.Info },
+            { LogLevel.Debug, NLog.LogLevel.Debug },
+            { LogLevel.Trace, NLog.LogLevel.Trace },
+        };
+
+        private static void SetLogLevel(Configuration configuration)
+        {
+            var logLevel = logLevelMapping[configuration.LogLevel];
+            var rules = NLog.LogManager.Configuration.LoggingRules;
+            var logFileRule = rules.FirstOrDefault(rule => rule.Targets.Any(target => target.Name == "logfile"));
+            if (logFileRule != null)
+            {
+                foreach (var level in NLog.LogLevel.AllLoggingLevels)
+                {
+                    if (level < logLevel)
+                        logFileRule.DisableLoggingForLevel(level);
+                    else
+                        logFileRule.EnableLoggingForLevel(level);
+                }
+                NLog.LogManager.ReconfigExistingLoggers();
+            }
         }
 
         private void OnDataLoaded(object sender, EventArgs e)

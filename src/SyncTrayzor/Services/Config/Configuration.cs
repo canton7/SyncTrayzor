@@ -74,6 +74,7 @@ namespace SyncTrayzor.Services.Config
         public IconAnimationMode IconAnimationMode { get; set; }
         public string OpenFolderCommand { get; set; }
         public string ShowFileInFolderCommand { get; set; }
+        public LogLevel LogLevel { get; set; }
 
         public Configuration()
         {
@@ -113,6 +114,7 @@ namespace SyncTrayzor.Services.Config
             this.IconAnimationMode = IconAnimationMode.DataTransferring;
             this.OpenFolderCommand = "explorer.exe \"{0}\"";
             this.ShowFileInFolderCommand = "explorer.exe /select, \"{0}\"";
+            this.LogLevel = LogLevel.Info;
         }
 
         public Configuration(Configuration other)
@@ -151,6 +153,7 @@ namespace SyncTrayzor.Services.Config
             this.IconAnimationMode = other.IconAnimationMode;
             this.OpenFolderCommand = other.OpenFolderCommand;
             this.ShowFileInFolderCommand = other.ShowFileInFolderCommand;
+            this.LogLevel = other.LogLevel;
         }
 
         public override string ToString()
@@ -169,7 +172,7 @@ namespace SyncTrayzor.Services.Config
                 $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+
                 $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks} "+
                 $"HaveDonated={this.HaveDonated} IconAnimationMode={this.IconAnimationMode} OpenFolderCommand={this.OpenFolderCommand} ShowFileInFolderCommand={this.ShowFileInFolderCommand}" +
-                $">";
+                $"LogLevel={this.LogLevel}>";
         }
     }
 }

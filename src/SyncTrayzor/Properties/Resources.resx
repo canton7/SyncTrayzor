@@ -964,4 +964,20 @@ Please donate to my charity fundraising campaign.</value>
     <value>Donate</value>
     <comment>Shown in the top right of the menu bar, if the user hasn't yet donated</comment>
   </data>
+  <data name="SettingsView_Logging_LogLevel" xml:space="preserve">
+    <value>Log Level:</value>
+    <comment>Label shown before SyncTrayzor logging level ComboBox</comment>
+  </data>
+  <data name="SettingsView_Logging_LogLevel_Debug" xml:space="preserve">
+    <value>Debug</value>
+    <comment>Name for the Debug log level (which provides lots of debug info)</comment>
+  </data>
+  <data name="SettingsView_Logging_LogLevel_Info" xml:space="preserve">
+    <value>Info (Default)</value>
+    <comment>Name for the Info log level</comment>
+  </data>
+  <data name="SettingsView_Logging_LogLevel_Trace" xml:space="preserve">
+    <value>Trace</value>
+    <comment>Name for the Trace log level (which provides the most debug info)</comment>
+  </data>
 </root>
