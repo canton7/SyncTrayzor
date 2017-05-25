@@ -131,12 +131,12 @@ namespace SyncTrayzor.Services
             var exists = System.IO.Directory.Exists(this.Directory);
             if (exists && this.watcher == null)
             {
-                logger.Info("Path {0} appeared. Creating watcher", this.Directory);
+                logger.Debug("Path {0} appeared. Creating watcher", this.Directory);
                 this.watcher = this.TryToCreateWatcher(this.Directory);
             }
             else if (!exists && this.watcher != null)
             {
-                logger.Info("Path {0} disappeared. Destroying watcher", this.Directory);
+                logger.Debug("Path {0} disappeared. Destroying watcher", this.Directory);
                 this.watcher.Dispose();
                 this.watcher = null;
             }
@@ -172,7 +172,7 @@ namespace SyncTrayzor.Services
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"Failed to see whether file/dir {e.FullPath} exists");
+                logger.Warn(ex, $"Failed to see whether file/dir {e.FullPath} exists");
             }
         }
 

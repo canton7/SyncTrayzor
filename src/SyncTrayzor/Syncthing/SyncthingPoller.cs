@@ -127,7 +127,7 @@ namespace SyncTrayzor.Syncthing
             {
                 // Anything else?
                 // We can't abort, as then the exception will be lost. So log it, and keep going
-                logger.Error(e, "Unexpected exception while polling");
+                logger.Warn(e, "Unexpected exception while polling");
                 errored = true;
             }
 

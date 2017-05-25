@@ -77,7 +77,7 @@ namespace SyncTrayzor.Services
 
                         this._canWrite = true;
                         this._canRead = true;
-                        logger.Info("Have read/write access to the registry");
+                        logger.Debug("Have read/write access to the registry");
                         return;
                     }
                 }
@@ -95,7 +95,7 @@ namespace SyncTrayzor.Services
                         new RegistryPermission(RegistryPermissionAccess.Read, runPathWithHive).Demand();
 
                         this._canRead = true;
-                        logger.Info("Have read-only access to the registry");
+                        logger.Warn("Have read-only access to the registry");
                         return;
                     }
                 }
@@ -103,7 +103,7 @@ namespace SyncTrayzor.Services
             catch (SecurityException) { }
             catch (UnauthorizedAccessException) { }
 
-            logger.Info("Have no access to the registry");
+            logger.Warn("Have no access to the registry");
         }
 
         private string FindKeyName()
@@ -180,7 +180,7 @@ namespace SyncTrayzor.Services
             }
 
             var config = new AutostartConfiguration() { AutoStart = autoStart, StartMinimized = startMinimized };
-            logger.Info("GetCurrentSetup determined that the current configuration is: {0}", config);
+            logger.Debug("GetCurrentSetup determined that the current configuration is: {0}", config);
             return config;
         }
 
@@ -189,7 +189,7 @@ namespace SyncTrayzor.Services
             if (!this.CanWrite)
                 throw new InvalidOperationException("Don't have permission to write to the registry");
 
-            logger.Info("Setting AutoStart to {0}", config);
+            logger.Debug("Setting AutoStart to {0}", config);
 
             using (var registryKey = this.OpenRegistryKey(true))
             {

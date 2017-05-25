@@ -35,13 +35,13 @@ namespace SyncTrayzor.Services
 
         public void Start(string filename)
         {
-            logger.Info("Starting {0}", filename);
+            logger.Debug("Starting {0}", filename);
             Process.Start(filename);
         }
 
         public void Start(string filename, string arguments)
         {
-            logger.Info("Starting {0} {1}", filename, arguments);
+            logger.Debug("Starting {0} {1}", filename, arguments);
             Process.Start(filename, arguments);
         }
 
@@ -58,7 +58,7 @@ namespace SyncTrayzor.Services
             var launch = launchAfterFinished == null ? null : String.Format("--launch=\"{0}\"", launchAfterFinished.Replace("\"", "\\\""));
             var formattedArguments = $"--shell {launch} -- \"{filename}\" {arguments}";
 
-            logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
+            logger.Debug("Starting {0} {1}", processRunnerPath, formattedArguments);
             var startInfo = new ProcessStartInfo()
             {
                 FileName = processRunnerPath,
@@ -78,7 +78,7 @@ namespace SyncTrayzor.Services
             var launch = launchAfterFinished == null ? null : String.Format("--launch=\"{0}\"", launchAfterFinished.Replace("\"", "\\\""));
             var formattedArguments = $"--nowindow -- \"{processRunnerPath}\" --runas {launch} -- \"{filename}\" {arguments}";
 
-            logger.Info("Starting {0} {1}", processRunnerPath, formattedArguments);
+            logger.Debug("Starting {0} {1}", processRunnerPath, formattedArguments);
 
             var startInfo = new ProcessStartInfo()
             {

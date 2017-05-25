@@ -118,7 +118,7 @@ namespace SyncTrayzor.Services.Config
             if (!this.filesystem.FileExists(expandedSyncthingPath))
             {
                 // We know that this.paths.SyncthingBackupPath exists, because we checked this above
-                logger.Info("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
+                logger.Warn("Syncthing doesn't exist at {0}, so copying from {1}", expandedSyncthingPath, this.paths.SyncthingBackupPath);
 
                 var expandedSyncthingPathDir = Path.GetDirectoryName(expandedSyncthingPath);
                 if (!this.filesystem.DirectoryExists(expandedSyncthingPathDir))
@@ -140,7 +140,7 @@ namespace SyncTrayzor.Services.Config
 
             // Merge any updates from app.config / Configuration into the configuration file on disk
             // (creating if necessary)
-            logger.Debug("Loaded default configuration: {0}", defaultConfiguration);
+            logger.Info("Loaded default configuration: {0}", defaultConfiguration);
             XDocument defaultConfig;
             using (var ms = new System.IO.MemoryStream())
             {
@@ -167,7 +167,7 @@ namespace SyncTrayzor.Services.Config
                 }
                 else
                 {
-                    logger.Debug($"Configuration file {this.paths.ConfigurationFilePath} doesn't exist, so creating");
+                    logger.Info($"Configuration file {this.paths.ConfigurationFilePath} doesn't exist, so creating");
                     hadToCreate = true;
                     loadedConfig = defaultConfig;
                 }

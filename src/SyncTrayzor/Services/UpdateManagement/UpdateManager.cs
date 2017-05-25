@@ -215,7 +215,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     // If another application is fullscreen, don't bother
                     if (this.userActivityMonitor.IsWindowFullscreen())
                     {
-                        logger.Info("Another application was fullscreen, so we didn't prompt the user");
+                        logger.Debug("Another application was fullscreen, so we didn't prompt the user");
                         return;
                     }
 
@@ -235,7 +235,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                     catch (OperationCanceledException)
                     {
                         this.toastCts = null;
-                        logger.Info("Update toast cancelled. Moving to a dialog");
+                        logger.Debug("Update toast cancelled. Moving to a dialog");
                         promptResult = this.updatePromptProvider.ShowDialog(checkResult, variantHandler.CanAutoInstall, variantHandler.RequiresUac);
                     }
                 }

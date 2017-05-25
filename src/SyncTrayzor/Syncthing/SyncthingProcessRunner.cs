@@ -223,10 +223,10 @@ namespace SyncTrayzor.Syncthing
                 this.process = null;
             }
 
-            logger.Info("Syncthing process stopped with exit status {0}", exitStatus);
+            logger.Debug("Syncthing process stopped with exit status {0}", exitStatus);
             if (exitStatus == SyncthingExitStatus.Restarting || exitStatus == SyncthingExitStatus.Upgrading)
             {
-                logger.Info("Syncthing process requested restart, so restarting");
+                logger.Debug("Syncthing process requested restart, so restarting");
                 this.OnProcessRestarted();
                 this.Start();
             }

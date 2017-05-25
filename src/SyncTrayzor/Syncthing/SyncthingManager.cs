@@ -341,7 +341,7 @@ namespace SyncTrayzor.Syncthing
             }
             catch (OperationCanceledException) // If Syncthing dies on its own, etc
             {
-                logger.Info("StartClientAsync aborted");
+                logger.Debug("StartClientAsync aborted");
             }
             catch (ApiException e)
             {

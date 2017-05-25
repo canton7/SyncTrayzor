@@ -108,7 +108,7 @@ namespace SyncTrayzor.Syncthing.EventWatcher
                     {
                         if (evt.IsValid)
                         {
-                            logger.Debug(evt);
+                            logger.Trace(evt);
                             evt.Visit(this);
                         }
                         else

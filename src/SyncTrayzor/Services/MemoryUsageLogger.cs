@@ -31,7 +31,7 @@ namespace SyncTrayzor.Services
             };
             this.timer.Elapsed += (o, e) =>
             {
-                logger.Debug("Working Set: {0}. Private Memory Size: {1}. GC Total Memory: {2}",
+                logger.Info("Working Set: {0}. Private Memory Size: {1}. GC Total Memory: {2}",
                     FormatUtils.BytesToHuman(this.process.WorkingSet64), FormatUtils.BytesToHuman(this.process.PrivateMemorySize64),
                     FormatUtils.BytesToHuman(GC.GetTotalMemory(true)));
             };

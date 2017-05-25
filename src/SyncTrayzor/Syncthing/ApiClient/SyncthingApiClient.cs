@@ -34,7 +34,7 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         public Task ShutdownAsync()
         {
-            logger.Info("Requesting API shutdown");
+            logger.Debug("Requesting API shutdown");
             return this.api.ShutdownAsync();
         }
 
@@ -112,13 +112,13 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         public Task PauseDeviceAsync(string deviceId)
         {
-            logger.Info("Pausing device {0}", deviceId);
+            logger.Debug("Pausing device {0}", deviceId);
             return this.api.PauseDeviceAsync(deviceId);
         }
 
         public Task ResumeDeviceAsync(string deviceId)
         {
-            logger.Info("Resuming device {0}", deviceId);
+            logger.Debug("Resuming device {0}", deviceId);
             return this.api.ResumeDeviceAsync(deviceId);
         }
     }
