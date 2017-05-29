@@ -16,6 +16,7 @@
 AppId={{#AppId}
 AppName={#AppName} ({#Arch})
 AppVersion={#AppVersion}
+VersionInfoVersion={#AppVersion}
 ;AppVerName={#AppName} {#AppVersion}
 AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
