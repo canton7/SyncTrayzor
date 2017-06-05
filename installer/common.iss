@@ -80,7 +80,7 @@ Name: "{group}\{cm:UninstallProgram,{#AppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall; Parameters: {code:SyncTrayzorStartFlags}; Check: ShouldStartSyncTrayzor
 
 [Code]
 var
@@ -239,10 +239,33 @@ begin
   Result := GlobalRestartRequired;
 end;
 
+function ShouldStartSyncTrayzor(): Boolean;
+var
+  flagPassed: Boolean;
+  i: Integer;
+begin
+  // Can't use {param}, as it doesn't match flags with no value
+  flagPassed := False;
+  for i := 0 to ParamCount do begin
+    if ParamStr(i) = '/StartSyncTrayzor' then begin
+      flagPassed := True;
+      break;
+    end;
+  end;
+  Result := (not WizardSilent()) or flagPassed;
+end;
+
+function SyncTrayzorStartFlags(param: String): String;
+begin
+   if WizardSilent() then begin
+      Result := '-minimized'
+   end else begin
+      Result := ''
+   end;
+end;
+
 [UninstallDelete]
 Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: files; Name: "{app}\InstallCount.txt"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{localappdata}\{#AppDataFolder}"
-
-
