@@ -199,6 +199,17 @@ There's a copy in `data\syncthing.exe`, which is the one which is run. There's a
 If you want to manually upgrade (e.g. to a beta version) you should download Syncthing from [the releases page](https://github.com/syncthing/syncthing/releases), and replace the one at `data\syncthing.exe`.
 
 
+Which syncthing.exe gets executed?
+--------------------------------------
+
+SyncTrayzor keeps two copies of syncthing.exe.
+
+The one that is executed is in %APPDATA%\SyncTrayzor. This one is writable by the user, and so can auto-upgrade.
+There's a backup in Program Files. This one is copied to %APPDATA%\SyncTrayzor if the one in %APPDATA%\SyncTrayzor does not exist (SyncTrayzor has never been run before for that user, for example).
+
+If you want to manually upgrade, you should replace the one in %APPDATA%\SyncTrayzor.
+
+
 Building from Source
 --------------------
 
