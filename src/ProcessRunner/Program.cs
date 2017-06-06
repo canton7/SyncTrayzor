@@ -27,14 +27,14 @@ namespace ProcessRunner
                 .Add("nowindow", "Set CreateNoWindow = true", v => noWindow = true);
 
             var pivotIndex = Array.IndexOf(args, "--");
-            if (pivotIndex < 0)
+            if (pivotIndex < 0 && Array.IndexOf(args, "-h") < 0 && Array.IndexOf(args, "--help") < 0)
             {
                 ShowHelp(options);
                 return 1;
             }
 
             var remainder = args.Skip(pivotIndex + 1).ToList();
-            var unknownArgs = options.Parse(args.Take(pivotIndex));
+            var unknownArgs = options.Parse(pivotIndex < 0 ? args : args.Take(pivotIndex));
 
             if (showHelp)
             {
