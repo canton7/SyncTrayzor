@@ -57,28 +57,47 @@ namespace SyncTrayzor.Services
             // Default
             this.IsEnabled = true;
 
-            this.CheckAccess();
-
             // Find a key, if we can, which points to our current location
-            if (this.CanRead)
-                this.keyName = this.FindKeyName();
+            this.keyName = this.FindKeyNameAndCheckAccess();
         }
 
-        private void CheckAccess()
+        private string FindKeyNameAndCheckAccess()
         {
+            string keyName = null;
+
+            try
+            {
+                keyName = this.FindKeyName();
+            }
+            catch (Exception e) when (e is SecurityException || e is UnauthorizedAccessException)
+            {
+                // Can't even get the key name? 
+                logger.Warn("Unable to find registry key name: do not have read access to the registry");
+                return null;
+            }
+
             try
             {
                 using (var key = this.OpenRegistryKey(true))
                 {
                     if (key != null) // It's null if "there was an error"
                     {
-                        // We can open it, but not have access to create subkeys, I think
-                        new RegistryPermission(RegistryPermissionAccess.AllAccess, runPathWithHive).Demand();
+                        // We can open it, but not have access to edit this value
+                        var value = key.GetValue(keyName);
+                        if (value != null)
+                        {
+                            key.SetValue(keyName, value);
+                        }
+                        else
+                        {
+                            key.SetValue(keyName, string.Empty);
+                            key.DeleteValue(keyName);
+                        }
 
                         this._canWrite = true;
                         this._canRead = true;
                         logger.Debug("Have read/write access to the registry");
-                        return;
+                        return keyName;
                     }
                 }
             }
@@ -91,19 +110,20 @@ namespace SyncTrayzor.Services
                 {
                     if (key != null) // It's null if "there was an error"
                     {
-                        // We can open it, but not have access to read subkeys, I think
-                        new RegistryPermission(RegistryPermissionAccess.Read, runPathWithHive).Demand();
+                        // We can open it, but not have access to read this value
+                        var value = key.GetValue(keyName);
 
                         this._canRead = true;
                         logger.Warn("Have read-only access to the registry");
-                        return;
+                        return keyName;
                     }
                 }
             }
             catch (SecurityException) { }
             catch (UnauthorizedAccessException) { }
 
-            logger.Warn("Have no access to the registry");
+            logger.Warn("Could find registry key name, but have no access to the registry");
+            return null;
         }
 
         private string FindKeyName()
