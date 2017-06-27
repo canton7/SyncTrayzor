@@ -31,10 +31,7 @@ namespace SyncTrayzor.Syncthing
                 }
                 catch (SocketException e)
                 {
-                    if (e.SocketErrorCode == SocketError.AddressAlreadyInUse)
-                        lastException = e;
-                    else
-                        throw;
+                    lastException = e;
                 }
             }
 
