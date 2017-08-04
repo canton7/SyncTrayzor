@@ -36,9 +36,6 @@ namespace SyncTrayzor.Services.Config
 
     public class ConfigurationProvider : IConfigurationProvider
     {
-        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
-        private const int apiKeyLength = 40;
-
         // Together these come to half a second, which is probably sensible
         private const int fileSaveRetryCount = 10;
         private const int fileSaveFailureDelayMs = 50;
@@ -178,9 +175,6 @@ namespace SyncTrayzor.Services.Config
             {
                 throw new BadConfigurationException(this.paths.ConfigurationFilePath, e);
             }
-
-            if (configuration.SyncthingApiKey == null)
-                configuration.SyncthingApiKey = this.GenerateApiKey();
 
             this.SaveToFile(configuration);
 
@@ -430,17 +424,6 @@ namespace SyncTrayzor.Services.Config
 
             if (lastException != null)
                 throw new CouldNotSaveConfigurationExeption(this.paths.ConfigurationFilePath, lastException);
-        }
-
-        private string GenerateApiKey()
-        {
-            var random = new Random();
-            var apiKey = new char[apiKeyLength];
-            for (int i = 0; i < apiKeyLength; i++)
-            {
-                apiKey[i] = apiKeyChars[random.Next(apiKeyChars.Length)];
-            }
-            return new string(apiKey);
         }
 
         private void OnConfigurationChanged(Configuration newConfiguration)

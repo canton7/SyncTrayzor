@@ -225,7 +225,6 @@
     <Compile Include="Pages\Settings\KeyValueStringParser.cs" />
     <Compile Include="Pages\Settings\SettingItem.cs" />
     <Compile Include="Pages\Settings\SyncthingAddressValidator.cs" />
-    <Compile Include="Pages\Settings\SyncthingApiKeyValidator.cs" />
     <Compile Include="Pages\Settings\SyncthingCommandLineFlagsValidator.cs" />
     <Compile Include="Pages\Settings\SyncthingEnvironmentalVariablesValidator.cs" />
     <Compile Include="Pages\Tray\FileTransferViewModel.cs" />

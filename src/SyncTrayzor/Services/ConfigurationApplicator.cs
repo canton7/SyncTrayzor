@@ -92,7 +92,6 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.ShowDeviceOrFolderRejectedBalloons = configuration.ShowDeviceOrFolderRejectedBalloons;
 
             this.syncthingManager.PreferredHostAndPort = configuration.SyncthingAddress;
-            this.syncthingManager.ApiKey = configuration.SyncthingApiKey;
             this.syncthingManager.SyncthingCommandLineFlags = configuration.SyncthingCommandLineFlags;
             this.syncthingManager.SyncthingEnvironmentalVariables = configuration.SyncthingEnvironmentalVariables;
             this.syncthingManager.SyncthingCustomHomeDir = String.IsNullOrWhiteSpace(configuration.SyncthingCustomHomePath) ?

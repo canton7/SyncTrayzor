@@ -338,7 +338,7 @@ Please adjust your settings / whitelists to allow '{1}' to execute</value>
   </data>
   <data name="SettingsView_Validation_NotShouldBeEmpty" xml:space="preserve">
     <value>Should not be empty</value>
-    <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress or SettingsView_ApiKey fields when the user makes this field empty</comment>
+    <comment>Validation message (shown in red) below the SettingsView_SyncthingAddress field when the user makes this field empty</comment>
   </data>
   <data name="ThirdPartyComponentsView_ComponentDescriptionLabel" xml:space="preserve">
     <value>Description:</value>
@@ -636,9 +636,6 @@ Full Path: {1}</value>
   </data>
   <data name="SettingsView_DisableHardwareRendering" xml:space="preserve">
     <value>Disable hardware rendering</value>
-  </data>
-  <data name="SettingsView_Validation_ApiKeyInvalidChars" xml:space="preserve">
-    <value>API key should contain only a-z A-Z 0-9 and -</value>
   </data>
   <data name="SettingsView_RestartSyncthing_Message" xml:space="preserve">
     <value>You must restart Syncthing for these settings to take effect.
