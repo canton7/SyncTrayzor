@@ -292,22 +292,17 @@ begin
   UninstallNextButton.ModalResult := mrOK;
 end;
 
-procedure UninstallNextButtonClick(Sender: TObject);
-begin
-  if UninstallProgressForm.InnerNotebook.ActivePage = UninstallPollPage then
-  begin
-    UninstallNextButton.Visible := False;
-  end;
-end;  
-
 procedure InitializeUninstallProgressForm();
 var
   PageText: TNewStaticText;
   PageNameLabel: string;
   PageDescriptionLabel: string;
-  TestCheckBox: TNewCheckBox;
   CancelButtonEnabled: Boolean;
   CancelButtonModalResult: Integer;
+  //CouldntMakeItWorkOption: TNewCheckBox;
+  //DidntDoWhatIWantedOption: TNewCheckBox;
+  Checklist: TNewCheckListBox;
+  CommentsBox: TNewMemo;
 begin
   if not UninstallSilent then
   begin
@@ -327,11 +322,37 @@ begin
     PageText.ShowAccelChar := False;
     PageText.Caption := 'Press Uninstall to proceeed with uninstallation.';
 
-    TestCheckBox := TNewCheckBox.Create(UninstallProgressForm);
-    TestCheckBox.Parent := UninstallPollPage;
-    TestCheckBox.Top = PageText.Top + PageText.Height + 10;
-    TestCheckBox.Left = PageText.Left;
-    TestCheckBox.Caption := 'Test Fooooo';
+    // https://stackoverflow.com/a/44254371/1086121
+
+    {
+    CouldntMakeItWorkOption := TNewCheckBox.Create(UninstallProgressForm);
+    CouldntMakeItWorkOption.Parent := UninstallPollPage;
+    CouldntMakeItWorkOption.Top := PageText.Top + PageText.Height + ScaleX(10);
+    CouldntMakeItWorkOption.Left := PageText.Left;
+    CouldntMakeItWorkOption.Caption := 'I couldn''t get Syncthing to work';
+
+    DidntDoWhatIWantedOption := TNewCheckBox.Create(UninstallProgressForm);
+    DidntDoWhatIWantedOption.Parent := UninstallPollPage;
+    DidntDoWhatIWantedOption.Top := CouldntMakeItWorkOption.Top + CouldntMakeItWorkOption.Height + ScaleX(10);
+    DidntDoWhatIWantedOption.Left := PageText.Left;
+    DidntDoWhatIWantedOption.Caption := 'Syncthing doesn''t do what I wanted';
+    }
+
+    Checklist := TNewCheckListBox.Create(UninstallProgressForm);
+    Checklist.Parent := UninstallPollPage;
+    Checklist.SetBounds(PageText.Left, PageText.Top + PageText.Height + ScaleY(10), PageText.Width, ScaleY(50));
+    Checklist.BorderStyle := bsNone;
+    Checklist.Color := clBtnFace;
+    Checklist.WantTabs := True;
+    Checklist.MinItemHeight := ScaleY(20);
+
+    Checklist.AddCheckBox('Test Caption', '', 0, False, True, False, False, nil);
+    Checklist.AddCheckBox('Another Test Caption', '', 0, False, True, False, False, nil);
+
+    CommentsBox := TNewMemo.Create(UninstallProgressForm);
+    CommentsBox.Parent := UninstallPollPage;
+    CommentsBox.SetBounds(PageText.Left, Checklist.Top + Checklist.Height + ScaleY(10), PageText.Width, ScaleY(50));
+    CommentsBox.ScrollBars := ssVertical;
 
     UninstallProgressForm.InnerNotebook.ActivePage := UninstallPollPage;
 
@@ -340,13 +361,10 @@ begin
 
     UninstallNextButton := TNewButton.Create(UninstallProgressForm);
     UninstallNextButton.Parent := UninstallProgressForm;
-    UninstallNextButton.Left :=
-      UninstallProgressForm.CancelButton.Left - UninstallProgressForm.CancelButton.Width -
-      ScaleX(10);
+    UninstallNextButton.Left := UninstallProgressForm.CancelButton.Left - UninstallProgressForm.CancelButton.Width - ScaleX(10);
     UninstallNextButton.Top := UninstallProgressForm.CancelButton.Top;
     UninstallNextButton.Width := UninstallProgressForm.CancelButton.Width;
     UninstallNextButton.Height := UninstallProgressForm.CancelButton.Height;
-    UninstallNextButton.OnClick := @UninstallNextButtonClick;
 
     UninstallProgressForm.CancelButton.TabOrder := UninstallNextButton.TabOrder + 1;
 
@@ -368,13 +386,6 @@ begin
 
     UninstallProgressForm.InnerNotebook.ActivePage := UninstallProgressForm.InstallingPage;
   end;
-end;
-
-function InitializeUninstall(): Boolean;
-begin
-  //UninstallPollPage := CreateInputOptionPage(
-
-  Result := true;
 end;
 
 [UninstallDelete]
