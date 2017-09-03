@@ -15,7 +15,8 @@
 #define AppDataFolder "SyncTrayzor"
 #define RunRegKey "Software\Microsoft\Windows\CurrentVersion\Run"
 #define DotNetInstallerExe "dotNet451Setup.exe"
-#define DonateUrl = "https://synctrayzor.antonymale.co.uk/donate"
+#define DonateUrl "https://synctrayzor.antonymale.co.uk/donate"
+#define SurveyUrl "https://requestb.in/yueovtyu"
 
 [Setup]
 AppId={{#AppId}
@@ -291,6 +292,47 @@ begin
   UninstallNextButton.ModalResult := mrOK;
 end;
 
+function SerializeBool(value: Boolean): String;
+begin
+  if value then
+  begin
+    Result := 'true';
+  end
+  else
+  begin
+    Result := 'false';
+  end
+end;
+
+function EscapeJsonString(value: String): String;
+var
+  c: Char;
+  i: Integer;
+begin
+  // http://www.jrsoftware.org/ishelp/index.php?topic=isxfunc_charlength
+  i := 1;
+  while i <= Length(value) do
+  begin
+    c := value[i];
+    if c = #10 then begin
+      Result := Result + '\n';
+    end else if c = #13 then begin
+      Result := Result + '\r';
+    end else if c = #9 then begin
+      Result := Result + '\t';
+    end else if Ord(c) < 32 then begin
+      Result := Result + Format('\x%.4x', [Ord(c)]);
+    end else if c = '"' then begin
+      Result := Result + '\"';
+    end else if c = '\' then begin
+      Result := Result + '\\'
+    end else begin
+      Result := Result + c;
+    end;
+    i := i + CharLength(value, i);
+  end;
+end;
+
 procedure InitializeUninstallProgressForm();
 var
   PageText: TNewStaticText;
@@ -301,6 +343,7 @@ var
   Checklist: TNewCheckListBox;
   CommentsText: TNewStaticText;
   CommentsBox: TNewMemo;
+  WinHttpReq: Variant;
 begin
   if not UninstallSilent then
   begin
@@ -369,6 +412,19 @@ begin
     UninstallProgressForm.CancelButton.ModalResult := mrCancel;
 
     if UninstallProgressForm.ShowModal = mrCancel then Abort;
+
+    WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+    WinHttpReq.Open('POST', '{#SurveyUrl}', false);
+    WinHttpReq.Send('{' +
+      ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
+      ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
+      ', "preferResilio": '+ SerializeBool(Checklist.Checked[2]) +
+      ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
+      ', "other": '+ SerializeBool(Checklist.Checked[4]) +
+      ', "comments": "' + EscapeJsonString(CommentsBox.Text) + '"' +
+      ' }');
+
+    Abort;
 
     // Restore the standard page payout
     UninstallProgressForm.CancelButton.Enabled := CancelButtonEnabled;
