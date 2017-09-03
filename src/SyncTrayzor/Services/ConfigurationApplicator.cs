@@ -157,9 +157,13 @@ namespace SyncTrayzor.Services
         {
             var folderIds = this.syncthingManager.Folders.FetchAll().Select(x => x.FolderId).ToList();
 
+            // If all folders are not watched, new folders are not watched too. Likewise notifications.
+            bool areAnyWatched = configuration.Folders.Any(x => x.IsWatched);
+            bool areAnyNotifications = configuration.Folders.Any(x => x.NotificationsEnabled);
+
             foreach (var newKey in folderIds.Except(configuration.Folders.Select(x => x.ID)))
             {
-                configuration.Folders.Add(new FolderConfiguration(newKey, true, true));
+                configuration.Folders.Add(new FolderConfiguration(newKey, areAnyWatched, areAnyNotifications));
             }
 
             configuration.Folders = configuration.Folders.Where(x => folderIds.Contains(x.ID)).ToList();
