@@ -211,4 +211,10 @@ Notes for System Administrators
 -------------------------------
 
 The installer is built using Inno Setup, and has various command-line options, [documented here](http://www.jrsoftware.org/ishelp/index.php?topic=setupcmdline).
-If you pass the `/silent` command-line flag when SyncTrayzor won't be launched when the installer completes: add `/StartSyncTrayzor` to override this (which also caused SyncTrayzor to be launched minimized).
+If you pass the `/silent` command-line flag when SyncTrayzor won't be launched when the installer completes: add `/StartSyncTrayzor` to override this (which also causes SyncTrayzor to be launched minimized).
+
+There are various parameters inside the file `SyncTrayzor.exe.config` which can be customised by system administrators, including the default SyncTrayzor configuration (used to create the user's SyncTrayzor config file when SyncTrayzor is first launched).
+To override these, pass the flag `/SyncTrayzorExeConfig="Path\To\Customized\SyncTrayzor.exe.config"` to the installer -- the specified `SyncTrayzor.exe.config` will overwrite the default.
+
+Note that the contents / structure of `SyncTrayzor.exe.config` may change between releases.
+Using the wrong version may cause a crash, or incorrect behaviour.

@@ -188,6 +188,7 @@ var
   FindRec: TFindRec;
   FolderPath: String;
   FilePath: String;
+  ExeConfig: String;
 begin
   if CurStep = ssInstall then
   begin
@@ -219,6 +220,21 @@ begin
         FindClose(FindRec);
       end;
     end;
+  end
+  else if CurStep = ssPostInstall then
+  begin
+    ExeConfig := ExpandConstant('{param:SyncTrayzorExeConfig}');
+    if ExeConfig <> '' then
+    begin
+      if FileExists(ExeConfig) then
+      begin
+        FileCopy(ExeConfig, ExpandConstant('{app}\SyncTrayzor.exe.config'), false);
+      end
+      else
+      begin
+        MsgBox('Could not find SyncTrayzorExeConfig file: ' + ExeConfig + '. Using default.', mbError, MB_OK);
+      end
+    end
   end
 end;
 
