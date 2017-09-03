@@ -31,7 +31,6 @@ Features include:
     - Syncthing on its own has to poll your folders, in order to see if any files have changed.
     - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
     - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
-    - Folder watching respects the ignores configured in Syncthing.
  - Has a tool to help you resolve file conflicts
  - Can pause devices on metered networks, to stop Syncthing transferring data on e.g. a mobile connection or wifi hotspot.
  - Contains translations for many languages
