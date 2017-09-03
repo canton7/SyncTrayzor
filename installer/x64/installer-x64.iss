@@ -16,7 +16,7 @@
 #define RunRegKey "Software\Microsoft\Windows\CurrentVersion\Run"
 #define DotNetInstallerExe "dotNet451Setup.exe"
 #define DonateUrl "https://synctrayzor.antonymale.co.uk/donate"
-#define SurveyUrl "https://requestb.in/yueovtyu"
+#define SurveyUrl "http://localhost:8080/survey.php"
 
 [Setup]
 AppId={{#AppId}
@@ -416,12 +416,14 @@ begin
     WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
     WinHttpReq.Open('POST', '{#SurveyUrl}', false);
     WinHttpReq.Send('{' +
-      ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
-      ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
-      ', "preferResilio": '+ SerializeBool(Checklist.Checked[2]) +
-      ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
-      ', "other": '+ SerializeBool(Checklist.Checked[4]) +
-      ', "comments": "' + EscapeJsonString(CommentsBox.Text) + '"' +
+      ' "version": "{#AppVersion}", "comment": "' + EscapeJsonString(CommentsBox.Text) + '"' +
+      ', "checklist": {' +
+        ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
+        ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
+        ', "preferResilio": '+ SerializeBool(Checklist.Checked[2]) +
+        ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
+        ', "other": '+ SerializeBool(Checklist.Checked[4]) +
+      ' }' +
       ' }');
 
     Abort;
