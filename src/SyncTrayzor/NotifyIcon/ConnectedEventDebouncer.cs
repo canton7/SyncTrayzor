@@ -16,7 +16,7 @@ namespace SyncTrayzor.NotifyIcon
 
     public class ConnectedEventDebouncer : IConnectedEventDebouncer
     {
-        private static readonly TimeSpan debounceTime = TimeSpan.FromSeconds(1);
+        private static readonly TimeSpan debounceTime = TimeSpan.FromSeconds(10);
 
         private readonly object syncRoot = new object();
 
