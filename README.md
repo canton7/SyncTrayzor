@@ -31,7 +31,6 @@ Features include:
     - Syncthing on its own has to poll your folders, in order to see if any files have changed.
     - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
     - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
-    - Folder watching respects the ignores configured in Syncthing.
  - Has a tool to help you resolve file conflicts
  - Can pause devices on metered networks, to stop Syncthing transferring data on e.g. a mobile connection or wifi hotspot.
  - Contains translations for many languages
@@ -203,5 +202,19 @@ Building from Source
 --------------------
 
 You'll need [Visual Studio 2017](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx).
+Make sure you install "Blend for Visual Studio SDK for .NET".
 Clone/download the repository, open `src\SyncTrayzor.sln`, and compile.
 You'll also need to [download syncthing.exe](https://github.com/syncthing/syncthing/releases) and place it in the `bin\x86\Debug`, `bin\x64\Debug`, `bin\x86\Release`, or `bin\x64\Release` folder as appropriate.
+
+
+Notes for System Administrators
+-------------------------------
+
+The installer is built using Inno Setup, and has various command-line options, [documented here](http://www.jrsoftware.org/ishelp/index.php?topic=setupcmdline).
+If you pass the `/silent` command-line flag when SyncTrayzor won't be launched when the installer completes: add `/StartSyncTrayzor` to override this (which also causes SyncTrayzor to be launched minimized).
+
+There are various parameters inside the file `SyncTrayzor.exe.config` which can be customised by system administrators, including the default SyncTrayzor configuration (used to create the user's SyncTrayzor config file when SyncTrayzor is first launched).
+To override these, pass the flag `/SyncTrayzorExeConfig="Path\To\Customized\SyncTrayzor.exe.config"` to the installer -- the specified `SyncTrayzor.exe.config` will overwrite the default.
+
+Note that the contents / structure of `SyncTrayzor.exe.config` may change between releases.
+Using the wrong version may cause a crash, or incorrect behaviour.

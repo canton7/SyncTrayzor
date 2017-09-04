@@ -937,6 +937,42 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log Level:.
+        /// </summary>
+        public static string SettingsView_Logging_LogLevel {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_LogLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        public static string SettingsView_Logging_LogLevel_Debug {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_LogLevel_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info (Default).
+        /// </summary>
+        public static string SettingsView_Logging_LogLevel_Info {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_LogLevel_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trace.
+        /// </summary>
+        public static string SettingsView_Logging_LogLevel_Trace {
+            get {
+                return ResourceManager.GetString("SettingsView_Logging_LogLevel_Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Syncthing Log File.
         /// </summary>
         public static string SettingsView_Logging_ShowSyncthingLog {
@@ -1360,15 +1396,6 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_UseComputerCulture {
             get {
                 return ResourceManager.GetString("SettingsView_UseComputerCulture", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to API key should contain only a-z A-Z 0-9 and -.
-        /// </summary>
-        public static string SettingsView_Validation_ApiKeyInvalidChars {
-            get {
-                return ResourceManager.GetString("SettingsView_Validation_ApiKeyInvalidChars", resourceCulture);
             }
         }
         

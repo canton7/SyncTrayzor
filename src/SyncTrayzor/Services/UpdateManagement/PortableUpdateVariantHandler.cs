@@ -108,7 +108,7 @@ namespace SyncTrayzor.Services.UpdateManagement
             var destinationDir = Path.Combine(Path.GetDirectoryName(zipPath), Path.GetFileNameWithoutExtension(zipPath));
             if (this.filesystem.DirectoryExists(destinationDir))
             {
-                logger.Info($"Extracted directory {destinationDir} already exists. Deleting...");
+                logger.Debug($"Extracted directory {destinationDir} already exists. Deleting...");
                 this.filesystem.DeleteDirectory(destinationDir, true);
             }
 

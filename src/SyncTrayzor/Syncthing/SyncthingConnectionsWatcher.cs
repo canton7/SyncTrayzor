@@ -45,7 +45,6 @@ namespace SyncTrayzor.Syncthing
         protected override void OnStop()
         {
             this.apiClient = null;
-            var prev = this.prevConnections.Total;
 
             // Send an update with zero transfer rate, since that's what we're now doing
             this.Update(this.prevConnections);

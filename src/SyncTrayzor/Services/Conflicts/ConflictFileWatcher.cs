@@ -162,7 +162,7 @@ namespace SyncTrayzor.Services.Conflicts
 
                 this.conflictedFiles = conflictFiles.ToList();
 
-                logger.Info($"Refreshing conflicted files. Found {this.conflictedFiles.Count} from {this.conflictFileOptions.Count} options");
+                logger.Debug($"Refreshing conflicted files. Found {this.conflictedFiles.Count} from {this.conflictFileOptions.Count} options");
             }
 
             this.ConflictedFilesChanged?.Invoke(this, EventArgs.Empty);

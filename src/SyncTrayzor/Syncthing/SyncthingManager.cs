@@ -31,7 +31,7 @@ namespace SyncTrayzor.Syncthing
         event EventHandler<FolderRejectedEventArgs> FolderRejected;
 
         string ExecutablePath { get; set; }
-        string ApiKey { get; set; }
+        string ApiKey { get; }
         string PreferredHostAndPort { get; set; }
         Uri Address { get; set; }
         List<string> SyncthingCommandLineFlags { get; set; }
@@ -62,6 +62,9 @@ namespace SyncTrayzor.Syncthing
 
     public class SyncthingManager : ISyncthingManager
     {
+        private const string apiKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
+        private const int apiKeyLength = 40;
+
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly SynchronizedEventDispatcher eventDispatcher;
@@ -121,7 +124,7 @@ namespace SyncTrayzor.Syncthing
         public event EventHandler ProcessExitedWithError;
 
         public string ExecutablePath { get; set; }
-        public string ApiKey { get; set; }
+        public string ApiKey { get; }
         public string PreferredHostAndPort { get; set; }
         public Uri Address { get; set; }
         public string SyncthingCustomHomeDir { get; set; }
@@ -158,6 +161,8 @@ namespace SyncTrayzor.Syncthing
         {
             this.StartedTime = DateTime.MinValue;
             this.LastConnectivityEventTime = DateTime.MinValue;
+
+            this.ApiKey = this.GenerateApiKey();
 
             this.eventDispatcher = new SynchronizedEventDispatcher(this);
             this.processRunner = processRunner;
@@ -319,6 +324,17 @@ namespace SyncTrayzor.Syncthing
             }
         }
 
+        private string GenerateApiKey()
+        {
+            var random = new Random();
+            var apiKey = new char[apiKeyLength];
+            for (int i = 0; i < apiKeyLength; i++)
+            {
+                apiKey[i] = apiKeyChars[random.Next(apiKeyChars.Length)];
+            }
+            return new string(apiKey);
+        }
+
         private async Task CreateApiClientAsync(CancellationToken cancellationToken)
         {
             logger.Debug("Starting API clients");
@@ -341,7 +357,7 @@ namespace SyncTrayzor.Syncthing
             }
             catch (OperationCanceledException) // If Syncthing dies on its own, etc
             {
-                logger.Info("StartClientAsync aborted");
+                logger.Debug("StartClientAsync aborted");
             }
             catch (ApiException e)
             {

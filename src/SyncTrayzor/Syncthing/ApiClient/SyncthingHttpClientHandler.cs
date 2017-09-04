@@ -19,9 +19,17 @@ namespace SyncTrayzor.Syncthing.ApiClient
         {
             var response = await base.SendAsync(request, cancellationToken);
             if (response.IsSuccessStatusCode)
-                logger.Trace(() => response.Content.ReadAsStringAsync().Result.Trim());
+            {
+                if (logger.IsTraceEnabled)
+                {
+                    var content = (await response.Content.ReadAsStringAsync()).Trim();
+                    logger.Trace(content);
+                }
+            }
             else
+            {
                 logger.Warn("Non-successful status code. {0} {1}", response, (await response.Content.ReadAsStringAsync()).Trim());
+            }
 
             return response;
         }

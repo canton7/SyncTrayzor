@@ -33,7 +33,7 @@ namespace SyncTrayzor.Services.Ipc
                     // Only care if the process came from our session: allow multiple instances under different users
                     if (String.Equals(process.MainModule.FileName, ourLocation, StringComparison.OrdinalIgnoreCase) && process.SessionId == ourProcess.SessionId && process.Id != ourProcess.Id)
                     {
-                        logger.Debug("Found process with ID {0} and location {1}", process.Id, process.MainModule.FileName);
+                        logger.Info("Found process with ID {0} and location {1}", process.Id, process.MainModule.FileName);
                         return new IpcCommsClient(process.Id);
                     }
                     else if (process.Id != ourProcess.Id)
@@ -43,7 +43,7 @@ namespace SyncTrayzor.Services.Ipc
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e, $"Error accessing information for process with PID {process.Id}");
+                    logger.Warn(e, $"Error accessing information for process with PID {process.Id}");
                 }
             }
 

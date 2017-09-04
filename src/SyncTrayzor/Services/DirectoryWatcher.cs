@@ -142,7 +142,7 @@ namespace SyncTrayzor.Services
 
         private void OnDirectoryChanged(string subPath)
         {
-            logger.Info("Path Changed: {0}", Path.Combine(this.Directory, subPath));
+            logger.Debug("Path Changed: {0}", Path.Combine(this.Directory, subPath));
             this.DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(this.Directory, subPath));
         }
 

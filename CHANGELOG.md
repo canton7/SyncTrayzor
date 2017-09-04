@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v1.1.17
+-------
+
+ - Don't store Syncthing's API key in config, and don't log it
+ - Fix filesystem notifications when the file contained non-ASCII characters (#400)
+ - Don't show device connected/disconnected notifications if a device is reconnecting a lot
+ - Don't watch / raise notifications about new folders if no existing folders are watched / have notifications (#393)
+ - Don't write to the disk as much by default (#370)
+ - Fix crash on the settings screen
+ - Be more reslient to weird registry permissions, fixing crash (#378)
+ - Fix crash when calculating data transfer stats (#380)
+ - Be more reslient when trying to find a free port for Syncthing to use (#381)
+ - Add installer command-line flags (for system administrators) (#371, #402)
+ - Add an exit poll to the uninstaller
+
 v1.1.16
 -------
 

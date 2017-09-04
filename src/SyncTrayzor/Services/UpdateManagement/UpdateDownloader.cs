@@ -157,7 +157,7 @@ namespace SyncTrayzor.Services.UpdateManagement
                             FormatUtils.BytesToHuman(p.BytesRead), FormatUtils.BytesToHuman(responseLength), (p.BytesRead * 100) / responseLength);
                         if (downloadProgressString != previousDownloadProgressString)
                         {
-                            logger.Info(downloadProgressString);
+                            logger.Debug(downloadProgressString);
                             previousDownloadProgressString = downloadProgressString;
                         }
                     });

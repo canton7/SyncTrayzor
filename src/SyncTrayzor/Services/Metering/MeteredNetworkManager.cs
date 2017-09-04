@@ -124,12 +124,12 @@ namespace SyncTrayzor.Services.Metering
                 if (deviceState == DeviceState.Unpaused)
                 {
                     this.deviceStates[e.Device] = DeviceState.PausedRenegade;
-                    logger.Info($"Device {e.Device.DeviceId} has been paused, and has gone renegade");
+                    logger.Debug($"Device {e.Device.DeviceId} has been paused, and has gone renegade");
                 }
                 else if (deviceState == DeviceState.UnpausedRenegade)
                 {
                     this.deviceStates[e.Device] = DeviceState.Paused;
-                    logger.Info($"Device {e.Device.DeviceId} has been paused, and has stopped being renegade");
+                    logger.Debug($"Device {e.Device.DeviceId} has been paused, and has stopped being renegade");
                     changed = true;
                 }
             }
@@ -155,13 +155,13 @@ namespace SyncTrayzor.Services.Metering
                 if (deviceState == DeviceState.Paused)
                 {
                     this.deviceStates[e.Device] = DeviceState.UnpausedRenegade;
-                    logger.Info($"Device {e.Device.DeviceId} has been resumed, and has gone renegade");
+                    logger.Debug($"Device {e.Device.DeviceId} has been resumed, and has gone renegade");
                     changed = true;
                 }
                 else if (deviceState == DeviceState.PausedRenegade)
                 {
                     this.deviceStates[e.Device] = DeviceState.Unpaused;
-                    logger.Info($"Device {e.Device.DeviceId} has been resumed, and has stopped being renegade");
+                    logger.Debug($"Device {e.Device.DeviceId} has been resumed, and has stopped being renegade");
                 }
             }
 
@@ -190,7 +190,7 @@ namespace SyncTrayzor.Services.Metering
             if (!this.IsEnabled)
                 return;
 
-            logger.Info("Network costs changed. Updating devices");
+            logger.Debug("Network costs changed. Updating devices");
             this.ResetRenegades();
             this.Update();
         }
@@ -200,7 +200,7 @@ namespace SyncTrayzor.Services.Metering
             if (!this.IsEnabled)
                 return;
 
-            logger.Info("Networks changed. Updating devices");
+            logger.Debug("Networks changed. Updating devices");
             this.ResetRenegades();
             this.Update();
         }
@@ -295,7 +295,7 @@ namespace SyncTrayzor.Services.Metering
 
             if (deviceState == DeviceState.PausedRenegade || deviceState == DeviceState.UnpausedRenegade)
             {
-                logger.Info($"Skipping update of device {device.DeviceId} as it has gone renegade");
+                logger.Debug($"Skipping update of device {device.DeviceId} as it has gone renegade");
                 return false;
             }
 
@@ -307,7 +307,7 @@ namespace SyncTrayzor.Services.Metering
 
             if (shouldBePaused && !device.Paused)
             {
-                logger.Info($"Pausing device {device.DeviceId}");
+                logger.Debug($"Pausing device {device.DeviceId}");
                 try
                 {
                     await this.syncthingManager.Devices.PauseDeviceAsync(device);
@@ -325,7 +325,7 @@ namespace SyncTrayzor.Services.Metering
             }
             else if (!shouldBePaused && device.Paused)
             {
-                logger.Info($"Resuming device {device.DeviceId}");
+                logger.Debug($"Resuming device {device.DeviceId}");
                 try
                 {
                     await this.syncthingManager.Devices.ResumeDeviceAsync(device);
