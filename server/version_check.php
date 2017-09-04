@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.16' => [
+   '1.1.17' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,11 +81,12 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Fix some crashes on startup\n- Fix bug where 'show logs' link on the crash screen would cause another crash\n- Reduce how often SyncTrayzor checks for updates",
+      'release_notes' => "- Don't store Syncthing's API key in config, and don't log it\n- Fix filesystem notifications when the file contained non-ASCII characters\n- Don't show device connected/disconnected notifications if a device is reconnecting a lot\n- Don't watch / raise notifications about new folders if no existing folders are watched / have notifications\n- Don't write to the disk as much by default\n- Fix crash on the settings screen\n- Be more reslient to weird registry permissions, fixing crash\n- Fix crash when calculating data transfer stats\n- Be more reslient when trying to find a free port for Syncthing to use",
    ]
 ];
 
 $upgrades = [
+   '1.1.16' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.15' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.14' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.13' => ['to' => 'latest', 'formatter' => '5'],
