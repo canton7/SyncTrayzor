@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.17' => [
+   '1.1.18' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -86,6 +86,7 @@ $versions = [
 ];
 
 $upgrades = [
+   '1.1.17' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['release_notes' => "- Fix uninstaller crash if the survey is submitted while not connected to the internet"]],
    '1.1.16' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.15' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.14' => ['to' => 'latest', 'formatter' => '5'],
