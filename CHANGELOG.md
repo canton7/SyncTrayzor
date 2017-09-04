@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.18
+-------
+
+ - Fix uninstaller crash if someone filled out the survey while not connected to the internet
+
 v1.1.17
 -------
 
