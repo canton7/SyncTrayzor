@@ -18,20 +18,24 @@ try
 	{
 		$db->exec("CREATE TABLE IF NOT EXISTS responses (
 			id INTEGER PRIMARY KEY,
-			version TEXT,
-			ip TEXT,
+			date TEXT NOT NULL,
+			version TEXT NOT NULL,
+			ip TEXT NOT NULL,
 			comment TEXT
 		);");
 		$db->exec("CREATE TABLE IF NOT EXISTS checklist (
 			id INTEGER PRIMARY KEY,
-			response_id INTEGER REFERENCES responses(id),
-			key TEXT
+			response_id INTEGER NOT NULL REFERENCES responses(id),
+			key TEXT NOT NULL
 		);");
 	}
 
 	$data = json_decode(file_get_contents('php://input'), true);
-	$stmt = $db->prepare("INSERT INTO responses(ip, version, comment) VALUES (:ip, :version, :comment);");
-	$stmt->execute(array('ip' => $_SERVER['REMOTE_ADDR'], 'version' => $data['version'], 'comment' => $data['comment']));
+	$stmt = $db->prepare("INSERT INTO responses(date, ip, version, comment) VALUES (CURRENT_TIMESTAMP, :ip, :version, :comment);");
+	$stmt->execute(array(
+		'ip' => $_SERVER['REMOTE_ADDR'],
+		'version' => $data['version'],
+		'comment' => $data['comment']));
 	$responseId = $db->lastInsertId();
 
 	$stmt = $db->prepare("INSERT INTO CHECKLIST (response_id, key) VALUES (:response_id, :key);");
