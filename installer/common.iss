@@ -380,7 +380,7 @@ begin
 
     Checklist.AddCheckBox('I couldn''t get Syncthing to work', '', 0, False, True, False, False, nil);
     Checklist.AddCheckBox('Syncthing doesn''t do what I need', '', 0, False, True, False, False, nil);
-    Checklist.AddCheckBox('I prefer Resilio Sync', '', 0, False, True, False, False, nil);
+    Checklist.AddCheckBox('I prefer another sync tool (please say which below)', '', 0, False, True, False, False, nil);
     Checklist.AddCheckBox('I don''t like SyncTrayzor - I''m going to use another wrapper', '', 0, False, True, False, False, nil);
     Checklist.AddCheckBox('Other (please expand below)', '', 0, False, True, False, False, nil);
 
@@ -430,7 +430,7 @@ begin
         ', "checklist": {' +
           ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
           ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
-          ', "preferResilio": '+ SerializeBool(Checklist.Checked[2]) +
+          ', "preferAnotherSyncTool": '+ SerializeBool(Checklist.Checked[2]) +
           ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
           ', "other": '+ SerializeBool(Checklist.Checked[4]) +
         ' }' +
