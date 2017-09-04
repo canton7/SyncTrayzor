@@ -288,29 +288,11 @@ begin
    end;
 end;
 
-// See https://stackoverflow.com/a/42550055/1086121
-
-procedure UpdateUninstallWizard;
-begin
-  if UninstallProgressForm.InnerNotebook.ActivePage = UninstallPollPage then
-  begin
-    UninstallProgressForm.PageNameLabel.Caption := 'Please Tell Us Why You''re Leaving';
-    UninstallProgressForm.PageDescriptionLabel.Caption := '';
-  end;
-
-  UninstallNextButton.Caption := 'Uninstall';
-  // Make the "Uninstall" button break the ShowModal loop
-  UninstallNextButton.ModalResult := mrOK;
-end;
-
 function SerializeBool(value: Boolean): String;
 begin
-  if value then
-  begin
+  if value then begin
     Result := 'true';
-  end
-  else
-  begin
+  end else begin
     Result := 'false';
   end
 end;
@@ -344,6 +326,21 @@ begin
   end;
 end;
 
+// See https://stackoverflow.com/a/42550055/1086121
+
+procedure UpdateUninstallWizard;
+begin
+  if UninstallProgressForm.InnerNotebook.ActivePage = UninstallPollPage then
+  begin
+    UninstallProgressForm.PageNameLabel.Caption := 'Please Tell Us Why You''re Leaving';
+    UninstallProgressForm.PageDescriptionLabel.Caption := '';
+  end;
+
+  UninstallNextButton.Caption := 'Uninstall';
+  // Make the "Uninstall" button break the ShowModal loop
+  UninstallNextButton.ModalResult := mrOK;
+end;
+
 procedure InitializeUninstallProgressForm();
 var
   PageText: TNewStaticText;
@@ -370,7 +367,7 @@ begin
     PageText.WordWrap := True;
     PageText.SetBounds(UninstallProgressForm.StatusLabel.Left, UninstallProgressForm.StatusLabel.Top, UninstallProgressForm.StatusLabel.Width, UninstallProgressForm.StatusLabel.Height);
     PageText.ShowAccelChar := False;
-    PageText.Caption := 'Please tell us why you don''t like Syncthing / SyncTrayzor so we can improve things.' + #13#10 +
+    PageText.Caption := 'Sorry you''re leaving! Please tell us what you didn''t like so we can improve it.' + #13#10 +
     'No personal data will be sent. You can skip this step if you want.';
 
     Checklist := TNewCheckListBox.Create(UninstallProgressForm);
@@ -384,7 +381,7 @@ begin
     Checklist.AddCheckBox('I couldn''t get Syncthing to work', '', 0, False, True, False, False, nil);
     Checklist.AddCheckBox('Syncthing doesn''t do what I need', '', 0, False, True, False, False, nil);
     Checklist.AddCheckBox('I prefer Resilio Sync', '', 0, False, True, False, False, nil);
-    Checklist.AddCheckBox('I don''t like SyncTrayzor - going to use another wrapper', '', 0, False, True, False, False, nil);
+    Checklist.AddCheckBox('I don''t like SyncTrayzor - I''m going to use another wrapper', '', 0, False, True, False, False, nil);
     Checklist.AddCheckBox('Other (please expand below)', '', 0, False, True, False, False, nil);
 
     CommentsText := TNewStaticText.Create(UninstallProgressForm);
@@ -394,7 +391,7 @@ begin
     CommentsText.SetBounds(PageText.Left, Checklist.Top + Checklist.Height + ScaleY(10), PageText.Width, ScaleY(15));
     CommentsText.AutoSize := False;
     CommentsText.ShowAccelChar := False;
-    CommentsText.Caption := 'Anything else?';
+    CommentsText.Caption := 'More Details / Complaints:';
 
     CommentsBox := TNewMemo.Create(UninstallProgressForm);
     CommentsBox.Parent := UninstallPollPage;
@@ -428,7 +425,8 @@ begin
       WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
       WinHttpReq.Open('POST', '{#SurveyUrl}', false);
       WinHttpReq.Send('{' +
-        ' "version": "{#AppVersion}", "comment": "' + EscapeJsonString(CommentsBox.Text) + '"' +
+        ' "version": "{#AppVersion}"' +
+        ', "comment": "' + EscapeJsonString(CommentsBox.Text) + '"' +
         ', "checklist": {' +
           ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
           ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
