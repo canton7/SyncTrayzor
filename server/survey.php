@@ -4,6 +4,14 @@
  * Survey endpoint for SyncTrayzor
  */
 
+set_error_handler('error_handler');
+date_default_timezone_set('UCT');
+
+function error_handler($severity, $message, $filename, $lineno)
+{
+   throw new ErrorException($message, 0, $severity, $filename, $lineno);
+}
+
 define('DATABASE', 'survey.sqlite');
 
 try 
