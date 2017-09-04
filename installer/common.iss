@@ -424,18 +424,20 @@ begin
 
     if UninstallProgressForm.ShowModal = mrCancel then Abort;
 
-    WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-    WinHttpReq.Open('POST', '{#SurveyUrl}', false);
-    WinHttpReq.Send('{' +
-      ' "version": "{#AppVersion}", "comment": "' + EscapeJsonString(CommentsBox.Text) + '"' +
-      ', "checklist": {' +
-        ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
-        ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
-        ', "preferResilio": '+ SerializeBool(Checklist.Checked[2]) +
-        ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
-        ', "other": '+ SerializeBool(Checklist.Checked[4]) +
-      ' }' +
-      ' }');
+    if Checklist.Checked[0] or Checklist.Checked[1] or Checklist.Checked[2] or Checklist.Checked[3] or Checklist.Checked[4] or (CommentsBox.Text <> '') then begin
+      WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+      WinHttpReq.Open('POST', '{#SurveyUrl}', false);
+      WinHttpReq.Send('{' +
+        ' "version": "{#AppVersion}", "comment": "' + EscapeJsonString(CommentsBox.Text) + '"' +
+        ', "checklist": {' +
+          ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
+          ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
+          ', "preferResilio": '+ SerializeBool(Checklist.Checked[2]) +
+          ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
+          ', "other": '+ SerializeBool(Checklist.Checked[4]) +
+        ' }' +
+        ' }');
+    end;
 
     // Restore the standard page payout
     UninstallProgressForm.CancelButton.Enabled := CancelButtonEnabled;
