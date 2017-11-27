@@ -20,6 +20,19 @@ namespace SyncTrayzor.Pages.Settings
         public string FolderId { get; set; }
         public string FolderLabel { get; set; }
         public bool IsWatched { get; set; }
+        public bool IsWatchAllowed { get; set; }
+        public bool VisibleIsWatched
+        {
+            get => this.IsWatched && this.IsWatchAllowed;
+            set
+            {
+                if (this.IsWatchAllowed)
+                    this.IsWatched = value;
+                else
+                    throw new InvalidOperationException();
+            }
+        }
+
         public bool IsNotified { get; set; }
     }
 
@@ -91,6 +104,7 @@ namespace SyncTrayzor.Pages.Settings
         public bool? AreAllFoldersWatched { get; set; }
         public bool? AreAllFoldersNotified { get; set; }
         public BindableCollection<FolderSettings> FolderSettings { get; } = new BindableCollection<FolderSettings>();
+        public bool IsAnyFolderWatchEnabledInSyncthing { get; private set; }
 
         public BindableCollection<DebugFacilitySetting> SyncthingDebugFacilities { get; } = new BindableCollection<DebugFacilitySetting>();
 
@@ -206,11 +220,14 @@ namespace SyncTrayzor.Pages.Settings
                 settingItem.LoadValue(configuration);
             }
 
-            foreach (var folderSetting in this.FolderSettings)
+            this.Bind(s => s.FolderSettings, (o2, e2) =>
             {
-                folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
-                folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
-            }
+                foreach (var folderSetting in this.FolderSettings)
+                {
+                    folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
+                    folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
+                }
+            });
 
             this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
             {
@@ -236,7 +253,8 @@ namespace SyncTrayzor.Pages.Settings
 
                 foreach (var folderSetting in this.FolderSettings)
                 {
-                    folderSetting.IsWatched = e.NewValue.GetValueOrDefault(false);
+                    if (folderSetting.IsWatchAllowed)
+                        folderSetting.IsWatched = e.NewValue.GetValueOrDefault(false);
                 }
 
                 this.updatingFolderSettings = false;
@@ -282,10 +300,12 @@ namespace SyncTrayzor.Pages.Settings
                     FolderId = x.ID,
                     FolderLabel = folder?.Label ?? x.ID,
                     IsWatched = x.IsWatched,
+                    IsWatchAllowed = !folder.IsFsWatcherEnabled,
                     IsNotified = x.NotificationsEnabled,
                 };
             });
             this.FolderSettings.AddRange(folderSettings.OrderBy(x => x.FolderLabel));
+            this.IsAnyFolderWatchEnabledInSyncthing = this.FolderSettings.Any(x => !x.IsWatchAllowed);
 
             this.NotifyOfPropertyChange(nameof(this.FolderSettings));
 
@@ -325,9 +345,9 @@ namespace SyncTrayzor.Pages.Settings
 
             this.updatingFolderSettings = true;
 
-            if (this.FolderSettings.All(x => x.IsWatched))
+            if (this.FolderSettings.All(x => x.VisibleIsWatched))
                 this.AreAllFoldersWatched = true;
-            else if (this.FolderSettings.All(x => !x.IsWatched))
+            else if (this.FolderSettings.All(x => !x.VisibleIsWatched))
                 this.AreAllFoldersWatched = false;
             else
                 this.AreAllFoldersWatched = null;

@@ -977,4 +977,12 @@ Please donate to my charity fundraising campaign.</value>
     <value>Trace</value>
     <comment>Name for the Trace log level (which provides the most debug info)</comment>
   </data>
+  <data name="SettingsView_WatchedFolderEnabledInSyncthing" xml:space="preserve">
+    <value>You have enabled filesystem watchers for one or more folders in Syncthing, and so the corresponding watchers in SyncTrayzor have been disabled.</value>
+    <comment>Text shown below the list of folders in the settings if the filesystem watcher for one or more folders has been enabled in Syncthing, meaning that SyncTrayzor's filesystem watcher for the corresponding folder(s) will be disabled</comment>
+  </data>
+  <data name="SettingsView_WatchedFolderEnabledInSyncthing_Note" xml:space="preserve">
+    <value>Note:</value>
+    <comment>Text shown in bold just before SettingsView_WatchedFolderEnabledInSyncthing</comment>
+  </data>
 </root>

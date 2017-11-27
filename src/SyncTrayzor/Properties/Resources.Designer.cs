@@ -19,7 +19,7 @@ namespace SyncTrayzor.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1459,6 +1459,24 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {
             get {
                 return ResourceManager.GetString("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have enabled filesystem watchers for one or more folders in Syncthing, and so the corresponding watchers in SyncTrayzor have been disabled..
+        /// </summary>
+        public static string SettingsView_WatchedFolderEnabledInSyncthing {
+            get {
+                return ResourceManager.GetString("SettingsView_WatchedFolderEnabledInSyncthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note:.
+        /// </summary>
+        public static string SettingsView_WatchedFolderEnabledInSyncthing_Note {
+            get {
+                return ResourceManager.GetString("SettingsView_WatchedFolderEnabledInSyncthing_Note", resourceCulture);
             }
         }
         
