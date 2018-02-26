@@ -32,10 +32,14 @@ namespace SyncTrayzor.Syncthing.ApiClient
                 try
                 {
                     logger.Debug("Attempting to request API");
-                    await client.FetchVersionAsync();
+                    await client.FetchVersionAsync(cancellationToken);
                     success = true;
                     logger.Debug("Success!");
                     break;
+                }
+                catch (OperationCanceledException e) when (e.CancellationToken != cancellationToken)
+                {
+                    logger.Debug("Failed to connect (cancelled) on attempt {0}", retryCount);
                 }
                 catch (HttpRequestException e)
                 {

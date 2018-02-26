@@ -26,13 +26,13 @@ namespace SyncTrayzor.Syncthing.ApiClient
         Task ScanAsync(string folder, string sub);
 
         [Get("/rest/system/status")]
-        Task<SystemInfo> FetchSystemInfoAsync();
+        Task<SystemInfo> FetchSystemInfoAsync(CancellationToken cancellationToken);
 
         [Get("/rest/system/connections")]
         Task<Connections> FetchConnectionsAsync(CancellationToken cancellationToken);
 
         [Get("/rest/system/version")]
-        Task<SyncthingVersion> FetchVersionAsync();
+        Task<SyncthingVersion> FetchVersionAsync(CancellationToken cancellationToken);
 
         [Post("/rest/system/restart")]
         Task RestartAsync();

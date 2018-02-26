@@ -469,8 +469,8 @@ namespace SyncTrayzor.Syncthing
             var apiClient = this.apiClient.Value;
             cancellationToken.ThrowIfCancellationRequested();
 
-            var syncthingVersionTask = apiClient.FetchVersionAsync();
-            var systemInfoTask = apiClient.FetchSystemInfoAsync();
+            var syncthingVersionTask = apiClient.FetchVersionAsync(cancellationToken);
+            var systemInfoTask = apiClient.FetchSystemInfoAsync(cancellationToken);
 
             await Task.WhenAll(syncthingVersionTask, systemInfoTask);
 
