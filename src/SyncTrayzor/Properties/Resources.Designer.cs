@@ -892,6 +892,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to set your auto-start settings. This is probably due to anti-virus software..
+        /// </summary>
+        public static string SettingsView_CannotSetAutoStart_Message {
+            get {
+                return ResourceManager.GetString("SettingsView_CannotSetAutoStart_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to set auto-start.
+        /// </summary>
+        public static string SettingsView_CannotSetAutoStart_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_CannotSetAutoStart_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close to tray.
         /// </summary>
         public static string SettingsView_CloseToTray {

@@ -392,8 +392,19 @@ namespace SyncTrayzor.Pages.Settings
 
             if (this.autostartProvider.CanWrite)
             {
-                var autostartConfig = new AutostartConfiguration() { AutoStart = this.StartOnLogon, StartMinimized = this.StartMinimized };
-                this.autostartProvider.SetAutoStart(autostartConfig);
+                // I've seen this fail, even though we successfully wrote on startup
+                try
+                {
+                    var autostartConfig = new AutostartConfiguration() { AutoStart = this.StartOnLogon, StartMinimized = this.StartMinimized };
+                    this.autostartProvider.SetAutoStart(autostartConfig);
+                }
+                catch
+                {
+                    this.windowManager.ShowMessageBox(
+                        Resources.SettingsView_CannotSetAutoStart_Message,
+                        Resources.SettingsView_CannotSetAutoStart_Title,
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
 
             if (this.settings.Any(x => x.HasChanged && x.RequiresSyncTrayzorRestart))

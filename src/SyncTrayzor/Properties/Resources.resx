@@ -985,4 +985,10 @@ Please donate to my charity fundraising campaign.</value>
     <value>Note:</value>
     <comment>Text shown in bold just before SettingsView_WatchedFolderEnabledInSyncthing</comment>
   </data>
+  <data name="SettingsView_CannotSetAutoStart_Message" xml:space="preserve">
+    <value>Unable to set your auto-start settings. This is probably due to anti-virus software.</value>
+  </data>
+  <data name="SettingsView_CannotSetAutoStart_Title" xml:space="preserve">
+    <value>Unable to set auto-start</value>
+  </data>
 </root>
