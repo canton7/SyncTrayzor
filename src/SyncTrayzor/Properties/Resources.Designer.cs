@@ -269,7 +269,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chooses the conflict which was created most recently&lt;.
+        ///   Looks up a localized string similar to Chooses the conflict which was created most recently.
         /// </summary>
         public static string ConflictResolutionView_ChooseNewestConflict_Text {
             get {
@@ -400,6 +400,15 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_Scanning_Label {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_Scanning_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use shift / control to select multiple items.
+        /// </summary>
+        public static string ConflictResolutionView_SelectMultiple {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_SelectMultiple", resourceCulture);
             }
         }
         

@@ -937,7 +937,7 @@ Please donate to my charity fundraising campaign.</value>
     <value>Choose Newest Conflict</value>
   </data>
   <data name="ConflictResolutionView_ChooseNewestConflict_Text" xml:space="preserve">
-    <value>Chooses the conflict which was created most recently&lt;</value>
+    <value>Chooses the conflict which was created most recently</value>
   </data>
   <data name="ConflictResolutionView_ChooseNewest_Button" xml:space="preserve">
     <value>Choose Newest</value>
@@ -984,6 +984,9 @@ Please donate to my charity fundraising campaign.</value>
   <data name="SettingsView_WatchedFolderEnabledInSyncthing_Note" xml:space="preserve">
     <value>Note:</value>
     <comment>Text shown in bold just before SettingsView_WatchedFolderEnabledInSyncthing</comment>
+  </data>
+  <data name="ConflictResolutionView_SelectMultiple" xml:space="preserve">
+    <value>Use shift / control to select multiple items</value>
   </data>
   <data name="SettingsView_CannotSetAutoStart_Message" xml:space="preserve">
     <value>Unable to set your auto-start settings. This is probably due to anti-virus software.</value>
