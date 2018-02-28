@@ -72,6 +72,11 @@ namespace SyncTrayzor.Syncthing
         private readonly object processLock = new object();
         private Process process;
 
+        private const int numRestarts = 4;
+        private static readonly TimeSpan restartThreshold = TimeSpan.FromMinutes(1);
+        private readonly List<DateTime> starts = new List<DateTime>();
+        private bool isKilling;
+
         public string ExecutablePath { get; set; }
         public string ApiKey { get; set; }
         public string HostAddress { get; set; }
@@ -98,7 +103,14 @@ namespace SyncTrayzor.Syncthing
             // This might cause our config to be set...
             this.OnStarting();
 
+            this.StartInternal(isRestart: false);
+        }
+
+        private void StartInternal(bool isRestart)
+        { 
             logger.Info("Starting syncthing: {0}", this.ExecutablePath);
+
+            this.isKilling = false;
 
             if (!File.Exists(this.ExecutablePath))
                 throw new Exception($"Unable to find Syncthing at path {this.ExecutablePath}");
@@ -122,6 +134,8 @@ namespace SyncTrayzor.Syncthing
                 processStartInfo.EnvironmentVariables["STNOUPGRADE"] = "1";
             if (this.DebugFacilities.Count > 0)
                 processStartInfo.EnvironmentVariables["STTRACE"] = String.Join(",", this.DebugFacilities);
+            if (isRestart)
+                processStartInfo.EnvironmentVariables["STRESTART"] = "yes";
 
             foreach (var kvp in this.EnvironmentalVariables)
             {
@@ -131,6 +145,10 @@ namespace SyncTrayzor.Syncthing
             lock (this.processLock)
             {
                 this.KillInternal();
+
+                if (this.starts.Count >= numRestarts)
+                    this.starts.RemoveRange(0, this.starts.Count - numRestarts + 1);
+                this.starts.Add(DateTime.UtcNow);
 
                 this.process = Process.Start(processStartInfo);
 
@@ -230,6 +248,19 @@ namespace SyncTrayzor.Syncthing
                 this.OnProcessRestarted();
                 this.Start();
             }
+            else if (exitStatus != SyncthingExitStatus.Success && !this.isKilling)
+            {
+                if (this.starts.Count >= numRestarts && DateTime.UtcNow - this.starts[0] < restartThreshold)
+                {
+                    logger.Warn("{0} restarts in less than {1}: not restarting again", numRestarts, restartThreshold);
+                    this.OnProcessStopped(exitStatus);
+                }
+                else
+                {
+                    logger.Info("Syncthing exited. Restarting...");
+                    this.StartInternal(isRestart: true);
+                }
+            }
             else
             {
                 this.OnProcessStopped(exitStatus);
@@ -260,6 +291,9 @@ namespace SyncTrayzor.Syncthing
 
         public void KillAllSyncthingProcesses()
         {
+            // So we don't restart ourselves...
+            this.isKilling = true;
+
             logger.Debug("Kill all Syncthing processes");
             foreach (var process in Process.GetProcessesByName("syncthing"))
             {
