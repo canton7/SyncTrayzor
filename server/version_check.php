@@ -71,7 +71,7 @@ $versions = [
       'installed' => [
          'direct_download_url' => [
             'x64' => "$base/v{version}/SyncTrayzorSetup-x64.exe",
-            'x86' => '$base/v{version}/SyncTrayzorSetup-x86.exe',
+            'x86' => "$base/v{version}/SyncTrayzorSetup-x86.exe",
          ],
       ],
       'portable' => [
