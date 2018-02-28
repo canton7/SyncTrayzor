@@ -86,8 +86,18 @@ namespace SyncTrayzor.Services.Config
             if (!this.filesystem.DirectoryExists(Path.GetDirectoryName(this.paths.ConfigurationFilePath)))
                 this.filesystem.CreateDirectory(Path.GetDirectoryName(this.paths.ConfigurationFilePath));
 
-            this.currentConfig = this.LoadFromDisk(defaultConfiguration, out bool hadToCreateConfiguration);
-            this.HadToCreateConfiguration = hadToCreateConfiguration;
+            // If this fails, then we're going to show an error. However, other parts of the application may still try and load the configuration.
+            // Therefore ensure that *something* is in place!
+            try
+            {
+                this.currentConfig = this.LoadFromDisk(defaultConfiguration, out bool hadToCreateConfiguration);
+                this.HadToCreateConfiguration = hadToCreateConfiguration;
+            }
+            catch
+            {
+                this.currentConfig = defaultConfiguration;
+                throw;
+            }
 
             bool updateConfigInstallCount = false;
             int latestInstallCount = 0;

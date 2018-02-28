@@ -724,14 +724,8 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConsoleView_Title" xml:space="preserve">
     <value>Syncthing Console</value>
   </data>
-  <data name="SettingsView_Logging_Explanation" xml:space="preserve">
-    <value>Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead.</value>
-  </data>
-  <data name="SettingsView_Logging_Unavailable" xml:space="preserve">
-    <value>Syncthing Debug Facilities unavailable. Please start Syncthing.</value>
-  </data>
   <data name="SettingsView_Tab_Logging" xml:space="preserve">
-    <value>Logging + STTRACE</value>
+    <value>Logging</value>
   </data>
   <data name="SettingsView_Validation_SetSttraceInTab" xml:space="preserve">
     <value>Set STTRACE in the 'Logging + STTRACE' tab</value>
@@ -937,7 +931,7 @@ Please donate to my charity fundraising campaign.</value>
     <value>Choose Newest Conflict</value>
   </data>
   <data name="ConflictResolutionView_ChooseNewestConflict_Text" xml:space="preserve">
-    <value>Chooses the conflict which was created most recently&lt;</value>
+    <value>Chooses the conflict which was created most recently</value>
   </data>
   <data name="ConflictResolutionView_ChooseNewest_Button" xml:space="preserve">
     <value>Choose Newest</value>
@@ -976,5 +970,25 @@ Please donate to my charity fundraising campaign.</value>
   <data name="SettingsView_Logging_LogLevel_Trace" xml:space="preserve">
     <value>Trace</value>
     <comment>Name for the Trace log level (which provides the most debug info)</comment>
+  </data>
+  <data name="SettingsView_WatchedFolderEnabledInSyncthing" xml:space="preserve">
+    <value>You have enabled filesystem watchers for one or more folders in Syncthing, and so the corresponding watchers in SyncTrayzor have been disabled.</value>
+    <comment>Text shown below the list of folders in the settings if the filesystem watcher for one or more folders has been enabled in Syncthing, meaning that SyncTrayzor's filesystem watcher for the corresponding folder(s) will be disabled</comment>
+  </data>
+  <data name="SettingsView_WatchedFolderEnabledInSyncthing_Note" xml:space="preserve">
+    <value>Note:</value>
+    <comment>Text shown in bold just before SettingsView_WatchedFolderEnabledInSyncthing</comment>
+  </data>
+  <data name="ConflictResolutionView_SelectMultiple" xml:space="preserve">
+    <value>Use shift / control to select multiple items</value>
+  </data>
+  <data name="SettingsView_CannotSetAutoStart_Message" xml:space="preserve">
+    <value>Unable to set your auto-start settings. This is probably due to anti-virus software.</value>
+  </data>
+  <data name="SettingsView_CannotSetAutoStart_Title" xml:space="preserve">
+    <value>Unable to set auto-start</value>
+  </data>
+  <data name="SettingsView_SyncthingCustomPath" xml:space="preserve">
+    <value>Syncthing Custom Path</value>
   </data>
 </root>

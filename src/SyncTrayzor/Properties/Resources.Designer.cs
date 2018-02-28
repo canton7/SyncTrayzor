@@ -19,7 +19,7 @@ namespace SyncTrayzor.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -269,7 +269,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chooses the conflict which was created most recently&lt;.
+        ///   Looks up a localized string similar to Chooses the conflict which was created most recently.
         /// </summary>
         public static string ConflictResolutionView_ChooseNewestConflict_Text {
             get {
@@ -400,6 +400,15 @@ namespace SyncTrayzor.Properties {
         public static string ConflictResolutionView_Scanning_Label {
             get {
                 return ResourceManager.GetString("ConflictResolutionView_Scanning_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use shift / control to select multiple items.
+        /// </summary>
+        public static string ConflictResolutionView_SelectMultiple {
+            get {
+                return ResourceManager.GetString("ConflictResolutionView_SelectMultiple", resourceCulture);
             }
         }
         
@@ -892,6 +901,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to set your auto-start settings. This is probably due to anti-virus software..
+        /// </summary>
+        public static string SettingsView_CannotSetAutoStart_Message {
+            get {
+                return ResourceManager.GetString("SettingsView_CannotSetAutoStart_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to set auto-start.
+        /// </summary>
+        public static string SettingsView_CannotSetAutoStart_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_CannotSetAutoStart_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close to tray.
         /// </summary>
         public static string SettingsView_CloseToTray {
@@ -924,15 +951,6 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_EnableFailedTransferAlerts {
             get {
                 return ResourceManager.GetString("SettingsView_EnableFailedTransferAlerts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead..
-        /// </summary>
-        public static string SettingsView_Logging_Explanation {
-            get {
-                return ResourceManager.GetString("SettingsView_Logging_Explanation", resourceCulture);
             }
         }
         
@@ -987,15 +1005,6 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Logging_ShowSyncTrayzorLog {
             get {
                 return ResourceManager.GetString("SettingsView_Logging_ShowSyncTrayzorLog", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Syncthing Debug Facilities unavailable. Please start Syncthing..
-        /// </summary>
-        public static string SettingsView_Logging_Unavailable {
-            get {
-                return ResourceManager.GetString("SettingsView_Logging_Unavailable", resourceCulture);
             }
         }
         
@@ -1292,6 +1301,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing Custom Path.
+        /// </summary>
+        public static string SettingsView_SyncthingCustomPath {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingCustomPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop Syncthing auto-upgrading.
         /// </summary>
         public static string SettingsView_SyncthingDenyUpgrade {
@@ -1328,7 +1346,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logging + STTRACE.
+        ///   Looks up a localized string similar to Logging.
         /// </summary>
         public static string SettingsView_Tab_Logging {
             get {
@@ -1459,6 +1477,24 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat {
             get {
                 return ResourceManager.GetString("SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have enabled filesystem watchers for one or more folders in Syncthing, and so the corresponding watchers in SyncTrayzor have been disabled..
+        /// </summary>
+        public static string SettingsView_WatchedFolderEnabledInSyncthing {
+            get {
+                return ResourceManager.GetString("SettingsView_WatchedFolderEnabledInSyncthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note:.
+        /// </summary>
+        public static string SettingsView_WatchedFolderEnabledInSyncthing_Note {
+            get {
+                return ResourceManager.GetString("SettingsView_WatchedFolderEnabledInSyncthing_Note", resourceCulture);
             }
         }
         

@@ -103,7 +103,6 @@ namespace SyncTrayzor.Services
             this.syncthingManager.ExecutablePath = String.IsNullOrWhiteSpace(configuration.SyncthingCustomPath) ?
                 this.pathsProvider.DefaultSyncthingPath :
                 this.pathTransformer.MakeAbsolute(configuration.SyncthingCustomPath);
-            this.syncthingManager.DebugFacilities.SetEnabledDebugFacilities(configuration.SyncthingDebugFacilities);
 
             this.watchedFolderMonitor.WatchedFolderIDs = configuration.Folders.Where(x => x.IsWatched).Select(x => x.ID);
 

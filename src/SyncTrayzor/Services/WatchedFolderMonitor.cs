@@ -89,7 +89,8 @@ namespace SyncTrayzor.Services
 
             foreach (var folder in folders)
             {
-                if (!this._watchedFolders.Contains(folder.FolderId) || folder.SyncState == FolderSyncState.Error)
+                // If Syncthing is watching the folder, don't watch it ourselves
+                if (!this._watchedFolders.Contains(folder.FolderId) || folder.IsFsWatcherEnabled || folder.SyncState == FolderSyncState.Error)
                     continue;
 
                 var watcher = this.directoryWatcherFactory.Create(folder.Path, this.BackoffInterval, this.FolderExistenceCheckingInterval);

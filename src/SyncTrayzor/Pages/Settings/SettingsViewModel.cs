@@ -20,14 +20,20 @@ namespace SyncTrayzor.Pages.Settings
         public string FolderId { get; set; }
         public string FolderLabel { get; set; }
         public bool IsWatched { get; set; }
-        public bool IsNotified { get; set; }
-    }
+        public bool IsWatchAllowed { get; set; }
+        public bool VisibleIsWatched
+        {
+            get => this.IsWatched && this.IsWatchAllowed;
+            set
+            {
+                if (this.IsWatchAllowed)
+                    this.IsWatched = value;
+                else
+                    throw new InvalidOperationException();
+            }
+        }
 
-    public class DebugFacilitySetting : PropertyChangedBase
-    {
-        public bool IsEnabled { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public bool IsNotified { get; set; }
     }
 
     public class SettingsViewModel : Screen
@@ -84,6 +90,7 @@ namespace SyncTrayzor.Pages.Settings
         public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
         public SettingItem<string> SyncthingCommandLineFlags { get; }
         public SettingItem<string> SyncthingEnvironmentalVariables { get; }
+        public SettingItem<string> SyncthingCustomPath { get; }
         public SettingItem<string> SyncthingCustomHomePath { get; }
         public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
@@ -91,8 +98,7 @@ namespace SyncTrayzor.Pages.Settings
         public bool? AreAllFoldersWatched { get; set; }
         public bool? AreAllFoldersNotified { get; set; }
         public BindableCollection<FolderSettings> FolderSettings { get; } = new BindableCollection<FolderSettings>();
-
-        public BindableCollection<DebugFacilitySetting> SyncthingDebugFacilities { get; } = new BindableCollection<DebugFacilitySetting>();
+        public bool IsAnyFolderWatchEnabledInSyncthing { get; private set; }
 
         public BindableCollection<LabelledValue<LogLevel>> LogLevels { get; }
         public SettingItem<LogLevel> SelectedLogLevel { get; set; }
@@ -177,6 +183,12 @@ namespace SyncTrayzor.Pages.Settings
                 }, new SyncthingEnvironmentalVariablesValidator());
             this.SyncthingEnvironmentalVariables.RequiresSyncthingRestart = true;
 
+
+            this.SyncthingCustomPath = this.CreateBasicSettingItem(x => x.SyncthingCustomPath);
+            // This *shouldn't* be necessary, but the code to copy the syncthing.exe binary if it doesn't exist
+            // is only run at startup, so require a restart...
+            this.SyncthingCustomPath.RequiresSyncTrayzorRestart = true;
+
             this.SyncthingCustomHomePath = this.CreateBasicSettingItem(x => x.SyncthingCustomHomePath);
             this.SyncthingCustomHomePath.RequiresSyncthingRestart = true;
 
@@ -206,11 +218,14 @@ namespace SyncTrayzor.Pages.Settings
                 settingItem.LoadValue(configuration);
             }
 
-            foreach (var folderSetting in this.FolderSettings)
+            this.Bind(s => s.FolderSettings, (o2, e2) =>
             {
-                folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
-                folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
-            }
+                foreach (var folderSetting in this.FolderSettings)
+                {
+                    folderSetting.Bind(s => s.IsWatched, (o, e) => this.UpdateAreAllFoldersWatched());
+                    folderSetting.Bind(s => s.IsNotified, (o, e) => this.UpdateAreAllFoldersNotified());
+                }
+            });
 
             this.Bind(s => s.AreAllFoldersNotified, (o, e) =>
             {
@@ -236,7 +251,8 @@ namespace SyncTrayzor.Pages.Settings
 
                 foreach (var folderSetting in this.FolderSettings)
                 {
-                    folderSetting.IsWatched = e.NewValue.GetValueOrDefault(false);
+                    if (folderSetting.IsWatchAllowed)
+                        folderSetting.IsWatched = e.NewValue.GetValueOrDefault(false);
                 }
 
                 this.updatingFolderSettings = false;
@@ -282,21 +298,14 @@ namespace SyncTrayzor.Pages.Settings
                     FolderId = x.ID,
                     FolderLabel = folder?.Label ?? x.ID,
                     IsWatched = x.IsWatched,
+                    IsWatchAllowed = !folder.IsFsWatcherEnabled,
                     IsNotified = x.NotificationsEnabled,
                 };
             });
             this.FolderSettings.AddRange(folderSettings.OrderBy(x => x.FolderLabel));
+            this.IsAnyFolderWatchEnabledInSyncthing = this.FolderSettings.Any(x => !x.IsWatchAllowed);
 
             this.NotifyOfPropertyChange(nameof(this.FolderSettings));
-
-            this.SyncthingDebugFacilities.Clear();
-            this.SyncthingDebugFacilities.AddRange(syncthingManager.DebugFacilities.DebugFacilities.Select(x => new DebugFacilitySetting()
-            {
-                IsEnabled = x.IsEnabled,
-                Name = x.Name,
-                Description = x.Description,
-            }));
-            this.NotifyOfPropertyChange(nameof(this.SyncthingDebugFacilities));
         }
 
         private SettingItem<T> CreateBasicSettingItem<T>(Expression<Func<Configuration, T>> accessExpression, IValidator<SettingItem<T>> validator = null)
@@ -325,9 +334,9 @@ namespace SyncTrayzor.Pages.Settings
 
             this.updatingFolderSettings = true;
 
-            if (this.FolderSettings.All(x => x.IsWatched))
+            if (this.FolderSettings.All(x => x.VisibleIsWatched))
                 this.AreAllFoldersWatched = true;
-            else if (this.FolderSettings.All(x => !x.IsWatched))
+            else if (this.FolderSettings.All(x => !x.VisibleIsWatched))
                 this.AreAllFoldersWatched = false;
             else
                 this.AreAllFoldersWatched = null;
@@ -355,9 +364,6 @@ namespace SyncTrayzor.Pages.Settings
         public bool CanSave => this.settings.All(x => !x.HasErrors);
         public void Save()
         {
-            bool debugFacilitiesRequiresRestart = !this.syncthingManager.DebugFacilities.SupportsRestartlessUpdate &&
-                !new HashSet<string>(this.syncthingManager.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name)).SetEquals(this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
-
             this.configurationProvider.AtomicLoadAndSave(configuration =>
             {
                 foreach (var settingItem in this.settings)
@@ -366,14 +372,23 @@ namespace SyncTrayzor.Pages.Settings
                 }
 
                 configuration.Folders = this.FolderSettings.Select(x => new FolderConfiguration(x.FolderId, x.IsWatched, x.IsNotified)).ToList();
-                // The ConfigurationApplicator will propagate this to the DebugFacilitiesManager
-                configuration.SyncthingDebugFacilities = this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             });
 
             if (this.autostartProvider.CanWrite)
             {
-                var autostartConfig = new AutostartConfiguration() { AutoStart = this.StartOnLogon, StartMinimized = this.StartMinimized };
-                this.autostartProvider.SetAutoStart(autostartConfig);
+                // I've seen this fail, even though we successfully wrote on startup
+                try
+                {
+                    var autostartConfig = new AutostartConfiguration() { AutoStart = this.StartOnLogon, StartMinimized = this.StartMinimized };
+                    this.autostartProvider.SetAutoStart(autostartConfig);
+                }
+                catch
+                {
+                    this.windowManager.ShowMessageBox(
+                        Resources.SettingsView_CannotSetAutoStart_Message,
+                        Resources.SettingsView_CannotSetAutoStart_Title,
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
 
             if (this.settings.Any(x => x.HasChanged && x.RequiresSyncTrayzorRestart))
@@ -388,7 +403,7 @@ namespace SyncTrayzor.Pages.Settings
                     this.applicationState.Shutdown();
                 }
             }
-            else if ((this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart) || debugFacilitiesRequiresRestart) &&
+            else if ((this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart)) &&
                 this.syncthingManager.State == SyncthingState.Running)
             {
                 var result = this.windowManager.ShowMessageBox(

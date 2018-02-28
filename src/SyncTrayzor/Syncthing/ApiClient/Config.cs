@@ -51,6 +51,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
         [JsonProperty("invalid")]
         public string Invalid { get; set; }
 
+        [JsonProperty("fsWatcherEnabled")]
+        public bool IsFsWatcherEnabled { get; set; }
+
         public bool Equals(ConfigFolder other)
         {
             return other != null &&
@@ -59,12 +62,14 @@ namespace SyncTrayzor.Syncthing.ApiClient
                 this.Devices.SequenceEqual(other.Devices) &&
                 //this.Type == other.Type &&
                 this.RescanIntervalSeconds == other.RescanIntervalSeconds &&
-                this.Invalid == other.Invalid;
+                this.Invalid == other.Invalid &&
+                this.IsFsWatcherEnabled == other.IsFsWatcherEnabled;
         }
 
         public override string ToString()
         {
-            return $"<Folder id={this.ID} label={this.Label} path={this.Path} devices=[{String.Join(", ", this.Devices)}] rescalinterval={this.RescanInterval} invalid={this.Invalid}>";
+            return $"<Folder id={this.ID} label={this.Label} path={this.Path} devices=[{String.Join(", ", this.Devices)}] rescalinterval={this.RescanInterval} " +
+                $"invalid={this.Invalid} fsWatcherEnabled={this.IsFsWatcherEnabled}>";
         }
     }
 

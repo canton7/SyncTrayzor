@@ -134,7 +134,7 @@ Good question. The answer depends on whether you installed SyncTrayzor using the
 
 The Installed version of SyncTrayzor will install itself into `C:\Program Files\SyncTrayzor` or `C:\Program Files (x86)\SyncTrayzor` for the 64-bit and 32-bit version respectively.
 
-By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayor`, and let Syncthing use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
+By default, SyncTrayzor will put its own configuration in `C:\Users\<You>\AppData\Roaming\SyncTrayzor`, and let Syncthing use its default folder for its database, which is `C:\Users\<You>\AppData\Local\Syncthing`.
 It will also create a registry key at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\SyncTrayzor` the first time that it is run, which will let it start when you log in.
 
 You can delete this registry key by unchecking "Automatically start on login" in the settings.
@@ -168,9 +168,17 @@ Here's a handy table of what you need to copy where if you're migrating between 
 | "raw" Syncthing | SyncTrayzor Portable | Copy the contents of `C:\Users\<You>\AppData\Local\Syncthing` into the `data\syncthing` folder inside the portable directory |
 | SyncTrayzor Installed | "raw" Syncthing | None |
 | SyncTrayzor Installed | SyncTrayzor Portable | <ol><li>Copy the contents of `C:\Users\<You>\AppData\Local\Syncthing` into the `data\syncthing` folder inside the portable directory</li><li>Copy `C:\Users\<You>\AppData\Roaming\SyncTrayzor\config.xml` to `data\config.xml`</li></ol> |
-| SyncTrayzor Portable | "raw" Syncthing | Copy the contents of the `data\syncthing\ folder inside the portable directly into `C:\Users\<You>\AppData\Local\Syncthing` |
+| SyncTrayzor Portable | "raw" Syncthing | Copy the contents of the `data\syncthing\` folder inside the portable directly into `C:\Users\<You>\AppData\Local\Syncthing` |
 | SyncTrayzor Portable | SyncTrayzor Installed | <ol><li>Copy the contents of the `data\syncthing` folder inside the portable directory into `C:\Users\<You>\AppData\Local\Syncthing`</li><li>Copy `data\config.xml` to `C:\Users\<You>\AppData\Roaming\SyncTrayzor\config.xml`</li></ol> |
 
+
+Backups
+-------
+
+For the installed version of SyncTrayzor, in order to save your configuration (both Syncthing's and SyncTrayzor's), you will need to backup the following paths:
+
+ - `C:\Users\<You>\AppData\Roaming\SyncTrayzor`
+ - `C:\Users\<You>\AppData\Local\Syncthing`
 
 
 Using Syncthing beta releases

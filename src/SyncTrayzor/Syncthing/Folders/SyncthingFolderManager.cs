@@ -158,7 +158,7 @@ namespace SyncTrayzor.Syncthing.Folders
                     if (path.StartsWith("~"))
                         path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
-                    return new Folder(folder.ID, folder.Label, path, syncState, status);
+                    return new Folder(folder.ID, folder.Label, path, folder.IsFsWatcherEnabled, syncState, status);
                 });
 
             cancellationToken.ThrowIfCancellationRequested();

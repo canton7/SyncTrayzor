@@ -153,6 +153,10 @@
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingEnvironmentalVariables" Text="{Binding SyncthingEnvironmentalVariables.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
 
+                                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCustomPath}" Content="{l:Loc SettingsView_SyncthingCustomPath}"
+                                           ToolTip="{l:Loc SettingsView_SyncthingCustomPath}"/>
+                                    <TextBox DockPanel.Dock="Top" x:Name="SyncthingCustomPath" Text="{Binding SyncthingCustomPath.Value}"/>
+                                    
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCustomHomePath}" Content="{l:Loc SettingsView_SyncthingCustomHomePath}"
                                            ToolTip="{l:Loc SettingsView_SyncthingCustomHomePath}"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingCustomHomePath" Text="{Binding SyncthingCustomHomePath.Value}"/>
@@ -177,6 +181,14 @@
                                     Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
                     </Grid>
 
+                    <TextBlock DockPanel.Dock="Bottom"
+                               Margin="0,5,0,0"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding IsAnyFolderWatchEnabledInSyncthing, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
+                        <Run FontWeight="Bold" Text="{l:Loc SettingsView_WatchedFolderEnabledInSyncthing_Note}"/>
+                        <Run Text="{l:Loc SettingsView_WatchedFolderEnabledInSyncthing}"/>
+                    </TextBlock>
+
                     <ListView Visibility="{Binding FolderSettings, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"  
                                 ItemsSource="{Binding FolderSettings}"
                                 Style="{StaticResource PassiveListViewStyle}"
@@ -190,7 +202,7 @@
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsWatched}" HorizontalAlignment="Left"/>
+                                            <CheckBox IsChecked="{Binding VisibleIsWatched}" IsEnabled="{Binding IsWatchAllowed}" HorizontalAlignment="Left"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -211,8 +223,16 @@
             </TabItem>
 
             <TabItem Header="{l:Loc SettingsView_Tab_Logging}">
-                <DockPanel>
-                    <GroupBox DockPanel.Dock="Bottom" Header="{l:Loc SettingsView_Section_SyncTrayzor}">
+                <StackPanel>
+                    <GroupBox Header="{l:Loc SettingsView_Section_Syncthing}">
+                        <Button DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="5,0"
+                                Command="{s:Action ShowSyncthingLogFile}"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource DialogButton}"
+                                Content="{l:Loc SettingsView_Logging_ShowSyncthingLog}"/>
+                    </GroupBox>
+
+                    <GroupBox Header="{l:Loc SettingsView_Section_SyncTrayzor}">
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                 <Label Content="{l:Loc SettingsView_Logging_LogLevel}"/>
@@ -226,45 +246,8 @@
                         </DockPanel>
                     </GroupBox>
 
-                    <GroupBox Header="{l:Loc SettingsView_Section_Syncthing}">
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Top"
-                                        TextWrapping="WrapWithOverflow"
-                                        Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"
-                                        Text="{l:Loc SettingsView_Logging_Explanation}"/>
 
-                            <Button DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="5,0"
-                                    Command="{s:Action ShowSyncthingLogFile}"
-                                    HorizontalAlignment="Left"
-                                    Style="{StaticResource DialogButton}"
-                                    Content="{l:Loc SettingsView_Logging_ShowSyncthingLog}"/>
-
-                            <Grid Margin="0,10,0,0">
-                                <TextBlock Visibility="{Binding SyncthingDebugFacilities, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"
-                                            Text="{l:Loc SettingsView_Logging_Unavailable}"/>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              Visibility="{Binding SyncthingDebugFacilities, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                                              MinHeight="200"
-                                              Height="{Binding Parent.ActualHeight, RelativeSource={RelativeSource Self}}">
-                                    <ItemsControl ItemsSource="{Binding SyncthingDebugFacilities}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <CheckBox IsChecked="{Binding IsEnabled}" x:Name="DebugFacilityIsEnabled">
-                                                        <TextBlock>
-                                                            <TextBlock Text="{Binding Name}"/>:
-                                                            <TextBlock Text="{Binding Description}"/>
-                                                        </TextBlock>
-                                                    </CheckBox>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Grid>
-                        </DockPanel>
-                    </GroupBox>
-                </DockPanel>
+                </StackPanel>
             </TabItem>
         </TabControl>
     </DockPanel>

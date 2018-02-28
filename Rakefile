@@ -1,6 +1,5 @@
 require 'tmpdir'
 require 'open-uri'
-require 'openssl'
 
 require_relative 'build/TxClient'
 require_relative 'build/CsprojResxWriter'
@@ -285,24 +284,23 @@ end
 desc 'Create both 64-bit and 32-bit portable packages'
 task :portable => ARCH_CONFIG.map{ |x| :"portable:#{x.arch}" }
 
-
 namespace :syncthing do
   namespace :download do
     ARCH_CONFIG.each do |arch_config|
       desc "Download syncthing (#{arch_config.arch})"
-      task arch_config.arch, [:version]  => [:"build-checksum-util"] do |t, args|
+      task arch_config.arch, [:version] => [:"build-checksum-util"] do |t, args|
         ensure_7zip
 
         Dir.mktmpdir do |tmp|
           download_file = File.join(tmp, File.basename(arch_config.download_uri(args[:version])))
           File.open(download_file, 'wb') do |outfile|
-            open(arch_config.download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
+            open(arch_config.download_uri(args[:version])) do |infile|
               outfile.write(infile.read)
             end
           end
 
           File.open(File.join(tmp, 'sha1sum.txt.asc.'), 'w') do |outfile|
-            open(arch_config.sha1sum_download_uri(args[:version]), { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }) do |infile|
+            open(arch_config.sha1sum_download_uri(args[:version])) do |infile|
               outfile.write(infile.read)
             end
           end

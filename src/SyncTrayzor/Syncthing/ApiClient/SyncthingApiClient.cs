@@ -61,9 +61,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
             return this.api.ScanAsync(folderId, subPath);
         }
 
-        public async Task<SystemInfo> FetchSystemInfoAsync()
+        public async Task<SystemInfo> FetchSystemInfoAsync(CancellationToken cancellationToken)
         {
-            var systemInfo = await this.api.FetchSystemInfoAsync();
+            var systemInfo = await this.api.FetchSystemInfoAsync(cancellationToken);
             logger.Debug("Fetched system info: {0}", systemInfo);
             return systemInfo;
         }
@@ -74,9 +74,9 @@ namespace SyncTrayzor.Syncthing.ApiClient
             return connections;
         }
 
-        public async Task<SyncthingVersion> FetchVersionAsync()
+        public async Task<SyncthingVersion> FetchVersionAsync(CancellationToken cancellationToken)
         {
-            var version = await this.api.FetchVersionAsync();
+            var version = await this.api.FetchVersionAsync(cancellationToken);
             logger.Debug("Fetched version: {0}", version);
             return version;
         }

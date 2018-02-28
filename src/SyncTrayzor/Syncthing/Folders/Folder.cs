@@ -13,6 +13,8 @@ namespace SyncTrayzor.Syncthing.Folders
         public string Label { get; }
         public string Path { get; }
 
+        public bool IsFsWatcherEnabled { get; }
+
         private FolderSyncState _syncState;
         public FolderSyncState SyncState
         {
@@ -36,12 +38,12 @@ namespace SyncTrayzor.Syncthing.Folders
             private set { lock(this.syncRoot) { this._folderErrors = value; } }
         }
 
-
-        public Folder(string folderId, string label, string path, FolderSyncState syncState, FolderStatus status)
+        public Folder(string folderId, string label, string path, bool isFsWatcherEnabled, FolderSyncState syncState, FolderStatus status)
         {
             this.FolderId = folderId;
             this.Label = String.IsNullOrWhiteSpace(label) ? folderId : label;
             this.Path = path;
+            this.IsFsWatcherEnabled = isFsWatcherEnabled;
             this.SyncState = syncState;
             this.syncingPaths = new HashSet<string>();
             this._status = status;
@@ -99,6 +101,7 @@ namespace SyncTrayzor.Syncthing.Folders
                 return this.FolderId == other.FolderId &&
                     this.Label == other.Label &&
                     this.Path == other.Path &&
+                    this.IsFsWatcherEnabled == other.IsFsWatcherEnabled && 
                     this.SyncState == other.SyncState &&
                     this.Status == other.Status &&
                     this.FolderErrors.SequenceEqual(other.FolderErrors) &&
@@ -115,6 +118,7 @@ namespace SyncTrayzor.Syncthing.Folders
                     int hash = 17;
                     hash = hash * 23 + this.FolderId.GetHashCode();
                     hash = hash * 23 + this.Label.GetHashCode();
+                    hash = hash * 23 + this.IsFsWatcherEnabled.GetHashCode();
                     hash = hash * 23 + this.SyncState.GetHashCode();
                     hash = hash * 23 + this.Status.GetHashCode();
                     hash = hash * 23 + this.syncingPaths.GetHashCode();
