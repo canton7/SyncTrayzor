@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.20
+-------
+
+ - Fix to allow SyncTrayzor to download updates from GitHub, after they made changes
+
 v1.1.19
 -------
 
