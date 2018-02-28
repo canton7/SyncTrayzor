@@ -26,6 +26,7 @@ using SyncTrayzor.Services.Metering;
 using System.Reflection;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Services.Ipc;
+using System.Net;
 
 namespace SyncTrayzor
 {
@@ -86,6 +87,10 @@ namespace SyncTrayzor
 
         protected override void Configure()
         {
+            // GitHub uses Tls 1.2 only, and it isn't enabled by default before .NET 4.6. Since we target an earlier
+            // .NET version, we have to enable this ourselves.
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             this.options = this.Container.Get<CommandLineOptionsParser>();
             if (!this.options.Parse(this.Args))
                 Environment.Exit(0);

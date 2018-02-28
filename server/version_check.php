@@ -64,28 +64,31 @@ function get_with_wildcard($src, $value, $default = null)
    return $default;
 }
 
+$base = "https://synctrayzor.antonymale.co.uk/download";
+
 $versions = [
-   '1.1.19' => [
+   '1.1.20' => [
       'installed' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x86.exe',
+            'x64' => "$base/v{version}/SyncTrayzorSetup-x64.exe",
+            'x86' => '$base/v{version}/SyncTrayzorSetup-x86.exe',
          ],
       ],
       'portable' => [
          'direct_download_url' => [
-            'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorPortable-x64.zip',
-            'x86' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorPortable-x86.zip',
+            'x64' => "$base/v{version}/SyncTrayzorPortable-x64.zip",
+            'x86' => "$base/v{version}/SyncTrayzorPortable-x86.zip",
          ],
       ],     
-      'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
-      'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
+      'sha1sum_download_url' => "$base/v{version}/sha1sum.txt.asc",
+      'sha512sum_download_url' => "$base/v{version}/sha512sum.txt.asc",
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Disable the built-in filesystem watcher if Syncthing's watcher is enabled\n- Retry starting Syncthing if it crashed (#421)\n- Make it clearer that multiple items in the Conflict Resolver window can be selected at once (#359)\n- Expose the setting to change the location of syncthing.exe (#386)\n- Fix issue where "Syncthing is starting" would appear forever (#420)\n- Fix crash when pausing/unpausing devices (#435)\n- Fix a rare condition when trying to enable auto-start would crash (#407)\n- Remove support for debug facilities, since Syncthing has this built in",
+      'release_notes' => "!!!!!\nYou must upgrade to v1.1.20 now, otherwise auto-upgrades will stop working!\n!!!!!\n\n- Fix to allow SyncTrayzor to download updates from GitHub, after they made changes\n- Disable the built-in filesystem watcher if Syncthing's watcher is enabled\n- Retry starting Syncthing if it crashed (#421)\n- Make it clearer that multiple items in the Conflict Resolver window can be selected at once (#359)\n- Expose the setting to change the location of syncthing.exe (#386)\n- Fix issue where \"Syncthing is starting\" would appear forever (#420)\n- Fix crash when pausing/unpausing devices (#435)\n- Fix a rare condition when trying to enable auto-start would crash (#407)\n- Remove support for debug facilities, since Syncthing has this built in",
    ]
 ];
 
 $upgrades = [
+   '1.1.19' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.18' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.17' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.16' => ['to' => 'latest', 'formatter' => '5'],
