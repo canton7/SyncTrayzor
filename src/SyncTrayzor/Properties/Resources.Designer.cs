@@ -955,15 +955,6 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead..
-        /// </summary>
-        public static string SettingsView_Logging_Explanation {
-            get {
-                return ResourceManager.GetString("SettingsView_Logging_Explanation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Log Level:.
         /// </summary>
         public static string SettingsView_Logging_LogLevel {
@@ -1014,15 +1005,6 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_Logging_ShowSyncTrayzorLog {
             get {
                 return ResourceManager.GetString("SettingsView_Logging_ShowSyncTrayzorLog", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Syncthing Debug Facilities unavailable. Please start Syncthing..
-        /// </summary>
-        public static string SettingsView_Logging_Unavailable {
-            get {
-                return ResourceManager.GetString("SettingsView_Logging_Unavailable", resourceCulture);
             }
         }
         
@@ -1364,7 +1346,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logging + STTRACE.
+        ///   Looks up a localized string similar to Logging.
         /// </summary>
         public static string SettingsView_Tab_Logging {
             get {

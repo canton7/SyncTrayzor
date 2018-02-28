@@ -724,14 +724,8 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="ConsoleView_Title" xml:space="preserve">
     <value>Syncthing Console</value>
   </data>
-  <data name="SettingsView_Logging_Explanation" xml:space="preserve">
-    <value>Enable different debug facilities in order to help debug problems. If you are asked to set STTRACE, please use this instead.</value>
-  </data>
-  <data name="SettingsView_Logging_Unavailable" xml:space="preserve">
-    <value>Syncthing Debug Facilities unavailable. Please start Syncthing.</value>
-  </data>
   <data name="SettingsView_Tab_Logging" xml:space="preserve">
-    <value>Logging + STTRACE</value>
+    <value>Logging</value>
   </data>
   <data name="SettingsView_Validation_SetSttraceInTab" xml:space="preserve">
     <value>Set STTRACE in the 'Logging + STTRACE' tab</value>

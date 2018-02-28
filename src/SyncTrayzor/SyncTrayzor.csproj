@@ -292,8 +292,6 @@
     <Compile Include="Syncthing\ApiClient\SyncthingApiClient.cs" />
     <Compile Include="Syncthing\ApiClient\ItemChangedActionType.cs" />
     <Compile Include="Syncthing\ApiClient\ItemChangedItemType.cs" />
-    <Compile Include="Syncthing\DebugFacilities\DebugFacility.cs" />
-    <Compile Include="Syncthing\DebugFacilities\SyncthingDebugFacilitiesManager.cs" />
     <Compile Include="Syncthing\EventWatcher\ConfigSavedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DevicePausedEventArgs.cs" />
     <Compile Include="Syncthing\EventWatcher\DeviceRejectedEventArgs.cs" />

@@ -36,13 +36,6 @@ namespace SyncTrayzor.Pages.Settings
         public bool IsNotified { get; set; }
     }
 
-    public class DebugFacilitySetting : PropertyChangedBase
-    {
-        public bool IsEnabled { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-    }
-
     public class SettingsViewModel : Screen
     {
         // We can be opened directly on this tab. All of the layout is done in xaml, so this is
@@ -106,8 +99,6 @@ namespace SyncTrayzor.Pages.Settings
         public bool? AreAllFoldersNotified { get; set; }
         public BindableCollection<FolderSettings> FolderSettings { get; } = new BindableCollection<FolderSettings>();
         public bool IsAnyFolderWatchEnabledInSyncthing { get; private set; }
-
-        public BindableCollection<DebugFacilitySetting> SyncthingDebugFacilities { get; } = new BindableCollection<DebugFacilitySetting>();
 
         public BindableCollection<LabelledValue<LogLevel>> LogLevels { get; }
         public SettingItem<LogLevel> SelectedLogLevel { get; set; }
@@ -315,15 +306,6 @@ namespace SyncTrayzor.Pages.Settings
             this.IsAnyFolderWatchEnabledInSyncthing = this.FolderSettings.Any(x => !x.IsWatchAllowed);
 
             this.NotifyOfPropertyChange(nameof(this.FolderSettings));
-
-            this.SyncthingDebugFacilities.Clear();
-            this.SyncthingDebugFacilities.AddRange(syncthingManager.DebugFacilities.DebugFacilities.Select(x => new DebugFacilitySetting()
-            {
-                IsEnabled = x.IsEnabled,
-                Name = x.Name,
-                Description = x.Description,
-            }));
-            this.NotifyOfPropertyChange(nameof(this.SyncthingDebugFacilities));
         }
 
         private SettingItem<T> CreateBasicSettingItem<T>(Expression<Func<Configuration, T>> accessExpression, IValidator<SettingItem<T>> validator = null)
@@ -382,9 +364,6 @@ namespace SyncTrayzor.Pages.Settings
         public bool CanSave => this.settings.All(x => !x.HasErrors);
         public void Save()
         {
-            bool debugFacilitiesRequiresRestart = !this.syncthingManager.DebugFacilities.SupportsRestartlessUpdate &&
-                !new HashSet<string>(this.syncthingManager.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name)).SetEquals(this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name));
-
             this.configurationProvider.AtomicLoadAndSave(configuration =>
             {
                 foreach (var settingItem in this.settings)
@@ -393,8 +372,6 @@ namespace SyncTrayzor.Pages.Settings
                 }
 
                 configuration.Folders = this.FolderSettings.Select(x => new FolderConfiguration(x.FolderId, x.IsWatched, x.IsNotified)).ToList();
-                // The ConfigurationApplicator will propagate this to the DebugFacilitiesManager
-                configuration.SyncthingDebugFacilities = this.SyncthingDebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             });
 
             if (this.autostartProvider.CanWrite)
@@ -426,7 +403,7 @@ namespace SyncTrayzor.Pages.Settings
                     this.applicationState.Shutdown();
                 }
             }
-            else if ((this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart) || debugFacilitiesRequiresRestart) &&
+            else if ((this.settings.Any(x => x.HasChanged && x.RequiresSyncthingRestart)) &&
                 this.syncthingManager.State == SyncthingState.Running)
             {
                 var result = this.windowManager.ShowMessageBox(

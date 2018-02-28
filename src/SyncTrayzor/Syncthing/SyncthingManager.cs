@@ -11,7 +11,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using SyncTrayzor.Syncthing.DebugFacilities;
 using SyncTrayzor.Syncthing.Devices;
 using SyncTrayzor.Syncthing.Folders;
 
@@ -47,7 +46,6 @@ namespace SyncTrayzor.Syncthing
         ISyncthingFolderManager Folders { get; }
         ISyncthingDeviceManager Devices { get; }
         ISyncthingTransferHistory TransferHistory { get; }
-        ISyncthingDebugFacilitiesManager DebugFacilities { get; }
         ISyncthingCapabilities Capabilities { get; }
 
         Task StartAsync();
@@ -146,9 +144,6 @@ namespace SyncTrayzor.Syncthing
         private readonly ISyncthingTransferHistory _transferHistory;
         public ISyncthingTransferHistory TransferHistory => this._transferHistory;
 
-        private SyncthingDebugFacilitiesManager _debugFacilities;
-        public ISyncthingDebugFacilitiesManager DebugFacilities => this._debugFacilities;
-
         private readonly SyncthingCapabilities _capabilities = new SyncthingCapabilities();
         public ISyncthingCapabilities Capabilities => this._capabilities;
 
@@ -185,7 +180,6 @@ namespace SyncTrayzor.Syncthing
             this._folders = new SyncthingFolderManager(this.apiClient, this.eventWatcher);
             this._devices = new SyncthingDeviceManager(this.apiClient, this.eventWatcher, this.Capabilities);
             this._transferHistory = new SyncthingTransferHistory(this.eventWatcher, this._folders);
-            this._debugFacilities = new SyncthingDebugFacilitiesManager(this.apiClient, this.Capabilities);
 
             this.processRunner.ProcessStopped += (o, e) => this.ProcessStopped(e.ExitStatus);
             this.processRunner.MessageLogged += (o, e) => this.OnMessageLogged(e.LogMessage);
@@ -425,7 +419,6 @@ namespace SyncTrayzor.Syncthing
             this.processRunner.CustomHomeDir = this.SyncthingCustomHomeDir;
             this.processRunner.CommandLineFlags = this.SyncthingCommandLineFlags;
             this.processRunner.EnvironmentalVariables = this.SyncthingEnvironmentalVariables;
-            this.processRunner.DebugFacilities = this.DebugFacilities.DebugFacilities.Where(x => x.IsEnabled).Select(x => x.Name).ToList();
             this.processRunner.DenyUpgrade = this.SyncthingDenyUpgrade;
             this.processRunner.SyncthingPriorityLevel = this.SyncthingPriorityLevel;
             this.processRunner.HideDeviceIds = this.SyncthingHideDeviceIds;
@@ -482,10 +475,7 @@ namespace SyncTrayzor.Syncthing
             
             cancellationToken.ThrowIfCancellationRequested();
 
-            var debugFacilitiesLoadTask = this._debugFacilities.LoadAsync();
-            var configDataLoadTask = this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
-
-            await Task.WhenAll(debugFacilitiesLoadTask, configDataLoadTask);
+            await this.LoadConfigDataAsync(this.systemInfo.Tilde, false, cancellationToken);
 
             cancellationToken.ThrowIfCancellationRequested();
             

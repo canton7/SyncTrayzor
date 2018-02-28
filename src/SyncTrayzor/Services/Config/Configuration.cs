@@ -64,9 +64,6 @@ namespace SyncTrayzor.Services.Config
         public bool EnableFailedTransferAlerts { get; set; }
         public bool EnableConflictFileMonitoring { get; set; }
 
-        [XmlArrayItem("DebugFacility")]
-        public List<string> SyncthingDebugFacilities { get; set; }
-
         public bool ConflictResolverDeletesToRecycleBin { get; set; }
         public bool PauseDevicesOnMeteredNetworks { get; set; }
         public bool HaveDonated { get; set; }
@@ -105,7 +102,6 @@ namespace SyncTrayzor.Services.Config
             this.DisableHardwareRendering = false;
             this.EnableFailedTransferAlerts = true;
             this.EnableConflictFileMonitoring = true;
-            this.SyncthingDebugFacilities = new List<string>();
             this.ConflictResolverDeletesToRecycleBin = true;
             this.PauseDevicesOnMeteredNetworks = true;
             this.HaveDonated = false;
@@ -143,7 +139,6 @@ namespace SyncTrayzor.Services.Config
             this.DisableHardwareRendering = other.DisableHardwareRendering;
             this.EnableFailedTransferAlerts = other.EnableFailedTransferAlerts;
             this.EnableConflictFileMonitoring = other.EnableConflictFileMonitoring;
-            this.SyncthingDebugFacilities = other.SyncthingDebugFacilities;
             this.ConflictResolverDeletesToRecycleBin = other.ConflictResolverDeletesToRecycleBin;
             this.PauseDevicesOnMeteredNetworks = other.PauseDevicesOnMeteredNetworks;
             this.HaveDonated = other.HaveDonated;
@@ -166,8 +161,8 @@ namespace SyncTrayzor.Services.Config
                 $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingCustomPath={this.SyncthingCustomPath} " +
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
                 $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
-                $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} SyncthingDebugFacilities=[{String.Join(",", this.SyncthingDebugFacilities)}] "+
-                $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks} "+
+                $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} " +
+                $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks} " +
                 $"HaveDonated={this.HaveDonated} IconAnimationMode={this.IconAnimationMode} OpenFolderCommand={this.OpenFolderCommand} ShowFileInFolderCommand={this.ShowFileInFolderCommand}" +
                 $"LogLevel={this.LogLevel}>";
         }

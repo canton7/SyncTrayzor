@@ -223,8 +223,16 @@
             </TabItem>
 
             <TabItem Header="{l:Loc SettingsView_Tab_Logging}">
-                <DockPanel>
-                    <GroupBox DockPanel.Dock="Bottom" Header="{l:Loc SettingsView_Section_SyncTrayzor}">
+                <StackPanel>
+                    <GroupBox Header="{l:Loc SettingsView_Section_Syncthing}">
+                        <Button DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="5,0"
+                                Command="{s:Action ShowSyncthingLogFile}"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource DialogButton}"
+                                Content="{l:Loc SettingsView_Logging_ShowSyncthingLog}"/>
+                    </GroupBox>
+
+                    <GroupBox Header="{l:Loc SettingsView_Section_SyncTrayzor}">
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                 <Label Content="{l:Loc SettingsView_Logging_LogLevel}"/>
@@ -238,45 +246,8 @@
                         </DockPanel>
                     </GroupBox>
 
-                    <GroupBox Header="{l:Loc SettingsView_Section_Syncthing}">
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Top"
-                                        TextWrapping="WrapWithOverflow"
-                                        Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"
-                                        Text="{l:Loc SettingsView_Logging_Explanation}"/>
 
-                            <Button DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="5,0"
-                                    Command="{s:Action ShowSyncthingLogFile}"
-                                    HorizontalAlignment="Left"
-                                    Style="{StaticResource DialogButton}"
-                                    Content="{l:Loc SettingsView_Logging_ShowSyncthingLog}"/>
-
-                            <Grid Margin="0,10,0,0">
-                                <TextBlock Visibility="{Binding SyncthingDebugFacilities, Converter={x:Static s:BoolToVisibilityConverter.InverseInstance}}"
-                                            Text="{l:Loc SettingsView_Logging_Unavailable}"/>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              Visibility="{Binding SyncthingDebugFacilities, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
-                                              MinHeight="200"
-                                              Height="{Binding Parent.ActualHeight, RelativeSource={RelativeSource Self}}">
-                                    <ItemsControl ItemsSource="{Binding SyncthingDebugFacilities}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <CheckBox IsChecked="{Binding IsEnabled}" x:Name="DebugFacilityIsEnabled">
-                                                        <TextBlock>
-                                                            <TextBlock Text="{Binding Name}"/>:
-                                                            <TextBlock Text="{Binding Description}"/>
-                                                        </TextBlock>
-                                                    </CheckBox>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Grid>
-                        </DockPanel>
-                    </GroupBox>
-                </DockPanel>
+                </StackPanel>
             </TabItem>
         </TabControl>
     </DockPanel>
