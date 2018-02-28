@@ -153,6 +153,10 @@
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingEnvironmentalVariables}" Content="{l:Loc SettingsView_SyncthingEnvironmentalVariables}"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingEnvironmentalVariables" Text="{Binding SyncthingEnvironmentalVariables.Value, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,40,20"/>
 
+                                    <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCustomPath}" Content="{l:Loc SettingsView_SyncthingCustomPath}"
+                                           ToolTip="{l:Loc SettingsView_SyncthingCustomPath}"/>
+                                    <TextBox DockPanel.Dock="Top" x:Name="SyncthingCustomPath" Text="{Binding SyncthingCustomPath.Value}"/>
+                                    
                                     <Label DockPanel.Dock="Top" Target="{Binding ElementName=SyncthingCustomHomePath}" Content="{l:Loc SettingsView_SyncthingCustomHomePath}"
                                            ToolTip="{l:Loc SettingsView_SyncthingCustomHomePath}"/>
                                     <TextBox DockPanel.Dock="Top" x:Name="SyncthingCustomHomePath" Text="{Binding SyncthingCustomHomePath.Value}"/>

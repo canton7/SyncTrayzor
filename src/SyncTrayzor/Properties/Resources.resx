@@ -994,4 +994,7 @@ Please donate to my charity fundraising campaign.</value>
   <data name="SettingsView_CannotSetAutoStart_Title" xml:space="preserve">
     <value>Unable to set auto-start</value>
   </data>
+  <data name="SettingsView_SyncthingCustomPath" xml:space="preserve">
+    <value>Syncthing Custom Path</value>
+  </data>
 </root>

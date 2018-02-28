@@ -1319,6 +1319,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Syncthing Custom Path.
+        /// </summary>
+        public static string SettingsView_SyncthingCustomPath {
+            get {
+                return ResourceManager.GetString("SettingsView_SyncthingCustomPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop Syncthing auto-upgrading.
         /// </summary>
         public static string SettingsView_SyncthingDenyUpgrade {

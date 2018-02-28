@@ -97,6 +97,7 @@ namespace SyncTrayzor.Pages.Settings
         public bool StartMinimizedEnabled => this.CanReadAndWriteAutostart && this.StartOnLogon;
         public SettingItem<string> SyncthingCommandLineFlags { get; }
         public SettingItem<string> SyncthingEnvironmentalVariables { get; }
+        public SettingItem<string> SyncthingCustomPath { get; }
         public SettingItem<string> SyncthingCustomHomePath { get; }
         public SettingItem<bool> SyncthingDenyUpgrade { get;  }
 
@@ -190,6 +191,12 @@ namespace SyncTrayzor.Pages.Settings
                     x.SyncthingEnvironmentalVariables = new EnvironmentalVariableCollection(envVars);
                 }, new SyncthingEnvironmentalVariablesValidator());
             this.SyncthingEnvironmentalVariables.RequiresSyncthingRestart = true;
+
+
+            this.SyncthingCustomPath = this.CreateBasicSettingItem(x => x.SyncthingCustomPath);
+            // This *shouldn't* be necessary, but the code to copy the syncthing.exe binary if it doesn't exist
+            // is only run at startup, so require a restart...
+            this.SyncthingCustomPath.RequiresSyncTrayzorRestart = true;
 
             this.SyncthingCustomHomePath = this.CreateBasicSettingItem(x => x.SyncthingCustomHomePath);
             this.SyncthingCustomHomePath.RequiresSyncthingRestart = true;
