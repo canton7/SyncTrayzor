@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.1.19
+-------
+
+ - Disable the built-in filesystem watcher if Syncthing's watcher is enabled
+ - Retry starting Syncthing if it crashed (#421)
+ - Make it clearer that multiple items in the Conflict Resolver window can be selected at once (#359)
+ - Expose the setting to change the location of syncthing.exe (#386)
+ - Fix issue where "Syncthing is starting" would appear forever (#420)
+ - Fix crash when pausing/unpausing devices (#435)
+ - Fix a rare condition when trying to enable auto-start would crash (#407)
+ - Remove support for debug facilities, since Syncthing has this built in
+
 v1.1.18
 -------
 
