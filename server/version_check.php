@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.18' => [
+   '1.1.19' => [
       'installed' => [
          'direct_download_url' => [
             'x64' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/SyncTrayzorSetup-x64.exe',
@@ -81,12 +81,13 @@ $versions = [
       'sha1sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha1sum.txt.asc',
       'sha512sum_download_url' => 'https://github.com/canton7/SyncTrayzor/releases/download/v{version}/sha512sum.txt.asc',
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Don't store Syncthing's API key in config, and don't log it\n- Fix filesystem notifications when the file contained non-ASCII characters\n- Don't show device connected/disconnected notifications if a device is reconnecting a lot\n- Don't watch / raise notifications about new folders if no existing folders are watched / have notifications\n- Don't write to the disk as much by default\n- Fix crash on the settings screen\n- Be more reslient to weird registry permissions, fixing crash\n- Fix crash when calculating data transfer stats\n- Be more reslient when trying to find a free port for Syncthing to use",
+      'release_notes' => "- Disable the built-in filesystem watcher if Syncthing's watcher is enabled\n- Retry starting Syncthing if it crashed (#421)\n- Make it clearer that multiple items in the Conflict Resolver window can be selected at once (#359)\n- Expose the setting to change the location of syncthing.exe (#386)\n- Fix issue where "Syncthing is starting" would appear forever (#420)\n- Fix crash when pausing/unpausing devices (#435)\n- Fix a rare condition when trying to enable auto-start would crash (#407)\n- Remove support for debug facilities, since Syncthing has this built in",
    ]
 ];
 
 $upgrades = [
-   '1.1.17' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['release_notes' => "- Fix uninstaller crash if the survey is submitted while not connected to the internet"]],
+   '1.1.18' => ['to' => 'latest', 'formatter' => '5'],
+   '1.1.17' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.16' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.15' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.14' => ['to' => 'latest', 'formatter' => '5'],
