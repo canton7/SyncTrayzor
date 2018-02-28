@@ -318,8 +318,9 @@ namespace SyncTrayzor.Services.Metering
                     }
                     changed = true;
                 }
-                catch (InvalidOperationException e)
+                catch (Exception e)
                 {
+                    // Could be that the client is not connected, or that this specific request fails
                     logger.Warn($"Could not pause device {device.DeviceId}: {e.Message}");
                 }
             }
@@ -336,8 +337,9 @@ namespace SyncTrayzor.Services.Metering
                     }
                     changed = true;
                 }
-                catch (InvalidOperationException e)
+                catch (Exception e)
                 {
+                    // Could be that the client is not connected, or that this specific request fails
                     logger.Warn($"Could not resume device {device.DeviceId}: {e.Message}");
                 }
             }
