@@ -172,6 +172,14 @@ Here's a handy table of what you need to copy where if you're migrating between 
 | SyncTrayzor Portable | SyncTrayzor Installed | <ol><li>Copy the contents of the `data\syncthing` folder inside the portable directory into `C:\Users\<You>\AppData\Local\Syncthing`</li><li>Copy `data\config.xml` to `C:\Users\<You>\AppData\Roaming\SyncTrayzor\config.xml`</li></ol> |
 
 
+Backups
+-------
+
+For the installed version of SyncTrayzor, in order to save your configuration (both Syncthing's and SyncTrayzor's), you will need to backup the following paths:
+
+ - `C:\Users\<You>\AppData\Roaming\SyncTrayzor`
+ - `C:\Users\<You>\AppData\Local\Syncthing`
+
 
 Using Syncthing beta releases
 -----------------------------
