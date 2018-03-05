@@ -172,8 +172,10 @@ namespace SyncTrayzor.Pages.ConflictResolution
                 this.conflictFileManager.ResolveConflict(conflictSet, filePath, this.DeleteToRecycleBin);
                 return true;
             }
-            catch (IOException e)
+            catch (Exception e)
             {
+                // So far I've seen IOExeption (no longer exists) and UnauthorizedAccessException
+                // Just in case there are any others, be pokemon
                 this.windowManager.ShowMessageBox(
                     Localizer.F(Resources.ConflictResolutionView_Dialog_Failed_Message, e.Message),
                     Resources.ConflictResolutionView_Dialog_Failed_Title,

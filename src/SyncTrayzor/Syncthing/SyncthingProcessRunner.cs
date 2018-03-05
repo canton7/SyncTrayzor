@@ -72,6 +72,7 @@ namespace SyncTrayzor.Syncthing
         private Process process;
 
         private const int numRestarts = 4;
+        private const int systemShutdownExitStatus = 0x40010004;
         private static readonly TimeSpan restartThreshold = TimeSpan.FromMinutes(1);
         private readonly List<DateTime> starts = new List<DateTime>();
         private bool isKilling;
@@ -244,7 +245,7 @@ namespace SyncTrayzor.Syncthing
                 this.OnProcessRestarted();
                 this.Start();
             }
-            else if (exitStatus != SyncthingExitStatus.Success && !this.isKilling)
+            else if (exitStatus != SyncthingExitStatus.Success && (int)exitStatus != systemShutdownExitStatus && !this.isKilling)
             {
                 if (this.starts.Count >= numRestarts && DateTime.UtcNow - this.starts[0] < restartThreshold)
                 {

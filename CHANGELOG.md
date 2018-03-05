@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.1.21
+-------
+
+ - Fix "Syncthing failed to start correctly" message when shutting down Windows (#438)
+ - Handle "Access denied" errors when resolving conflicts (#440)
+
 v1.1.20
 -------
 
