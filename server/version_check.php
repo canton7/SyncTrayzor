@@ -64,30 +64,32 @@ function get_with_wildcard($src, $value, $default = null)
    return $default;
 }
 
-$base = "https://synctrayzor.antonymale.co.uk/download";
-
 $versions = [
-   '1.1.20' => [
+   '1.1.21' => [
+      'base_url' => 'https://synctrayzor.antonymale.co.uk/download',
       'installed' => [
          'direct_download_url' => [
-            'x64' => "$base/v{version}/SyncTrayzorSetup-x64.exe",
-            'x86' => "$base/v{version}/SyncTrayzorSetup-x86.exe",
+            'x64' => "{base_url}/v{version}/SyncTrayzorSetup-x64.exe",
+            'x86' => "{base_url}/v{version}/SyncTrayzorSetup-x86.exe",
          ],
       ],
       'portable' => [
          'direct_download_url' => [
-            'x64' => "$base/v{version}/SyncTrayzorPortable-x64.zip",
-            'x86' => "$base/v{version}/SyncTrayzorPortable-x86.zip",
+            'x64' => "{base_url}/v{version}/SyncTrayzorPortable-x64.zip",
+            'x86' => "{base_url}/v{version}/SyncTrayzorPortable-x86.zip",
          ],
       ],     
-      'sha1sum_download_url' => "$base/v{version}/sha1sum.txt.asc",
-      'sha512sum_download_url' => "$base/v{version}/sha512sum.txt.asc",
+      'sha1sum_download_url' => "{base_url}/v{version}/sha1sum.txt.asc",
+      'sha512sum_download_url' => "{base_url}/v{version}/sha512sum.txt.asc",
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "!!!!!\nYou must upgrade to v1.1.20 now, otherwise auto-upgrades will stop working!\n!!!!!\n\n- Fix to allow SyncTrayzor to download updates from GitHub, after they made changes\n- Disable the built-in filesystem watcher if Syncthing's watcher is enabled\n- Retry starting Syncthing if it crashed (#421)\n- Make it clearer that multiple items in the Conflict Resolver window can be selected at once (#359)\n- Expose the setting to change the location of syncthing.exe (#386)\n- Fix issue where \"Syncthing is starting\" would appear forever (#420)\n- Fix crash when pausing/unpausing devices (#435)\n- Fix a rare condition when trying to enable auto-start would crash (#407)\n- Remove support for debug facilities, since Syncthing has this built in",
+      'release_notes' => "!!!!!\nYou must upgrade to v1.1.21 now, otherwise auto-upgrades will stop working!\n!!!!!\n\n- Fix \"Syncthing failed to start correctly\" message when shutting down Windows (#438)\n- Handle \"Access denied\" errors when resolving conflicts (#440)",
    ]
 ];
 
 $upgrades = [
+   // Github start supporting tls3 only, and versions prior to 1.1.20 didn't support this. 1.1.20 and 1.1.21 are hosted on my server. 1.1.20 can download
+   // directly from github, but versions prior have to use my server. 
+   '1.1.20' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['base_url' => 'https://github.com/canton7/SyncTrayzor/releases/download', 'release_notes' => "- Fix \"Syncthing failed to start correctly\" message when shutting down Windows (#438)\n- Handle \"Access denied\" errors when resolving conflicts (#440)"]],
    '1.1.19' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.18' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.17' => ['to' => 'latest', 'formatter' => '5'],
@@ -232,10 +234,15 @@ try
       $to_version = $upgrades[$version]['to'];
       if ($to_version == 'latest')
          $to_version = array_keys($versions)[0];
+
       $formatter = $response_formatters[$upgrades[$version]['formatter']];
       $overrides = isset($upgrades[$version]['overrides']) ? $upgrades[$version]['overrides'] : [];
-      array_walk_recursive($versions[$to_version], function(&$value, $key) use ($to_version) {
+
+      $base_url = isset($overrides['base_url']) ? $overrides['base_url'] : $versions[$to_version]['base_url'];
+
+      array_walk_recursive($versions[$to_version], function(&$value, $key) use ($to_version, $base_url) {
          $value = str_replace('{version}', $to_version, $value);
+         $value = str_replace('{base_url}', $base_url, $value);
       });
       $to_version_info = $versions[$to_version];
 
