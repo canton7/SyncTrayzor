@@ -289,19 +289,23 @@ namespace SyncTrayzor.Pages.Settings
 
             this.FolderSettings.Clear();
 
-            var folderSettings = configuration.Folders.Select(x =>
-            {
-                this.syncthingManager.Folders.TryFetchById(x.ID, out var folder);
+            var folderSettings = new List<FolderSettings>(configuration.Folders.Count);
 
-                return new FolderSettings()
+            foreach (var configFolder in configuration.Folders)
+            {
+                if (this.syncthingManager.Folders.TryFetchById(configFolder.ID, out var folder))
                 {
-                    FolderId = x.ID,
-                    FolderLabel = folder?.Label ?? x.ID,
-                    IsWatched = x.IsWatched,
-                    IsWatchAllowed = !folder.IsFsWatcherEnabled,
-                    IsNotified = x.NotificationsEnabled,
-                };
-            });
+                    folderSettings.Add(new FolderSettings()
+                    {
+                        FolderId = configFolder.ID,
+                        FolderLabel = folder?.Label ?? configFolder.ID,
+                        IsWatched = configFolder.IsWatched,
+                        IsWatchAllowed = !folder.IsFsWatcherEnabled,
+                        IsNotified = configFolder.NotificationsEnabled,
+                    });
+                }
+            }
+
             this.FolderSettings.AddRange(folderSettings.OrderBy(x => x.FolderLabel));
             this.IsAnyFolderWatchEnabledInSyncthing = this.FolderSettings.Any(x => !x.IsWatchAllowed);
 
