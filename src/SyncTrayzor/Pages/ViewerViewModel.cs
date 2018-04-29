@@ -99,6 +99,7 @@ namespace SyncTrayzor.Pages
                     // We really only want to set the LocalStorage path, but we don't have that level of control....
                     CachePath = this.pathsProvider.CefCachePath,
                     IgnoreCertificateErrors = true,
+                    LogSeverity = LogSeverity.Disable,
                 };
 
                 // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
