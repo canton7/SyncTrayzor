@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.Folders;
 using SyncTrayzor.Syncthing.TransferHistory;
 using SyncTrayzor.Utils;
 using System;
@@ -22,7 +23,7 @@ namespace SyncTrayzor.Pages.Tray
         private readonly DispatcherTimer completedTimeAgoUpdateTimer;
 
         public string Path { get; }
-        public string FolderId { get; }
+        public Folder Folder { get; }
         public string FullPath { get; }
         public ImageSource Icon { get; }
         public string Error { get; private set; }
@@ -56,7 +57,7 @@ namespace SyncTrayzor.Pages.Tray
             this.FileTransfer = fileTransfer;
             this.Path = Pri.LongPath.Path.GetFileName(this.FileTransfer.Path);
             this.FullPath = this.FileTransfer.Path;
-            this.FolderId = this.FileTransfer.FolderId;
+            this.Folder = this.FileTransfer.Folder;
             using (var icon = ShellTools.GetIcon(this.FileTransfer.Path, this.FileTransfer.ItemType != ItemChangedItemType.Dir))
             {
                 var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());

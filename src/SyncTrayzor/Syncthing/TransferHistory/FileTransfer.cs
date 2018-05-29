@@ -1,4 +1,5 @@
 ﻿using SyncTrayzor.Syncthing.ApiClient;
+using SyncTrayzor.Syncthing.Folders;
 using System;
 
 namespace SyncTrayzor.Syncthing.TransferHistory
@@ -11,7 +12,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
         public long TotalBytes { get; private set; }
         public double? DownloadBytesPerSecond { get; private set; }
 
-        public string FolderId { get; }
+        public Folder Folder { get; }
         public string Path { get; }
         public ItemChangedItemType ItemType { get; }
         public ItemChangedActionType ActionType { get; }
@@ -24,9 +25,9 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
         private DateTime? lastProgressUpdateUtc;
 
-        public FileTransfer(string folderId, string path, ItemChangedItemType itemType, ItemChangedActionType actionType)
+        public FileTransfer(Folder folder, string path, ItemChangedItemType itemType, ItemChangedActionType actionType)
         {
-            this.FolderId = folderId;
+            this.Folder = folder;
             this.Path = path;
 
             this.Status = FileTransferStatus.Started;
@@ -61,7 +62,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
         public override string ToString()
         {
-            return $"<FileTransfer Folder={this.FolderId} Path={this.Path} Status={this.Status} ItemType={this.ItemType} ActionType={this.ActionType} Started={this.StartedUtc} Finished={this.FinishedUtc}>";
+            return $"<FileTransfer Folder={this.Folder.Label} Path={this.Path} Status={this.Status} ItemType={this.ItemType} ActionType={this.ActionType} Started={this.StartedUtc} Finished={this.FinishedUtc}>";
         }
     }
 }

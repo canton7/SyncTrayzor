@@ -126,7 +126,7 @@
                                                                 <l:LocExtension Key="FileTransfersTrayView_PathDetails">
                                                                     <l:LocExtension.ValueBindings>
                                                                         <MultiBinding>
-                                                                            <Binding Path="FolderId"/>
+                                                                            <Binding Path="Folder.Label"/>
                                                                             <Binding Path="FullPath"/>
                                                                         </MultiBinding>
                                                                     </l:LocExtension.ValueBindings>

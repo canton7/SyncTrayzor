@@ -98,14 +98,15 @@ namespace SyncTrayzor.Syncthing.TransferHistory
             this.folderManager.SyncStateChanged += this.SyncStateChanged;
         }
 
-        private FileTransfer FetchOrInsertInProgressFileTransfer(string folder, string path, ItemChangedItemType itemType, ItemChangedActionType actionType)
+        private FileTransfer FetchOrInsertInProgressFileTransfer(string folderId, string path, ItemChangedItemType itemType, ItemChangedActionType actionType)
         {
-            var key = new FolderPathKey(folder, path);
+            var key = new FolderPathKey(folderId, path);
             bool created = false;
             FileTransfer fileTransfer;
             lock (this.transfersLock)
             {
-                if (!this.inProgressTransfers.TryGetValue(key, out fileTransfer))
+                if (!this.inProgressTransfers.TryGetValue(key, out fileTransfer) &&
+                    this.folderManager.TryFetchById(folderId, out var folder))
                 {
                     created = true;
                     fileTransfer = new FileTransfer(folder, path, itemType, actionType);
@@ -116,6 +117,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
 
             if (created)
                 this.OnTransferStarted(fileTransfer);
+
             return fileTransfer;
         }
 
@@ -149,12 +151,18 @@ namespace SyncTrayzor.Syncthing.TransferHistory
             lock (this.transfersLock)
             {
                 fileTransfer = this.FetchOrInsertInProgressFileTransfer(e.Folder, e.Item, e.ItemType, e.Action);
-
-                this.CompleteFileTransfer(fileTransfer, e.Error);
+                // If it wasn't, and we couldn't create it, fileTransfer is null
+                if (fileTransfer != null)
+                {
+                    this.CompleteFileTransfer(fileTransfer, e.Error);
+                }
             }
 
-            this.OnTransferStateChanged(fileTransfer);
-            this.OnTransferCompleted(fileTransfer);
+            if (fileTransfer != null)
+            {
+                this.OnTransferStateChanged(fileTransfer);
+                this.OnTransferCompleted(fileTransfer);
+            }
         }
 
         private void CompleteFileTransfer(FileTransfer fileTransfer, string error)
@@ -162,7 +170,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
             // This is always called from within a lock, but you can't be too sure...
             lock (this.transfersLock)
             {
-                var key = new FolderPathKey(fileTransfer.FolderId, fileTransfer.Path);
+                var key = new FolderPathKey(fileTransfer.Folder.FolderId, fileTransfer.Path);
 
                 bool isNewError = false;
                 if (error == null)
@@ -175,7 +183,7 @@ namespace SyncTrayzor.Syncthing.TransferHistory
                     {
                         // Remove will only do something in the case that the failure existed, but the error changed
                         this.currentlyFailingTransfers.Remove(key);
-                        this.currentlyFailingTransfers.Add(key, new FailingTransfer(fileTransfer.FolderId, fileTransfer.Path, error));
+                        this.currentlyFailingTransfers.Add(key, new FailingTransfer(fileTransfer.Folder.FolderId, fileTransfer.Path, error));
                         isNewError = true;
                     }
                 }
@@ -189,10 +197,10 @@ namespace SyncTrayzor.Syncthing.TransferHistory
                 if (this.completedTransfers.Count > maxCompletedTransfers)
                     this.completedTransfers.Dequeue();
 
-                if (!this.recentlySynchronized.TryGetValue(fileTransfer.FolderId, out var recentlySynchronizedList))
+                if (!this.recentlySynchronized.TryGetValue(fileTransfer.Folder.FolderId, out var recentlySynchronizedList))
                 {
                     recentlySynchronizedList = new List<FileTransfer>();
-                    this.recentlySynchronized[fileTransfer.FolderId] = recentlySynchronizedList;
+                    this.recentlySynchronized[fileTransfer.Folder.FolderId] = recentlySynchronizedList;
                 }
                 recentlySynchronizedList.Add(fileTransfer);
             }
