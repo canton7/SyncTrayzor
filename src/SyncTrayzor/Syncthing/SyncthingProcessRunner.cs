@@ -251,6 +251,7 @@ namespace SyncTrayzor.Syncthing
                 {
                     logger.Warn("{0} restarts in less than {1}: not restarting again", numRestarts, restartThreshold);
                     this.OnProcessStopped(exitStatus);
+                    this.starts.Clear();
                 }
                 else
                 {
