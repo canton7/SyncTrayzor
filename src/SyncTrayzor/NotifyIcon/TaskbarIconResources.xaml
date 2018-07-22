@@ -109,7 +109,8 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <Separator Visibility="{Binding Folders, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"/>
+                <MenuItem Header="{l:Loc TrayIcon_Menu_RescanAllFolders}" Command="{s:Action RescanAll, ActionNotFound=Disable}"/>
+                <Separator/>
                 
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StartSyncthing}" Command="{s:Action Start, ActionNotFound=Disable}"/>
                 <MenuItem Header="{l:Loc TrayIcon_Menu_StopSyncthing}" Command="{s:Action Stop, ActionNotFound=Disable}"/>

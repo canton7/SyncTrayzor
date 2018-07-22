@@ -991,4 +991,8 @@ Please donate to my charity fundraising campaign.</value>
   <data name="SettingsView_SyncthingCustomPath" xml:space="preserve">
     <value>Syncthing Custom Path</value>
   </data>
+  <data name="TrayIcon_Menu_RescanAllFolders" xml:space="preserve">
+    <value>_Rescan All Folders</value>
+    <comment>Menu option available when right-clicking the tray icon. Allows the user to re-scan all folders</comment>
+  </data>
 </root>

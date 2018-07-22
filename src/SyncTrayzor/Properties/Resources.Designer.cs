@@ -2051,6 +2051,15 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Rescan All Folders.
+        /// </summary>
+        public static string TrayIcon_Menu_RescanAllFolders {
+            get {
+                return ResourceManager.GetString("TrayIcon_Menu_RescanAllFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Restart Syncthing.
         /// </summary>
         public static string TrayIcon_Menu_RestartSyncthing {

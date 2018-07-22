@@ -158,6 +158,12 @@ namespace SyncTrayzor.NotifyIcon
             this.syncthingManager.RestartAsync();
         }
 
+        public bool CanRescanAll => this.SyncthingState == SyncthingState.Running;
+        public void RescanAll()
+        {
+            this.syncthingManager.ScanAsync(null, null);
+        }
+
         public void Exit()
         {
             this.OnExitRequested();
