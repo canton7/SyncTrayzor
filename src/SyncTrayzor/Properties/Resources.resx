@@ -727,10 +727,6 @@ Do you want to restart SyncTrayzor now?</value>
   <data name="SettingsView_Tab_Logging" xml:space="preserve">
     <value>Logging</value>
   </data>
-  <data name="SettingsView_Validation_SetSttraceInTab" xml:space="preserve">
-    <value>Set STTRACE in the 'Logging + STTRACE' tab</value>
-    <comment>Shown when the user attempts to enter an STTRACE value in the 'Syncthing Environmental Variables' box. They should use the tab with the heading 'Logging +STTRACE' instead.</comment>
-  </data>
   <data name="ConsoleView_SettingsButton" xml:space="preserve">
     <value>Settings</value>
   </data>

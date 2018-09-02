@@ -1436,15 +1436,6 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set STTRACE in the &apos;Logging + STTRACE&apos; tab.
-        /// </summary>
-        public static string SettingsView_Validation_SetSttraceInTab {
-            get {
-                return ResourceManager.GetString("SettingsView_Validation_SetSttraceInTab", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You may not specify the flag {0}.
         /// </summary>
         public static string SettingsView_Validation_SyncthingCommandLineFlagIsNotAllowed {

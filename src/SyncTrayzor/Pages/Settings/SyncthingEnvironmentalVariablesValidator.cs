@@ -12,12 +12,6 @@ namespace SyncTrayzor.Pages.Settings
             {
                 return KeyValueStringParser.TryParse(str, out var result);
             }).WithMessage(Resources.SettingsView_Validation_SyncthingEnvironmentalVariablesMustHaveFormat);
-
-            RuleFor(x => x.Value).Must(str =>
-            {
-                KeyValueStringParser.TryParse(str, out var result);
-                return !result.Any(x => x.Key == "STTRACE");
-            }).WithMessage(Resources.SettingsView_Validation_SetSttraceInTab);
         }
     }
 }
