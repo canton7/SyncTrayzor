@@ -41,16 +41,21 @@ namespace SyncTrayzor.NotifyIcon
             if (imageSource != null)
             {
                 Uri uri = new Uri(imageSource.ToString());
-                StreamResourceInfo streamInfo = Application.GetResourceStream(uri);
+                // The Icon ctor doesn't take ownership of the stream. This stream *does* however
+                // need to be disposed: PackagePart keeps a cache of streams which have been requested,
+                // and only releases them once they've been disposed, so the finalizer never gets a chance
+                // to kick in. See #479.
+                using (var stream = Application.GetResourceStream(uri)?.Stream)
+                { 
+                    if (stream == null)
+                    {
+                        string msg = "The supplied image source '{0}' could not be resolved.";
+                        msg = String.Format(msg, imageSource);
+                        throw new ArgumentException(msg);
+                    }
 
-                if (streamInfo == null)
-                {
-                    string msg = "The supplied image source '{0}' could not be resolved.";
-                    msg = String.Format(msg, imageSource);
-                    throw new ArgumentException(msg);
+                    icon = new Icon(stream, idealIconSize, idealIconSize);
                 }
-
-                icon = new Icon(streamInfo.Stream, idealIconSize, idealIconSize);
             }
 
             taskbarIcon.Icon?.Dispose();
