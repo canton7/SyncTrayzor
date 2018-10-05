@@ -123,6 +123,10 @@ namespace SyncTrayzor.Xaml
 
         private void SortBy(GridViewColumnHeader header)
         {
+            // Not entirely sure how this can happen, but it's been reported in the wild
+            if (header.Column == null)
+                return;
+
             var direction = ListSortDirection.Ascending;
             if (header == this.lastColumnHeader)
                 direction = (this.lastDirection == ListSortDirection.Ascending) ? ListSortDirection.Descending : ListSortDirection.Ascending;
@@ -131,7 +135,7 @@ namespace SyncTrayzor.Xaml
         }
 
         private void ApplyColumnSort(GridViewColumnHeader header, GridViewColumn column, ListSortDirection direction)
-        {
+        {   
             var propertyName = GridViewSortBy.GetSortByKey(column);
             if (propertyName == null)
                 return;

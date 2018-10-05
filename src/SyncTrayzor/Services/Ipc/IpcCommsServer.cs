@@ -52,32 +52,48 @@ namespace SyncTrayzor.Services.Ipc
             byte[] buffer = new byte[256];
             var commandBuilder = new StringBuilder();
 
-            var serverStream = new NamedPipeServerStream(this.PipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.Asynchronous, 0, 0);
-
-            using (cancellationToken.Register(() => serverStream.Close()))
+            try
             {
-                while (!cancellationToken.IsCancellationRequested)
+                var serverStream = new NamedPipeServerStream(this.PipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.Asynchronous, 0, 0);
+
+                using (cancellationToken.Register(() => serverStream.Close()))
                 {
-                    await Task.Factory.FromAsync(serverStream.BeginWaitForConnection, serverStream.EndWaitForConnection, TaskCreationOptions.None);
-
-                    int read = await serverStream.ReadAsync(buffer, 0, buffer.Length);
-                    commandBuilder.Append(Encoding.ASCII.GetString(buffer, 0, read));
-
-                    while (!serverStream.IsMessageComplete)
+                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        read = serverStream.Read(buffer, 0, buffer.Length);
+                        await Task.Factory.FromAsync(serverStream.BeginWaitForConnection, serverStream.EndWaitForConnection, TaskCreationOptions.None);
+
+                        int read = await serverStream.ReadAsync(buffer, 0, buffer.Length);
                         commandBuilder.Append(Encoding.ASCII.GetString(buffer, 0, read));
+
+                        while (!serverStream.IsMessageComplete)
+                        {
+                            read = serverStream.Read(buffer, 0, buffer.Length);
+                            commandBuilder.Append(Encoding.ASCII.GetString(buffer, 0, read));
+                        }
+
+                        var response = this.HandleReceivedCommand(commandBuilder.ToString());
+                        var responseBytes = Encoding.ASCII.GetBytes(response);
+
+                        try
+                        {
+                            serverStream.Write(responseBytes, 0, responseBytes.Length);
+
+                            serverStream.WaitForPipeDrain();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error(e, "Unable to write response to pipe");
+                        }
+
+                        serverStream.Disconnect();
+
+                        commandBuilder.Clear();
                     }
-
-                    var response = this.HandleReceivedCommand(commandBuilder.ToString());
-                    var responseBytes = Encoding.ASCII.GetBytes(response);
-                    serverStream.Write(responseBytes, 0, responseBytes.Length);
-
-                    serverStream.WaitForPipeDrain();
-                    serverStream.Disconnect();
-
-                    commandBuilder.Clear();
                 }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "Pipe server threw an exception");
             }
         }
 

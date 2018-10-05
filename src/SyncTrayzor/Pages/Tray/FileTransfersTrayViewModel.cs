@@ -137,16 +137,14 @@ namespace SyncTrayzor.Pages.Tray
         public void ItemClicked(FileTransferViewModel fileTransferVm)
         {
             var fileTransfer = fileTransferVm.FileTransfer;
-            if (!this.syncthingManager.Folders.TryFetchById(fileTransfer.FolderId, out var folder))
-                return; // Huh? Nothing we can do about it...
 
             // Not sure of the best way to deal with deletions yet...
             if (fileTransfer.ActionType == ItemChangedActionType.Update)
             {
                 if (fileTransfer.ItemType == ItemChangedItemType.File)
-                    this.processStartProvider.ShowFileInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
+                    this.processStartProvider.ShowFileInExplorer(Path.Combine(fileTransferVm.Folder.Path, fileTransfer.Path));
                 else if (fileTransfer.ItemType == ItemChangedItemType.Dir)
-                    this.processStartProvider.ShowFolderInExplorer(Path.Combine(folder.Path, fileTransfer.Path));
+                    this.processStartProvider.ShowFolderInExplorer(Path.Combine(fileTransferVm.Folder.Path, fileTransfer.Path));
             }
         }
 

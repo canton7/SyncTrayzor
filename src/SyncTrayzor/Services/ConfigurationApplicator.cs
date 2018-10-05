@@ -52,7 +52,7 @@ namespace SyncTrayzor.Services
             this.meteredNetworkManager = meteredNetworkManager;
             this.pathTransformer = pathTransformer;
 
-            this.syncthingManager.DataLoaded += this.OnDataLoaded;
+            this.syncthingManager.Folders.FoldersChanged += this.FoldersChanged;
             this.updateManager.VersionIgnored += this.VersionIgnored;
         }
 
@@ -144,7 +144,7 @@ namespace SyncTrayzor.Services
             }
         }
 
-        private void OnDataLoaded(object sender, EventArgs e)
+        private void FoldersChanged(object sender, EventArgs e)
         {
             this.configurationProvider.AtomicLoadAndSave(c =>
             {
@@ -171,7 +171,7 @@ namespace SyncTrayzor.Services
         public void Dispose()
         {
             this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
-            this.syncthingManager.DataLoaded -= this.OnDataLoaded;
+            this.syncthingManager.Folders.FoldersChanged -= this.FoldersChanged;
             this.updateManager.VersionIgnored -= this.VersionIgnored;
         }
     }

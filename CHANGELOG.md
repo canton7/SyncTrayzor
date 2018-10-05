@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.1.22
+-------
+
+ - Fix some crashes (#443, #463, #468, #471)
+ - Show the folder name, not ID, in the file transfers progress tooltip  (#457)
+ - Add tray button to rescan all folders (#465)
+ - Show change in Syncthing theme without requiring refresh (#472)
+ - Allow STTRACE to be set in env vars in settings (#473)
+ - Fix slow memory leak (#479)
+
 v1.1.21
 -------
 

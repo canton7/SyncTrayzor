@@ -64,9 +64,12 @@ namespace SyncTrayzor.Services
 
         public void Dispose()
         {
-            this.rootViewModel.Activated -= this.OnRootWindowActivated;
-            this.rootViewModel.Deactivated -= this.OnRootWindowDeactivated;
-            this.rootViewModel.Closed -= this.OnRootWindowClosed;
+            if (this.rootViewModel != null)
+            {
+                this.rootViewModel.Activated -= this.OnRootWindowActivated;
+                this.rootViewModel.Deactivated -= this.OnRootWindowDeactivated;
+                this.rootViewModel.Closed -= this.OnRootWindowClosed;
+            }
         }
     }
 }

@@ -99,16 +99,17 @@ namespace SyncTrayzor.Pages
                     // We really only want to set the LocalStorage path, but we don't have that level of control....
                     CachePath = this.pathsProvider.CefCachePath,
                     IgnoreCertificateErrors = true,
+                    LogSeverity = LogSeverity.Disable,
                 };
 
                 // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
                 settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+                settings.CefCommandLineArgs.Add("disable-cache", "1");
 
                 if (configuration.DisableHardwareRendering)
                 {
                     settings.CefCommandLineArgs.Add("disable-gpu", "1");
                     settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
-                    settings.CefCommandLineArgs.Add("disable-cache", "1");
                     settings.CefCommandLineArgs.Add("disable-application-cache", "1");
                 }
 
@@ -342,6 +343,12 @@ namespace SyncTrayzor.Pages
             // and https://github.com/cefsharp/CefSharp/issues/534#issuecomment-60694502
             var headers = request.Headers;
             headers["X-API-Key"] = this.syncthingManager.ApiKey;
+
+            // I don't know why it adds these, even when we explicitly disable caching.
+            headers.Remove("Cache-Control");
+            headers.Remove("If-None-Match");
+            headers.Remove("If-Modified-Since");
+
             lock (this.cultureLock)
             {
                 if (this.culture != null)
