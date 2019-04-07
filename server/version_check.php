@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.22' => [
+   '1.1.23' => [
       'base_url' => 'https://github.com/canton7/SyncTrayzor/releases/download',
       'installed' => [
          'direct_download_url' => [
@@ -106,10 +106,11 @@ $versions = [
 ];
 
 $upgrades = [
-   // Github start supporting tls3 only, and versions prior to 1.1.20 didn't support this. 1.1.20 and 1.1.21 are hosted on my server. 1.1.20 can download
-   // directly from github, but versions prior have to use my server. 
+   '1.1.22' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.21' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.20' => ['to' => 'latest', 'formatter' => '5'],
+   // Github start supporting tls3 only, and versions prior to 1.1.20 didn't support this. 1.1.20 and 1.1.21 are hosted on my server. 1.1.20 can download
+   // directly from github, but versions prior have to use my server. 
    '1.1.19' => ['to' => '1.1.21', 'formatter' => '5'],
    '1.1.18' => ['to' => '1.1.21', 'formatter' => '5'],
    '1.1.17' => ['to' => '1.1.21', 'formatter' => '5'],
