@@ -8,6 +8,10 @@ namespace SyncTrayzor.Syncthing.Devices
         private readonly object syncRoot = new object();
 
         public string DeviceId { get; }
+
+        private string _shortDeviceId;
+        public string ShortDeviceId => _shortDeviceId ?? (_shortDeviceId = this.DeviceId.Substring(0, this.DeviceId.IndexOf('-')));
+
         public string Name { get; }
 
         public bool IsConnected
