@@ -18,6 +18,7 @@
                 <ColumnDefinition Width="{Binding View.Columns[1].ActualWidth, ElementName=SelectConflictOptions}"/>
                 <ColumnDefinition Width="{Binding View.Columns[2].ActualWidth, ElementName=SelectConflictOptions}"/>
                 <ColumnDefinition Width="{Binding View.Columns[3].ActualWidth, ElementName=SelectConflictOptions}"/>
+                <ColumnDefinition Width="{Binding View.Columns[4].ActualWidth, ElementName=SelectConflictOptions}"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -40,7 +41,8 @@
             <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Value}" Text="{Binding Conflict.FileName}"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding Conflict.LastModified}"/>
             <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding Conflict.Size}"/>
-            <Button Grid.Row="1" Grid.Column="3"
+            
+            <Button Grid.Row="1" Grid.Column="4"
                                 HorizontalAlignment="Left"
                                 Style="{StaticResource Value}"
                                 Padding="5,0"
@@ -73,6 +75,13 @@
                             <DataTemplate>
                                 <!-- The size in the 'Original File' table may be smaller - hack by adding padding here (which does make it look better anyway) -->
                                 <TextBlock Margin="0,0,20,0" Text="{Binding Size}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{l:Loc ConflictResolutionView_Header_ModifiedBy}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,0,10,0" Text="{Binding ModifiedBy}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

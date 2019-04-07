@@ -28,9 +28,9 @@ namespace SyncTrayzor.Utils
             return path + DefaultTempFileSuffix;
         }
 
-        public override void Close()
+        protected override void Dispose(bool disposing)
         {
-            base.Close();
+            base.Dispose(disposing);
 
             bool success = NativeMethods.MoveFileEx(this.tempPath, this.path, MoveFileFlags.ReplaceExisting | MoveFileFlags.WriteThrough);
             if (!success)

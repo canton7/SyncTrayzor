@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Pri.LongPath;
 using NLog;
 using System.Reactive.Linq;
+using SyncTrayzor.Syncthing.Devices;
+using SyncTrayzor.Syncthing;
 
 namespace SyncTrayzor.Services.Conflicts
 {
@@ -36,13 +38,15 @@ namespace SyncTrayzor.Services.Conflicts
 
         public DateTime Created { get; }
         public long SizeBytes { get; }
+        public Device Device { get; }
 
-        public ConflictOption(string filePath, DateTime lastModified, DateTime created, long sizeBytes)
+        public ConflictOption(string filePath, DateTime lastModified, DateTime created, long sizeBytes, Device device)
         {
             this.FilePath = filePath;
             this.LastModified = lastModified;
             this.Created = created;
             this.SizeBytes = sizeBytes;
+            this.Device = device;
         }
 
         public override string ToString()
@@ -68,12 +72,14 @@ namespace SyncTrayzor.Services.Conflicts
         public string FilePath { get; }
         public string OriginalPath { get; }
         public DateTime Created { get; }
+        public string ShortDeviceId { get; }
 
-        public ParsedConflictFileInfo(string filePath, string originalPath, DateTime created)
+        public ParsedConflictFileInfo(string filePath, string originalPath, DateTime created, string shortDeviceId)
         {
             this.FilePath = filePath;
             this.OriginalPath = originalPath;
             this.Created = created;
+            this.ShortDeviceId = shortDeviceId;
         }
     }
 
@@ -96,17 +102,19 @@ namespace SyncTrayzor.Services.Conflicts
         private const string syncthingSpecialFileMarker = "~syncthing~";
 
         private static readonly Regex conflictRegex =
-            new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(?<suffix>.*)(?<extension>\..*)$");
+            new Regex(@"^(?<prefix>.*).sync-conflict-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})-(?<hours>\d{2})(?<mins>\d{2})(?<secs>\d{2})(-(?<device>[a-zA-Z0-9]+))?(?<suffix>.*)(?<extension>\..*)$");
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const int maxSearchDepth = 255; // Loosely based on the max path length (a bit over)
 
         private readonly IFilesystemProvider filesystemProvider;
+        private readonly ISyncthingManager syncthingManager;
 
         public string ConflictPattern => conflictPattern;
 
-        public ConflictFileManager(IFilesystemProvider filesystemProvider)
+        public ConflictFileManager(IFilesystemProvider filesystemProvider, ISyncthingManager syncthingManager)
         {
             this.filesystemProvider = filesystemProvider;
+            this.syncthingManager = syncthingManager;
         }
 
         public IObservable<ConflictSet> FindConflicts(string basePath)
@@ -187,7 +195,12 @@ namespace SyncTrayzor.Services.Conflicts
                     try
                     {
                         var file = new ConflictFile(kvp.Key, this.filesystemProvider.GetLastWriteTime(kvp.Key), this.filesystemProvider.GetFileSize(kvp.Key));
-                        var conflicts = kvp.Value.Select(x => new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created, this.filesystemProvider.GetFileSize(x.FilePath))).ToList();
+                        var devices = this.syncthingManager.Devices.FetchDevices();
+                        var conflicts = kvp.Value.Select(x =>
+                        {
+                            var device = x.ShortDeviceId == null ? null : devices.FirstOrDefault(d => d.ShortDeviceId == x.ShortDeviceId);
+                            return new ConflictOption(x.FilePath, this.filesystemProvider.GetLastWriteTime(x.FilePath), x.Created, this.filesystemProvider.GetFileSize(x.FilePath), device);
+                        }).ToList();
                         observer.OnNext(new ConflictSet(file, conflicts));
                         cancellationToken.ThrowIfCancellationRequested();
                     }
@@ -255,6 +268,9 @@ namespace SyncTrayzor.Services.Conflicts
             var hours = Int32.Parse(parsed.Groups["hours"].Value);
             var mins = Int32.Parse(parsed.Groups["mins"].Value);
             var secs = Int32.Parse(parsed.Groups["secs"].Value);
+            var device = parsed.Groups["device"].Value;
+            if (string.IsNullOrWhiteSpace(device))
+                device = null;
             var suffix = parsed.Groups["suffix"].Value;
             var extension = parsed.Groups["extension"].Value;
 
@@ -279,14 +295,14 @@ namespace SyncTrayzor.Services.Conflicts
                 var withSuffix = Path.Combine(directory, prefix + suffix + extension);
                 if (this.filesystemProvider.FileExists(withSuffix))
                 {
-                    parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withSuffix, dateCreated);
+                    parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withSuffix, dateCreated, device);
                     return true;
                 }
 
                 var withoutSuffix = Path.Combine(directory, prefix + extension);
                 if (this.filesystemProvider.FileExists(withoutSuffix))
                 {
-                    parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withoutSuffix, dateCreated);
+                    parsedConflictFileInfo = new ParsedConflictFileInfo(filePath, withoutSuffix, dateCreated, device);
                     return true;
                 }
             }

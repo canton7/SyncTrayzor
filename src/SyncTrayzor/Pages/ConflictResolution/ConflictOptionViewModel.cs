@@ -15,6 +15,7 @@ namespace SyncTrayzor.Pages.ConflictResolution
         public DateTime DateCreated => this.ConflictOption.Created;
         public DateTime LastModified => this.ConflictOption.LastModified;
         public string Size => FormatUtils.BytesToHuman(this.ConflictOption.SizeBytes, 1);
+        public string ModifiedBy => this.ConflictOption.Device?.Name;
 
         public ConflictOptionViewModel(ConflictOption conflictOption)
         {

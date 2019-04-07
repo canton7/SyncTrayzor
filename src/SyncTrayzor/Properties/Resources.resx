@@ -770,6 +770,10 @@ Do you want to restart SyncTrayzor now?</value>
     <value>Original File</value>
     <comment>Header shown above the 'Original File' entry, which contains the name of the original file in the conflict, and is shown when the user selects a conflict</comment>
   </data>
+  <data name="ConflictResolutionView_Header_ModifiedBy" xml:space="preserve">
+    <value>Modified By</value>
+    <comment>Header shown above the 'Modified by' entry, which contains the name of the device which last modified the file, and is shown when the user selects a conflict</comment>
+  </data>
   <data name="ConflictResolutionView_Scanning_CancelButton" xml:space="preserve">
     <value>Cancel</value>
     <comment>Text on the 'Cancel' button, shown next to the 'Scanning' progress bar at the top of the page when scanning is in progress</comment>
