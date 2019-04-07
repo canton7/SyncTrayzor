@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.1.23
+-------
+
+ - Include the latest version of Syncthing (#493)
+ - Show 'modified by' device in conflict resolver (#492)
+ - Fix possible cause of null bytes in config file (#471)
+ - If creating the first folder, enable notifications by default (#495)
+
 v1.1.22
 -------
 
