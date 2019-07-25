@@ -155,6 +155,8 @@ namespace SyncTrayzor.Syncthing.Folders
                     // Strip off UNC prefix, if they're put it on
                     if (path.StartsWith(uncPrefix))
                         path = path.Substring(uncPrefix.Length);
+                    // Change forward slashes to backslashes
+                    path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
                     if (path.StartsWith("~"))
                         path = Path.Combine(tilde, path.Substring(1).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
