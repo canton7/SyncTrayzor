@@ -11,8 +11,8 @@ using System.Windows;
 using SyncTrayzor.Properties;
 using SyncTrayzor.Services;
 using SyncTrayzor.Services.Config;
-using System.Reactive.Linq;
 using System.Windows.Threading;
+using System.Reactive.Linq;
 
 namespace SyncTrayzor.Pages.ConflictResolution
 {
