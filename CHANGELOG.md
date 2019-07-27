@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.24
+-------
+
+ - Fix issues caused by forward slashes in folder paths (#519, #520)
+
 v1.1.23
 -------
 
