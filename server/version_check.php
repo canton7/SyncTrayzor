@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.23' => [
+   '1.1.24' => [
       'base_url' => 'https://github.com/canton7/SyncTrayzor/releases/download',
       'installed' => [
          'direct_download_url' => [
@@ -82,7 +82,7 @@ $versions = [
       'sha1sum_download_url' => "{base_url}/v{version}/sha1sum.txt.asc",
       'sha512sum_download_url' => "{base_url}/v{version}/sha512sum.txt.asc",
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Show 'modified by' device in conflict resolver (#492)\n- Fix possible cause of null bytes in config file (#471)\n- If creating the first folder, enable notifications by default (#495)",
+      'release_notes' => "- Fix issues caused by forward slashes in folder paths (#519, #520)",
    ],
    '1.1.21' => [
       'base_url' => 'https://synctrayzor.antonymale.co.uk/download',
@@ -106,6 +106,7 @@ $versions = [
 ];
 
 $upgrades = [
+   // No point in upgrading from 1.1.23 for something so minor
    '1.1.22' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.21' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.20' => ['to' => 'latest', 'formatter' => '5'],
