@@ -573,7 +573,7 @@ SyncTrayzor is going to have to close. Sorry about that</value>
     <comment>{0}: a value such as '1.2kb'</comment>
   </data>
   <data name="FileTransfersTrayView_NothingToShow" xml:space="preserve">
-    <value>No recent file transfers</value>
+    <value>No recent file uploads</value>
   </data>
   <data name="FileTransfersTrayView_OutConnectionRate" xml:space="preserve">
     <value>Out: {0}/s</value>
