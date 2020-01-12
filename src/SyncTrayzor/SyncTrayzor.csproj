@@ -250,6 +250,7 @@
     <Compile Include="Services\DonationManager.cs" />
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\FileWatcher.cs" />
+    <Compile Include="Services\FocusWindowProvider.cs" />
     <Compile Include="Services\Ipc\IpcCommsClient.cs" />
     <Compile Include="Services\Ipc\IpcCommsClientFactory.cs" />
     <Compile Include="Services\Ipc\IpcCommsServer.cs" />

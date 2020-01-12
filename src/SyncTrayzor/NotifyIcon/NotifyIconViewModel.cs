@@ -16,6 +16,7 @@ namespace SyncTrayzor.NotifyIcon
     public class NotifyIconViewModel : PropertyChangedBase, IDisposable
     {
         private readonly IWindowManager windowManager;
+        private readonly IFocusWindowProvider focusWindowProvider;
         private readonly ISyncthingManager syncthingManager;
         private readonly Func<SettingsViewModel> settingsViewModelFactory;
         private readonly IProcessStartProvider processStartProvider;
@@ -45,6 +46,7 @@ namespace SyncTrayzor.NotifyIcon
 
         public NotifyIconViewModel(
             IWindowManager windowManager,
+            IFocusWindowProvider focusWindowProvider,
             ISyncthingManager syncthingManager,
             Func<SettingsViewModel> settingsViewModelFactory,
             IProcessStartProvider processStartProvider,
@@ -53,6 +55,7 @@ namespace SyncTrayzor.NotifyIcon
             IConfigurationProvider configurationProvider)
         {
             this.windowManager = windowManager;
+            this.focusWindowProvider = focusWindowProvider;
             this.syncthingManager = syncthingManager;
             this.settingsViewModelFactory = settingsViewModelFactory;
             this.processStartProvider = processStartProvider;
@@ -126,8 +129,11 @@ namespace SyncTrayzor.NotifyIcon
 
         public void ShowSettings()
         {
-            var vm = this.settingsViewModelFactory();
-            this.windowManager.ShowDialog(vm);
+            if (!this.focusWindowProvider.TryFocus<SettingsViewModel>())
+            {
+                var vm = this.settingsViewModelFactory();
+                this.windowManager.ShowDialog(vm);
+            }
         }
 
         public void Restore()
