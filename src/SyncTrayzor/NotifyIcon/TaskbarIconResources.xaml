@@ -5,7 +5,7 @@
                     xmlns:ni="clr-namespace:SyncTrayzor.NotifyIcon"
                     xmlns:tb="http://www.hardcodet.net/taskbar"
                     xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
-                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
 
     <BitmapImage x:Key="TaskbarStoppedIcon" UriSource="pack://application:,,,/Icons/stopped.ico"/>
     <BitmapImage x:Key="TaskbarAlertIcon" UriSource="pack://application:,,,/Icons/alert_tray.ico"/>
