@@ -257,6 +257,7 @@ task :package => [:clean, *ARCH_CONFIG.map{ |x| :"package:#{x.arch}" }, :"create
 desc 'Build chocolatey package'
 task :chocolatey do
   chocolatey_dir = File.dirname(CHOCOLATEY_NUSPEC)
+  cp Dir[File.join(DEPLOY_DIR, 'SyncTrayzorSetup-*.exe')], File.join(chocolatey_dir, 'tools')
   Dir.chdir(chocolatey_dir) do
     sh "choco pack"
   end

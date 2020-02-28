@@ -1,10 +1,13 @@
 ﻿$ErrorActionPreference = 'Stop'; # stop on all errors
+$toolsDir              = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
 $packageName= 'SyncTrayzor'
-$url        = "https://github.com/canton7/SyncTrayzor/releases/download/v${env:chocolateyPackageVersion}/SyncTrayzorSetup-x86.exe"
-$url64      = "https://github.com/canton7/SyncTrayzor/releases/download/v${env:chocolateyPackageVersion}/SyncTrayzorSetup-x64.exe"
+$file       = (Join-Path $toolsDir 'SyncTrayzorSetup-x86.exe')
+$file64     = (Join-Path $toolsDir 'SyncTrayzorSetup-x64.exe')
 $silentArgs = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-'
 $fileType   = 'exe'
 $validExitCodes = @(0)
 
-Install-ChocolateyPackage $packageName $fileType $silentArgs $url $url64 -validExitCodes $validExitCodes
+Install-ChocolateyInstallPackage $packageName $fileType $silentArgs $file $file64 -validExitCodes $validExitCodes
+
+Remove-Item -Force -ea 0 $file, $file64
