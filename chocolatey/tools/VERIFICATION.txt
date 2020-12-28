@@ -1,0 +1,7 @@
+VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+
+This package is published by the developer of SyncTrayzor. 
+Binaries are identical to the setup binaries available at the GitHub release page:
+https://github.com/canton7/SyncTrayzor/releases
