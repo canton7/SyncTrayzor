@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.1.25
+-------
+
+ - Add touch support
+ - Minor UI updates (#538, #540, #541, #543)
+
 v1.1.24
 -------
 
