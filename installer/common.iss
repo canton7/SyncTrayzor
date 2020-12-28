@@ -1,17 +1,17 @@
+
 #define AppExeName "SyncTrayzor.exe"
 #define AppRoot "..\.."
 #define AppSrc AppRoot + "\src\SyncTrayzor"
 #define AppBin AppRoot +"\bin\" + Arch + "\Release"
 #define AppExe AppBin + "\SyncTrayzor.exe"
 #define AppName GetStringFileInfo(AppExe, "ProductName")
-#define AppVersion GetFileVersion(AppExe)
+#define AppVersion GetVersionNumbersString(AppExe)
 #define AppPublisher "SyncTrayzor"
 #define AppURL "https://github.com/canton7/SyncTrayzor"
 #define AppDataFolder "SyncTrayzor"
 #define RunRegKey "Software\Microsoft\Windows\CurrentVersion\Run"
-#define DotNetInstallerExe "dotNet451Setup.exe"
+#define DotNetInstallerExe "dotNet472Setup.exe"
 #define DonateUrl "https://synctrayzor.antonymale.co.uk/donate"
-#define SurveyUrl "https://synctrayzor.antonymale.co.uk/survey.php"
 
 [Setup]
 AppId={{#AppId}
@@ -23,7 +23,7 @@ AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
 AppSupportURL={#AppURL}
 AppUpdatesURL={#AppURL}
-DefaultDirName={pf}\{#AppName}
+DefaultDirName={commonpf}\{#AppName}
 DefaultGroupName={#AppName}
 AllowNoIcons=yes
 LicenseFile={#AppRoot}\LICENSE.txt
@@ -86,16 +86,15 @@ Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(
 [Code]
 var
   GlobalRestartRequired: boolean;
-  UninstallPollPage: TNewNotebookPage;
-  UninstallNextButton: TNewButton;
 
 function DotNetIsMissing(): Boolean;
 var 
   Exists: Boolean;
   Release: Cardinal;
 begin
+  // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#minimum-version
   Exists := RegQueryDWordValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release', Release);
-  Result := not Exists or (Release < 378758);
+  Result := not Exists or (Release < 461808);
 end;
 
 // Adapted from https://blogs.msdn.microsoft.com/davidrickard/2015/07/17/installing-net-framework-4-5-automatically-with-inno-setup/
@@ -166,9 +165,9 @@ end;
 
 procedure URLLabelOnClick(Sender: TObject);
 var
-	ErrorCode: Integer;
+  ErrorCode: Integer;
 begin
-	ShellExec('open', '{#DonateUrl}', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', '{#DonateUrl}', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 procedure InitializeWizard;
@@ -180,8 +179,8 @@ begin
   URLLabel.Cursor := crHand;
   URLLabel.Parent := WizardForm;
   URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
-	URLLabel.Font.Color := clBlue;
-	URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 15;
+  URLLabel.Font.Color := clBlue;
+  URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 15;
   URLLabel.Left := ScaleX(10)
   URLLabel.OnClick := @URLLabelOnClick;
 end;
@@ -241,11 +240,6 @@ begin
   end
 end;
 
-procedure CurPageChanged(CurPageID: Integer);
-begin
-
-end;
-
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   // 'NeedsRestart' only has an effect if we return a non-empty string, thus aborting the installation.
@@ -286,170 +280,6 @@ begin
    end else begin
       Result := ''
    end;
-end;
-
-function SerializeBool(value: Boolean): String;
-begin
-  if value then begin
-    Result := 'true';
-  end else begin
-    Result := 'false';
-  end
-end;
-
-function EscapeJsonString(value: String): String;
-var
-  c: Char;
-  i: Integer;
-begin
-  // http://www.jrsoftware.org/ishelp/index.php?topic=isxfunc_charlength
-  i := 1;
-  while i <= Length(value) do
-  begin
-    c := value[i];
-    if c = #10 then begin
-      Result := Result + '\n';
-    end else if c = #13 then begin
-      Result := Result + '\r';
-    end else if c = #9 then begin
-      Result := Result + '\t';
-    end else if Ord(c) < 32 then begin
-      Result := Result + Format('\x%.4x', [Ord(c)]);
-    end else if c = '"' then begin
-      Result := Result + '\"';
-    end else if c = '\' then begin
-      Result := Result + '\\'
-    end else begin
-      Result := Result + c;
-    end;
-    i := i + CharLength(value, i);
-  end;
-end;
-
-// See https://stackoverflow.com/a/42550055/1086121
-
-procedure UpdateUninstallWizard;
-begin
-  if UninstallProgressForm.InnerNotebook.ActivePage = UninstallPollPage then
-  begin
-    UninstallProgressForm.PageNameLabel.Caption := 'Please Tell Us Why You''re Leaving';
-    UninstallProgressForm.PageDescriptionLabel.Caption := '';
-  end;
-
-  UninstallNextButton.Caption := 'Uninstall';
-  // Make the "Uninstall" button break the ShowModal loop
-  UninstallNextButton.ModalResult := mrOK;
-end;
-
-procedure InitializeUninstallProgressForm();
-var
-  PageText: TNewStaticText;
-  PageNameLabel: string;
-  PageDescriptionLabel: string;
-  CancelButtonEnabled: Boolean;
-  CancelButtonModalResult: Integer;
-  Checklist: TNewCheckListBox;
-  CommentsText: TNewStaticText;
-  CommentsBox: TNewMemo;
-  WinHttpReq: Variant;
-begin
-  if not UninstallSilent then
-  begin
-    // Create the poll page and make it active
-    UninstallPollPage := TNewNotebookPage.Create(UninstallProgressForm);
-    UninstallPollPage.Notebook := UninstallProgressForm.InnerNotebook;
-    UninstallPollPage.Parent := UninstallProgressForm.InnerNotebook;
-    UninstallPollPage.Align := alClient;
-
-    PageText := TNewStaticText.Create(UninstallProgressForm);
-    PageText.Parent := UninstallPollPage;
-    PageText.AutoSize := True;
-    PageText.WordWrap := True;
-    PageText.SetBounds(UninstallProgressForm.StatusLabel.Left, UninstallProgressForm.StatusLabel.Top, UninstallProgressForm.StatusLabel.Width, UninstallProgressForm.StatusLabel.Height);
-    PageText.ShowAccelChar := False;
-    PageText.Caption := 'Sorry you''re leaving! Please tell us what you didn''t like so we can improve it.' + #13#10 +
-    'No personal data will be sent. You can skip this step if you want.';
-
-    Checklist := TNewCheckListBox.Create(UninstallProgressForm);
-    Checklist.Parent := UninstallPollPage;
-    Checklist.SetBounds(PageText.Left, PageText.Top + PageText.Height + ScaleY(10), PageText.Width, ScaleY(20) * 5);
-    Checklist.BorderStyle := bsNone;
-    Checklist.Color := clBtnFace;
-    Checklist.WantTabs := True;
-    Checklist.MinItemHeight := ScaleY(20);
-
-    Checklist.AddCheckBox('I couldn''t get Syncthing to work', '', 0, False, True, False, False, nil);
-    Checklist.AddCheckBox('Syncthing doesn''t do what I need', '', 0, False, True, False, False, nil);
-    Checklist.AddCheckBox('I prefer another sync tool (please say which below)', '', 0, False, True, False, False, nil);
-    Checklist.AddCheckBox('I don''t like SyncTrayzor - I''m going to use another wrapper', '', 0, False, True, False, False, nil);
-    Checklist.AddCheckBox('Other (please expand below)', '', 0, False, True, False, False, nil);
-
-    CommentsText := TNewStaticText.Create(UninstallProgressForm);
-    CommentsText.Parent := UninstallPollPage;
-    CommentsText.AutoSize := True;
-    CommentsText.WordWrap := True;
-    CommentsText.SetBounds(PageText.Left, Checklist.Top + Checklist.Height + ScaleY(10), PageText.Width, ScaleY(15));
-    CommentsText.AutoSize := False;
-    CommentsText.ShowAccelChar := False;
-    CommentsText.Caption := 'More Details / Complaints:';
-
-    CommentsBox := TNewMemo.Create(UninstallProgressForm);
-    CommentsBox.Parent := UninstallPollPage;
-    CommentsBox.SetBounds(PageText.Left, CommentsText.Top + CommentsText.Height + ScaleY(5), PageText.Width, ScaleY(60));
-    CommentsBox.ScrollBars := ssVertical;
-
-    UninstallProgressForm.InnerNotebook.ActivePage := UninstallPollPage;
-
-    PageNameLabel := UninstallProgressForm.PageNameLabel.Caption;
-    PageDescriptionLabel := UninstallProgressForm.PageDescriptionLabel.Caption;
-
-    UninstallNextButton := TNewButton.Create(UninstallProgressForm);
-    UninstallNextButton.Parent := UninstallProgressForm;
-    UninstallNextButton.Left := UninstallProgressForm.CancelButton.Left - UninstallProgressForm.CancelButton.Width - ScaleX(10);
-    UninstallNextButton.Top := UninstallProgressForm.CancelButton.Top;
-    UninstallNextButton.Width := UninstallProgressForm.CancelButton.Width;
-    UninstallNextButton.Height := UninstallProgressForm.CancelButton.Height;
-
-    UninstallProgressForm.CancelButton.TabOrder := UninstallNextButton.TabOrder + 1;
-
-    // Run our wizard pages
-    UpdateUninstallWizard;
-    CancelButtonEnabled := UninstallProgressForm.CancelButton.Enabled
-    UninstallProgressForm.CancelButton.Enabled := True;
-    CancelButtonModalResult := UninstallProgressForm.CancelButton.ModalResult;
-    UninstallProgressForm.CancelButton.ModalResult := mrCancel;
-
-    if UninstallProgressForm.ShowModal = mrCancel then Abort;
-
-    if Checklist.Checked[0] or Checklist.Checked[1] or Checklist.Checked[2] or Checklist.Checked[3] or Checklist.Checked[4] or (CommentsBox.Text <> '') then begin
-      try
-      begin
-        WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-        WinHttpReq.Open('POST', '{#SurveyUrl}', false);
-        WinHttpReq.Send('{' +
-          ' "version": "{#AppVersion}"' +
-          ', "comment": "' + EscapeJsonString(CommentsBox.Text) + '"' +
-          ', "checklist": {' +
-            ' "wontWork": '+ SerializeBool(Checklist.Checked[0]) + 
-            ', "notWhatINeed": '+ SerializeBool(Checklist.Checked[1]) +
-            ', "preferAnotherSyncTool": '+ SerializeBool(Checklist.Checked[2]) +
-            ', "dontLikeSyncTrayzor": '+ SerializeBool(Checklist.Checked[3]) +
-            ', "other": '+ SerializeBool(Checklist.Checked[4]) +
-          ' }' +
-          ' }');
-      end except
-      end;
-    end;
-
-    // Restore the standard page payout
-    UninstallProgressForm.CancelButton.Enabled := CancelButtonEnabled;
-    UninstallProgressForm.CancelButton.ModalResult := CancelButtonModalResult;
-
-    UninstallProgressForm.PageNameLabel.Caption := PageNameLabel;
-    UninstallProgressForm.PageDescriptionLabel.Caption := PageDescriptionLabel;
-
-    UninstallProgressForm.InnerNotebook.ActivePage := UninstallProgressForm.InstallingPage;
-  end;
 end;
 
 [UninstallDelete]

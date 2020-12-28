@@ -657,7 +657,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No recent file transfers.
+        ///   Looks up a localized string similar to No recent file downloads.
         /// </summary>
         public static string FileTransfersTrayView_NothingToShow {
             get {

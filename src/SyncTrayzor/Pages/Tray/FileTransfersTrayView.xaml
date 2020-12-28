@@ -6,7 +6,7 @@
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:l="clr-namespace:SyncTrayzor.Localization"
              xmlns:xaml="clr-namespace:SyncTrayzor.Xaml"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              x:Name="RootObject"
              Height="350"

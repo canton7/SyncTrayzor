@@ -40,7 +40,7 @@ Features include:
     <tags>synctrayzor syncthing synchronization admin</tags>
     <licenseUrl>https://raw.githubusercontent.com/canton7/SyncTrayzor/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <iconUrl>https://cdn.rawgit.com/canton7/SyncTrayzor/develop/SyncTrayzor.png</iconUrl>
+    <iconUrl>https://cdn.statically.io/gh/canton7/SyncTrayzor/develop/SyncTrayzor.png</iconUrl>
     <dependencies>
       <!-- Chocolatey 0.9.9 required in order to access the chocolateyPackageName and chocolateyPackageVersion environment variables -->
       <dependency id="chocolatey" version="0.9.9" />

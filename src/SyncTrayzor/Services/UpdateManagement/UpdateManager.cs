@@ -34,12 +34,12 @@ namespace SyncTrayzor.Services.UpdateManagement
 
         private static readonly TimeSpan deadTimeAfterStarting = TimeSpan.FromMinutes(5);
         // We'll never check more frequently than this, ever
-        private static readonly TimeSpan updateCheckDebounceTime = TimeSpan.FromHours(1);
+        private static readonly TimeSpan updateCheckDebounceTime = TimeSpan.FromHours(24);
         // If 'remind me later' is active, we'll check this frequently
-        private static readonly TimeSpan remindMeLaterTime = TimeSpan.FromDays(3);
+        private static readonly TimeSpan remindMeLaterTime = TimeSpan.FromDays(7);
         // How often the update checking timer should fire. Having it fire too often is OK: we won't
         // take action
-        private static readonly TimeSpan updateCheckingTimerInterval = TimeSpan.FromHours(8);
+        private static readonly TimeSpan updateCheckingTimerInterval = TimeSpan.FromDays(5);
 
         private readonly IApplicationState applicationState;
         private readonly IApplicationWindowState applicationWindowState;
