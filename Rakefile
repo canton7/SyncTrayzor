@@ -4,13 +4,12 @@ require 'open-uri'
 require_relative 'build/TxClient'
 require_relative 'build/CsprojResxWriter'
 
-ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 5\ISCC.exe'
-SZIP = ENV['SZIP'] || 'C:\Program Files\7-Zip\7z.exe'
+ISCC = ENV['ISCC'] || 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+SZIP = ENV['SZIP'] || File.join(__dir__, 'build', '7za.exe')
 SIGNTOOL = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe'
 VSWHERE = 'build/vswhere.exe'
 
 CONFIG = ENV['CONFIG'] || 'Release'
-MSBUILD_VERSION = '15.0'
 MSBUILD_LOGGER = ENV['MSBUILD_LOGGER']
 
 SRC_DIR = 'src/SyncTrayzor'
@@ -67,30 +66,24 @@ SYNCTHING_VERSIONS_TO_UPDATE = ['latest']
 ARCH_CONFIG = [ArchDirConfig.new('x64', 'amd64'), ArchDirConfig.new('x86', '386')]
 ASSEMBLY_INFOS = FileList['**/AssemblyInfo.cs']
 
-def ensure_7zip
-  unless File.exist?(SIGNTOOL)
-    warn "You must install the Windows SDK"
-    exit 1
-  end
-end
-
 def build(sln, platform, rebuild = true)
   if ENV['MSBUILD']
     msbuild = ENV['MSBUILD']
   else
-    path = `#{VSWHERE} -version #{MSBUILD_VERSION} -requires Microsoft.Component.MSBuild -format value -property installationPath`.chomp
-    msbuild = File.join(path, 'MSBuild', MSBUILD_VERSION, 'Bin', 'MSBuild.exe')
+    path = `#{VSWHERE} -requires Microsoft.Component.MSBuild -format value -property installationPath`.chomp
+    msbuild = File.join(path, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
   end
 
   puts "MSBuild is at #{msbuild}"
   tasks = rebuild ? 'Clean;Rebuild' : 'Build'
-  cmd = "\"#{msbuild}\" \"#{sln}\" /t:#{tasks} /p:Configuration=#{CONFIG};Platform=#{platform}"
+  cmd = "\"#{msbuild}\" \"#{sln}\" -t:#{tasks} -p:Configuration=#{CONFIG};Platform=#{platform}"
   if MSBUILD_LOGGER
-    cmd << " /logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
+    cmd << " -logger:\"#{MSBUILD_LOGGER}\" /verbosity:minimal"
   else
-    cmd << " /verbosity:quiet"
+    cmd << " -verbosity:quiet"
   end
   
+  puts cmd
   sh cmd
 end
 
@@ -135,7 +128,11 @@ namespace :"sign-installer" do
   ARCH_CONFIG.each do |arch_config|
     desc "Sign the installer (#{arch_config.arch}). Specify PASSWORD if required"
     task arch_config.arch do
-      ensure_7zip
+
+      unless File.exist?(SIGNTOOL)
+        warn "You must install the Windows SDK"
+        exit 1
+      end
 
       unless File.exist?(PFX)
         warn "#{PFX} must exist"
@@ -171,8 +168,6 @@ namespace :portable do
   ARCH_CONFIG.each do |arch_config|
     desc "Create the portable package (#{arch_config.arch})"
     task arch_config.arch do
-      ensure_7zip
-
       mkdir_p File.dirname(arch_config.portable_output_file)
       rm arch_config.portable_output_file if File.exist?(arch_config.portable_output_file)
 
@@ -290,8 +285,6 @@ namespace :syncthing do
     ARCH_CONFIG.each do |arch_config|
       desc "Download syncthing (#{arch_config.arch})"
       task arch_config.arch, [:version] => [:"build-checksum-util"] do |t, args|
-        ensure_7zip
-
         Dir.mktmpdir do |tmp|
           download_file = File.join(tmp, File.basename(arch_config.download_uri(args[:version])))
           File.open(download_file, 'wb') do |outfile|
