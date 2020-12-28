@@ -9,7 +9,7 @@
 #define AppURL "https://github.com/canton7/SyncTrayzor"
 #define AppDataFolder "SyncTrayzor"
 #define RunRegKey "Software\Microsoft\Windows\CurrentVersion\Run"
-#define DotNetInstallerExe "dotNet451Setup.exe"
+#define DotNetInstallerExe "dotNet472Setup.exe"
 #define DonateUrl "https://synctrayzor.antonymale.co.uk/donate"
 #define SurveyUrl "https://synctrayzor.antonymale.co.uk/survey.php"
 
@@ -94,8 +94,9 @@ var
   Exists: Boolean;
   Release: Cardinal;
 begin
+  // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#minimum-version
   Exists := RegQueryDWordValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release', Release);
-  Result := not Exists or (Release < 378758);
+  Result := not Exists or (Release < 461808);
 end;
 
 // Adapted from https://blogs.msdn.microsoft.com/davidrickard/2015/07/17/installing-net-framework-4-5-automatically-with-inno-setup/

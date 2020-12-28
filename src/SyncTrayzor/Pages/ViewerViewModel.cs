@@ -11,16 +11,19 @@ using SyncTrayzor.Services;
 using SyncTrayzor.Properties;
 
 using Microsoft.WindowsAPICodePack.Dialogs;
+using CefSharp.Handler;
 
 namespace SyncTrayzor.Pages
 {
-    public class ViewerViewModel : Screen, IRequestHandler, ILifeSpanHandler, IContextMenuHandler, IDisposable
+    public class ViewerViewModel : Screen, IResourceRequestHandlerFactory, ILifeSpanHandler, IContextMenuHandler, IDisposable
     {
         private readonly IWindowManager windowManager;
         private readonly ISyncthingManager syncthingManager;
         private readonly IProcessStartProvider processStartProvider;
         private readonly IConfigurationProvider configurationProvider;
         private readonly IApplicationPathsProvider pathsProvider;
+
+        private readonly CustomResourceRequestHandler customResourceRequestHandler;
 
         private readonly object cultureLock = new object(); // This can be read from many threads
         private CultureInfo culture;
@@ -61,8 +64,9 @@ namespace SyncTrayzor.Pages
             this.zoomLevel = configuration.SyncthingWebBrowserZoomLevel;
 
             this.syncthingManager.StateChanged += this.SyncthingStateChanged;
-
-            this.callback = new JavascriptCallbackObject(this.OpenFolder, this.BrowseFolderPath);
+            
+            this.customResourceRequestHandler = new CustomResourceRequestHandler(this);
+            this.callback = new JavascriptCallbackObject(this);
 
             this.SetCulture(configuration);
             configurationProvider.ConfigurationChanged += this.ConfigurationChanged;
@@ -124,12 +128,11 @@ namespace SyncTrayzor.Pages
 
         private void InitializeBrowser(ChromiumWebBrowser webBrowser)
         {
-            webBrowser.RequestHandler = this;
+            webBrowser.ResourceRequestHandlerFactory = this;
             webBrowser.LifeSpanHandler = this;
             webBrowser.MenuHandler = this;
-            // Don't enable touch scrolling yet - it's still buggy, and causes tapping on links to fail
-            //webBrowser.IsManipulationEnabled = true;
-            webBrowser.RegisterJsObject("callbackObject", this.callback);
+            webBrowser.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
+            webBrowser.JavascriptObjectRepository.Register("callbackObject", this.callback, isAsync: true);
 
             // So. Fun story. From https://github.com/cefsharp/CefSharp/issues/738#issuecomment-91099199, we need to set the zoom level
             // in the FrameLoadStart event. However, the IWpfWebBrowser's ZoomLevel is a DependencyProperty, and it wraps
@@ -317,17 +320,14 @@ namespace SyncTrayzor.Pages
             return uriBuilder.Uri;
         }
 
-        bool IRequestHandler.GetAuthCredentials(IWebBrowser browserControl, IBrowser browser, IFrame frame, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
+        bool IResourceRequestHandlerFactory.HasHandlers => true;
+
+        IResourceRequestHandler IResourceRequestHandlerFactory.GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
         {
-            return false;
+            return this.customResourceRequestHandler;
         }
 
-        bool IRequestHandler.OnBeforeBrowse(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, bool isRedirect)
-        {
-            return false;
-        }
-
-        CefReturnValue IRequestHandler.OnBeforeResourceLoad(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback)
+        private CefReturnValue OnBeforeResourceLoad(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback)
         {
             var uri = new Uri(request.Url);
             // We can get http requests just after changing Syncthing's address: after we've navigated to about:blank but before navigating to
@@ -357,58 +357,6 @@ namespace SyncTrayzor.Pages
             request.Headers = headers;
 
             return CefReturnValue.Continue;
-        }
-
-        bool IRequestHandler.OnCertificateError(IWebBrowser browserControl, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback)
-        {
-            // We shouldn't hit this, since IgnoreCertificateErrors is true
-            return true;
-        }
-
-        void IRequestHandler.OnPluginCrashed(IWebBrowser browserControl, IBrowser browser, string pluginPath)
-        {
-        }
-
-        void IRequestHandler.OnRenderProcessTerminated(IWebBrowser browserControl, IBrowser browser, CefTerminationStatus status)
-        {
-        }
-
-        bool IRequestHandler.OnOpenUrlFromTab(IWebBrowser browserControl, IBrowser browser, IFrame frame, string targetUrl, WindowOpenDisposition targetDisposition, bool userGesture)
-        {
-            return false;
-        }
-
-        bool IRequestHandler.OnQuotaRequest(IWebBrowser browserControl, IBrowser browser, string originUrl, long newSize, IRequestCallback callback)
-        {
-            callback.Continue(true);
-            return true;
-        }
-
-        void IRequestHandler.OnResourceRedirect(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, ref string newUrl)
-        {
-        }
-
-        bool IRequestHandler.OnProtocolExecution(IWebBrowser browserControl, IBrowser browser, string url)
-        {
-            return false;
-        }
-
-        void IRequestHandler.OnRenderViewReady(IWebBrowser browserControl, IBrowser browser)
-        {
-        }
-
-        bool IRequestHandler.OnResourceResponse(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response)
-        {
-            return false;
-        }
-
-        IResponseFilter IRequestHandler.GetResourceResponseFilter(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response)
-        {
-            return null;
-        }
-
-        void IRequestHandler.OnResourceLoadComplete(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request, IResponse response, UrlRequestStatus status, long receivedContentLength)
-        {
         }
 
         void ILifeSpanHandler.OnBeforeClose(IWebBrowser browserControl, IBrowser browser)
@@ -457,25 +405,38 @@ namespace SyncTrayzor.Pages
             this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
         }
 
+        private class CustomResourceRequestHandler : ResourceRequestHandler
+        {
+            private readonly ViewerViewModel parent;
+
+            public CustomResourceRequestHandler(ViewerViewModel parent)
+            {
+                this.parent = parent;
+            }
+
+            protected override CefReturnValue OnBeforeResourceLoad(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback)
+            {
+                return this.parent.OnBeforeResourceLoad(chromiumWebBrowser, browser, frame, request, callback);
+            }
+        }
+
         private class JavascriptCallbackObject
         {
-            private readonly Action<string> openFolderAction;
-            private readonly Action browseFolderPathAction;
+            private readonly ViewerViewModel parent;
 
-            public JavascriptCallbackObject(Action<string> openFolderAction, Action browseFolderPathAction)
+            public JavascriptCallbackObject(ViewerViewModel parent)
             {
-                this.openFolderAction = openFolderAction;
-                this.browseFolderPathAction = browseFolderPathAction;
+                this.parent = parent;
             }
 
             public void OpenFolder(string folderId)
             {
-                this.openFolderAction(folderId);
+                this.parent.OpenFolder(folderId);
             }
 
             public void BrowseFolderPath()
             {
-                this.browseFolderPathAction();
+                this.parent.BrowseFolderPath();
             }
         }
     }

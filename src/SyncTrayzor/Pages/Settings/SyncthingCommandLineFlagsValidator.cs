@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Properties;
 
@@ -25,17 +24,16 @@ namespace SyncTrayzor.Pages.Settings
         {
             public IndividualFlagsValidator()
             {
-                Custom(str =>
+                this.RuleFor(x => x).Custom((str, ctx) =>
                 {
                     KeyValueStringParser.TryParse(str, out var result, mustHaveValue: false);
 
                     if (!result.All(flag => flag.Key.StartsWith("-")))
-                        return new ValidationFailure(null, Resources.SettingsView_Validation_SyncthingCommandLineFlagsMustBeginWithHyphen);
+                        ctx.AddFailure(Resources.SettingsView_Validation_SyncthingCommandLineFlagsMustBeginWithHyphen);
 
                     var firstFailure = result.Select(flag => flag.Key).FirstOrDefault(key => forbiddenArgs.Contains(key));
                     if (firstFailure != null)
-                        return new ValidationFailure(null, Localizer.F(Resources.SettingsView_Validation_SyncthingCommandLineFlagIsNotAllowed, firstFailure));
-                    return null;
+                        ctx.AddFailure(Localizer.F(Resources.SettingsView_Validation_SyncthingCommandLineFlagIsNotAllowed, firstFailure));
                 });
             }
         }
