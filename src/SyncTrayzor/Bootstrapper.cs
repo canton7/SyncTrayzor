@@ -151,9 +151,8 @@ namespace SyncTrayzor
             }
 
             // Has to be done before the VMs are fetched from the container
-            var languageArg = this.Args.FirstOrDefault(x => x.StartsWith("-culture="));
-            if (languageArg != null)
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageArg.Substring("-culture=".Length));
+            if (this.options.Culture != null)
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(this.options.Culture);
             else if (!configuration.UseComputerCulture)
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
