@@ -122,10 +122,15 @@ namespace SyncTrayzor.Localization
             var pluralCount = pluralWords.Count;
             var pluralIndex = pluralRule(value, pluralCount);
 
-            if (pluralIndex < 0 || pluralWords.Count <= pluralIndex)
+            if (pluralIndex < 0)
+            {
+                throw new FormattingException(format, "Invalid pluralIndex <0", pluralIndex);
+            }
+            else if (pluralWords.Count <= pluralIndex)
             {
                 // The plural rule should always return a value in-range!
-                throw new FormattingException(format, "Invalid number of plural parameters", pluralWords.Last().endIndex);
+                // Pick the last plural in this case: we don't want to crash because of a bad translation
+                pluralIndex = pluralWords.Count - 1;
             }
 
             // Output the selected word (allowing for nested formats):
