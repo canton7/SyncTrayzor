@@ -248,6 +248,17 @@ namespace SyncTrayzor
                 }
             }
 
+            if (this.Container == null)
+            {
+                // This happened very early on... Not much we can do.
+                MessageBox.Show(
+                    $"An unexpected exception occurred during startup:\n\n{e.Exception.ToString()}",
+                    "An unexpected exception occurred",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
             // It's nicer if we try stopping the syncthing process, but if we can't, carry on
             try
             {
