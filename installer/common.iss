@@ -1,4 +1,3 @@
-
 #define AppExeName "SyncTrayzor.exe"
 #define AppRoot "..\.."
 #define AppSrc AppRoot + "\src\SyncTrayzor"
@@ -282,8 +281,38 @@ begin
    end;
 end;
 
+// We won't be able to find keys for users other than the one running the installer, but try and do
+// a best-effort attempt to cleaning ourselves up.
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  keyValueNames: TArrayOfString;
+  keyValue: String;
+  i: Integer;
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    if RegGetValueNames(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', keyValueNames) then
+    begin
+      for i := 0 to GetArrayLength(keyValueNames)-1 do
+      begin
+        if Pos('SyncTrayzor', keyValueNames[i]) = 1 then
+        begin
+          if RegQueryStringValue(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', keyValueNames[i], keyValue) then
+          begin
+            if Pos(ExpandConstant('"{app}\{#AppExeName}"'), keyValue) = 1 then
+            begin
+              RegDeleteValue(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', keyValueNames[i]);
+            end;
+          end;
+        end
+      end;
+    end;
+  end;
+end;
+
 [UninstallDelete]
 Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: files; Name: "{app}\InstallCount.txt"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{localappdata}\{#AppDataFolder}"
+
