@@ -109,6 +109,7 @@ namespace SyncTrayzor.Pages
                 // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
                 settings.CefCommandLineArgs.Add("no-proxy-server", "1");
                 settings.CefCommandLineArgs.Add("disable-cache", "1");
+                settings.CefCommandLineArgs.Add("disable-extensions", "1");
 
                 if (configuration.DisableHardwareRendering)
                 {
