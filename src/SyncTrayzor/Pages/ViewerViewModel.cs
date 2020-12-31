@@ -109,6 +109,7 @@ namespace SyncTrayzor.Pages
                 // System proxy settings (which also specify a proxy for localhost) shouldn't affect us
                 settings.CefCommandLineArgs.Add("no-proxy-server", "1");
                 settings.CefCommandLineArgs.Add("disable-cache", "1");
+                settings.CefCommandLineArgs.Add("disable-extensions", "1");
 
                 if (configuration.DisableHardwareRendering)
                 {
@@ -128,6 +129,7 @@ namespace SyncTrayzor.Pages
 
         private void InitializeBrowser(ChromiumWebBrowser webBrowser)
         {
+            webBrowser.RequestHandler = new CustomRequestHandler();
             webBrowser.ResourceRequestHandlerFactory = this;
             webBrowser.LifeSpanHandler = this;
             webBrowser.MenuHandler = this;
@@ -403,6 +405,16 @@ namespace SyncTrayzor.Pages
         {
             this.syncthingManager.StateChanged -= this.SyncthingStateChanged;
             this.configurationProvider.ConfigurationChanged -= this.ConfigurationChanged;
+        }
+
+        private class CustomRequestHandler : RequestHandler
+        {
+            protected override bool OnCertificateError(IWebBrowser chromiumWebBrowser, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback)
+            {
+                // We shouldn't hit this because IgnoreCertificateErrors is true, but we do
+                callback.Continue(true);
+                return true;
+            }
         }
 
         private class CustomResourceRequestHandler : ResourceRequestHandler

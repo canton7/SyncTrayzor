@@ -1,4 +1,3 @@
-
 #define AppExeName "SyncTrayzor.exe"
 #define AppRoot "..\.."
 #define AppSrc AppRoot + "\src\SyncTrayzor"
@@ -67,12 +66,12 @@ Name: "{userappdata}\{#AppDataFolder}"
 ; Near the beginning, as it's extracted first and this makes it cheaper
 Source: "..\{#DotNetInstallerExe}"; DestDir: {tmp}; Flags: dontcopy nocompression noencryption
 
-Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,ffmpegsumo.dll,d3dcompiler_43.dll,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,pdf.dll"; Flags: ignoreversion recursesubdirs
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,cef_extensions.pak,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,swiftshader/libEGL.dll,swiftshader/libGLESv2.dll"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ucrt\*.dll"; DestDir: "{app}"; Flags: ignoreversion; OnlyBelowVersion: 10.0
 Source: "syncthing.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Flags: ignoreversion
 
 [Icons]
@@ -282,8 +281,38 @@ begin
    end;
 end;
 
+// We won't be able to find keys for users other than the one running the installer, but try and do
+// a best-effort attempt to cleaning ourselves up.
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  keyValueNames: TArrayOfString;
+  keyValue: String;
+  i: Integer;
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    if RegGetValueNames(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', keyValueNames) then
+    begin
+      for i := 0 to GetArrayLength(keyValueNames)-1 do
+      begin
+        if Pos('SyncTrayzor', keyValueNames[i]) = 1 then
+        begin
+          if RegQueryStringValue(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', keyValueNames[i], keyValue) then
+          begin
+            if Pos(ExpandConstant('"{app}\{#AppExeName}"'), keyValue) = 1 then
+            begin
+              RegDeleteValue(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', keyValueNames[i]);
+            end;
+          end;
+        end
+      end;
+    end;
+  end;
+end;
+
 [UninstallDelete]
 Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: files; Name: "{app}\InstallCount.txt"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{localappdata}\{#AppDataFolder}"
+

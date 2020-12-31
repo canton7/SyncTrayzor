@@ -177,7 +177,7 @@ namespace :portable do
           files = FileList['**/*'].exclude(
             '*.xml', '*.vshost.*', '*.log', '*.Installer.config', '*/FluentValidation.resources.dll',
             '*/System.Windows.Interactivity.resources.dll', 'syncthing.exe', 'data/*', 'logs',
-            'ffmpegsumo.dll', 'd3dcompiler_43.dll', 'd3dcompiler_47.dll', 'libEGL.dll', 'libGLESv2.dll', 'pdf.dll')
+            'd3dcompiler_47.dll', 'libEGL.dll', 'libGLESv2.dll', 'swiftshader/libEGL.dll', 'swiftshader/libGLESv2.dll',)
 
           files.each do |file|
             cp_to_portable(portable_dir, file)
@@ -194,10 +194,12 @@ namespace :portable do
           cp_to_portable(portable_dir, file)
         end
         
-        Dir.chdir(arch_config.installer_dir) do
+        Dir.chdir(File.join(arch_config.installer_dir, 'ucrt')) do
           FileList['*.dll'].each do |file|
             cp_to_portable(portable_dir, file)
           end
+        end
+        Dir.chdir(arch_config.installer_dir) do
           cp_to_portable(portable_dir, arch_config.syncthing_binaries[PORTABLE_SYNCTHING_VERSION], 'syncthing.exe')
         end
 
@@ -253,6 +255,7 @@ desc 'Build chocolatey package'
 task :chocolatey do
   chocolatey_dir = File.dirname(CHOCOLATEY_NUSPEC)
   cp Dir[File.join(DEPLOY_DIR, 'SyncTrayzorSetup-*.exe')], File.join(chocolatey_dir, 'tools')
+  cp 'LICENSE.txt', File.join(chocolatey_dir, 'tools')
   Dir.chdir(chocolatey_dir) do
     sh "choco pack"
   end

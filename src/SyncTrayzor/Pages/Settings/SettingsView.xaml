@@ -52,7 +52,6 @@
                     <DockPanel>
                         <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_SyncTrayzor}">
                             <DockPanel>
-                                <CheckBox DockPanel.Dock="Top" Content="WOo yay this is a really long string and it isn't wrapping nooo make it even longer go on I dare you"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding MinimizeToTray.Value}" Content="{l:Loc SettingsView_MinimizeToTray}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding CloseToTray.Value}" Content="{l:Loc SettingsView_CloseToTray}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding NotifyOfNewVersions.Value}" Content="{l:Loc SettingsView_AlertOnNewVersion}"/>

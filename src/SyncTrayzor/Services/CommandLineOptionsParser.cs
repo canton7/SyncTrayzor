@@ -12,6 +12,7 @@ namespace SyncTrayzor.Services
         public bool StartMinimized { get; private set; }
         public bool StartSyncthing { get; private set; }
         public bool StopSyncthing { get; private set; }
+        public string Culture { get; private set; }
 
         public CommandLineOptionsParser(IWindowManager windowManager)
         {
@@ -33,7 +34,8 @@ namespace SyncTrayzor.Services
                 .Add("stop-syncthing", "\nIf another SyncTrayzor process is running, tell it to stop Syncthing. Otherwise, launch with Syncthing stopped regardless of configuration.", v => this.StopSyncthing = true)
                 .Add("noautostart", null, v => this.StopSyncthing = true, hidden: true)
                 .Add("minimized", "\nIf another SyncTrayzor process is running, this flag has no effect. Otherwise, start in the tray rather than in the foreground.", v => minimized = true)
-                .Add("show", "\nIf another SyncTrayzor process is running, tell it to show its main window. Otherwise, this flag has no effect.", v => show = true);
+                .Add("show", "\nIf another SyncTrayzor process is running, tell it to show its main window. Otherwise, this flag has no effect.", v => show = true)
+                .Add("culture=", "\nForce SyncTrayzor to use a particular language", v => this.Culture = v);
 
             var unknownArgs = options.Parse(args);
 

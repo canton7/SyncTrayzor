@@ -16,7 +16,7 @@
     <BitmapImage x:Key="TaskbarSyncing4Icon" UriSource="pack://application:,,,/Icons/syncing_4.ico"/>
 
     <tb:TaskbarIcon x:Key="TaskbarIcon" x:Name="TaskbarIcon"
-                    Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}}"
+                    Visibility="{Binding Visible, Converter={x:Static s:BoolToVisibilityConverter.Instance}, FallbackValue=Collapsed}"
                     DoubleClickCommand="{s:Action DoubleClick, ActionNotFound=Disable}"
                     MenuActivation="RightClick"
                     ToolTipText="SyncTrayzor">

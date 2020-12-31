@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.1.26
+-------
+
+ - Fix the problems in v1.1.25 (#594, #595, #596, #597)
+ - Uninstaller tries to remove autostart registry keys (#586)
+
 v1.1.25
 -------
 
