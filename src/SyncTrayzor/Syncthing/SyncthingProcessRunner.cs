@@ -125,6 +125,8 @@ namespace SyncTrayzor.Syncthing
                 RedirectStandardOutput = true,
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8,
+                // In case people are using relative folder paths, mirror the shortcut
+                WorkingDirectory = Path.GetDirectoryName(typeof(SyncthingProcessRunner).Assembly.Location),
             };
 
             processStartInfo.EnvironmentVariables["STGUIAPIKEY"] = this.ApiKey;
