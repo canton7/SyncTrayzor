@@ -75,6 +75,11 @@ Source: "vc++\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ucrt\*.dll"; DestDir: "{app}"; Flags: ignoreversion; OnlyBelowVersion: 10.0
 Source: "syncthing.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Flags: ignoreversion
 
+[InstallDelete]
+Type: files; Name: "{app}\msvcp120.dll"
+Type: files; Name: "{app}\msvcr120.dll"
+Type: files; Name: "{app}\vccorlib120.dll"
+
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#AppName}}"; Filename: "{uninstallexe}"
