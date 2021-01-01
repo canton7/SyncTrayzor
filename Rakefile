@@ -199,6 +199,11 @@ namespace :portable do
             cp_to_portable(portable_dir, file)
           end
         end
+        Dir.chdir(File.join(arch_config.installer_dir, 'vc++')) do
+          FileList['*.dll'].each do |file|
+            cp_to_portable(portable_dir, file)
+          end
+        end
         Dir.chdir(arch_config.installer_dir) do
           cp_to_portable(portable_dir, arch_config.syncthing_binaries[PORTABLE_SYNCTHING_VERSION], 'syncthing.exe')
         end
