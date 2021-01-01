@@ -31,6 +31,8 @@ namespace SyncTrayzor.Syncthing.ApiClient
             { EventType.FolderRejected, typeof(FolderRejectedEvent) },
         };
 
+        public static string GetEventsFilterString() => string.Join(",", eventTypes.Keys);
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             return base.ReadJson(reader, objectType, existingValue, serializer);
