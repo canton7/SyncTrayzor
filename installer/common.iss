@@ -66,7 +66,7 @@ Name: "{userappdata}\{#AppDataFolder}"
 ; Near the beginning, as it's extracted first and this makes it cheaper
 Source: "..\{#DotNetInstallerExe}"; DestDir: {tmp}; Flags: dontcopy nocompression noencryption
 
-Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,cef_extensions.pak,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,swiftshader/libEGL.dll,swiftshader/libGLESv2.dll"; Flags: ignoreversion recursesubdirs
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,*.pdb,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,cef_extensions.pak,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,swiftshader/libEGL.dll,swiftshader/libGLESv2.dll"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
@@ -79,6 +79,8 @@ Source: "syncthing.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Flags: ign
 Type: files; Name: "{app}\msvcp120.dll"
 Type: files; Name: "{app}\msvcr120.dll"
 Type: files; Name: "{app}\vccorlib120.dll"
+Type: files; Name: "{app}\*.pdb"
+Type: files; Name: "{app}\System.Windows.Interactivity.dll"
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
