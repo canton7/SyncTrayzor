@@ -73,7 +73,8 @@
                                 </Grid>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceOrFolderRejectedBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceOrFolderRejectedBalloons}"/>
-                                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
+                                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" TextWrapping="Wrap"
+                                           Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
                                     <Label Padding="0,0,5,0" Target="{Binding ElementName=IconAnimationModeSelect}" VerticalAlignment="Center" Content="{l:Loc SettingsView_AnimateTrayIcon}"/>
                                     <ComboBox x:Name="IconAnimationModeSelect" ItemsSource="{Binding IconAnimationModes}" SelectedValuePath="Value" SelectedValue="{Binding IconAnimationMode.Value}"/>
@@ -109,7 +110,7 @@
                             <DockPanel>
                                 <Grid DockPanel.Dock="Top">
                                     <TextBlock Visibility="{Binding CanReadAndWriteAutostart, Converter={StaticResource InverseVisibilityConverter}}"
-                                        TextWrapping="WrapWithOverflow" Margin="0,0,0,5" Text="{l:Loc SettingsView_StartOnLogin_PermissionDenied}"
+                                        TextWrapping="Wrap" Margin="0,0,0,5" Text="{l:Loc SettingsView_StartOnLogin_PermissionDenied}"
                                         Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"/>
                                 </Grid>
 
