@@ -41,6 +41,8 @@ RestartApplications=no
 CloseApplicationsFilter=SyncTrayzor.exe
 TouchDate=current
 WizardStyle=modern
+; We do access user areas, but only as a best-effort attempt to clean up after ourselves
+UsedUserAreasWarning=no
 #if "x64" == Arch
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
