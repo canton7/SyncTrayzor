@@ -40,6 +40,7 @@ RestartApplications=no
 ; However if we close *just* SyncTrayzor, that will take care of shutting down CefSharp and syncthing
 CloseApplicationsFilter=SyncTrayzor.exe
 TouchDate=current
+WizardStyle=modern
 #if "x64" == Arch
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
