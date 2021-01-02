@@ -79,6 +79,9 @@
     <CodeAnalysisRuleSet>SyncTrayzor.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.NETWORKLIST">
       <SpecificVersion>False</SpecificVersion>
@@ -360,6 +363,7 @@
       <Link>Resources\synctrayzor_releases_cert.asc</Link>
     </EmbeddedResource>
     <AppDesigner Include="Properties\" />
+    <None Include="app.manifest" />
     <None Include="SyncTrayzor.ruleset" />
   </ItemGroup>
   <ItemGroup>
