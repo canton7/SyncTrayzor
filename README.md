@@ -205,8 +205,7 @@ If you want to manually upgrade (e.g. to a beta version) you should download Syn
 Building from Source
 --------------------
 
-You'll need [Visual Studio 2017](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx).
-Make sure you install "Blend for Visual Studio SDK for .NET".
+You'll need Visual Studio 2019.
 Clone/download the repository, open `src\SyncTrayzor.sln`, and compile.
 You'll also need to [download syncthing.exe](https://github.com/syncthing/syncthing/releases) and place it in the `bin\x86\Debug`, `bin\x64\Debug`, `bin\x86\Release`, or `bin\x64\Release` folder as appropriate.
 

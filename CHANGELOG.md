@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.1.27
+-------
+
+ - Fix crashes on a small number of machines (#602, #603)
+ - Wrap text on Settings screen (#540)
+ - Improve appearance on high-DPI displays (#559)
+
 v1.1.26
 -------
 

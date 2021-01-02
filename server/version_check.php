@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.26' => [
+   '1.1.27' => [
       'base_url' => 'https://github.com/canton7/SyncTrayzor/releases/download',
       'installed' => [
          'direct_download_url' => [
@@ -82,7 +82,7 @@ $versions = [
       'sha1sum_download_url' => "{base_url}/v{version}/sha1sum.txt.asc",
       'sha512sum_download_url' => "{base_url}/v{version}/sha512sum.txt.asc",
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "- Add touch support\n- Minor UI updates (#538, #540, #541, #543)\n- Uninstaller tries to remove autostart registry keys (#586)",
+      'release_notes' => "- Add touch support\n- Minor UI updates (#538, #540, #541, #543)\n- Wrap text on Settings screen (#540)\n- Improve appearance on high-DPI displays (#559)\n- Uninstaller tries to remove autostart registry keys (#586)",
    ],
    '1.1.21' => [
       'base_url' => 'https://synctrayzor.antonymale.co.uk/download',
@@ -106,8 +106,9 @@ $versions = [
 ];
 
 $upgrades = [
-   '1.1.25' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['release_notes' => "- Fix the problems in v1.1.25 (#594, #595, #596, #597)\n- Uninstaller tries to remove autostart registry keys (#586)"]],
-   '1.1.24' => ['to' => 'latest', 'formatter' => '5'],
+   '1.1.26' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['release_notes' => "- Fix crashes on a small number of machines (#602, #603)\n- Wrap text on Settings screen (#540)\n- Improve appearance on high-DPI displays (#559)"]],
+   '1.1.25' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['release_notes' => "- Fix the problems in v1.1.25 (#594, #595, #596, #597, #602, #603)\n- Wrap text on Settings screen (#540)\n- Improve appearance on high-DPI displays (#559)\n- Uninstaller tries to remove autostart registry keys (#586)"]],
+   '1.1.24' => ['to' => 'latest', 'formatter' => '5', 'overrides' => ['release_notes' => "- Add touch support\n- Wrap text on Settings screen (#540)\n- Improve appearance on high-DPI displays (#559)\n- Uninstaller tries to remove autostart registry keys (#586)"]],
    '1.1.23' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.22' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.21' => ['to' => 'latest', 'formatter' => '5'],

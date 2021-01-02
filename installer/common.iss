@@ -25,7 +25,6 @@ AppUpdatesURL={#AppURL}
 DefaultDirName={commonpf}\{#AppName}
 DefaultGroupName={#AppName}
 AllowNoIcons=yes
-LicenseFile={#AppRoot}\LICENSE.txt
 OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
@@ -40,6 +39,9 @@ RestartApplications=no
 ; However if we close *just* SyncTrayzor, that will take care of shutting down CefSharp and syncthing
 CloseApplicationsFilter=SyncTrayzor.exe
 TouchDate=current
+WizardStyle=modern
+; We do access user areas, but only as a best-effort attempt to clean up after ourselves
+UsedUserAreasWarning=no
 #if "x64" == Arch
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
@@ -66,13 +68,21 @@ Name: "{userappdata}\{#AppDataFolder}"
 ; Near the beginning, as it's extracted first and this makes it cheaper
 Source: "..\{#DotNetInstallerExe}"; DestDir: {tmp}; Flags: dontcopy nocompression noencryption
 
-Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,cef_extensions.pak,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,swiftshader/libEGL.dll,swiftshader/libGLESv2.dll"; Flags: ignoreversion recursesubdirs
+Source: "{#AppBin}\*"; DestDir: "{app}"; Excludes: "*.xml,*.vshost.*,*.config,*.log,*.pdb,FluentValidation.resources.dll,System.Windows.Interactivity.resources.dll,syncthing.exe,data,logs,cef_extensions.pak,d3dcompiler_47.dll,libEGL.dll,libGLESv2.dll,swiftshader/libEGL.dll,swiftshader/libGLESv2.dll"; Flags: ignoreversion recursesubdirs
 Source: "{#AppBin}\SyncTrayzor.exe.Installer.config"; DestDir: "{app}"; DestName: "SyncTrayzor.exe.config"; Flags: ignoreversion
 Source: "{#AppSrc}\Icons\default.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppRoot}\*.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "vc++\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ucrt\*.dll"; DestDir: "{app}"; Flags: ignoreversion; OnlyBelowVersion: 10.0
 Source: "syncthing.exe"; DestDir: "{app}"; DestName: "syncthing.exe"; Flags: ignoreversion
+
+[InstallDelete]
+Type: files; Name: "{app}\msvcp120.dll"
+Type: files; Name: "{app}\msvcr120.dll"
+Type: files; Name: "{app}\vccorlib120.dll"
+Type: files; Name: "{app}\*.pdb"
+Type: files; Name: "{app}\System.Windows.Interactivity.dll"
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
@@ -179,8 +189,9 @@ begin
   URLLabel.Parent := WizardForm;
   URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
   URLLabel.Font.Color := clBlue;
-  URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 15;
-  URLLabel.Left := ScaleX(10)
+  URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 30;
+  URLLabel.Left := ScaleX(20)
+  URLLabel.Anchors := [akLeft, akBottom]
   URLLabel.OnClick := @URLLabelOnClick;
 end;
 

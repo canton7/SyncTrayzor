@@ -11,10 +11,10 @@ namespace SyncTrayzor.Syncthing.ApiClient
         string ApiKey { get; set; }
 
         [Get("/rest/events")]
-        Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken);
+        Task<List<Event>> FetchEventsAsync(int since, string events, CancellationToken cancellationToken);
 
         [Get("/rest/events")]
-        Task<List<Event>> FetchEventsLimitAsync(int since, int limit, CancellationToken cancellationToken);
+        Task<List<Event>> FetchEventsLimitAsync(int since, int limit, string events, CancellationToken cancellationToken);
 
         [Get("/rest/system/config")]
         Task<Config> FetchConfigAsync();

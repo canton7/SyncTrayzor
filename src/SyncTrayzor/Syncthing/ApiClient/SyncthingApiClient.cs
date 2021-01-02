@@ -40,12 +40,12 @@ namespace SyncTrayzor.Syncthing.ApiClient
 
         public Task<List<Event>> FetchEventsAsync(int since, int limit, CancellationToken cancellationToken)
         {
-            return this.api.FetchEventsLimitAsync(since, limit, cancellationToken);
+            return this.api.FetchEventsLimitAsync(since, limit, EventConverter.GetEventsFilterString(), cancellationToken);
         }
 
         public Task<List<Event>> FetchEventsAsync(int since, CancellationToken cancellationToken)
         {
-            return this.api.FetchEventsAsync(since, cancellationToken);
+            return this.api.FetchEventsAsync(since, EventConverter.GetEventsFilterString(), cancellationToken);
         }
 
         public async Task<Config> FetchConfigAsync()
