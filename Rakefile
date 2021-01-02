@@ -385,3 +385,29 @@ namespace :tx do
     puts "Added: #{response['strings_added']}. Updated: #{response['strings_updated']}. Deleted: #{response['strings_delete']}."
   end
 end
+
+namespace :icons do
+  desc "Create a tray icon (pass 256x256 source)"
+  task :"tray-icon", [:source] do |t,args|
+    source = args[:source]
+    # See https://wiki.lazarus.freepascal.org/Windows_Icon
+    sizes = [
+      16, 32, # Normal 96 DPI
+      20, 40, # 120 DPI (125%)
+      24, 48, # 144 DPI (150%)
+      32, 64, # 192 DPI (200%)
+      36, 72, # 225%
+      40, 80, # 250%
+      44, 88, # 275%
+      48, 96, # 300%
+    ].uniq.sort
+    raise "Need a source image" unless source
+    Dir.chdir(File.join('src', 'SyncTrayzor', 'Icons')) do
+      sizes.each do |size|
+        sh 'magick', 'convert', source, '-resize', "#{size}x#{size}", source.pathmap("%n-#{size}%x")
+      end
+      sh 'magick', 'convert', *sizes.map{ |x| source.pathmap("%n-#{x}%x") }, source.pathmap('%n.ico')
+      rm sizes.map{ |x| source.pathmap("%n-#{x}%x") }
+    end    
+  end
+end
