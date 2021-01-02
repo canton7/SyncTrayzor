@@ -25,7 +25,6 @@ AppUpdatesURL={#AppURL}
 DefaultDirName={commonpf}\{#AppName}
 DefaultGroupName={#AppName}
 AllowNoIcons=yes
-LicenseFile={#AppRoot}\LICENSE.txt
 OutputDir="."
 OutputBaseFilename={#AppName}Setup-{#Arch}
 SetupIconFile={#AppSrc}\Icons\default.ico
