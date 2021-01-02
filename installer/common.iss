@@ -190,8 +190,9 @@ begin
   URLLabel.Parent := WizardForm;
   URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
   URLLabel.Font.Color := clBlue;
-  URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 15;
-  URLLabel.Left := ScaleX(10)
+  URLLabel.Top := WizardForm.ClientHeight - URLLabel.Height - 30;
+  URLLabel.Left := ScaleX(20)
+  URLLabel.Anchors := [akLeft, akBottom]
   URLLabel.OnClick := @URLLabelOnClick;
 end;
 
