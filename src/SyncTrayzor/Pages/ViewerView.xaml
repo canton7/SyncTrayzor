@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ContentControl Content="{Binding WebBrowser}">
+        <ContentControl Content="{Binding WebBrowser}" UseLayoutRounding="True">
             <ContentControl.Resources>
                 <Style TargetType="cefSharp:ChromiumWebBrowser">
                     <Setter Property="ContextMenu">
@@ -22,6 +22,7 @@
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="RenderOptions.BitmapScalingMode" Value="NearestNeighbor"/>
                 </Style>
             </ContentControl.Resources>
         </ContentControl>
