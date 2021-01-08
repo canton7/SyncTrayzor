@@ -250,13 +250,31 @@ begin
   end
 end;
 
+function CmdLineParamNotExists(const Value: string): Boolean;
+var
+  I: Integer;  
+begin
+  Result := True;
+  for I := 1 to ParamCount do
+    if CompareText(ParamStr(I), Value) = 0 then
+    begin
+      Result := False;
+      Exit;
+    end;
+end;
+
+function NoSkipDotNet(): Boolean;
+begin
+  Result := CmdLineParamNotExists('/SKIPDOTNET');
+end;
+
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   // 'NeedsRestart' only has an effect if we return a non-empty string, thus aborting the installation.
   // If the installers indicate that they want a restart, this should be done at the end of installation.
   // Therefore we set the global 'restartRequired' if a restart is needed, and return this from NeedRestart()
 
-  if DotNetIsMissing() then
+  if DotNetIsMissing() And NoSkipDotNet() then
   begin
     Result := InstallDotNet();
   end;
