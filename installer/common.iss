@@ -250,22 +250,18 @@ begin
   end
 end;
 
-function CmdLineParamNotExists(const Value: string): Boolean;
+function CmdLineParamGiven(const Value: String): Boolean;
 var
   I: Integer;  
 begin
-  Result := True;
+  // Can't use {param}, as it doesn't match flags with no value
+  Result := False;
   for I := 1 to ParamCount do
     if CompareText(ParamStr(I), Value) = 0 then
     begin
-      Result := False;
+      Result := True;
       Exit;
     end;
-end;
-
-function NoSkipDotNet(): Boolean;
-begin
-  Result := CmdLineParamNotExists('/SKIPDOTNET');
 end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
@@ -274,7 +270,7 @@ begin
   // If the installers indicate that they want a restart, this should be done at the end of installation.
   // Therefore we set the global 'restartRequired' if a restart is needed, and return this from NeedRestart()
 
-  if DotNetIsMissing() And NoSkipDotNet() then
+  if not CmdLineParamGiven('/SkipDotNetInstall') and DotNetIsMissing() then
   begin
     Result := InstallDotNet();
   end;
@@ -286,19 +282,8 @@ begin
 end;
 
 function ShouldStartSyncTrayzor(): Boolean;
-var
-  flagPassed: Boolean;
-  i: Integer;
 begin
-  // Can't use {param}, as it doesn't match flags with no value
-  flagPassed := False;
-  for i := 0 to ParamCount do begin
-    if ParamStr(i) = '/StartSyncTrayzor' then begin
-      flagPassed := True;
-      break;
-    end;
-  end;
-  Result := (not WizardSilent()) or flagPassed;
+  Result := (not WizardSilent()) or CmdLineParamGiven('/StartSyncTrayzor');
 end;
 
 function SyncTrayzorStartFlags(param: String): String;
