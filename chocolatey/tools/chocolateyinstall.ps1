@@ -4,7 +4,7 @@ $toolsDir              = "$(Split-Path -parent $MyInvocation.MyCommand.Definitio
 $packageName= 'SyncTrayzor'
 $file       = (Join-Path $toolsDir 'SyncTrayzorSetup-x86.exe')
 $file64     = (Join-Path $toolsDir 'SyncTrayzorSetup-x64.exe')
-$silentArgs = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-'
+$silentArgs = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /SkipDotNetInstall'
 $fileType   = 'exe'
 $validExitCodes = @(0)
 
