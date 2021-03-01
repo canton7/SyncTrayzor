@@ -7,7 +7,7 @@ Quick Links
 
  - [Download and install SyncTrayzor now](#installation)
  - [Something went wrong](#something-went-wrong)
- - [Find Syncthing/SyncTrayzor useful? Please donate!](DONATING.md)
+ - [Find Syncthing/SyncTrayzor useful? Please donate!](DONATING.md#donating)
 
 
 Introduction
@@ -83,7 +83,7 @@ Want to make a contribution? Fantastic, and thank you! Please read [Contributing
 Find Syncthing/SyncTrayzor useful? Please donate!
 -------------------------------------------------
 
-Please see [DONATING](DONATING.md).
+Please see [DONATING](DONATING.md#donating).
 
 
 Will SyncTrayzor phone home / give away my secrets / etc?
