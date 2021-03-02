@@ -113,9 +113,10 @@ namespace SyncTrayzor.Pages
 
                 if (configuration.DisableHardwareRendering)
                 {
-                    settings.CefCommandLineArgs.Add("disable-gpu", "1");
-                    settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
-                    settings.CefCommandLineArgs.Add("disable-application-cache", "1");
+                    settings.CefCommandLineArgs.Add("disable-gpu");
+                    settings.CefCommandLineArgs.Add("disable-gpu-vsync");
+                    settings.CefCommandLineArgs.Add("disable-gpu-compositing");
+                    settings.CefCommandLineArgs.Add("disable-application-cache");
                 }
 
                 Cef.Initialize(settings);
