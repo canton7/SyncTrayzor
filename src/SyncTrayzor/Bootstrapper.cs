@@ -27,6 +27,8 @@ using System.Reflection;
 using SyncTrayzor.Localization;
 using SyncTrayzor.Services.Ipc;
 using System.Net;
+using System.Windows.Media;
+using System.Windows.Interop;
 
 namespace SyncTrayzor
 {
@@ -195,6 +197,13 @@ namespace SyncTrayzor
             MessageBoxViewModel.DefaultFlowDirection = Localizer.FlowDirection;
 
             RecycleBinDeleter.Logger = s => LogManager.GetLogger(typeof(RecycleBinDeleter).FullName).Error(s);
+
+            // Workaround for Intel Xe processors, which mess up CefSharp unless we disable hardware
+            // rendering for WPF. See #606.
+            if (configuration.DisableHardwareRendering)
+            {
+                RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+            }
         }
 
         protected override void Launch()
