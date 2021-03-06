@@ -101,6 +101,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Numerics" />
@@ -140,6 +141,7 @@
     <Compile Include="Pages\BarAlerts\FailedTransfersAlertViewModel.cs" />
     <Compile Include="Pages\BarAlerts\IBarAlert.cs" />
     <Compile Include="Pages\BarAlerts\BarAlertsViewModel.cs" />
+    <Compile Include="Pages\BarAlerts\IntelXeGraphicsAlertViewModel.cs" />
     <Compile Include="Pages\BarAlerts\PausedDevicesFromMeteringView.xaml.cs">
       <DependentUpon>PausedDevicesFromMeteringView.xaml</DependentUpon>
     </Compile>
@@ -183,6 +185,7 @@
     <Compile Include="Services\FilesystemProvider.cs" />
     <Compile Include="Services\FileWatcher.cs" />
     <Compile Include="Services\FocusWindowProvider.cs" />
+    <Compile Include="Services\GraphicsCardDetector.cs" />
     <Compile Include="Services\Ipc\IpcCommsClient.cs" />
     <Compile Include="Services\Ipc\IpcCommsClientFactory.cs" />
     <Compile Include="Services\Ipc\IpcCommsServer.cs" />
@@ -389,6 +392,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\BarAlerts\FailedTransfersAlertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BarAlerts\IntelXeGraphicsAlertView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

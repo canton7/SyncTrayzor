@@ -61,6 +61,7 @@ namespace SyncTrayzor.Services.Config
         public string SyncthingCustomPath { get; set; }
         public string SyncthingCustomHomePath { get; set; }
         public bool DisableHardwareRendering { get; set; }
+        public bool HideIntelXeWarningMessage { get; set; }
         public bool EnableFailedTransferAlerts { get; set; }
         public bool EnableConflictFileMonitoring { get; set; }
 
@@ -100,6 +101,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingCustomPath = null;
             this.SyncthingCustomHomePath = null;
             this.DisableHardwareRendering = false;
+            this.HideIntelXeWarningMessage = false;
             this.EnableFailedTransferAlerts = true;
             this.EnableConflictFileMonitoring = true;
             this.ConflictResolverDeletesToRecycleBin = true;
@@ -137,6 +139,7 @@ namespace SyncTrayzor.Services.Config
             this.SyncthingCustomPath = other.SyncthingCustomPath;
             this.SyncthingCustomHomePath = other.SyncthingCustomHomePath;
             this.DisableHardwareRendering = other.DisableHardwareRendering;
+            this.HideIntelXeWarningMessage = other.HideIntelXeWarningMessage;
             this.EnableFailedTransferAlerts = other.EnableFailedTransferAlerts;
             this.EnableConflictFileMonitoring = other.EnableConflictFileMonitoring;
             this.ConflictResolverDeletesToRecycleBin = other.ConflictResolverDeletesToRecycleBin;
@@ -160,7 +163,7 @@ namespace SyncTrayzor.Services.Config
                 $"ObfuscateDeviceIDs={this.ObfuscateDeviceIDs} UseComputerCulture={this.UseComputerCulture} SyncthingConsoleHeight={this.SyncthingConsoleHeight} WindowPlacement={this.WindowPlacement} " +
                 $"SyncthingWebBrowserZoomLevel={this.SyncthingWebBrowserZoomLevel} LastSeenInstallCount={this.LastSeenInstallCount} SyncthingCustomPath={this.SyncthingCustomPath} " +
                 $"SyncthingCustomHomePath={this.SyncthingCustomHomePath} ShowSynchronizedBalloonEvenIfNothingDownloaded={this.ShowSynchronizedBalloonEvenIfNothingDownloaded} " +
-                $"DisableHardwareRendering={this.DisableHardwareRendering} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
+                $"DisableHardwareRendering={this.DisableHardwareRendering} HideIntelXeWarningMessage={this.HideIntelXeWarningMessage} EnableFailedTransferAlerts={this.EnableFailedTransferAlerts} " +
                 $"EnableConflictFileMonitoring={this.EnableConflictFileMonitoring} " +
                 $"ConflictResolverDeletesToRecycleBin={this.ConflictResolverDeletesToRecycleBin} PauseDevicesOnMeteredNetworks={this.PauseDevicesOnMeteredNetworks} " +
                 $"HaveDonated={this.HaveDonated} IconAnimationMode={this.IconAnimationMode} OpenFolderCommand={this.OpenFolderCommand} ShowFileInFolderCommand={this.ShowFileInFolderCommand}" +

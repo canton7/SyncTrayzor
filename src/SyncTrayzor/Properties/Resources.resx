@@ -995,4 +995,11 @@ Please donate to my charity fundraising campaign.</value>
     <value>_Rescan All Folders</value>
     <comment>Menu option available when right-clicking the tray icon. Allows the user to re-scan all folders</comment>
   </data>
+  <data name="BarAlertsView_IntelXeGraphics_AlertText" xml:space="preserve">
+    <value>The area below may be blank when using Intel Xe graphics cards. Please disable hardware rendering under File&#160;-&#8288;&gt;&#160;Settings if you encounter this.</value>
+    <comment>Warning shown at the top of a page if Intel Xe graphics are detected</comment>
+  </data>
+  <data name="BarAlertsView_IntelXeGraphics_DismissLink" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
 </root>
