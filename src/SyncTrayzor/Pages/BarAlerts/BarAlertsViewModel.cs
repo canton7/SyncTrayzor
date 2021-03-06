@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using SyncTrayzor.Pages.ConflictResolution;
 using SyncTrayzor.Services;
+using SyncTrayzor.Services.Config;
 using SyncTrayzor.Syncthing;
 using System;
 using System.Collections.Generic;
@@ -12,23 +13,33 @@ namespace SyncTrayzor.Pages.BarAlerts
         private readonly IAlertsManager alertsManager;
         private readonly ISyncthingManager syncthingManager;
         private readonly Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory;
+        private readonly Func<IntelXeGraphicsAlertViewModel> intelXeGraphicsAlertViewModelFactory;
         private readonly IWindowManager windowManager;
+        private readonly IConfigurationProvider configurationProvider;
+        private readonly GraphicsCardDetector graphicsCardDetector;
 
         public BarAlertsViewModel(
             IAlertsManager alertsManager,
             ISyncthingManager syncthingManager,
             Func<ConflictResolutionViewModel> conflictResolutionViewModelFactory,
-            IWindowManager windowManager)
+            Func<IntelXeGraphicsAlertViewModel> intelXeGraphicsAlertViewModelFactory,
+            IWindowManager windowManager,
+            IConfigurationProvider configurationProvider,
+            GraphicsCardDetector graphicsCardDetector)
         {
             this.alertsManager = alertsManager;
             this.syncthingManager = syncthingManager;
             this.conflictResolutionViewModelFactory = conflictResolutionViewModelFactory;
+            this.intelXeGraphicsAlertViewModelFactory = intelXeGraphicsAlertViewModelFactory;
             this.windowManager = windowManager;
+            this.configurationProvider = configurationProvider;
+            this.graphicsCardDetector = graphicsCardDetector;
         }
 
         protected override void OnInitialActivate()
         {
             this.alertsManager.AlertsStateChanged += this.AlertsStateChanged;
+            this.configurationProvider.ConfigurationChanged += this.AlertsStateChanged;
             this.Load();
         }
 
@@ -69,6 +80,12 @@ namespace SyncTrayzor.Pages.BarAlerts
                 var vm = new PausedDevicesFromMeteringViewModel(pausedDeviceNames);
                 this.Items.Add(vm);
             }
+
+            var configuration = this.configurationProvider.Load();
+            if (!configuration.DisableHardwareRendering && !configuration.HideIntelXeWarningMessage && this.graphicsCardDetector.IsIntelXe)
+            {
+                this.Items.Add(this.intelXeGraphicsAlertViewModelFactory());
+            }
         }
 
         private void OpenConflictResolver()
@@ -80,6 +97,7 @@ namespace SyncTrayzor.Pages.BarAlerts
         protected override void OnClose()
         {
             this.alertsManager.AlertsStateChanged -= this.AlertsStateChanged;
+            this.configurationProvider.ConfigurationChanged -= this.AlertsStateChanged;
         }
     }
 }

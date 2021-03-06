@@ -206,6 +206,24 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The area below may be blank when using Intel Xe graphics cards. Please disable hardware rendering under File -⁠&gt; Settings if you encounter this..
+        /// </summary>
+        public static string BarAlertsView_IntelXeGraphics_AlertText {
+            get {
+                return ResourceManager.GetString("BarAlertsView_IntelXeGraphics_AlertText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismiss.
+        /// </summary>
+        public static string BarAlertsView_IntelXeGraphics_DismissLink {
+            get {
+                return ResourceManager.GetString("BarAlertsView_IntelXeGraphics_DismissLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following {0:p:device has|devices have} been paused because {0:p:it|they} connected using a metered network: {0:l:{}|, }..
         /// </summary>
         public static string BarAlertsView_PausedDevicesFromMetering_AlertText {
