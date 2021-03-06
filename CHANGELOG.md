@@ -4,7 +4,7 @@ Changelog
 v1.1.28
 -------
 
- - Work around Intel X2 Graphics driver bug which causes Syncthing's UI to appear blank (#606)
+ - Work around Intel Xe Graphics driver bug which causes Syncthing's UI to appear blank (#606)
  - Fix chocolatey package (#614)
 
 v1.1.27
