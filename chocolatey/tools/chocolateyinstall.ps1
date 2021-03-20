@@ -12,17 +12,18 @@ $packageArgs = @{
     validExitCodes = @(0)
 }
 
+# Version 1.1.28 had a bug which installed x86 on x64 machines. Forcefully transitioning someone from
+# x86 to x64 is risky, as it potentially loses their config, Syncthing version, etc.
+# Therefore if they've got the x86 version and not the x64 version, upgrade using the x86 version to
+# avoid breaking them.
 #If only the 32 bit version is installed, upgrade that instead of installing the 64 bit version
-if ((Get-OSArchitectureWidth -compare 64) -and ($env:chocolateyForceX86 -ne $true)) {
-    Write-Host -ForegroundColor green "Checking for 32 bit versions of SyncTrayzor"
-    if (Get-UninstallRegistryKey -SoftwareName 'SyncTrayzor (x86)*') {
-        if (Get-UninstallRegistryKey -SoftwareName 'SyncTrayzor (x64)*') {
-            Write-Host -ForegroundColor green "Both 32 and 64 bit SyncTrayzor found, upgrading 64 bit"
-        } else {
-            Write-Host -ForegroundColor green "32 bit SyncTrayzor found, upgrading"
-            #null out the 64 bit file parameter, so only the 32 bit file is available to install
-            $packageArgs['file64'] = $null
-        }
+if ((Get-OSArchitectureWidth -compare 64) -and ($env:chocolateyForceX86 -ne $true) -and (Get-UninstallRegistryKey -SoftwareName 'SyncTrayzor (x86)*')) {
+    if (Get-UninstallRegistryKey -SoftwareName 'SyncTrayzor (x64)*') {
+        Write-Host -ForegroundColor green "Both the x86 and x64 versions of SyncTrayzor are installed. Upgrading the x64 version."
+    } else {
+        Write-Host -ForegroundColor green "You have the x86 version of SyncTrayzor installed, so upgrading this. If you intended to install the x64 version, please uninstall the x86 version first."
+        # null out the 64 bit file parameter, so only the 32 bit file is available to install
+        $packageArgs['file64'] = $null
     }
 }
 
