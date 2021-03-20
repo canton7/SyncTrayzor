@@ -8,7 +8,7 @@
     <version>0.0.0</version>
     <authors>Antony Male</authors>
     <owners>Antony Male</owners>
-    <summary>Windows tray utility / filesystem watcher / launcher for syncthing</summary>
+    <summary>Windows tray utility / launcher for Syncthing</summary>
     <description>SyncTrayzor is a little tray utility for [Syncthing](http://syncthing.net/) on Windows.
 It hosts and wraps Syncthing, making it behave more like a native Windows application and less like a command-line utility with a web browser interface.
 
@@ -23,11 +23,6 @@ Features include:
     - One of your folders is out of sync
     - Folders finish syncing
     - Devices connect / disconnect
- - Can watch your folders for changes, so you don't have to poll them frequently:
-    - Syncthing on its own has to poll your folders, in order to see if any files have changed.
-    - SyncTrayzor will watch your folders for changes, and alert Syncthing the second anything changes.
-    - This means you can increase the polling interval in Syncthing, avoiding the resource usage of high-frequency polling, but still have any changes propagated straight away.
-    - Folder watching respects the ignores configured in Syncthing.
  - Has a tool to help you resolve file conflicts
  - Contains translations for many languages 
     </description>
