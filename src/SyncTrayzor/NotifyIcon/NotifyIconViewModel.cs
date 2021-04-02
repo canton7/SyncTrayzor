@@ -153,21 +153,21 @@ namespace SyncTrayzor.NotifyIcon
         }
 
         public bool CanStop => this.SyncthingState == SyncthingState.Running;
-        public void Stop()
+        public async void Stop()
         {
-            this.syncthingManager.StopAsync();
+            await this.syncthingManager.StopAsync();
         }
 
         public bool CanRestart => this.SyncthingState == SyncthingState.Running;
-        public void Restart()
+        public async void Restart()
         {
-            this.syncthingManager.RestartAsync();
+            await this.syncthingManager.RestartAsync();
         }
 
         public bool CanRescanAll => this.SyncthingState == SyncthingState.Running;
-        public void RescanAll()
+        public async void RescanAll()
         {
-            this.syncthingManager.ScanAsync(null, null);
+            await this.syncthingManager.ScanAsync(null, null);
         }
 
         public void Exit()

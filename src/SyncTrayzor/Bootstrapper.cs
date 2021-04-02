@@ -346,7 +346,7 @@ namespace SyncTrayzor
             this.exiting = true;
 
             // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncthingProcessRunning kills it dead
-            this.Container.Get<ISyncthingManager>().StopAsync().Wait(500);
+            this.Container.Get<ISyncthingManager>().StopAndWaitAsync().Wait(2000);
         }
 
         public override void Dispose()
