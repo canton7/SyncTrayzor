@@ -81,7 +81,7 @@ namespace SyncTrayzor.Services.Config
             this.MinimizeToTray = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = false;
-            this.ShowDeviceConnectivityBalloons = true;
+            this.ShowDeviceConnectivityBalloons = false;
             this.ShowDeviceOrFolderRejectedBalloons = true;
             this.SyncthingAddress = "localhost:8384";
             this.StartSyncthingAutomatically = true;
