@@ -910,7 +910,7 @@ namespace SyncTrayzor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to See the &apos;Folders&apos; tab for per-folder notification settings..
+        ///   Looks up a localized string similar to Disable balloon messages entirely on the &apos;Folders&apos; tab.
         /// </summary>
         public static string SettingsView_Alerts_SeeFolders {
             get {

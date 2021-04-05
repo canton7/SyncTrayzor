@@ -65,7 +65,8 @@
 
                         <GroupBox DockPanel.Dock="Top" Header="{l:Loc SettingsView_Section_TrayIcon}">
                             <DockPanel>
-                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose.Value}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
+                                <TextBlock DockPanel.Dock="Top" Margin="0,0,0,5" TextWrapping="Wrap"
+                                           Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
                                 <Grid DockPanel.Dock="Top">
                                     <CheckBox IsChecked="{Binding ShowSynchronizedBalloonEvenIfNothingDownloaded.Value}"
                                               Width="{Binding Parent.ActualWidth, RelativeSource={RelativeSource Self}}"
@@ -73,8 +74,7 @@
                                 </Grid>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceOrFolderRejectedBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceOrFolderRejectedBalloons}"/>
-                                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" TextWrapping="Wrap"
-                                           Text="{l:Loc SettingsView_Alerts_SeeFolders}"/>
+                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose.Value}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
                                     <Label Padding="0,0,5,0" Target="{Binding ElementName=IconAnimationModeSelect}" VerticalAlignment="Center" Content="{l:Loc SettingsView_AnimateTrayIcon}"/>
                                     <ComboBox x:Name="IconAnimationModeSelect" ItemsSource="{Binding IconAnimationModes}" SelectedValuePath="Value" SelectedValue="{Binding IconAnimationMode.Value}"/>

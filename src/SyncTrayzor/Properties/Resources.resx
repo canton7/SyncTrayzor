@@ -873,7 +873,7 @@ Please donate to my charity fundraising campaign.</value>
     <value>Metered Networks</value>
   </data>
   <data name="SettingsView_Alerts_SeeFolders" xml:space="preserve">
-    <value>See the 'Folders' tab for per-folder notification settings.</value>
+    <value>Disable balloon messages entirely on the 'Folders' tab</value>
   </data>
   <data name="ViewerView_BrowseToFolder" xml:space="preserve">
     <value>Browse</value>
