@@ -1,10 +1,18 @@
 Changelog
 =========
 
+v1.1.19
+-------
+
+ - Don't crash in rare cases trying to detect if Intel Xe Graphics in use (#626)
+ - Make it clearer that balloon settings are on the Folders tab (#613)
+ - Don't show device connectivity balloons by default
+ - Uninstaller: try to shut down running SyncTrayzor instances (#516)
+
 v1.1.28
 -------
 
- - Work around Intel X2 Graphics driver bug which causes Syncthing's UI to appear blank (#606)
+ - Work around Intel Xe Graphics driver bug which causes Syncthing's UI to appear blank (#606)
  - Fix chocolatey package (#614)
 
 v1.1.27

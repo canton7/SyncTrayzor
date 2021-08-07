@@ -14,6 +14,7 @@ namespace SyncTrayzor.Services.Ipc
 
     public interface IIpcCommsClient
     {
+        void Shutdown();
         void ShowMainWindow();
         void StartSyncthing();
         void StopSyncthing();
@@ -28,6 +29,11 @@ namespace SyncTrayzor.Services.Ipc
         public IpcCommsClient(int pid)
         {
             this.pid = pid;
+        }
+
+        public void Shutdown()
+        {
+            this.SendCommand("Shutdown");
         }
 
         public void ShowMainWindow()

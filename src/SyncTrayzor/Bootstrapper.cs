@@ -119,6 +119,21 @@ namespace SyncTrayzor
             {
                 try
                 {
+                    if (this.options.Shutdown)
+                    {
+                        client.Shutdown();
+                        // Give it some time to shut down
+                        var elapsed = Stopwatch.StartNew();
+                        while (elapsed.Elapsed < TimeSpan.FromSeconds(10) &&
+                            this.Container.Get<IIpcCommsClientFactory>().TryCreateClient() != null)
+                        {
+                            Thread.Sleep(100);
+                        }
+                        // Wait another half-second -- it seems it can take the browser process a little longer to exit
+                        Thread.Sleep(500);
+                        Environment.Exit(0);
+                    }
+
                     if (this.options.StartSyncthing || this.options.StopSyncthing)
                     {
                         if (this.options.StartSyncthing)
@@ -141,6 +156,12 @@ namespace SyncTrayzor
                 {
                     logger.Error(e, $"Failed to talk to {client}: {e.Message}. Pretending that it doesn't exist...");
                 }
+            }
+            
+            // If we got this far, there probably isn't another instance running, and we should just shut down
+            if (this.options.Shutdown)
+            {
+                Environment.Exit(0);
             }
 
             var configurationProvider = this.Container.Get<IConfigurationProvider>();
@@ -346,7 +367,7 @@ namespace SyncTrayzor
             this.exiting = true;
 
             // Try and be nice and close SyncTrayzor gracefully, before the Dispose call on SyncthingProcessRunning kills it dead
-            this.Container.Get<ISyncthingManager>().StopAsync().Wait(500);
+            this.Container.Get<ISyncthingManager>().StopAndWaitAsync().Wait(2000);
         }
 
         public override void Dispose()

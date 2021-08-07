@@ -20,21 +20,28 @@ namespace SyncTrayzor.Services
         }
 
         private static bool GetIsIntelXe()
-        { 
-            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
-            foreach (ManagementObject obj in searcher.Get())
+        {
+            // ManagedObjectEnumerator.MoveNext can throw a COMException if WMI isn't started.
+            // We also want to ignore other potential problems. If we hit something, assume they're not
+            // using Intel Xe Graphics.
+            try
             {
-                if (obj["CurrentBitsPerPixel"] != null && obj["CurrentHorizontalResolution"] != null)
+                var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
+                foreach (ManagementObject obj in searcher.Get())
                 {
-                    string name = obj["Name"]?.ToString();
-                    if (name.IndexOf("Intel", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                        name.IndexOf(" Xe ", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (obj["CurrentBitsPerPixel"] != null && obj["CurrentHorizontalResolution"] != null)
                     {
-                        logger.Info($"Graphics card: {name}");
-                        return true;
+                        string name = obj["Name"]?.ToString();
+                        if (name.IndexOf("Intel", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                            name.IndexOf(" Xe ", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            logger.Info($"Graphics card: {name}");
+                            return true;
+                        }
                     }
                 }
             }
+            catch { }
 
             return false;
         }

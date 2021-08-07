@@ -20,15 +20,17 @@ namespace SyncTrayzor.Services.Ipc
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         private readonly ISyncthingManager syncthingManager;
+        private readonly IApplicationState applicationState;
         private readonly IApplicationWindowState windowState;
 
         private CancellationTokenSource cts;
 
         public string PipeName =>  $"SyncTrayzor-{Process.GetCurrentProcess().Id}";
 
-        public IpcCommsServer(ISyncthingManager syncthingManager, IApplicationWindowState windowState)
+        public IpcCommsServer(ISyncthingManager syncthingManager, IApplicationState applicationState, IApplicationWindowState windowState)
         {
             this.syncthingManager = syncthingManager;
+            this.applicationState = applicationState;
             this.windowState = windowState;
         }
 
@@ -101,6 +103,10 @@ namespace SyncTrayzor.Services.Ipc
         {
             switch (command)
             {
+                case "Shutdown":
+                    this.Shutdown();
+                    return "OK";
+
                 case "ShowMainWindow":
                     this.ShowMainWindow();
                     return "OK";
@@ -116,6 +122,11 @@ namespace SyncTrayzor.Services.Ipc
                 default:
                     return "UnknownCommand";
             }
+        }
+
+        private void Shutdown()
+        {
+            this.applicationState.Shutdown();
         }
 
         private void ShowMainWindow()

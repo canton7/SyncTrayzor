@@ -324,9 +324,14 @@ begin
   end;
 end;
 
+[UninstallRun]
+Filename: "{app}\SyncTrayzor.exe"; Parameters: "--shutdown"; RunOnceId: "ShutdownSyncTrayzor"; Flags: skipifdoesntexist
+
 [UninstallDelete]
 Type: files; Name: "{app}\ProcessRunner.exe.old"
 Type: files; Name: "{app}\InstallCount.txt"
+; Not sure why this gets left behind, but it does. Clean it up...
+Type: filesandordirs; Name: "{app}\locales"
 Type: filesandordirs; Name: "{userappdata}\{#AppDataFolder}"
 Type: filesandordirs; Name: "{localappdata}\{#AppDataFolder}"
 

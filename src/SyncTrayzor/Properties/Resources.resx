@@ -307,7 +307,7 @@ This risks corrupting Syncthing's database. ONLY do this if you are unable to st
 
 Please read the log to determine the cause.
 
-If "FATAL: Cannot open database" appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option "Syncthing -&gt; Kill all Syncthing processes" to stop them, then use "Syncthing -&gt; Start" to start Syncthing again.</value>
+If "FATAL: Cannot open database" appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombie Syncthing processes alive. Please use the menu option "Syncthing -&gt; Kill all Syncthing processes" to stop them, then use "Syncthing -&gt; Start" to start Syncthing again.</value>
     <comment>Content of the dialog shown when Syncthing couldn't be started (and exited with an error). Instructs the user on how to proceed.
 
 "FATAL: Cannot Open Database" should remain in English
@@ -873,7 +873,7 @@ Please donate to my charity fundraising campaign.</value>
     <value>Metered Networks</value>
   </data>
   <data name="SettingsView_Alerts_SeeFolders" xml:space="preserve">
-    <value>See the 'Folders' tab for per-folder notification settings.</value>
+    <value>Disable balloon messages entirely on the 'Folders' tab</value>
   </data>
   <data name="ViewerView_BrowseToFolder" xml:space="preserve">
     <value>Browse</value>

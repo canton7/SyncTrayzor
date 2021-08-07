@@ -1,7 +1,9 @@
 ﻿using Mono.Options;
 using Stylet;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace SyncTrayzor.Services
 {
@@ -9,6 +11,7 @@ namespace SyncTrayzor.Services
     {
         private readonly IWindowManager windowManager;
 
+        public bool Shutdown { get; private set; }
         public bool StartMinimized { get; private set; }
         public bool StartSyncthing { get; private set; }
         public bool StopSyncthing { get; private set; }
@@ -30,6 +33,7 @@ namespace SyncTrayzor.Services
             bool show = false;
 
             var options = new OptionSet()
+                .Add("shutdown", "\nIf another SyncTrayzor process is running, tell it to shutdown.", v => this.Shutdown = true)
                 .Add("start-syncthing", "\nIf another SyncTrayzor process is running, tell it to start Syncthing. Otherwise, launch with Syncthing started regardless of configuration.", v => this.StartSyncthing = true)
                 .Add("stop-syncthing", "\nIf another SyncTrayzor process is running, tell it to stop Syncthing. Otherwise, launch with Syncthing stopped regardless of configuration.", v => this.StopSyncthing = true)
                 .Add("noautostart", null, v => this.StopSyncthing = true, hidden: true)
@@ -47,6 +51,11 @@ namespace SyncTrayzor.Services
                 return false;
             }
 
+            if (this.Shutdown && (this.StartSyncthing || this.StopSyncthing || minimized || show))
+            {
+                this.windowManager.ShowMessageBox("--shutdown may not be used with any other options", "Error", icon: MessageBoxImage.Error);
+                return false;
+            }
             if (this.StartSyncthing && this.StopSyncthing)
             {
                 this.windowManager.ShowMessageBox("--start-syncthing and --stop-syncthing may not be used together", "Error", icon: MessageBoxImage.Error);
