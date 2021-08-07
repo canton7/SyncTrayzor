@@ -54,10 +54,16 @@ Unzip, and run `SyncTrayzor.exe`. If you're updating, you'll need to copy the `d
 
 ### Chocolatey
 
-The installed version of SyncTrayzor is also [available on Chocolatey](https://chocolatey.org/packages/synctrayzor).
+The installed version of SyncTrayzor is also [available on Chocolatey](https://chocolatey.org/packages/synctrayzor) ...
 
 ```
 C:\> choco install synctrayzor
+```
+
+... and on [winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/)
+
+```
+C:\> winget install SyncTrayzor.SyncTrayzor
 ```
 
 Something went wrong!
