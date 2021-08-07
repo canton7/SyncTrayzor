@@ -307,7 +307,11 @@ namespace SyncTrayzor.Pages.Settings
             }
 
             this.FolderSettings.AddRange(folderSettings.OrderBy(x => x.FolderLabel));
+
             this.IsAnyFolderWatchEnabledInSyncthing = this.FolderSettings.Any(x => !x.IsWatchAllowed);
+
+            this.UpdateAreAllFoldersWatched();
+            this.UpdateAreAllFoldersNotified();
 
             this.NotifyOfPropertyChange(nameof(this.FolderSettings));
         }
