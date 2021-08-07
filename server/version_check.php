@@ -65,7 +65,7 @@ function get_with_wildcard($src, $value, $default = null)
 }
 
 $versions = [
-   '1.1.28' => [
+   '1.1.29' => [
       'base_url' => 'https://github.com/canton7/SyncTrayzor/releases/download',
       'installed' => [
          'direct_download_url' => [
@@ -82,7 +82,7 @@ $versions = [
       'sha1sum_download_url' => "{base_url}/v{version}/sha1sum.txt.asc",
       'sha512sum_download_url' => "{base_url}/v{version}/sha512sum.txt.asc",
       'release_page_url' => 'https://github.com/canton7/SyncTrayzor/releases/tag/v{version}',
-      'release_notes' => "Add a workaround for an Intel Xe graphics driver bug which causes Syncthing's UI to appear blank.\n\nIf you are not affected by this, you do not need to upgrade.",
+      'release_notes' => "- Don't crash in rare cases trying to detect if Intel Xe Graphics in use (#626)\n- Make it clearer that balloon settings are on the Folders tab (#613)\n- Don't show device connectivity balloons by default\n- Uninstaller: try to shut down running SyncTrayzor instances (#516)",
    ],
    '1.1.21' => [
       'base_url' => 'https://synctrayzor.antonymale.co.uk/download',
@@ -106,6 +106,7 @@ $versions = [
 ];
 
 $upgrades = [
+   // Currently no need to upgrade people on 1.1.28 or 1.1.29
    '1.1.27' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.26' => ['to' => 'latest', 'formatter' => '5'],
    '1.1.25' => ['to' => 'latest', 'formatter' => '5'],
