@@ -574,7 +574,7 @@
       <Version>1.8.6.1</Version>
     </PackageReference>
     <PackageReference Include="CefSharp.Wpf">
-      <Version>86.0.241</Version>
+      <Version>98.1.210</Version>
     </PackageReference>
     <PackageReference Include="FluentValidation">
       <Version>9.3.0</Version>
