@@ -1,7 +1,7 @@
 Changelog
 =========
 
-v1.1.19
+v1.1.29
 -------
 
  - Don't crash in rare cases trying to detect if Intel Xe Graphics in use (#626)
