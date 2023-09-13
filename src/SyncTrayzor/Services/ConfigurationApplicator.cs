@@ -86,6 +86,7 @@ namespace SyncTrayzor.Services
             this.notifyIconManager.MinimizeToTray = configuration.MinimizeToTray;
             this.notifyIconManager.CloseToTray = configuration.CloseToTray;
             this.notifyIconManager.ShowOnlyOnClose = configuration.ShowTrayIconOnlyOnClose;
+            this.notifyIconManager.ShowInLegacyMode = configuration.ShowTrayToolTipInLegacyMode;
             this.notifyIconManager.FolderNotificationsEnabled = configuration.Folders.ToDictionary(x => x.ID, x => x.NotificationsEnabled);
             this.notifyIconManager.ShowSynchronizedBalloonEvenIfNothingDownloaded = configuration.ShowSynchronizedBalloonEvenIfNothingDownloaded;
             this.notifyIconManager.ShowDeviceConnectivityBalloons = configuration.ShowDeviceConnectivityBalloons;
