@@ -20,6 +20,7 @@ namespace SyncTrayzor.NotifyIcon
     public interface INotifyIconManager : IDisposable
     {
         bool ShowOnlyOnClose { get; set; }
+        bool ShowInLegacyMode { get; set; }
         bool MinimizeToTray { get; set; }
         bool CloseToTray { get; set; }
         Dictionary<string, bool> FolderNotificationsEnabled { get; set; }
@@ -56,6 +57,17 @@ namespace SyncTrayzor.NotifyIcon
             {
                 this._showOnlyOnClose = value;
                 this.viewModel.Visible = !this._showOnlyOnClose || this.applicationWindowState.ScreenState == ScreenState.Closed;
+            }
+        }
+
+        private bool _showInLegacyMode;
+        public bool ShowInLegacyMode
+        {
+            get => this._showInLegacyMode;
+            set
+            {
+                this._showInLegacyMode = value;
+                Utils.TrayToolTipWorkaround.SetLegacyMode(value, this.taskbarIcon);
             }
         }
 

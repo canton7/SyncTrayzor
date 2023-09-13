@@ -15,6 +15,9 @@
     <WarningLevel>4</WarningLevel>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,11 +30,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
-    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
   </PropertyGroup>
   <PropertyGroup>
   </PropertyGroup>
@@ -339,6 +339,7 @@
     <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Utils\SynchronizedEventDispatcher.cs" />
     <Compile Include="Design\ViewModelLocator.cs" />
+    <Compile Include="Utils\TrayToolTipWorkaround.cs" />
     <Compile Include="Xaml\ActivateBehaviour.cs" />
     <Compile Include="Xaml\CultureAwareBinding.cs" />
     <Compile Include="Xaml\GridLengthToAbsoluteConverter.cs" />

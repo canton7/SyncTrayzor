@@ -67,6 +67,8 @@ namespace SyncTrayzor.Pages.Settings
         public SettingItem<bool> PauseDevicesOnMeteredNetworks { get; }
 
         public SettingItem<bool> ShowTrayIconOnlyOnClose { get; }
+
+        public SettingItem<bool> ShowTrayToolTipInLegacyMode { get; }
         public SettingItem<bool> ShowSynchronizedBalloonEvenIfNothingDownloaded { get; }
         public SettingItem<bool> ShowDeviceConnectivityBalloons { get; }
         public SettingItem<bool> ShowDeviceOrFolderRejectedBalloons { get; }
@@ -138,6 +140,7 @@ namespace SyncTrayzor.Pages.Settings
             this.PauseDevicesOnMeteredNetworksSupported = meteredNetworkManager.IsSupportedByWindows;
 
             this.ShowTrayIconOnlyOnClose = this.CreateBasicSettingItem(x => x.ShowTrayIconOnlyOnClose);
+            this.ShowTrayToolTipInLegacyMode = this.CreateBasicSettingItem(x => x.ShowTrayToolTipInLegacyMode);
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = this.CreateBasicSettingItem(x => x.ShowSynchronizedBalloonEvenIfNothingDownloaded);
             this.ShowDeviceConnectivityBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceConnectivityBalloons);
             this.ShowDeviceOrFolderRejectedBalloons = this.CreateBasicSettingItem(x => x.ShowDeviceOrFolderRejectedBalloons);

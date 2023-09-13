@@ -19,7 +19,7 @@ namespace SyncTrayzor.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -554,7 +554,7 @@ namespace SyncTrayzor.Properties {
         ///
         ///Please read the log to determine the cause.
         ///
-        ///If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombine Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again..
+        ///If &quot;FATAL: Cannot open database&quot; appears, please close any other open instances of Syncthing. If SyncTrayzor crashed previously, there may still be zombie Syncthing processes alive. Please use the menu option &quot;Syncthing -&gt; Kill all Syncthing processes&quot; to stop them, then use &quot;Syncthing -&gt; Start&quot; to start Syncthing again..
         /// </summary>
         public static string Dialog_FailedToStartSyncthing_Message {
             get {
@@ -1207,6 +1207,15 @@ namespace SyncTrayzor.Properties {
         public static string SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred {
             get {
                 return ResourceManager.GetString("SettingsView_ShowSynchronizedBalloonIfNoFilesTransferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show TrayToolTip in legacy mode (Experimental): Check this option if the TrayToolTip is displaying in the wrong location to attempt to fix it..
+        /// </summary>
+        public static string SettingsView_ShowTrayToolTipInLegacyMode {
+            get {
+                return ResourceManager.GetString("SettingsView_ShowTrayToolTipInLegacyMode", resourceCulture);
             }
         }
         
