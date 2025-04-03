@@ -7,7 +7,7 @@ SyncTrayzor [![Build status](https://ci.appveyor.com/api/projects/status/pwa4mpy
 
 I stopped using Syncthing some years ago, and I'm afraid I don't have the time to maintain it. Sorry.
 
-If you feel like forking it, please do. Otherwise, I can recommend [Syncthing Tray](https://github.com/Martchus/syncthingtray).
+It looks like Syncthing 2.0 makes backwards-incompatible changes, which break SyncTrayzor. If you feel like forking it, please do. Otherwise, I can recommend [Syncthing Tray](https://github.com/Martchus/syncthingtray).
 
 
 Quick Links
