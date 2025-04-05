@@ -75,6 +75,7 @@
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceConnectivityBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceConnectivityBalloons}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowDeviceOrFolderRejectedBalloons.Value}" Content="{l:Loc SettingsView_ShowDeviceOrFolderRejectedBalloons}"/>
                                 <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayIconOnlyOnClose.Value}" Content="{l:Loc SettingsView_OnlyShowTrayIconOnClose}"/>
+                                <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowTrayToolTipInLegacyMode.Value}" Content="{l:Loc SettingsView_ShowTrayToolTipInLegacyMode}"/>
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,5,0,0">
                                     <Label Padding="0,0,5,0" Target="{Binding ElementName=IconAnimationModeSelect}" VerticalAlignment="Center" Content="{l:Loc SettingsView_AnimateTrayIcon}"/>
                                     <ComboBox x:Name="IconAnimationModeSelect" ItemsSource="{Binding IconAnimationModes}" SelectedValuePath="Value" SelectedValue="{Binding IconAnimationMode.Value}"/>
