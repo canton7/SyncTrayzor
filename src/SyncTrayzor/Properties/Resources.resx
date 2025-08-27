@@ -1002,4 +1002,7 @@ Please donate to my charity fundraising campaign.</value>
   <data name="BarAlertsView_IntelXeGraphics_DismissLink" xml:space="preserve">
     <value>Dismiss</value>
   </data>
+  <data name="SettingsView_ShowTrayToolTipInLegacyMode" xml:space="preserve">
+    <value>Show TrayToolTip in legacy mode (Experimental): Check this option if the TrayToolTip is displaying in the wrong location to attempt to fix it.</value>
+  </data>
 </root>

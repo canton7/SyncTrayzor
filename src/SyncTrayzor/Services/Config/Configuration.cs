@@ -24,6 +24,7 @@ namespace SyncTrayzor.Services.Config
         }
 
         public bool ShowTrayIconOnlyOnClose { get; set; }
+        public bool ShowTrayToolTipInLegacyMode { get; set; }
         public bool MinimizeToTray { get; set; }
         public bool CloseToTray { get; set; }
         public bool ShowDeviceConnectivityBalloons { get; set; }
@@ -78,6 +79,7 @@ namespace SyncTrayzor.Services.Config
             // Default configuration is for a portable setup.
 
             this.ShowTrayIconOnlyOnClose = false;
+            this.ShowTrayToolTipInLegacyMode = false;
             this.MinimizeToTray = false;
             this.CloseToTray = true;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = false;
@@ -116,6 +118,7 @@ namespace SyncTrayzor.Services.Config
         public Configuration(Configuration other)
         {
             this.ShowTrayIconOnlyOnClose = other.ShowTrayIconOnlyOnClose;
+            this.ShowTrayToolTipInLegacyMode = other.ShowTrayToolTipInLegacyMode;
             this.MinimizeToTray = other.MinimizeToTray;
             this.CloseToTray = other.CloseToTray;
             this.ShowSynchronizedBalloonEvenIfNothingDownloaded = other.ShowSynchronizedBalloonEvenIfNothingDownloaded;
@@ -153,7 +156,7 @@ namespace SyncTrayzor.Services.Config
 
         public override string ToString()
         {
-            return $"<Configuration ShowTrayIconOnlyOnClose={this.ShowTrayIconOnlyOnClose} MinimizeToTray={this.MinimizeToTray} CloseToTray={this.CloseToTray} " +
+            return $"<Configuration ShowTrayIconOnlyOnClose={this.ShowTrayIconOnlyOnClose} ShowTrayToolTipInLegacyMode={this.ShowTrayToolTipInLegacyMode} MinimizeToTray={this.MinimizeToTray} CloseToTray={this.CloseToTray} " +
                 $"ShowDeviceConnectivityBalloons={this.ShowDeviceConnectivityBalloons} ShowDeviceOrFolderRejectedBalloons={this.ShowDeviceOrFolderRejectedBalloons} " +
                 $"SyncthingAddress={this.SyncthingAddress} StartSyncthingAutomatically={this.StartSyncthingAutomatically} " +
                 $"SyncthingCommandLineFlags=[{String.Join(",", this.SyncthingCommandLineFlags)}] " +
